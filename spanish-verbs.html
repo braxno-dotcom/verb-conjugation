@@ -217,7 +217,7 @@
 </header>
 
 <div class="search-area">
-  <input type="text" id="verbInput" placeholder="например: hablar, ser, tener..." autofocus
+  <input type="text" id="verbInput" placeholder="hablar, ser... или по-русски: делать, знать..." autofocus
     onkeydown="if(event.key==='Enter')conjugate()">
   <button onclick="conjugate()">Спрягать</button>
 </div>
@@ -233,6 +233,10 @@
   <span onclick="tryVerb('decir')">decir</span>,
   <span onclick="tryVerb('comer')">comer</span>,
   <span onclick="tryVerb('vivir')">vivir</span>
+  | на русском:
+  <span onclick="tryVerb('делать')">делать</span>,
+  <span onclick="tryVerb('хотеть')">хотеть</span>,
+  <span onclick="tryVerb('понимать')">понимать</span>
 </div>
 
 <div class="warning-banner" id="warningBanner"></div>
