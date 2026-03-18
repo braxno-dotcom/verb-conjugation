@@ -1,0 +1,15 @@
+{
+  "name": "Испанские глаголы",
+  "short_name": "ES Verbos",
+  "start_url": "spanish-verbs.html",
+  "display": "standalone",
+  "background_color": "#f5f0eb",
+  "theme_color": "#7b1a1a",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇪🇸</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
