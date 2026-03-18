@@ -1,0 +1,2142 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇪🇸</text></svg>">
+<meta name="apple-mobile-web-app-title" content="ES verbos">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇪🇸 Испанские глаголы — Спряжения</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f0eb;
+    color: #2c2c2c;
+    min-height: 100vh;
+  }
+  header {
+    background: linear-gradient(135deg, #7b1a1a, #c0392b);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switch {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+  header { position: relative; }
+
+  .search-area {
+    max-width: 600px;
+    margin: 30px auto 10px;
+    padding: 0 20px;
+    display: flex;
+    gap: 10px;
+  }
+  .search-area input {
+    flex: 1;
+    padding: 14px 18px;
+    font-size: 1.15em;
+    border: 2px solid #c8bfb6;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-area input:focus { border-color: #c0392b; }
+  .search-area button {
+    padding: 14px 28px;
+    font-size: 1.05em;
+    background: #c0392b;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .search-area button:hover { background: #7b1a1a; }
+
+  .hint {
+    max-width: 600px;
+    margin: 8px auto 0;
+    padding: 0 20px;
+    font-size: 0.85em;
+    color: #888;
+  }
+  .hint span { cursor: pointer; color: #c0392b; text-decoration: underline; }
+  .hint span:hover { color: #7b1a1a; }
+
+  .verb-info {
+    max-width: 900px;
+    margin: 18px auto 8px;
+    padding: 0 20px;
+    display: none;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .verb-info .badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 600;
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+  .badge-group { background: #fce4ec; color: #7b1a1a; }
+  .badge-aux { background: #e8eaf6; color: #283593; }
+  .badge-pp { background: #e8f5e9; color: #1b5e20; }
+  .badge-gp { background: #fff3e0; color: #e65100; }
+
+  .legend {
+    max-width: 900px;
+    margin: 10px auto;
+    padding: 0 20px;
+    display: none;
+  }
+  .legend-inner {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 0.85em;
+    color: #666;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 14px; height: 14px; border-radius: 4px; }
+  .dot-active { background: #c0392b; }
+  .dot-literary { background: #9e9e9e; }
+
+  #results {
+    max-width: 900px;
+    margin: 10px auto 40px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 16px;
+  }
+  @media (max-width: 500px) {
+    #results { grid-template-columns: 1fr; }
+  }
+
+  .tense-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .tense-header {
+    padding: 12px 16px;
+    color: white;
+    font-weight: 600;
+  }
+  .tense-header.active { background: #c0392b; }
+  .tense-header.literary { background: #9e9e9e; }
+  .tense-header .fr-name { font-size: 1.05em; }
+  .tense-header .ru-name { font-size: 0.85em; opacity: 0.9; margin-top: 2px; }
+  .tense-explain {
+    padding: 8px 16px;
+    font-size: 0.88em;
+    color: #666;
+    background: #fafafa;
+    border-bottom: 1px solid #eee;
+    font-style: italic;
+  }
+  .tense-body { padding: 12px 16px; }
+  .tense-body table { width: 100%; }
+  .tense-body td { padding: 3px 0; font-size: 0.95em; }
+  .tense-body .pronoun { color: #999; width: 110px; font-size: 0.9em; }
+  .tense-body .verb-form { font-weight: 600; color: #2c2c2c; }
+  .literary-card .tense-body .verb-form { color: #777; }
+
+  .no-result {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: #999;
+    font-size: 1.1em;
+  }
+  .warning-banner {
+    max-width: 900px;
+    margin: 10px auto;
+    padding: 12px 20px;
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 10px;
+    color: #856404;
+    font-size: 0.92em;
+    display: none;
+  }
+  .section-label {
+    grid-column: 1 / -1;
+    font-size: 1.1em;
+    font-weight: 700;
+    color: #c0392b;
+    padding: 12px 0 0;
+    border-top: 2px solid #e0e0e0;
+    margin-top: 8px;
+  }
+  .section-label.literary { color: #9e9e9e; }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="french-verbs.html" class="lang-switch">🇫🇷 Французский</a>
+  <h1>🇪🇸 Спряжение испанских глаголов</h1>
+  <p>Введите глагол в инфинитиве — получите все времена с объяснениями на русском</p>
+</header>
+
+<div class="search-area">
+  <input type="text" id="verbInput" placeholder="например: hablar, ser, tener..." autofocus
+    onkeydown="if(event.key==='Enter')conjugate()">
+  <button onclick="conjugate()">Спрягать</button>
+</div>
+<div class="hint">
+  Попробуйте:
+  <span onclick="tryVerb('hablar')">hablar</span>,
+  <span onclick="tryVerb('ser')">ser</span>,
+  <span onclick="tryVerb('estar')">estar</span>,
+  <span onclick="tryVerb('tener')">tener</span>,
+  <span onclick="tryVerb('ir')">ir</span>,
+  <span onclick="tryVerb('hacer')">hacer</span>,
+  <span onclick="tryVerb('poder')">poder</span>,
+  <span onclick="tryVerb('decir')">decir</span>,
+  <span onclick="tryVerb('comer')">comer</span>,
+  <span onclick="tryVerb('vivir')">vivir</span>
+</div>
+
+<div class="warning-banner" id="warningBanner"></div>
+<div class="verb-info" id="verbInfo"></div>
+<div class="legend" id="legend">
+  <div class="legend-inner">
+    <div class="legend-item"><div class="legend-dot dot-active"></div> Используется в речи</div>
+    <div class="legend-item"><div class="legend-dot dot-literary"></div> Книжное / региональное (в Латинской Америке почти не встретишь)</div>
+  </div>
+</div>
+
+<div id="results"></div>
+
+<script>
+// ============================================================
+// TENSE DEFINITIONS
+// ============================================================
+const TENSES = [
+  {
+    id: 'presente', name: 'Presente',
+    ru: 'Настоящее время',
+    explain: '«я делаю», «я делаю сейчас» — то, что происходит прямо сейчас или регулярно',
+    literary: false, compound: false
+  },
+  {
+    id: 'preterito_perfecto_compuesto', name: 'Pretérito perfecto compuesto',
+    ru: 'Прошедшее составное (недавнее)',
+    explain: '«я уже сделал (сегодня/недавно)» — действие завершилось, но период ещё не кончился',
+    literary: false, compound: true, auxTense: 'presente'
+  },
+  {
+    id: 'preterito_indefinido', name: 'Pretérito indefinido',
+    ru: 'Прошедшее законченное',
+    explain: '«я сделал (вчера/в прошлом году)» — завершённое действие, точка в прошлом',
+    literary: false, compound: false
+  },
+  {
+    id: 'preterito_imperfecto', name: 'Pretérito imperfecto',
+    ru: 'Прошедшее незавершённое',
+    explain: '«я делал», «бывало, делал», «я как раз делал, когда...» — фон, привычка, процесс',
+    literary: false, compound: false
+  },
+  {
+    id: 'preterito_pluscuamperfecto', name: 'Pretérito pluscuamperfecto',
+    ru: 'Давнопрошедшее',
+    explain: '«я уже сделал (до того, как случилось другое)» — прошлое до прошлого',
+    literary: false, compound: true, auxTense: 'preterito_imperfecto'
+  },
+  {
+    id: 'futuro_simple', name: 'Futuro simple',
+    ru: 'Простое будущее',
+    explain: '«я сделаю», «я буду делать» — будущее действие, а также предположение',
+    literary: false, compound: false
+  },
+  {
+    id: 'futuro_perfecto', name: 'Futuro perfecto',
+    ru: 'Предбудущее',
+    explain: '«я уже сделаю (к тому моменту)», «наверное, уже сделал» — предположение о прошлом',
+    literary: false, compound: true, auxTense: 'futuro_simple'
+  },
+  {
+    id: 'condicional_simple', name: 'Condicional simple',
+    ru: 'Условное настоящее',
+    explain: '«я бы сделал», «я сделал бы» — вежливость, мечты, условие',
+    literary: false, compound: false
+  },
+  {
+    id: 'condicional_perfecto', name: 'Condicional perfecto',
+    ru: 'Условное прошедшее',
+    explain: '«я бы уже сделал (но не сделал)» — нереализованное условие',
+    literary: false, compound: true, auxTense: 'condicional_simple'
+  },
+  {
+    id: 'subjuntivo_presente', name: 'Subjuntivo presente',
+    ru: 'Сослагательное настоящее',
+    explain: '«чтобы я делал», «хочу, чтобы он делал» — после «quiero que», «es necesario que»',
+    literary: false, compound: false
+  },
+  {
+    id: 'subjuntivo_preterito_perfecto', name: 'Subjuntivo pretérito perfecto',
+    ru: 'Сослагательное прошедшее составное',
+    explain: '«чтобы я уже сделал», «надеюсь, что он уже сделал»',
+    literary: false, compound: true, auxTense: 'subjuntivo_presente'
+  },
+  {
+    id: 'subjuntivo_imperfecto', name: 'Subjuntivo imperfecto',
+    ru: 'Сослагательное незавершённое',
+    explain: '«если бы я делал», «хотел, чтобы он делал» — условие, нереальность, прошлое «чтобы»',
+    literary: false, compound: false
+  },
+  {
+    id: 'subjuntivo_pluscuamperfecto', name: 'Subjuntivo pluscuamperfecto',
+    ru: 'Сослагательное давнопрошедшее',
+    explain: '«если бы я уже сделал (тогда)» — нереализованное условие в прошлом',
+    literary: false, compound: true, auxTense: 'subjuntivo_imperfecto'
+  },
+  {
+    id: 'imperativo_afirmativo', name: 'Imperativo afirmativo',
+    ru: 'Повелительное (утвердительное)',
+    explain: '«делай!», «делайте!» — приказ, просьба, совет',
+    literary: false, compound: false, isImperative: true
+  },
+  {
+    id: 'imperativo_negativo', name: 'Imperativo negativo',
+    ru: 'Повелительное (отрицательное)',
+    explain: '«не делай!», «не делайте!» — запрет (формы совпадают с subjuntivo)',
+    literary: false, compound: false, isImperative: true
+  },
+  // --- Literary ---
+  {
+    id: 'preterito_anterior', name: 'Pretérito anterior',
+    ru: 'Предпрошедшее (книжное)',
+    explain: '«как только я сделал...» — книжный аналог pluscuamperfecto, в речи не используется',
+    literary: true, compound: true, auxTense: 'preterito_indefinido'
+  },
+  {
+    id: 'futuro_subjuntivo', name: 'Futuro de subjuntivo',
+    ru: 'Будущее сослагательное (книжное)',
+    explain: '«если вдруг я сделаю (когда-нибудь)» — встречается только в юридических текстах и у классиков',
+    literary: true, compound: false
+  },
+  {
+    id: 'futuro_perfecto_subjuntivo', name: 'Futuro perfecto de subjuntivo',
+    ru: 'Будущее сослагательное составное (книжное)',
+    explain: '«если вдруг я уже сделаю» — совсем архаика, практически мёртвая форма',
+    literary: true, compound: true, auxTense: 'futuro_subjuntivo'
+  },
+  {
+    id: 'vosotros_note', name: 'Vosotros',
+    ru: 'Местоимение vosotros',
+    explain: '«вы» (неформальное мн.ч.) — используется только в Испании. В Латинской Америке вместо него ustedes',
+    literary: true, compound: false, isNote: true
+  }
+];
+
+const PRONOUNS = ['yo', 'tú', 'él / ella / Ud.', 'nosotros', 'vosotros', 'ellos / ellas / Uds.'];
+const IMP_PRONOUNS_AF = ['(tú)', '(Ud.)', '(nosotros)', '(vosotros)', '(Uds.)'];
+const IMP_PRONOUNS_NEG = ['(tú)', '(Ud.)', '(nosotros)', '(vosotros)', '(Uds.)'];
+
+// ============================================================
+// IRREGULAR VERBS DATABASE
+// 6 forms: yo, tú, él, nosotros, vosotros, ellos
+// imperative afirmativo: 5 forms: tú, Ud., nosotros, vosotros, Uds.
+// ============================================================
+const IRREG = {
+  'ser': {
+    group: 'Неправильный',
+    pp: 'sido', prp: 'siendo',
+    pp_ru: 'бывший', prp_ru: 'будучи',
+    presente: ['soy','eres','es','somos','sois','son'],
+    preterito_indefinido: ['fui','fuiste','fue','fuimos','fuisteis','fueron'],
+    preterito_imperfecto: ['era','eras','era','éramos','erais','eran'],
+    futuro_simple: ['seré','serás','será','seremos','seréis','serán'],
+    condicional_simple: ['sería','serías','sería','seríamos','seríais','serían'],
+    subjuntivo_presente: ['sea','seas','sea','seamos','seáis','sean'],
+    subjuntivo_imperfecto: ['fuera','fueras','fuera','fuéramos','fuerais','fueran'],
+    imperativo_afirmativo: ['sé','sea','seamos','sed','sean'],
+    futuro_subjuntivo: ['fuere','fueres','fuere','fuéremos','fuereis','fueren']
+  },
+  'estar': {
+    group: 'Неправильный',
+    pp: 'estado', prp: 'estando',
+    pp_ru: 'бывший (в состоянии)', prp_ru: 'находясь/будучи',
+    presente: ['estoy','estás','está','estamos','estáis','están'],
+    preterito_indefinido: ['estuve','estuviste','estuvo','estuvimos','estuvisteis','estuvieron'],
+    preterito_imperfecto: ['estaba','estabas','estaba','estábamos','estabais','estaban'],
+    futuro_simple: ['estaré','estarás','estará','estaremos','estaréis','estarán'],
+    condicional_simple: ['estaría','estarías','estaría','estaríamos','estaríais','estarían'],
+    subjuntivo_presente: ['esté','estés','esté','estemos','estéis','estén'],
+    subjuntivo_imperfecto: ['estuviera','estuvieras','estuviera','estuviéramos','estuvierais','estuvieran'],
+    imperativo_afirmativo: ['está','esté','estemos','estad','estén'],
+    futuro_subjuntivo: ['estuviere','estuvieres','estuviere','estuviéremos','estuviereis','estuvieren']
+  },
+  'haber': {
+    group: 'Неправильный (вспомогательный)',
+    pp: 'habido', prp: 'habiendo',
+    pp_ru: 'имевший', prp_ru: 'имея',
+    presente: ['he','has','ha','hemos','habéis','han'],
+    preterito_indefinido: ['hube','hubiste','hubo','hubimos','hubisteis','hubieron'],
+    preterito_imperfecto: ['había','habías','había','habíamos','habíais','habían'],
+    futuro_simple: ['habré','habrás','habrá','habremos','habréis','habrán'],
+    condicional_simple: ['habría','habrías','habría','habríamos','habríais','habrían'],
+    subjuntivo_presente: ['haya','hayas','haya','hayamos','hayáis','hayan'],
+    subjuntivo_imperfecto: ['hubiera','hubieras','hubiera','hubiéramos','hubierais','hubieran'],
+    imperativo_afirmativo: null,
+    futuro_subjuntivo: ['hubiere','hubieres','hubiere','hubiéremos','hubiereis','hubieren']
+  },
+  'tener': {
+    group: 'Неправильный',
+    pp: 'tenido', prp: 'teniendo',
+    pp_ru: 'имевший', prp_ru: 'имея',
+    presente: ['tengo','tienes','tiene','tenemos','tenéis','tienen'],
+    preterito_indefinido: ['tuve','tuviste','tuvo','tuvimos','tuvisteis','tuvieron'],
+    preterito_imperfecto: ['tenía','tenías','tenía','teníamos','teníais','tenían'],
+    futuro_simple: ['tendré','tendrás','tendrá','tendremos','tendréis','tendrán'],
+    condicional_simple: ['tendría','tendrías','tendría','tendríamos','tendríais','tendrían'],
+    subjuntivo_presente: ['tenga','tengas','tenga','tengamos','tengáis','tengan'],
+    subjuntivo_imperfecto: ['tuviera','tuvieras','tuviera','tuviéramos','tuvierais','tuvieran'],
+    imperativo_afirmativo: ['ten','tenga','tengamos','tened','tengan'],
+    futuro_subjuntivo: ['tuviere','tuvieres','tuviere','tuviéremos','tuviereis','tuvieren']
+  },
+  'ir': {
+    group: 'Неправильный',
+    pp: 'ido', prp: 'yendo',
+    pp_ru: 'ушедший/пошедший', prp_ru: 'идя/уходя',
+    presente: ['voy','vas','va','vamos','vais','van'],
+    preterito_indefinido: ['fui','fuiste','fue','fuimos','fuisteis','fueron'],
+    preterito_imperfecto: ['iba','ibas','iba','íbamos','ibais','iban'],
+    futuro_simple: ['iré','irás','irá','iremos','iréis','irán'],
+    condicional_simple: ['iría','irías','iría','iríamos','iríais','irían'],
+    subjuntivo_presente: ['vaya','vayas','vaya','vayamos','vayáis','vayan'],
+    subjuntivo_imperfecto: ['fuera','fueras','fuera','fuéramos','fuerais','fueran'],
+    imperativo_afirmativo: ['ve','vaya','vayamos','id','vayan'],
+    futuro_subjuntivo: ['fuere','fueres','fuere','fuéremos','fuereis','fueren']
+  },
+  'hacer': {
+    group: 'Неправильный',
+    pp: 'hecho', prp: 'haciendo',
+    pp_ru: 'сделанный', prp_ru: 'делая',
+    presente: ['hago','haces','hace','hacemos','hacéis','hacen'],
+    preterito_indefinido: ['hice','hiciste','hizo','hicimos','hicisteis','hicieron'],
+    preterito_imperfecto: ['hacía','hacías','hacía','hacíamos','hacíais','hacían'],
+    futuro_simple: ['haré','harás','hará','haremos','haréis','harán'],
+    condicional_simple: ['haría','harías','haría','haríamos','haríais','harían'],
+    subjuntivo_presente: ['haga','hagas','haga','hagamos','hagáis','hagan'],
+    subjuntivo_imperfecto: ['hiciera','hicieras','hiciera','hiciéramos','hicierais','hicieran'],
+    imperativo_afirmativo: ['haz','haga','hagamos','haced','hagan'],
+    futuro_subjuntivo: ['hiciere','hicieres','hiciere','hiciéremos','hiciereis','hicieren']
+  },
+  'decir': {
+    group: 'Неправильный',
+    pp: 'dicho', prp: 'diciendo',
+    pp_ru: 'сказанный', prp_ru: 'говоря',
+    presente: ['digo','dices','dice','decimos','decís','dicen'],
+    preterito_indefinido: ['dije','dijiste','dijo','dijimos','dijisteis','dijeron'],
+    preterito_imperfecto: ['decía','decías','decía','decíamos','decíais','decían'],
+    futuro_simple: ['diré','dirás','dirá','diremos','diréis','dirán'],
+    condicional_simple: ['diría','dirías','diría','diríamos','diríais','dirían'],
+    subjuntivo_presente: ['diga','digas','diga','digamos','digáis','digan'],
+    subjuntivo_imperfecto: ['dijera','dijeras','dijera','dijéramos','dijerais','dijeran'],
+    imperativo_afirmativo: ['di','diga','digamos','decid','digan'],
+    futuro_subjuntivo: ['dijere','dijeres','dijere','dijéremos','dijereis','dijeren']
+  },
+  'poder': {
+    group: 'Неправильный',
+    pp: 'podido', prp: 'pudiendo',
+    pp_ru: 'смогший', prp_ru: 'имея возможность',
+    presente: ['puedo','puedes','puede','podemos','podéis','pueden'],
+    preterito_indefinido: ['pude','pudiste','pudo','pudimos','pudisteis','pudieron'],
+    preterito_imperfecto: ['podía','podías','podía','podíamos','podíais','podían'],
+    futuro_simple: ['podré','podrás','podrá','podremos','podréis','podrán'],
+    condicional_simple: ['podría','podrías','podría','podríamos','podríais','podrían'],
+    subjuntivo_presente: ['pueda','puedas','pueda','podamos','podáis','puedan'],
+    subjuntivo_imperfecto: ['pudiera','pudieras','pudiera','pudiéramos','pudierais','pudieran'],
+    imperativo_afirmativo: null,
+    futuro_subjuntivo: ['pudiere','pudieres','pudiere','pudiéremos','pudiereis','pudieren']
+  },
+  'querer': {
+    group: 'Неправильный',
+    pp: 'querido', prp: 'queriendo',
+    pp_ru: 'желанный/любимый', prp_ru: 'желая/любя',
+    presente: ['quiero','quieres','quiere','queremos','queréis','quieren'],
+    preterito_indefinido: ['quise','quisiste','quiso','quisimos','quisisteis','quisieron'],
+    preterito_imperfecto: ['quería','querías','quería','queríamos','queríais','querían'],
+    futuro_simple: ['querré','querrás','querrá','querremos','querréis','querrán'],
+    condicional_simple: ['querría','querrías','querría','querríamos','querríais','querrían'],
+    subjuntivo_presente: ['quiera','quieras','quiera','queramos','queráis','quieran'],
+    subjuntivo_imperfecto: ['quisiera','quisieras','quisiera','quisiéramos','quisierais','quisieran'],
+    imperativo_afirmativo: ['quiere','quiera','queramos','quered','quieran'],
+    futuro_subjuntivo: ['quisiere','quisieres','quisiere','quisiéremos','quisiereis','quisieren']
+  },
+  'saber': {
+    group: 'Неправильный',
+    pp: 'sabido', prp: 'sabiendo',
+    pp_ru: 'узнанный', prp_ru: 'зная',
+    presente: ['sé','sabes','sabe','sabemos','sabéis','saben'],
+    preterito_indefinido: ['supe','supiste','supo','supimos','supisteis','supieron'],
+    preterito_imperfecto: ['sabía','sabías','sabía','sabíamos','sabíais','sabían'],
+    futuro_simple: ['sabré','sabrás','sabrá','sabremos','sabréis','sabrán'],
+    condicional_simple: ['sabría','sabrías','sabría','sabríamos','sabríais','sabrían'],
+    subjuntivo_presente: ['sepa','sepas','sepa','sepamos','sepáis','sepan'],
+    subjuntivo_imperfecto: ['supiera','supieras','supiera','supiéramos','supierais','supieran'],
+    imperativo_afirmativo: ['sabe','sepa','sepamos','sabed','sepan'],
+    futuro_subjuntivo: ['supiere','supieres','supiere','supiéremos','supiereis','supieren']
+  },
+  'poner': {
+    group: 'Неправильный',
+    pp: 'puesto', prp: 'poniendo',
+    pp_ru: 'положенный/поставленный', prp_ru: 'ставя/кладя',
+    presente: ['pongo','pones','pone','ponemos','ponéis','ponen'],
+    preterito_indefinido: ['puse','pusiste','puso','pusimos','pusisteis','pusieron'],
+    preterito_imperfecto: ['ponía','ponías','ponía','poníamos','poníais','ponían'],
+    futuro_simple: ['pondré','pondrás','pondrá','pondremos','pondréis','pondrán'],
+    condicional_simple: ['pondría','pondrías','pondría','pondríamos','pondríais','pondrían'],
+    subjuntivo_presente: ['ponga','pongas','ponga','pongamos','pongáis','pongan'],
+    subjuntivo_imperfecto: ['pusiera','pusieras','pusiera','pusiéramos','pusierais','pusieran'],
+    imperativo_afirmativo: ['pon','ponga','pongamos','poned','pongan'],
+    futuro_subjuntivo: ['pusiere','pusieres','pusiere','pusiéremos','pusiereis','pusieren']
+  },
+  'venir': {
+    group: 'Неправильный',
+    pp: 'venido', prp: 'viniendo',
+    pp_ru: 'пришедший', prp_ru: 'приходя',
+    presente: ['vengo','vienes','viene','venimos','venís','vienen'],
+    preterito_indefinido: ['vine','viniste','vino','vinimos','vinisteis','vinieron'],
+    preterito_imperfecto: ['venía','venías','venía','veníamos','veníais','venían'],
+    futuro_simple: ['vendré','vendrás','vendrá','vendremos','vendréis','vendrán'],
+    condicional_simple: ['vendría','vendrías','vendría','vendríamos','vendríais','vendrían'],
+    subjuntivo_presente: ['venga','vengas','venga','vengamos','vengáis','vengan'],
+    subjuntivo_imperfecto: ['viniera','vinieras','viniera','viniéramos','vinierais','vinieran'],
+    imperativo_afirmativo: ['ven','venga','vengamos','venid','vengan'],
+    futuro_subjuntivo: ['viniere','vinieres','viniere','viniéremos','viniereis','vinieren']
+  },
+  'salir': {
+    group: 'Неправильный',
+    pp: 'salido', prp: 'saliendo',
+    pp_ru: 'вышедший', prp_ru: 'выходя',
+    presente: ['salgo','sales','sale','salimos','salís','salen'],
+    preterito_indefinido: ['salí','saliste','salió','salimos','salisteis','salieron'],
+    preterito_imperfecto: ['salía','salías','salía','salíamos','salíais','salían'],
+    futuro_simple: ['saldré','saldrás','saldrá','saldremos','saldréis','saldrán'],
+    condicional_simple: ['saldría','saldrías','saldría','saldríamos','saldríais','saldrían'],
+    subjuntivo_presente: ['salga','salgas','salga','salgamos','salgáis','salgan'],
+    subjuntivo_imperfecto: ['saliera','salieras','saliera','saliéramos','salierais','salieran'],
+    imperativo_afirmativo: ['sal','salga','salgamos','salid','salgan'],
+    futuro_subjuntivo: ['saliere','salieres','saliere','saliéremos','saliereis','salieren']
+  },
+  'dar': {
+    group: 'Неправильный',
+    pp: 'dado', prp: 'dando',
+    pp_ru: 'данный', prp_ru: 'давая',
+    presente: ['doy','das','da','damos','dais','dan'],
+    preterito_indefinido: ['di','diste','dio','dimos','disteis','dieron'],
+    preterito_imperfecto: ['daba','dabas','daba','dábamos','dabais','daban'],
+    futuro_simple: ['daré','darás','dará','daremos','daréis','darán'],
+    condicional_simple: ['daría','darías','daría','daríamos','daríais','darían'],
+    subjuntivo_presente: ['dé','des','dé','demos','deis','den'],
+    subjuntivo_imperfecto: ['diera','dieras','diera','diéramos','dierais','dieran'],
+    imperativo_afirmativo: ['da','dé','demos','dad','den'],
+    futuro_subjuntivo: ['diere','dieres','diere','diéremos','diereis','dieren']
+  },
+  'ver': {
+    group: 'Неправильный',
+    pp: 'visto', prp: 'viendo',
+    pp_ru: 'увиденный', prp_ru: 'видя',
+    presente: ['veo','ves','ve','vemos','veis','ven'],
+    preterito_indefinido: ['vi','viste','vio','vimos','visteis','vieron'],
+    preterito_imperfecto: ['veía','veías','veía','veíamos','veíais','veían'],
+    futuro_simple: ['veré','verás','verá','veremos','veréis','verán'],
+    condicional_simple: ['vería','verías','vería','veríamos','veríais','verían'],
+    subjuntivo_presente: ['vea','veas','vea','veamos','veáis','vean'],
+    subjuntivo_imperfecto: ['viera','vieras','viera','viéramos','vierais','vieran'],
+    imperativo_afirmativo: ['ve','vea','veamos','ved','vean'],
+    futuro_subjuntivo: ['viere','vieres','viere','viéremos','viereis','vieren']
+  },
+  'conocer': {
+    group: 'Неправильный (c→zc)',
+    pp: 'conocido', prp: 'conociendo',
+    pp_ru: 'знакомый/узнанный', prp_ru: 'узнавая/зная',
+    presente: ['conozco','conoces','conoce','conocemos','conocéis','conocen'],
+    preterito_indefinido: ['conocí','conociste','conoció','conocimos','conocisteis','conocieron'],
+    preterito_imperfecto: ['conocía','conocías','conocía','conocíamos','conocíais','conocían'],
+    futuro_simple: ['conoceré','conocerás','conocerá','conoceremos','conoceréis','conocerán'],
+    condicional_simple: ['conocería','conocerías','conocería','conoceríamos','conoceríais','conocerían'],
+    subjuntivo_presente: ['conozca','conozcas','conozca','conozcamos','conozcáis','conozcan'],
+    subjuntivo_imperfecto: ['conociera','conocieras','conociera','conociéramos','conocierais','conocieran'],
+    imperativo_afirmativo: ['conoce','conozca','conozcamos','conoced','conozcan'],
+    futuro_subjuntivo: ['conociere','conocieres','conociere','conociéremos','conociereis','conocieren']
+  },
+  'dormir': {
+    group: 'Неправильный (o→ue)',
+    pp: 'dormido', prp: 'durmiendo',
+    pp_ru: 'спавший/уснувший', prp_ru: 'спя',
+    presente: ['duermo','duermes','duerme','dormimos','dormís','duermen'],
+    preterito_indefinido: ['dormí','dormiste','durmió','dormimos','dormisteis','durmieron'],
+    preterito_imperfecto: ['dormía','dormías','dormía','dormíamos','dormíais','dormían'],
+    futuro_simple: ['dormiré','dormirás','dormirá','dormiremos','dormiréis','dormirán'],
+    condicional_simple: ['dormiría','dormirías','dormiría','dormiríamos','dormiríais','dormirían'],
+    subjuntivo_presente: ['duerma','duermas','duerma','durmamos','durmáis','duerman'],
+    subjuntivo_imperfecto: ['durmiera','durmieras','durmiera','durmiéramos','durmierais','durmieran'],
+    imperativo_afirmativo: ['duerme','duerma','durmamos','dormid','duerman'],
+    futuro_subjuntivo: ['durmiere','durmieres','durmiere','durmiéremos','durmiereis','durmieren']
+  },
+  'pedir': {
+    group: 'Неправильный (e→i)',
+    pp: 'pedido', prp: 'pidiendo',
+    pp_ru: 'попрошенный', prp_ru: 'прося',
+    presente: ['pido','pides','pide','pedimos','pedís','piden'],
+    preterito_indefinido: ['pedí','pediste','pidió','pedimos','pedisteis','pidieron'],
+    preterito_imperfecto: ['pedía','pedías','pedía','pedíamos','pedíais','pedían'],
+    futuro_simple: ['pediré','pedirás','pedirá','pediremos','pediréis','pedirán'],
+    condicional_simple: ['pediría','pedirías','pediría','pediríamos','pediríais','pedirían'],
+    subjuntivo_presente: ['pida','pidas','pida','pidamos','pidáis','pidan'],
+    subjuntivo_imperfecto: ['pidiera','pidieras','pidiera','pidiéramos','pidierais','pidieran'],
+    imperativo_afirmativo: ['pide','pida','pidamos','pedid','pidan'],
+    futuro_subjuntivo: ['pidiere','pidieres','pidiere','pidiéremos','pidiereis','pidieren']
+  },
+  'sentir': {
+    group: 'Неправильный (e→ie, e→i)',
+    pp: 'sentido', prp: 'sintiendo',
+    pp_ru: 'почувствованный', prp_ru: 'чувствуя',
+    presente: ['siento','sientes','siente','sentimos','sentís','sienten'],
+    preterito_indefinido: ['sentí','sentiste','sintió','sentimos','sentisteis','sintieron'],
+    preterito_imperfecto: ['sentía','sentías','sentía','sentíamos','sentíais','sentían'],
+    futuro_simple: ['sentiré','sentirás','sentirá','sentiremos','sentiréis','sentirán'],
+    condicional_simple: ['sentiría','sentirías','sentiría','sentiríamos','sentiríais','sentirían'],
+    subjuntivo_presente: ['sienta','sientas','sienta','sintamos','sintáis','sientan'],
+    subjuntivo_imperfecto: ['sintiera','sintieras','sintiera','sintiéramos','sintierais','sintieran'],
+    imperativo_afirmativo: ['siente','sienta','sintamos','sentid','sientan'],
+    futuro_subjuntivo: ['sintiere','sintieres','sintiere','sintiéremos','sintiereis','sintieren']
+  },
+  'pensar': {
+    group: 'Неправильный (e→ie)',
+    pp: 'pensado', prp: 'pensando',
+    pp_ru: 'обдуманный', prp_ru: 'думая',
+    presente: ['pienso','piensas','piensa','pensamos','pensáis','piensan'],
+    preterito_indefinido: ['pensé','pensaste','pensó','pensamos','pensasteis','pensaron'],
+    preterito_imperfecto: ['pensaba','pensabas','pensaba','pensábamos','pensabais','pensaban'],
+    futuro_simple: ['pensaré','pensarás','pensará','pensaremos','pensaréis','pensarán'],
+    condicional_simple: ['pensaría','pensarías','pensaría','pensaríamos','pensaríais','pensarían'],
+    subjuntivo_presente: ['piense','pienses','piense','pensemos','penséis','piensen'],
+    subjuntivo_imperfecto: ['pensara','pensaras','pensara','pensáramos','pensarais','pensaran'],
+    imperativo_afirmativo: ['piensa','piense','pensemos','pensad','piensen'],
+    futuro_subjuntivo: ['pensare','pensares','pensare','pensáremos','pensareis','pensaren']
+  },
+  'volver': {
+    group: 'Неправильный (o→ue)',
+    pp: 'vuelto', prp: 'volviendo',
+    pp_ru: 'вернувшийся', prp_ru: 'возвращаясь',
+    presente: ['vuelvo','vuelves','vuelve','volvemos','volvéis','vuelven'],
+    preterito_indefinido: ['volví','volviste','volvió','volvimos','volvisteis','volvieron'],
+    preterito_imperfecto: ['volvía','volvías','volvía','volvíamos','volvíais','volvían'],
+    futuro_simple: ['volveré','volverás','volverá','volveremos','volveréis','volverán'],
+    condicional_simple: ['volvería','volverías','volvería','volveríamos','volveríais','volverían'],
+    subjuntivo_presente: ['vuelva','vuelvas','vuelva','volvamos','volváis','vuelvan'],
+    subjuntivo_imperfecto: ['volviera','volvieras','volviera','volviéramos','volvierais','volvieran'],
+    imperativo_afirmativo: ['vuelve','vuelva','volvamos','volved','vuelvan'],
+    futuro_subjuntivo: ['volviere','volvieres','volviere','volviéremos','volviereis','volvieren']
+  },
+  'encontrar': {
+    group: 'Неправильный (o→ue)',
+    pp: 'encontrado', prp: 'encontrando',
+    pp_ru: 'найденный', prp_ru: 'находя',
+    presente: ['encuentro','encuentras','encuentra','encontramos','encontráis','encuentran'],
+    preterito_indefinido: ['encontré','encontraste','encontró','encontramos','encontrasteis','encontraron'],
+    preterito_imperfecto: ['encontraba','encontrabas','encontraba','encontrábamos','encontrabais','encontraban'],
+    futuro_simple: ['encontraré','encontrarás','encontrará','encontraremos','encontraréis','encontrarán'],
+    condicional_simple: ['encontraría','encontrarías','encontraría','encontraríamos','encontraríais','encontrarían'],
+    subjuntivo_presente: ['encuentre','encuentres','encuentre','encontremos','encontréis','encuentren'],
+    subjuntivo_imperfecto: ['encontrara','encontraras','encontrara','encontráramos','encontrarais','encontraran'],
+    imperativo_afirmativo: ['encuentra','encuentre','encontremos','encontrad','encuentren'],
+    futuro_subjuntivo: ['encontrare','encontrares','encontrare','encontráremos','encontrareis','encontraren']
+  },
+  'escribir': {
+    group: 'Неправильный (причастие)',
+    pp: 'escrito', prp: 'escribiendo',
+    pp_ru: 'написанный', prp_ru: 'пиша/записывая',
+    // regular except pp
+  },
+  'abrir': {
+    group: 'Неправильный (причастие)',
+    pp: 'abierto', prp: 'abriendo',
+    pp_ru: 'открытый', prp_ru: 'открывая',
+  },
+  'morir': {
+    group: 'Неправильный (o→ue, причастие)',
+    pp: 'muerto', prp: 'muriendo',
+    pp_ru: 'умерший', prp_ru: 'умирая',
+    presente: ['muero','mueres','muere','morimos','morís','mueren'],
+    preterito_indefinido: ['morí','moriste','murió','morimos','moristeis','murieron'],
+    preterito_imperfecto: ['moría','morías','moría','moríamos','moríais','morían'],
+    futuro_simple: ['moriré','morirás','morirá','moriremos','moriréis','morirán'],
+    condicional_simple: ['moriría','morirías','moriría','moriríamos','moriríais','morirían'],
+    subjuntivo_presente: ['muera','mueras','muera','muramos','muráis','mueran'],
+    subjuntivo_imperfecto: ['muriera','murieras','muriera','muriéramos','murierais','murieran'],
+    imperativo_afirmativo: ['muere','muera','muramos','morid','mueran'],
+    futuro_subjuntivo: ['muriere','murieres','muriere','muriéremos','muriereis','murieren']
+  },
+  'traer': {
+    group: 'Неправильный',
+    pp: 'traído', prp: 'trayendo',
+    pp_ru: 'принесённый', prp_ru: 'принося',
+    presente: ['traigo','traes','trae','traemos','traéis','traen'],
+    preterito_indefinido: ['traje','trajiste','trajo','trajimos','trajisteis','trajeron'],
+    preterito_imperfecto: ['traía','traías','traía','traíamos','traíais','traían'],
+    futuro_simple: ['traeré','traerás','traerá','traeremos','traeréis','traerán'],
+    condicional_simple: ['traería','traerías','traería','traeríamos','traeríais','traerían'],
+    subjuntivo_presente: ['traiga','traigas','traiga','traigamos','traigáis','traigan'],
+    subjuntivo_imperfecto: ['trajera','trajeras','trajera','trajéramos','trajerais','trajeran'],
+    imperativo_afirmativo: ['trae','traiga','traigamos','traed','traigan'],
+    futuro_subjuntivo: ['trajere','trajeres','trajere','trajéremos','trajereis','trajeren']
+  },
+  'caer': {
+    group: 'Неправильный',
+    pp: 'caído', prp: 'cayendo',
+    pp_ru: 'упавший', prp_ru: 'падая',
+    presente: ['caigo','caes','cae','caemos','caéis','caen'],
+    preterito_indefinido: ['caí','caíste','cayó','caímos','caísteis','cayeron'],
+    preterito_imperfecto: ['caía','caías','caía','caíamos','caíais','caían'],
+    futuro_simple: ['caeré','caerás','caerá','caeremos','caeréis','caerán'],
+    condicional_simple: ['caería','caerías','caería','caeríamos','caeríais','caerían'],
+    subjuntivo_presente: ['caiga','caigas','caiga','caigamos','caigáis','caigan'],
+    subjuntivo_imperfecto: ['cayera','cayeras','cayera','cayéramos','cayerais','cayeran'],
+    imperativo_afirmativo: ['cae','caiga','caigamos','caed','caigan'],
+    futuro_subjuntivo: ['cayere','cayeres','cayere','cayéremos','cayereis','cayeren']
+  },
+  'creer': {
+    group: 'Неправильный (герундий)',
+    pp: 'creído', prp: 'creyendo',
+    pp_ru: 'поверивший', prp_ru: 'веря',
+    // mostly regular -er, only preterito and gerund irregular
+    preterito_indefinido: ['creí','creíste','creyó','creímos','creísteis','creyeron'],
+    subjuntivo_imperfecto: ['creyera','creyeras','creyera','creyéramos','creyerais','creyeran'],
+    futuro_subjuntivo: ['creyere','creyeres','creyere','creyéremos','creyereis','creyeren']
+  },
+  'leer': {
+    group: 'Неправильный (герундий)',
+    pp: 'leído', prp: 'leyendo',
+    pp_ru: 'прочитанный', prp_ru: 'читая',
+    preterito_indefinido: ['leí','leíste','leyó','leímos','leísteis','leyeron'],
+    subjuntivo_imperfecto: ['leyera','leyeras','leyera','leyéramos','leyerais','leyeran'],
+    futuro_subjuntivo: ['leyere','leyeres','leyere','leyéremos','leyereis','leyeren']
+  },
+  'oír': {
+    group: 'Неправильный',
+    pp: 'oído', prp: 'oyendo',
+    pp_ru: 'услышанный', prp_ru: 'слыша',
+    presente: ['oigo','oyes','oye','oímos','oís','oyen'],
+    preterito_indefinido: ['oí','oíste','oyó','oímos','oísteis','oyeron'],
+    preterito_imperfecto: ['oía','oías','oía','oíamos','oíais','oían'],
+    futuro_simple: ['oiré','oirás','oirá','oiremos','oiréis','oirán'],
+    condicional_simple: ['oiría','oirías','oiría','oiríamos','oiríais','oirían'],
+    subjuntivo_presente: ['oiga','oigas','oiga','oigamos','oigáis','oigan'],
+    subjuntivo_imperfecto: ['oyera','oyeras','oyera','oyéramos','oyerais','oyeran'],
+    imperativo_afirmativo: ['oye','oiga','oigamos','oíd','oigan'],
+    futuro_subjuntivo: ['oyere','oyeres','oyere','oyéremos','oyereis','oyeren']
+  },
+  'conducir': {
+    group: 'Неправильный (c→zc, -je-)',
+    pp: 'conducido', prp: 'conduciendo',
+    pp_ru: 'ведённый', prp_ru: 'ведя/управляя',
+    presente: ['conduzco','conduces','conduce','conducimos','conducís','conducen'],
+    preterito_indefinido: ['conduje','condujiste','condujo','condujimos','condujisteis','condujeron'],
+    preterito_imperfecto: ['conducía','conducías','conducía','conducíamos','conducíais','conducían'],
+    futuro_simple: ['conduciré','conducirás','conducirá','conduciremos','conduciréis','conducirán'],
+    condicional_simple: ['conduciría','conducirías','conduciría','conduciríamos','conduciríais','conducirían'],
+    subjuntivo_presente: ['conduzca','conduzcas','conduzca','conduzcamos','conduzcáis','conduzcan'],
+    subjuntivo_imperfecto: ['condujera','condujeras','condujera','condujéramos','condujerais','condujeran'],
+    imperativo_afirmativo: ['conduce','conduzca','conduzcamos','conducid','conduzcan'],
+    futuro_subjuntivo: ['condujere','condujeres','condujere','condujéremos','condujereis','condujeren']
+  },
+  'seguir': {
+    group: 'Неправильный (e→i, gu→g)',
+    pp: 'seguido', prp: 'siguiendo',
+    pp_ru: 'следовавший', prp_ru: 'следуя',
+    presente: ['sigo','sigues','sigue','seguimos','seguís','siguen'],
+    preterito_indefinido: ['seguí','seguiste','siguió','seguimos','seguisteis','siguieron'],
+    preterito_imperfecto: ['seguía','seguías','seguía','seguíamos','seguíais','seguían'],
+    futuro_simple: ['seguiré','seguirás','seguirá','seguiremos','seguiréis','seguirán'],
+    condicional_simple: ['seguiría','seguirías','seguiría','seguiríamos','seguiríais','seguirían'],
+    subjuntivo_presente: ['siga','sigas','siga','sigamos','sigáis','sigan'],
+    subjuntivo_imperfecto: ['siguiera','siguieras','siguiera','siguiéramos','siguierais','siguieran'],
+    imperativo_afirmativo: ['sigue','siga','sigamos','seguid','sigan'],
+    futuro_subjuntivo: ['siguiere','siguieres','siguiere','siguiéremos','siguiereis','siguieren']
+  },
+  'jugar': {
+    group: 'Неправильный (u→ue)',
+    pp: 'jugado', prp: 'jugando',
+    pp_ru: 'сыгранный', prp_ru: 'играя',
+    presente: ['juego','juegas','juega','jugamos','jugáis','juegan'],
+    preterito_indefinido: ['jugué','jugaste','jugó','jugamos','jugasteis','jugaron'],
+    preterito_imperfecto: ['jugaba','jugabas','jugaba','jugábamos','jugabais','jugaban'],
+    futuro_simple: ['jugaré','jugarás','jugará','jugaremos','jugaréis','jugarán'],
+    condicional_simple: ['jugaría','jugarías','jugaría','jugaríamos','jugaríais','jugarían'],
+    subjuntivo_presente: ['juegue','juegues','juegue','juguemos','juguéis','jueguen'],
+    subjuntivo_imperfecto: ['jugara','jugaras','jugara','jugáramos','jugarais','jugaran'],
+    imperativo_afirmativo: ['juega','juegue','juguemos','jugad','jueguen'],
+    futuro_subjuntivo: ['jugare','jugares','jugare','jugáremos','jugareis','jugaren']
+  },
+  'comenzar': {
+    group: 'Неправильный (e→ie, z→c)',
+    pp: 'comenzado', prp: 'comenzando',
+    pp_ru: 'начатый', prp_ru: 'начиная',
+    presente: ['comienzo','comienzas','comienza','comenzamos','comenzáis','comienzan'],
+    preterito_indefinido: ['comencé','comenzaste','comenzó','comenzamos','comenzasteis','comenzaron'],
+    preterito_imperfecto: ['comenzaba','comenzabas','comenzaba','comenzábamos','comenzabais','comenzaban'],
+    futuro_simple: ['comenzaré','comenzarás','comenzará','comenzaremos','comenzaréis','comenzarán'],
+    condicional_simple: ['comenzaría','comenzarías','comenzaría','comenzaríamos','comenzaríais','comenzarían'],
+    subjuntivo_presente: ['comience','comiences','comience','comencemos','comencéis','comiencen'],
+    subjuntivo_imperfecto: ['comenzara','comenzaras','comenzara','comenzáramos','comenzarais','comenzaran'],
+    imperativo_afirmativo: ['comienza','comience','comencemos','comenzad','comiencen'],
+    futuro_subjuntivo: ['comenzare','comenzares','comenzare','comenzáremos','comenzareis','comenzaren']
+  },
+
+  // === FULLY IRREGULAR ===
+  'andar': {
+    group: 'Неправильный',
+    pp: 'andado', prp: 'andando',
+    pp_ru: 'ходивший', prp_ru: 'ходя/гуляя',
+    preterito_indefinido: ['anduve','anduviste','anduvo','anduvimos','anduvisteis','anduvieron'],
+    subjuntivo_imperfecto: ['anduviera','anduvieras','anduviera','anduviéramos','anduvierais','anduvieran'],
+    futuro_subjuntivo: ['anduviere','anduvieres','anduviere','anduviéremos','anduviereis','anduvieren']
+  },
+  'caber': {
+    group: 'Неправильный',
+    pp: 'cabido', prp: 'cabiendo',
+    pp_ru: 'вместившийся', prp_ru: 'вмещаясь',
+    presente: ['quepo','cabes','cabe','cabemos','cabéis','caben'],
+    preterito_indefinido: ['cupe','cupiste','cupo','cupimos','cupisteis','cupieron'],
+    futuro_simple: ['cabré','cabrás','cabrá','cabremos','cabréis','cabrán'],
+    condicional_simple: ['cabría','cabrías','cabría','cabríamos','cabríais','cabrían'],
+    subjuntivo_presente: ['quepa','quepas','quepa','quepamos','quepáis','quepan'],
+    subjuntivo_imperfecto: ['cupiera','cupieras','cupiera','cupiéramos','cupierais','cupieran'],
+    imperativo_afirmativo: ['cabe','quepa','quepamos','cabed','quepan'],
+    futuro_subjuntivo: ['cupiere','cupieres','cupiere','cupiéremos','cupiereis','cupieren']
+  },
+  'valer': {
+    group: 'Неправильный',
+    pp: 'valido', prp: 'valiendo',
+    pp_ru: 'стоивший', prp_ru: 'стоя (по цене)',
+    presente: ['valgo','vales','vale','valemos','valéis','valen'],
+    futuro_simple: ['valdré','valdrás','valdrá','valdremos','valdréis','valdrán'],
+    condicional_simple: ['valdría','valdrías','valdría','valdríamos','valdríais','valdrían'],
+    subjuntivo_presente: ['valga','valgas','valga','valgamos','valgáis','valgan'],
+    imperativo_afirmativo: ['vale','valga','valgamos','valed','valgan']
+  },
+  'satisfacer': {
+    group: 'Неправильный (как hacer)',
+    pp: 'satisfecho', prp: 'satisfaciendo',
+    pp_ru: 'удовлетворённый', prp_ru: 'удовлетворяя',
+    presente: ['satisfago','satisfaces','satisface','satisfacemos','satisfacéis','satisfacen'],
+    preterito_indefinido: ['satisfice','satisficiste','satisfizo','satisficimos','satisficisteis','satisficieron'],
+    futuro_simple: ['satisfaré','satisfarás','satisfará','satisfaremos','satisfaréis','satisfarán'],
+    condicional_simple: ['satisfaría','satisfarías','satisfaría','satisfaríamos','satisfaríais','satisfarían'],
+    subjuntivo_presente: ['satisfaga','satisfagas','satisfaga','satisfagamos','satisfagáis','satisfagan'],
+    subjuntivo_imperfecto: ['satisficiera','satisficieras','satisficiera','satisficiéramos','satisficierais','satisficieran'],
+    imperativo_afirmativo: ['satisfaz','satisfaga','satisfagamos','satisfaced','satisfagan'],
+    futuro_subjuntivo: ['satisficiere','satisficieres','satisficiere','satisficiéremos','satisficiereis','satisficieren']
+  },
+
+  // === E→IE (1-я группа -ar) ===
+  'cerrar': {
+    group: 'Неправильный (e→ie)',
+    pp: 'cerrado', prp: 'cerrando',
+    pp_ru: 'закрытый', prp_ru: 'закрывая',
+    presente: ['cierro','cierras','cierra','cerramos','cerráis','cierran'],
+    subjuntivo_presente: ['cierre','cierres','cierre','cerremos','cerréis','cierren'],
+    imperativo_afirmativo: ['cierra','cierre','cerremos','cerrad','cierren']
+  },
+  'empezar': {
+    group: 'Неправильный (e→ie, z→c)',
+    pp: 'empezado', prp: 'empezando',
+    pp_ru: 'начатый', prp_ru: 'начиная',
+    presente: ['empiezo','empiezas','empieza','empezamos','empezáis','empiezan'],
+    preterito_indefinido: ['empecé','empezaste','empezó','empezamos','empezasteis','empezaron'],
+    subjuntivo_presente: ['empiece','empieces','empiece','empecemos','empecéis','empiecen'],
+    imperativo_afirmativo: ['empieza','empiece','empecemos','empezad','empiecen']
+  },
+  'despertar': {
+    group: 'Неправильный (e→ie)',
+    pp: 'despertado', prp: 'despertando',
+    pp_ru: 'разбуженный', prp_ru: 'просыпаясь',
+    presente: ['despierto','despiertas','despierta','despertamos','despertáis','despiertan'],
+    subjuntivo_presente: ['despierte','despiertes','despierte','despertemos','despertéis','despierten'],
+    imperativo_afirmativo: ['despierta','despierte','despertemos','despertad','despierten']
+  },
+  'sentar': {
+    group: 'Неправильный (e→ie)',
+    pp: 'sentado', prp: 'sentando',
+    pp_ru: 'усаженный', prp_ru: 'усаживая',
+    presente: ['siento','sientas','sienta','sentamos','sentáis','sientan'],
+    subjuntivo_presente: ['siente','sientes','siente','sentemos','sentéis','sienten'],
+    imperativo_afirmativo: ['sienta','siente','sentemos','sentad','sienten']
+  },
+  'negar': {
+    group: 'Неправильный (e→ie, g→gu)',
+    pp: 'negado', prp: 'negando',
+    pp_ru: 'отрицаемый', prp_ru: 'отрицая',
+    presente: ['niego','niegas','niega','negamos','negáis','niegan'],
+    preterito_indefinido: ['negué','negaste','negó','negamos','negasteis','negaron'],
+    subjuntivo_presente: ['niegue','niegues','niegue','neguemos','neguéis','nieguen'],
+    imperativo_afirmativo: ['niega','niegue','neguemos','negad','nieguen']
+  },
+  'confesar': {
+    group: 'Неправильный (e→ie)',
+    pp: 'confesado', prp: 'confesando',
+    pp_ru: 'признанный', prp_ru: 'признавая',
+    presente: ['confieso','confiesas','confiesa','confesamos','confesáis','confiesan'],
+    subjuntivo_presente: ['confiese','confieses','confiese','confesemos','confeséis','confiesen'],
+    imperativo_afirmativo: ['confiesa','confiese','confesemos','confesad','confiesen']
+  },
+  'recomendar': {
+    group: 'Неправильный (e→ie)',
+    pp: 'recomendado', prp: 'recomendando',
+    pp_ru: 'рекомендованный', prp_ru: 'рекомендуя',
+    presente: ['recomiendo','recomiendas','recomienda','recomendamos','recomendáis','recomiendan'],
+    subjuntivo_presente: ['recomiende','recomiendes','recomiende','recomendemos','recomendéis','recomienden'],
+    imperativo_afirmativo: ['recomienda','recomiende','recomendemos','recomendad','recomienden']
+  },
+  'gobernar': {
+    group: 'Неправильный (e→ie)',
+    pp: 'gobernado', prp: 'gobernando',
+    pp_ru: 'управляемый', prp_ru: 'управляя',
+    presente: ['gobierno','gobiernas','gobierna','gobernamos','gobernáis','gobiernan'],
+    subjuntivo_presente: ['gobierne','gobiernes','gobierne','gobernemos','gobernéis','gobiernen'],
+    imperativo_afirmativo: ['gobierna','gobierne','gobernemos','gobernad','gobiernen']
+  },
+  'calentar': {
+    group: 'Неправильный (e→ie)',
+    pp: 'calentado', prp: 'calentando',
+    pp_ru: 'нагретый', prp_ru: 'нагревая',
+    presente: ['caliento','calientas','calienta','calentamos','calentáis','calientan'],
+    subjuntivo_presente: ['caliente','calientes','caliente','calentemos','calentéis','calienten'],
+    imperativo_afirmativo: ['calienta','caliente','calentemos','calentad','calienten']
+  },
+  'atravesar': {
+    group: 'Неправильный (e→ie)',
+    pp: 'atravesado', prp: 'atravesando',
+    pp_ru: 'пересечённый', prp_ru: 'пересекая',
+    presente: ['atravieso','atraviesas','atraviesa','atravesamos','atravesáis','atraviesan'],
+    subjuntivo_presente: ['atraviese','atravieses','atraviese','atravesemos','atraveséis','atraviesen'],
+    imperativo_afirmativo: ['atraviesa','atraviese','atravesemos','atravesad','atraviesen']
+  },
+  'temblar': {
+    group: 'Неправильный (e→ie)',
+    pp: 'temblado', prp: 'temblando',
+    pp_ru: 'дрожавший', prp_ru: 'дрожа',
+    presente: ['tiemblo','tiemblas','tiembla','temblamos','tembláis','tiemblan'],
+    subjuntivo_presente: ['tiemble','tiembles','tiemble','temblemos','tembléis','tiemblen'],
+    imperativo_afirmativo: ['tiembla','tiemble','temblemos','temblad','tiemblen']
+  },
+  'tropezar': {
+    group: 'Неправильный (e→ie, z→c)',
+    pp: 'tropezado', prp: 'tropezando',
+    pp_ru: 'споткнувшийся', prp_ru: 'спотыкаясь',
+    presente: ['tropiezo','tropiezas','tropieza','tropezamos','tropezáis','tropiezan'],
+    preterito_indefinido: ['tropecé','tropezaste','tropezó','tropezamos','tropezasteis','tropezaron'],
+    subjuntivo_presente: ['tropiece','tropieces','tropiece','tropecemos','tropecéis','tropiecen'],
+    imperativo_afirmativo: ['tropieza','tropiece','tropecemos','tropezad','tropiecen']
+  },
+
+  // === E→IE (2-я группа -er) ===
+  'perder': {
+    group: 'Неправильный (e→ie)',
+    pp: 'perdido', prp: 'perdiendo',
+    pp_ru: 'потерянный', prp_ru: 'теряя',
+    presente: ['pierdo','pierdes','pierde','perdemos','perdéis','pierden'],
+    subjuntivo_presente: ['pierda','pierdas','pierda','perdamos','perdáis','pierdan'],
+    imperativo_afirmativo: ['pierde','pierda','perdamos','perded','pierdan']
+  },
+  'entender': {
+    group: 'Неправильный (e→ie)',
+    pp: 'entendido', prp: 'entendiendo',
+    pp_ru: 'понятый', prp_ru: 'понимая',
+    presente: ['entiendo','entiendes','entiende','entendemos','entendéis','entienden'],
+    subjuntivo_presente: ['entienda','entiendas','entienda','entendamos','entendáis','entiendan'],
+    imperativo_afirmativo: ['entiende','entienda','entendamos','entended','entiendan']
+  },
+  'encender': {
+    group: 'Неправильный (e→ie)',
+    pp: 'encendido', prp: 'encendiendo',
+    pp_ru: 'зажжённый', prp_ru: 'зажигая',
+    presente: ['enciendo','enciendes','enciende','encendemos','encendéis','encienden'],
+    subjuntivo_presente: ['encienda','enciendas','encienda','encendamos','encendáis','enciendan'],
+    imperativo_afirmativo: ['enciende','encienda','encendamos','encended','enciendan']
+  },
+  'defender': {
+    group: 'Неправильный (e→ie)',
+    pp: 'defendido', prp: 'defendiendo',
+    pp_ru: 'защищённый', prp_ru: 'защищая',
+    presente: ['defiendo','defiendes','defiende','defendemos','defendéis','defienden'],
+    subjuntivo_presente: ['defienda','defiendas','defienda','defendamos','defendáis','defiendan'],
+    imperativo_afirmativo: ['defiende','defienda','defendamos','defended','defiendan']
+  },
+  'tender': {
+    group: 'Неправильный (e→ie)',
+    pp: 'tendido', prp: 'tendiendo',
+    pp_ru: 'натянутый', prp_ru: 'натягивая',
+    presente: ['tiendo','tiendes','tiende','tendemos','tendéis','tienden'],
+    subjuntivo_presente: ['tienda','tiendas','tienda','tendamos','tendáis','tiendan'],
+    imperativo_afirmativo: ['tiende','tienda','tendamos','tended','tiendan']
+  },
+
+  // === E→IE (3-я группа -ir) ===
+  'preferir': {
+    group: 'Неправильный (e→ie, e→i)',
+    pp: 'preferido', prp: 'prefiriendo',
+    pp_ru: 'предпочтённый', prp_ru: 'предпочитая',
+    presente: ['prefiero','prefieres','prefiere','preferimos','preferís','prefieren'],
+    preterito_indefinido: ['preferí','preferiste','prefirió','preferimos','preferisteis','prefirieron'],
+    subjuntivo_presente: ['prefiera','prefieras','prefiera','prefiramos','prefiráis','prefieran'],
+    subjuntivo_imperfecto: ['prefiriera','prefirieras','prefiriera','prefiriéramos','prefirierais','prefirieran'],
+    imperativo_afirmativo: ['prefiere','prefiera','prefiramos','preferid','prefieran'],
+    futuro_subjuntivo: ['prefiriere','prefirieres','prefiriere','prefiriéremos','prefiriereis','prefirieren']
+  },
+  'mentir': {
+    group: 'Неправильный (e→ie, e→i)',
+    pp: 'mentido', prp: 'mintiendo',
+    pp_ru: 'солгавший', prp_ru: 'обманывая',
+    presente: ['miento','mientes','miente','mentimos','mentís','mienten'],
+    preterito_indefinido: ['mentí','mentiste','mintió','mentimos','mentisteis','mintieron'],
+    subjuntivo_presente: ['mienta','mientas','mienta','mintamos','mintáis','mientan'],
+    subjuntivo_imperfecto: ['mintiera','mintieras','mintiera','mintiéramos','mintierais','mintieran'],
+    imperativo_afirmativo: ['miente','mienta','mintamos','mentid','mientan'],
+    futuro_subjuntivo: ['mintiere','mintieres','mintiere','mintiéremos','mintiereis','mintieren']
+  },
+  'sugerir': {
+    group: 'Неправильный (e→ie, e→i)',
+    pp: 'sugerido', prp: 'sugiriendo',
+    pp_ru: 'предложенный', prp_ru: 'предлагая',
+    presente: ['sugiero','sugieres','sugiere','sugerimos','sugerís','sugieren'],
+    preterito_indefinido: ['sugerí','sugeriste','sugirió','sugerimos','sugeristeis','sugirieron'],
+    subjuntivo_presente: ['sugiera','sugieras','sugiera','sugiramos','sugiráis','sugieran'],
+    subjuntivo_imperfecto: ['sugiriera','sugirieras','sugiriera','sugiriéramos','sugirierais','sugirieran'],
+    imperativo_afirmativo: ['sugiere','sugiera','sugiramos','sugerid','sugieran'],
+    futuro_subjuntivo: ['sugiriere','sugirieres','sugiriere','sugiriéremos','sugiriereis','sugirieren']
+  },
+  'divertir': {
+    group: 'Неправильный (e→ie, e→i)',
+    pp: 'divertido', prp: 'divirtiendo',
+    pp_ru: 'развлечённый', prp_ru: 'развлекая',
+    presente: ['divierto','diviertes','divierte','divertimos','divertís','divierten'],
+    preterito_indefinido: ['divertí','divertiste','divirtió','divertimos','divertisteis','divirtieron'],
+    subjuntivo_presente: ['divierta','diviertas','divierta','divirtamos','divirtáis','diviertan'],
+    subjuntivo_imperfecto: ['divirtiera','divirtieras','divirtiera','divirtiéramos','divirtierais','divirtieran'],
+    imperativo_afirmativo: ['divierte','divierta','divirtamos','divertid','diviertan'],
+    futuro_subjuntivo: ['divirtiere','divirtieres','divirtiere','divirtiéremos','divirtiereis','divirtieren']
+  },
+  'convertir': {
+    group: 'Неправильный (e→ie, e→i)',
+    pp: 'convertido', prp: 'convirtiendo',
+    pp_ru: 'превращённый', prp_ru: 'превращая',
+    presente: ['convierto','conviertes','convierte','convertimos','convertís','convierten'],
+    preterito_indefinido: ['convertí','convertiste','convirtió','convertimos','convertisteis','convirtieron'],
+    subjuntivo_presente: ['convierta','conviertas','convierta','convirtamos','convirtáis','conviertan'],
+    subjuntivo_imperfecto: ['convirtiera','convirtieras','convirtiera','convirtiéramos','convirtierais','convirtieran'],
+    imperativo_afirmativo: ['convierte','convierta','convirtamos','convertid','conviertan'],
+    futuro_subjuntivo: ['convirtiere','convirtieres','convirtiere','convirtiéremos','convirtiereis','convirtieren']
+  },
+  'hervir': {
+    group: 'Неправильный (e→ie, e→i)',
+    pp: 'hervido', prp: 'hirviendo',
+    pp_ru: 'кипячёный', prp_ru: 'кипя',
+    presente: ['hiervo','hierves','hierve','hervimos','hervís','hierven'],
+    preterito_indefinido: ['herví','herviste','hirvió','hervimos','hervisteis','hirvieron'],
+    subjuntivo_presente: ['hierva','hiervas','hierva','hirvamos','hirváis','hiervan'],
+    subjuntivo_imperfecto: ['hirviera','hirvieras','hirviera','hirviéramos','hirvierais','hirvieran'],
+    imperativo_afirmativo: ['hierve','hierva','hirvamos','hervid','hiervan'],
+    futuro_subjuntivo: ['hirviere','hirvieres','hirviere','hirviéremos','hirviereis','hirvieren']
+  },
+  'advertir': {
+    group: 'Неправильный (e→ie, e→i)',
+    pp: 'advertido', prp: 'advirtiendo',
+    pp_ru: 'предупреждённый', prp_ru: 'предупреждая',
+    presente: ['advierto','adviertes','advierte','advertimos','advertís','advierten'],
+    preterito_indefinido: ['advertí','advertiste','advirtió','advertimos','advertisteis','advirtieron'],
+    subjuntivo_presente: ['advierta','adviertas','advierta','advirtamos','advirtáis','adviertan'],
+    subjuntivo_imperfecto: ['advirtiera','advirtieras','advirtiera','advirtiéramos','advirtierais','advirtieran'],
+    imperativo_afirmativo: ['advierte','advierta','advirtamos','advertid','adviertan'],
+    futuro_subjuntivo: ['advirtiere','advirtieres','advirtiere','advirtiéremos','advirtiereis','advirtieren']
+  },
+
+  // === O→UE (1-я группа -ar) ===
+  'contar': {
+    group: 'Неправильный (o→ue)',
+    pp: 'contado', prp: 'contando',
+    pp_ru: 'рассказанный/считанный', prp_ru: 'считая/рассказывая',
+    presente: ['cuento','cuentas','cuenta','contamos','contáis','cuentan'],
+    subjuntivo_presente: ['cuente','cuentes','cuente','contemos','contéis','cuenten'],
+    imperativo_afirmativo: ['cuenta','cuente','contemos','contad','cuenten']
+  },
+  'mostrar': {
+    group: 'Неправильный (o→ue)',
+    pp: 'mostrado', prp: 'mostrando',
+    pp_ru: 'показанный', prp_ru: 'показывая',
+    presente: ['muestro','muestras','muestra','mostramos','mostráis','muestran'],
+    subjuntivo_presente: ['muestre','muestres','muestre','mostremos','mostréis','muestren'],
+    imperativo_afirmativo: ['muestra','muestre','mostremos','mostrad','muestren']
+  },
+  'recordar': {
+    group: 'Неправильный (o→ue)',
+    pp: 'recordado', prp: 'recordando',
+    pp_ru: 'вспоминаемый', prp_ru: 'вспоминая',
+    presente: ['recuerdo','recuerdas','recuerda','recordamos','recordáis','recuerdan'],
+    subjuntivo_presente: ['recuerde','recuerdes','recuerde','recordemos','recordéis','recuerden'],
+    imperativo_afirmativo: ['recuerda','recuerde','recordemos','recordad','recuerden']
+  },
+  'costar': {
+    group: 'Неправильный (o→ue)',
+    pp: 'costado', prp: 'costando',
+    pp_ru: 'стоивший', prp_ru: 'стоя (по цене)',
+    presente: ['cuesto','cuestas','cuesta','costamos','costáis','cuestan'],
+    subjuntivo_presente: ['cueste','cuestes','cueste','costemos','costéis','cuesten'],
+    imperativo_afirmativo: ['cuesta','cueste','costemos','costad','cuesten']
+  },
+  'probar': {
+    group: 'Неправильный (o→ue)',
+    pp: 'probado', prp: 'probando',
+    pp_ru: 'испробованный', prp_ru: 'пробуя',
+    presente: ['pruebo','pruebas','prueba','probamos','probáis','prueban'],
+    subjuntivo_presente: ['pruebe','pruebes','pruebe','probemos','probéis','prueben'],
+    imperativo_afirmativo: ['prueba','pruebe','probemos','probad','prueben']
+  },
+  'sonar': {
+    group: 'Неправильный (o→ue)',
+    pp: 'sonado', prp: 'sonando',
+    pp_ru: 'прозвучавший', prp_ru: 'звуча',
+    presente: ['sueno','suenas','suena','sonamos','sonáis','suenan'],
+    subjuntivo_presente: ['suene','suenes','suene','sonemos','sonéis','suenen'],
+    imperativo_afirmativo: ['suena','suene','sonemos','sonad','suenen']
+  },
+  'soñar': {
+    group: 'Неправильный (o→ue)',
+    pp: 'soñado', prp: 'soñando',
+    pp_ru: 'приснившийся', prp_ru: 'мечтая/снясь',
+    presente: ['sueño','sueñas','sueña','soñamos','soñáis','sueñan'],
+    subjuntivo_presente: ['sueñe','sueñes','sueñe','soñemos','soñéis','sueñen'],
+    imperativo_afirmativo: ['sueña','sueñe','soñemos','soñad','sueñen']
+  },
+  'volar': {
+    group: 'Неправильный (o→ue)',
+    pp: 'volado', prp: 'volando',
+    pp_ru: 'летавший', prp_ru: 'летая',
+    presente: ['vuelo','vuelas','vuela','volamos','voláis','vuelan'],
+    subjuntivo_presente: ['vuele','vueles','vuele','volemos','voléis','vuelen'],
+    imperativo_afirmativo: ['vuela','vuele','volemos','volad','vuelen']
+  },
+  'colgar': {
+    group: 'Неправильный (o→ue, g→gu)',
+    pp: 'colgado', prp: 'colgando',
+    pp_ru: 'повешенный', prp_ru: 'вешая',
+    presente: ['cuelgo','cuelgas','cuelga','colgamos','colgáis','cuelgan'],
+    preterito_indefinido: ['colgué','colgaste','colgó','colgamos','colgasteis','colgaron'],
+    subjuntivo_presente: ['cuelgue','cuelgues','cuelgue','colguemos','colguéis','cuelguen'],
+    imperativo_afirmativo: ['cuelga','cuelgue','colguemos','colgad','cuelguen']
+  },
+  'rogar': {
+    group: 'Неправильный (o→ue, g→gu)',
+    pp: 'rogado', prp: 'rogando',
+    pp_ru: 'упрашиваемый', prp_ru: 'умоляя',
+    presente: ['ruego','ruegas','ruega','rogamos','rogáis','ruegan'],
+    preterito_indefinido: ['rogué','rogaste','rogó','rogamos','rogasteis','rogaron'],
+    subjuntivo_presente: ['ruegue','ruegues','ruegue','roguemos','roguéis','rueguen'],
+    imperativo_afirmativo: ['ruega','ruegue','roguemos','rogad','rueguen']
+  },
+  'aprobar': {
+    group: 'Неправильный (o→ue)',
+    pp: 'aprobado', prp: 'aprobando',
+    pp_ru: 'одобренный', prp_ru: 'одобряя',
+    presente: ['apruebo','apruebas','aprueba','aprobamos','aprobáis','aprueban'],
+    subjuntivo_presente: ['apruebe','apruebes','apruebe','aprobemos','aprobéis','aprueben'],
+    imperativo_afirmativo: ['aprueba','apruebe','aprobemos','aprobad','aprueben']
+  },
+  'almorzar': {
+    group: 'Неправильный (o→ue, z→c)',
+    pp: 'almorzado', prp: 'almorzando',
+    pp_ru: 'пообедавший', prp_ru: 'обедая',
+    presente: ['almuerzo','almuerzas','almuerza','almorzamos','almorzáis','almuerzan'],
+    preterito_indefinido: ['almorcé','almorzaste','almorzó','almorzamos','almorzasteis','almorzaron'],
+    subjuntivo_presente: ['almuerce','almuerces','almuerce','almorcemos','almorcéis','almuercen'],
+    imperativo_afirmativo: ['almuerza','almuerce','almorcemos','almorzad','almuercen']
+  },
+
+  // === O→UE (2-я группа -er) ===
+  'mover': {
+    group: 'Неправильный (o→ue)',
+    pp: 'movido', prp: 'moviendo',
+    pp_ru: 'двигаемый', prp_ru: 'двигая',
+    presente: ['muevo','mueves','mueve','movemos','movéis','mueven'],
+    subjuntivo_presente: ['mueva','muevas','mueva','movamos','mováis','muevan'],
+    imperativo_afirmativo: ['mueve','mueva','movamos','moved','muevan']
+  },
+  'resolver': {
+    group: 'Неправильный (o→ue, причастие)',
+    pp: 'resuelto', prp: 'resolviendo',
+    pp_ru: 'решённый', prp_ru: 'решая',
+    presente: ['resuelvo','resuelves','resuelve','resolvemos','resolvéis','resuelven'],
+    subjuntivo_presente: ['resuelva','resuelvas','resuelva','resolvamos','resolváis','resuelvan'],
+    imperativo_afirmativo: ['resuelve','resuelva','resolvamos','resolved','resuelvan']
+  },
+  'devolver': {
+    group: 'Неправильный (o→ue, причастие)',
+    pp: 'devuelto', prp: 'devolviendo',
+    pp_ru: 'возвращённый', prp_ru: 'возвращая',
+    presente: ['devuelvo','devuelves','devuelve','devolvemos','devolvéis','devuelven'],
+    subjuntivo_presente: ['devuelva','devuelvas','devuelva','devolvamos','devolváis','devuelvan'],
+    imperativo_afirmativo: ['devuelve','devuelva','devolvamos','devolved','devuelvan']
+  },
+  'envolver': {
+    group: 'Неправильный (o→ue, причастие)',
+    pp: 'envuelto', prp: 'envolviendo',
+    pp_ru: 'завёрнутый', prp_ru: 'заворачивая',
+    presente: ['envuelvo','envuelves','envuelve','envolvemos','envolvéis','envuelven'],
+    subjuntivo_presente: ['envuelva','envuelvas','envuelva','envolvamos','envolváis','envuelvan'],
+    imperativo_afirmativo: ['envuelve','envuelva','envolvamos','envolved','envuelvan']
+  },
+  'llover': {
+    group: 'Неправильный (o→ue, безличный)',
+    pp: 'llovido', prp: 'lloviendo',
+    pp_ru: 'дождивший', prp_ru: 'идя (о дожде)',
+    presente: ['—','—','llueve','—','—','—'],
+    subjuntivo_presente: ['—','—','llueva','—','—','—'],
+    imperativo_afirmativo: null
+  },
+
+  // === E→I (3-я группа -ir) ===
+  'repetir': {
+    group: 'Неправильный (e→i)',
+    pp: 'repetido', prp: 'repitiendo',
+    pp_ru: 'повторённый', prp_ru: 'повторяя',
+    presente: ['repito','repites','repite','repetimos','repetís','repiten'],
+    preterito_indefinido: ['repetí','repetiste','repitió','repetimos','repetisteis','repitieron'],
+    subjuntivo_presente: ['repita','repitas','repita','repitamos','repitáis','repitan'],
+    subjuntivo_imperfecto: ['repitiera','repitieras','repitiera','repitiéramos','repitierais','repitieran'],
+    imperativo_afirmativo: ['repite','repita','repitamos','repetid','repitan'],
+    futuro_subjuntivo: ['repitiere','repitieres','repitiere','repitiéremos','repitiereis','repitieren']
+  },
+  'servir': {
+    group: 'Неправильный (e→i)',
+    pp: 'servido', prp: 'sirviendo',
+    pp_ru: 'обслуженный', prp_ru: 'служа/обслуживая',
+    presente: ['sirvo','sirves','sirve','servimos','servís','sirven'],
+    preterito_indefinido: ['serví','serviste','sirvió','servimos','servisteis','sirvieron'],
+    subjuntivo_presente: ['sirva','sirvas','sirva','sirvamos','sirváis','sirvan'],
+    subjuntivo_imperfecto: ['sirviera','sirvieras','sirviera','sirviéramos','sirvierais','sirvieran'],
+    imperativo_afirmativo: ['sirve','sirva','sirvamos','servid','sirvan'],
+    futuro_subjuntivo: ['sirviere','sirvieres','sirviere','sirviéremos','sirviereis','sirvieren']
+  },
+  'vestir': {
+    group: 'Неправильный (e→i)',
+    pp: 'vestido', prp: 'vistiendo',
+    pp_ru: 'одетый', prp_ru: 'одевая',
+    presente: ['visto','vistes','viste','vestimos','vestís','visten'],
+    preterito_indefinido: ['vestí','vestiste','vistió','vestimos','vestisteis','vistieron'],
+    subjuntivo_presente: ['vista','vistas','vista','vistamos','vistáis','vistan'],
+    subjuntivo_imperfecto: ['vistiera','vistieras','vistiera','vistiéramos','vistierais','vistieran'],
+    imperativo_afirmativo: ['viste','vista','vistamos','vestid','vistan'],
+    futuro_subjuntivo: ['vistiere','vistieres','vistiere','vistiéremos','vistiereis','vistieren']
+  },
+  'medir': {
+    group: 'Неправильный (e→i)',
+    pp: 'medido', prp: 'midiendo',
+    pp_ru: 'измеренный', prp_ru: 'измеряя',
+    presente: ['mido','mides','mide','medimos','medís','miden'],
+    preterito_indefinido: ['medí','mediste','midió','medimos','medisteis','midieron'],
+    subjuntivo_presente: ['mida','midas','mida','midamos','midáis','midan'],
+    subjuntivo_imperfecto: ['midiera','midieras','midiera','midiéramos','midierais','midieran'],
+    imperativo_afirmativo: ['mide','mida','midamos','medid','midan'],
+    futuro_subjuntivo: ['midiere','midieres','midiere','midiéremos','midiereis','midieren']
+  },
+  'elegir': {
+    group: 'Неправильный (e→i, g→j)',
+    pp: 'elegido', prp: 'eligiendo',
+    pp_ru: 'выбранный', prp_ru: 'выбирая',
+    presente: ['elijo','eliges','elige','elegimos','elegís','eligen'],
+    preterito_indefinido: ['elegí','elegiste','eligió','elegimos','elegisteis','eligieron'],
+    subjuntivo_presente: ['elija','elijas','elija','elijamos','elijáis','elijan'],
+    subjuntivo_imperfecto: ['eligiera','eligieras','eligiera','eligiéramos','eligierais','eligieran'],
+    imperativo_afirmativo: ['elige','elija','elijamos','elegid','elijan'],
+    futuro_subjuntivo: ['eligiere','eligieres','eligiere','eligiéremos','eligiereis','eligieren']
+  },
+  'corregir': {
+    group: 'Неправильный (e→i, g→j)',
+    pp: 'corregido', prp: 'corrigiendo',
+    pp_ru: 'исправленный', prp_ru: 'исправляя',
+    presente: ['corrijo','corriges','corrige','corregimos','corregís','corrigen'],
+    preterito_indefinido: ['corregí','corregiste','corrigió','corregimos','corregisteis','corrigieron'],
+    subjuntivo_presente: ['corrija','corrijas','corrija','corrijamos','corrijáis','corrijan'],
+    subjuntivo_imperfecto: ['corrigiera','corrigieras','corrigiera','corrigiéramos','corrigierais','corrigieran'],
+    imperativo_afirmativo: ['corrige','corrija','corrijamos','corregid','corrijan'],
+    futuro_subjuntivo: ['corrigiere','corrigieres','corrigiere','corrigiéremos','corrigiereis','corrigieren']
+  },
+  'despedir': {
+    group: 'Неправильный (e→i)',
+    pp: 'despedido', prp: 'despidiendo',
+    pp_ru: 'уволенный/провожённый', prp_ru: 'провожая/увольняя',
+    presente: ['despido','despides','despide','despedimos','despedís','despiden'],
+    preterito_indefinido: ['despedí','despediste','despidió','despedimos','despedisteis','despidieron'],
+    subjuntivo_presente: ['despida','despidas','despida','despidamos','despidáis','despidan'],
+    subjuntivo_imperfecto: ['despidiera','despidieras','despidiera','despidiéramos','despidierais','despidieran'],
+    imperativo_afirmativo: ['despide','despida','despidamos','despedid','despidan'],
+    futuro_subjuntivo: ['despidiere','despidieres','despidiere','despidiéremos','despidiereis','despidieren']
+  },
+  'impedir': {
+    group: 'Неправильный (e→i)',
+    pp: 'impedido', prp: 'impidiendo',
+    pp_ru: 'воспрепятствованный', prp_ru: 'препятствуя',
+    presente: ['impido','impides','impide','impedimos','impedís','impiden'],
+    preterito_indefinido: ['impedí','impediste','impidió','impedimos','impedisteis','impidieron'],
+    subjuntivo_presente: ['impida','impidas','impida','impidamos','impidáis','impidan'],
+    subjuntivo_imperfecto: ['impidiera','impidieras','impidiera','impidiéramos','impidierais','impidieran'],
+    imperativo_afirmativo: ['impide','impida','impidamos','impedid','impidan'],
+    futuro_subjuntivo: ['impidiere','impidieres','impidiere','impidiéremos','impidiereis','impidieren']
+  },
+  'conseguir': {
+    group: 'Неправильный (e→i, gu→g)',
+    pp: 'conseguido', prp: 'consiguiendo',
+    pp_ru: 'достигнутый', prp_ru: 'добиваясь',
+    presente: ['consigo','consigues','consigue','conseguimos','conseguís','consiguen'],
+    preterito_indefinido: ['conseguí','conseguiste','consiguió','conseguimos','conseguisteis','consiguieron'],
+    subjuntivo_presente: ['consiga','consigas','consiga','consigamos','consigáis','consigan'],
+    subjuntivo_imperfecto: ['consiguiera','consiguieras','consiguiera','consiguiéramos','consiguierais','consiguieran'],
+    imperativo_afirmativo: ['consigue','consiga','consigamos','conseguid','consigan'],
+    futuro_subjuntivo: ['consiguiere','consiguieres','consiguiere','consiguiéremos','consiguiereis','consiguieren']
+  },
+  'perseguir': {
+    group: 'Неправильный (e→i, gu→g)',
+    pp: 'perseguido', prp: 'persiguiendo',
+    pp_ru: 'преследуемый', prp_ru: 'преследуя',
+    presente: ['persigo','persigues','persigue','perseguimos','perseguís','persiguen'],
+    preterito_indefinido: ['perseguí','perseguiste','persiguió','perseguimos','perseguisteis','persiguieron'],
+    subjuntivo_presente: ['persiga','persigas','persiga','persigamos','persigáis','persigan'],
+    subjuntivo_imperfecto: ['persiguiera','persiguieras','persiguiera','persiguiéramos','persiguierais','persiguieran'],
+    imperativo_afirmativo: ['persigue','persiga','persigamos','perseguid','persigan'],
+    futuro_subjuntivo: ['persiguiere','persiguieres','persiguiere','persiguiéremos','persiguiereis','persiguieren']
+  },
+  'reír': {
+    group: 'Неправильный (e→i)',
+    pp: 'reído', prp: 'riendo',
+    pp_ru: 'смеявшийся', prp_ru: 'смеясь',
+    presente: ['río','ríes','ríe','reímos','reís','ríen'],
+    preterito_indefinido: ['reí','reíste','rio','reímos','reísteis','rieron'],
+    subjuntivo_presente: ['ría','rías','ría','riamos','riáis','rían'],
+    subjuntivo_imperfecto: ['riera','rieras','riera','riéramos','rierais','rieran'],
+    imperativo_afirmativo: ['ríe','ría','riamos','reíd','rían'],
+    futuro_subjuntivo: ['riere','rieres','riere','riéremos','riereis','rieren']
+  },
+  'sonreír': {
+    group: 'Неправильный (e→i, как reír)',
+    pp: 'sonreído', prp: 'sonriendo',
+    pp_ru: 'улыбнувшийся', prp_ru: 'улыбаясь',
+    presente: ['sonrío','sonríes','sonríe','sonreímos','sonreís','sonríen'],
+    preterito_indefinido: ['sonreí','sonreíste','sonrio','sonreímos','sonreísteis','sonrieron'],
+    subjuntivo_presente: ['sonría','sonrías','sonría','sonriamos','sonriáis','sonrían'],
+    subjuntivo_imperfecto: ['sonriera','sonrieras','sonriera','sonriéramos','sonrierais','sonrieran'],
+    imperativo_afirmativo: ['sonríe','sonría','sonriamos','sonreíd','sonrían'],
+    futuro_subjuntivo: ['sonriere','sonrieres','sonriere','sonriéremos','sonriereis','sonrieren']
+  },
+  'freír': {
+    group: 'Неправильный (e→i, причастие)',
+    pp: 'frito', prp: 'friendo',
+    pp_ru: 'жареный', prp_ru: 'жаря',
+    presente: ['frío','fríes','fríe','freímos','freís','fríen'],
+    preterito_indefinido: ['freí','freíste','frio','freímos','freísteis','frieron'],
+    subjuntivo_presente: ['fría','frías','fría','friamos','friáis','frían'],
+    subjuntivo_imperfecto: ['friera','frieras','friera','friéramos','frierais','frieran'],
+    imperativo_afirmativo: ['fríe','fría','friamos','freíd','frían'],
+    futuro_subjuntivo: ['friere','frieres','friere','friéremos','friereis','frieren']
+  },
+  'rendir': {
+    group: 'Неправильный (e→i)',
+    pp: 'rendido', prp: 'rindiendo',
+    pp_ru: 'сдавшийся/утомлённый', prp_ru: 'сдаваясь',
+    presente: ['rindo','rindes','rinde','rendimos','rendís','rinden'],
+    preterito_indefinido: ['rendí','rendiste','rindió','rendimos','rendisteis','rindieron'],
+    subjuntivo_presente: ['rinda','rindas','rinda','rindamos','rindáis','rindan'],
+    subjuntivo_imperfecto: ['rindiera','rindieras','rindiera','rindiéramos','rindierais','rindieran'],
+    imperativo_afirmativo: ['rinde','rinda','rindamos','rendid','rindan'],
+    futuro_subjuntivo: ['rindiere','rindieres','rindiere','rindiéremos','rindiereis','rindieren']
+  },
+  'competir': {
+    group: 'Неправильный (e→i)',
+    pp: 'competido', prp: 'compitiendo',
+    pp_ru: 'соревновавшийся', prp_ru: 'соревнуясь',
+    presente: ['compito','compites','compite','competimos','competís','compiten'],
+    preterito_indefinido: ['competí','competiste','compitió','competimos','competisteis','compitieron'],
+    subjuntivo_presente: ['compita','compitas','compita','compitamos','compitáis','compitan'],
+    subjuntivo_imperfecto: ['compitiera','compitieras','compitiera','compitiéramos','compitierais','compitieran'],
+    imperativo_afirmativo: ['compite','compita','compitamos','competid','compitan'],
+    futuro_subjuntivo: ['compitiere','compitieres','compitiere','compitiéremos','compitiereis','compitieren']
+  },
+
+  // === C→ZC (yo, subjuntivo) ===
+  'parecer': {
+    group: 'Неправильный (c→zc)',
+    pp: 'parecido', prp: 'pareciendo',
+    pp_ru: 'показавшийся', prp_ru: 'казаясь',
+    presente: ['parezco','pareces','parece','parecemos','parecéis','parecen'],
+    subjuntivo_presente: ['parezca','parezcas','parezca','parezcamos','parezcáis','parezcan'],
+    imperativo_afirmativo: ['parece','parezca','parezcamos','pareced','parezcan']
+  },
+  'ofrecer': {
+    group: 'Неправильный (c→zc)',
+    pp: 'ofrecido', prp: 'ofreciendo',
+    pp_ru: 'предложенный', prp_ru: 'предлагая',
+    presente: ['ofrezco','ofreces','ofrece','ofrecemos','ofrecéis','ofrecen'],
+    subjuntivo_presente: ['ofrezca','ofrezcas','ofrezca','ofrezcamos','ofrezcáis','ofrezcan'],
+    imperativo_afirmativo: ['ofrece','ofrezca','ofrezcamos','ofreced','ofrezcan']
+  },
+  'crecer': {
+    group: 'Неправильный (c→zc)',
+    pp: 'crecido', prp: 'creciendo',
+    pp_ru: 'выросший', prp_ru: 'вырастая',
+    presente: ['crezco','creces','crece','crecemos','crecéis','crecen'],
+    subjuntivo_presente: ['crezca','crezcas','crezca','crezcamos','crezcáis','crezcan'],
+    imperativo_afirmativo: ['crece','crezca','crezcamos','creced','crezcan']
+  },
+  'nacer': {
+    group: 'Неправильный (c→zc)',
+    pp: 'nacido', prp: 'naciendo',
+    pp_ru: 'родившийся', prp_ru: 'рождаясь',
+    presente: ['nazco','naces','nace','nacemos','nacéis','nacen'],
+    subjuntivo_presente: ['nazca','nazcas','nazca','nazcamos','nazcáis','nazcan'],
+    imperativo_afirmativo: ['nace','nazca','nazcamos','naced','nazcan']
+  },
+  'pertenecer': {
+    group: 'Неправильный (c→zc)',
+    pp: 'pertenecido', prp: 'perteneciendo',
+    pp_ru: 'принадлежавший', prp_ru: 'принадлежа',
+    presente: ['pertenezco','perteneces','pertenece','pertenecemos','pertenecéis','pertenecen'],
+    subjuntivo_presente: ['pertenezca','pertenezcas','pertenezca','pertenezcamos','pertenezcáis','pertenezcan'],
+    imperativo_afirmativo: ['pertenece','pertenezca','pertenezcamos','perteneced','pertenezcan']
+  },
+  'aparecer': {
+    group: 'Неправильный (c→zc)',
+    pp: 'aparecido', prp: 'apareciendo',
+    pp_ru: 'появившийся', prp_ru: 'появляясь',
+    presente: ['aparezco','apareces','aparece','aparecemos','aparecéis','aparecen'],
+    subjuntivo_presente: ['aparezca','aparezcas','aparezca','aparezcamos','aparezcáis','aparezcan'],
+    imperativo_afirmativo: ['aparece','aparezca','aparezcamos','apareced','aparezcan']
+  },
+  'desaparecer': {
+    group: 'Неправильный (c→zc)',
+    pp: 'desaparecido', prp: 'desapareciendo',
+    pp_ru: 'исчезнувший', prp_ru: 'исчезая',
+    presente: ['desaparezco','desapareces','desaparece','desaparecemos','desaparecéis','desaparecen'],
+    subjuntivo_presente: ['desaparezca','desaparezcas','desaparezca','desaparezcamos','desaparezcáis','desaparezcan'],
+    imperativo_afirmativo: ['desaparece','desaparezca','desaparezcamos','desapareced','desaparezcan']
+  },
+  'establecer': {
+    group: 'Неправильный (c→zc)',
+    pp: 'establecido', prp: 'estableciendo',
+    pp_ru: 'установленный', prp_ru: 'устанавливая',
+    presente: ['establezco','estableces','establece','establecemos','establecéis','establecen'],
+    subjuntivo_presente: ['establezca','establezcas','establezca','establezcamos','establezcáis','establezcan'],
+    imperativo_afirmativo: ['establece','establezca','establezcamos','estableced','establezcan']
+  },
+  'agradecer': {
+    group: 'Неправильный (c→zc)',
+    pp: 'agradecido', prp: 'agradeciendo',
+    pp_ru: 'благодарный', prp_ru: 'благодаря',
+    presente: ['agradezco','agradeces','agradece','agradecemos','agradecéis','agradecen'],
+    subjuntivo_presente: ['agradezca','agradezcas','agradezca','agradezcamos','agradezcáis','agradezcan'],
+    imperativo_afirmativo: ['agradece','agradezca','agradezcamos','agradeced','agradezcan']
+  },
+  'merecer': {
+    group: 'Неправильный (c→zc)',
+    pp: 'merecido', prp: 'mereciendo',
+    pp_ru: 'заслуженный', prp_ru: 'заслуживая',
+    presente: ['merezco','mereces','merece','merecemos','merecéis','merecen'],
+    subjuntivo_presente: ['merezca','merezcas','merezca','merezcamos','merezcáis','merezcan'],
+    imperativo_afirmativo: ['merece','merezca','merezcamos','mereced','merezcan']
+  },
+  'reconocer': {
+    group: 'Неправильный (c→zc)',
+    pp: 'reconocido', prp: 'reconociendo',
+    pp_ru: 'признанный/узнанный', prp_ru: 'узнавая/признавая',
+    presente: ['reconozco','reconoces','reconoce','reconocemos','reconocéis','reconocen'],
+    subjuntivo_presente: ['reconozca','reconozcas','reconozca','reconozcamos','reconozcáis','reconozcan'],
+    imperativo_afirmativo: ['reconoce','reconozca','reconozcamos','reconoced','reconozcan']
+  },
+  'obedecer': {
+    group: 'Неправильный (c→zc)',
+    pp: 'obedecido', prp: 'obedeciendo',
+    pp_ru: 'послушный', prp_ru: 'повинуясь',
+    presente: ['obedezco','obedeces','obedece','obedecemos','obedecéis','obedecen'],
+    subjuntivo_presente: ['obedezca','obedezcas','obedezca','obedezcamos','obedezcáis','obedezcan'],
+    imperativo_afirmativo: ['obedece','obedezca','obedezcamos','obedeced','obedezcan']
+  },
+  'favorecer': {
+    group: 'Неправильный (c→zc)',
+    pp: 'favorecido', prp: 'favoreciendo',
+    pp_ru: 'благоприятствующий', prp_ru: 'благоприятствуя',
+    presente: ['favorezco','favoreces','favorece','favorecemos','favorecéis','favorecen'],
+    subjuntivo_presente: ['favorezca','favorezcas','favorezca','favorezcamos','favorezcáis','favorezcan'],
+    imperativo_afirmativo: ['favorece','favorezca','favorezcamos','favoreced','favorezcan']
+  },
+  'permanecer': {
+    group: 'Неправильный (c→zc)',
+    pp: 'permanecido', prp: 'permaneciendo',
+    pp_ru: 'оставшийся', prp_ru: 'оставаясь',
+    presente: ['permanezco','permaneces','permanece','permanecemos','permanecéis','permanecen'],
+    subjuntivo_presente: ['permanezca','permanezcas','permanezca','permanezcamos','permanezcáis','permanezcan'],
+    imperativo_afirmativo: ['permanece','permanezca','permanezcamos','permaneced','permanezcan']
+  },
+  'enriquecer': {
+    group: 'Неправильный (c→zc)',
+    pp: 'enriquecido', prp: 'enriqueciendo',
+    pp_ru: 'обогащённый', prp_ru: 'обогащая',
+    presente: ['enriquezco','enriqueces','enriquece','enriquecemos','enriquecéis','enriquecen'],
+    subjuntivo_presente: ['enriquezca','enriquezcas','enriquezca','enriquezcamos','enriquezcáis','enriquezcan'],
+    imperativo_afirmativo: ['enriquece','enriquezca','enriquezcamos','enriqueced','enriquezcan']
+  },
+
+  // === -DUCIR (c→zc + preterito irregular) ===
+  'producir': {
+    group: 'Неправильный (c→zc, -je-)',
+    pp: 'producido', prp: 'produciendo',
+    pp_ru: 'произведённый', prp_ru: 'производя',
+    presente: ['produzco','produces','produce','producimos','producís','producen'],
+    preterito_indefinido: ['produje','produjiste','produjo','produjimos','produjisteis','produjeron'],
+    subjuntivo_presente: ['produzca','produzcas','produzca','produzcamos','produzcáis','produzcan'],
+    subjuntivo_imperfecto: ['produjera','produjeras','produjera','produjéramos','produjerais','produjeran'],
+    imperativo_afirmativo: ['produce','produzca','produzcamos','producid','produzcan'],
+    futuro_subjuntivo: ['produjere','produjeres','produjere','produjéremos','produjereis','produjeren']
+  },
+  'traducir': {
+    group: 'Неправильный (c→zc, -je-)',
+    pp: 'traducido', prp: 'traduciendo',
+    pp_ru: 'переведённый', prp_ru: 'переводя',
+    presente: ['traduzco','traduces','traduce','traducimos','traducís','traducen'],
+    preterito_indefinido: ['traduje','tradujiste','tradujo','tradujimos','tradujisteis','tradujeron'],
+    subjuntivo_presente: ['traduzca','traduzcas','traduzca','traduzcamos','traduzcáis','traduzcan'],
+    subjuntivo_imperfecto: ['tradujera','tradujeras','tradujera','tradujéramos','tradujerais','tradujeran'],
+    imperativo_afirmativo: ['traduce','traduzca','traduzcamos','traducid','traduzcan'],
+    futuro_subjuntivo: ['tradujere','tradujeres','tradujere','tradujéremos','tradujereis','tradujeren']
+  },
+  'reducir': {
+    group: 'Неправильный (c→zc, -je-)',
+    pp: 'reducido', prp: 'reduciendo',
+    pp_ru: 'уменьшенный', prp_ru: 'уменьшая',
+    presente: ['reduzco','reduces','reduce','reducimos','reducís','reducen'],
+    preterito_indefinido: ['reduje','redujiste','redujo','redujimos','redujisteis','redujeron'],
+    subjuntivo_presente: ['reduzca','reduzcas','reduzca','reduzcamos','reduzcáis','reduzcan'],
+    subjuntivo_imperfecto: ['redujera','redujeras','redujera','redujéramos','redujerais','redujeran'],
+    imperativo_afirmativo: ['reduce','reduzca','reduzcamos','reducid','reduzcan'],
+    futuro_subjuntivo: ['redujere','redujeres','redujere','redujéremos','redujereis','redujeren']
+  },
+  'introducir': {
+    group: 'Неправильный (c→zc, -je-)',
+    pp: 'introducido', prp: 'introduciendo',
+    pp_ru: 'введённый', prp_ru: 'вводя',
+    presente: ['introduzco','introduces','introduce','introducimos','introducís','introducen'],
+    preterito_indefinido: ['introduje','introdujiste','introdujo','introdujimos','introdujisteis','introdujeron'],
+    subjuntivo_presente: ['introduzca','introduzcas','introduzca','introduzcamos','introduzcáis','introduzcan'],
+    subjuntivo_imperfecto: ['introdujera','introdujeras','introdujera','introdujéramos','introdujerais','introdujeran'],
+    imperativo_afirmativo: ['introduce','introduzca','introduzcamos','introducid','introduzcan'],
+    futuro_subjuntivo: ['introdujere','introdujeres','introdujere','introdujéremos','introdujereis','introdujeren']
+  },
+  'deducir': {
+    group: 'Неправильный (c→zc, -je-)',
+    pp: 'deducido', prp: 'deduciendo',
+    pp_ru: 'выведенный', prp_ru: 'выводя/вычитая',
+    presente: ['deduzco','deduces','deduce','deducimos','deducís','deducen'],
+    preterito_indefinido: ['deduje','dedujiste','dedujo','dedujimos','dedujisteis','dedujeron'],
+    subjuntivo_presente: ['deduzca','deduzcas','deduzca','deduzcamos','deduzcáis','deduzcan'],
+    subjuntivo_imperfecto: ['dedujera','dedujeras','dedujera','dedujéramos','dedujerais','dedujeran'],
+    imperativo_afirmativo: ['deduce','deduzca','deduzcamos','deducid','deduzcan'],
+    futuro_subjuntivo: ['dedujere','dedujeres','dedujere','dedujéremos','dedujereis','dedujeren']
+  },
+
+  // === IRREGULAR PARTICIPLES (otherwise mostly regular) ===
+  'romper': {
+    group: 'Неправильный (причастие)',
+    pp: 'roto', prp: 'rompiendo',
+    pp_ru: 'сломанный/разбитый', prp_ru: 'ломая',
+  },
+  'cubrir': {
+    group: 'Неправильный (причастие)',
+    pp: 'cubierto', prp: 'cubriendo',
+    pp_ru: 'покрытый', prp_ru: 'покрывая',
+  },
+  'descubrir': {
+    group: 'Неправильный (причастие)',
+    pp: 'descubierto', prp: 'descubriendo',
+    pp_ru: 'открытый/обнаруженный', prp_ru: 'обнаруживая',
+  },
+  'imprimir': {
+    group: 'Неправильный (причастие)',
+    pp: 'impreso', prp: 'imprimiendo',
+    pp_ru: 'напечатанный', prp_ru: 'печатая',
+  },
+
+  // === COMPOUND IRREGULAR (poner/tener/venir-based) ===
+  'componer': {
+    group: 'Неправильный (как poner)',
+    pp: 'compuesto', prp: 'componiendo',
+    pp_ru: 'составленный/сочинённый', prp_ru: 'сочиняя',
+    presente: ['compongo','compones','compone','componemos','componéis','componen'],
+    preterito_indefinido: ['compuse','compusiste','compuso','compusimos','compusisteis','compusieron'],
+    futuro_simple: ['compondré','compondrás','compondrá','compondremos','compondréis','compondrán'],
+    condicional_simple: ['compondría','compondrías','compondría','compondríamos','compondríais','compondrían'],
+    subjuntivo_presente: ['componga','compongas','componga','compongamos','compongáis','compongan'],
+    subjuntivo_imperfecto: ['compusiera','compusieras','compusiera','compusiéramos','compusierais','compusieran'],
+    imperativo_afirmativo: ['compón','componga','compongamos','componed','compongan'],
+    futuro_subjuntivo: ['compusiere','compusieres','compusiere','compusiéremos','compusiereis','compusieren']
+  },
+  'suponer': {
+    group: 'Неправильный (как poner)',
+    pp: 'supuesto', prp: 'suponiendo',
+    pp_ru: 'предполагаемый', prp_ru: 'предполагая',
+    presente: ['supongo','supones','supone','suponemos','suponéis','suponen'],
+    preterito_indefinido: ['supuse','supusiste','supuso','supusimos','supusisteis','supusieron'],
+    futuro_simple: ['supondré','supondrás','supondrá','supondremos','supondréis','supondrán'],
+    condicional_simple: ['supondría','supondrías','supondría','supondríamos','supondríais','supondrían'],
+    subjuntivo_presente: ['suponga','supongas','suponga','supongamos','supongáis','supongan'],
+    subjuntivo_imperfecto: ['supusiera','supusieras','supusiera','supusiéramos','supusierais','supusieran'],
+    imperativo_afirmativo: ['supón','suponga','supongamos','suponed','supongan'],
+    futuro_subjuntivo: ['supusiere','supusieres','supusiere','supusiéremos','supusiereis','supusieren']
+  },
+  'disponer': {
+    group: 'Неправильный (как poner)',
+    pp: 'dispuesto', prp: 'disponiendo',
+    pp_ru: 'расположенный/готовый', prp_ru: 'располагая',
+    presente: ['dispongo','dispones','dispone','disponemos','disponéis','disponen'],
+    preterito_indefinido: ['dispuse','dispusiste','dispuso','dispusimos','dispusisteis','dispusieron'],
+    futuro_simple: ['dispondré','dispondrás','dispondrá','dispondremos','dispondréis','dispondrán'],
+    condicional_simple: ['dispondría','dispondrías','dispondría','dispondríamos','dispondríais','dispondrían'],
+    subjuntivo_presente: ['disponga','dispongas','disponga','dispongamos','dispongáis','dispongan'],
+    subjuntivo_imperfecto: ['dispusiera','dispusieras','dispusiera','dispusiéramos','dispusierais','dispusieran'],
+    imperativo_afirmativo: ['dispón','disponga','dispongamos','disponed','dispongan'],
+    futuro_subjuntivo: ['dispusiere','dispusieres','dispusiere','dispusiéremos','dispusiereis','dispusieren']
+  },
+  'proponer': {
+    group: 'Неправильный (как poner)',
+    pp: 'propuesto', prp: 'proponiendo',
+    pp_ru: 'предложенный', prp_ru: 'предлагая',
+    presente: ['propongo','propones','propone','proponemos','proponéis','proponen'],
+    preterito_indefinido: ['propuse','propusiste','propuso','propusimos','propusisteis','propusieron'],
+    futuro_simple: ['propondré','propondrás','propondrá','propondremos','propondréis','propondrán'],
+    condicional_simple: ['propondría','propondrías','propondría','propondríamos','propondríais','propondrían'],
+    subjuntivo_presente: ['proponga','propongas','proponga','propongamos','propongáis','propongan'],
+    subjuntivo_imperfecto: ['propusiera','propusieras','propusiera','propusiéramos','propusierais','propusieran'],
+    imperativo_afirmativo: ['propón','proponga','propongamos','proponed','propongan'],
+    futuro_subjuntivo: ['propusiere','propusieres','propusiere','propusiéremos','propusiereis','propusieren']
+  },
+  'mantener': {
+    group: 'Неправильный (как tener)',
+    pp: 'mantenido', prp: 'manteniendo',
+    pp_ru: 'поддерживаемый', prp_ru: 'поддерживая',
+    presente: ['mantengo','mantienes','mantiene','mantenemos','mantenéis','mantienen'],
+    preterito_indefinido: ['mantuve','mantuviste','mantuvo','mantuvimos','mantuvisteis','mantuvieron'],
+    futuro_simple: ['mantendré','mantendrás','mantendrá','mantendremos','mantendréis','mantendrán'],
+    condicional_simple: ['mantendría','mantendrías','mantendría','mantendríamos','mantendríais','mantendrían'],
+    subjuntivo_presente: ['mantenga','mantengas','mantenga','mantengamos','mantengáis','mantengan'],
+    subjuntivo_imperfecto: ['mantuviera','mantuvieras','mantuviera','mantuviéramos','mantuvierais','mantuvieran'],
+    imperativo_afirmativo: ['mantén','mantenga','mantengamos','mantened','mantengan'],
+    futuro_subjuntivo: ['mantuviere','mantuvieres','mantuviere','mantuviéremos','mantuviereis','mantuvieren']
+  },
+  'obtener': {
+    group: 'Неправильный (как tener)',
+    pp: 'obtenido', prp: 'obteniendo',
+    pp_ru: 'полученный', prp_ru: 'получая',
+    presente: ['obtengo','obtienes','obtiene','obtenemos','obtenéis','obtienen'],
+    preterito_indefinido: ['obtuve','obtuviste','obtuvo','obtuvimos','obtuvisteis','obtuvieron'],
+    futuro_simple: ['obtendré','obtendrás','obtendrá','obtendremos','obtendréis','obtendrán'],
+    condicional_simple: ['obtendría','obtendrías','obtendría','obtendríamos','obtendríais','obtendrían'],
+    subjuntivo_presente: ['obtenga','obtengas','obtenga','obtengamos','obtengáis','obtengan'],
+    subjuntivo_imperfecto: ['obtuviera','obtuvieras','obtuviera','obtuviéramos','obtuvierais','obtuvieran'],
+    imperativo_afirmativo: ['obtén','obtenga','obtengamos','obtened','obtengan'],
+    futuro_subjuntivo: ['obtuviere','obtuvieres','obtuviere','obtuviéremos','obtuviereis','obtuvieren']
+  },
+  'contener': {
+    group: 'Неправильный (как tener)',
+    pp: 'contenido', prp: 'conteniendo',
+    pp_ru: 'содержащийся', prp_ru: 'содержа',
+    presente: ['contengo','contienes','contiene','contenemos','contenéis','contienen'],
+    preterito_indefinido: ['contuve','contuviste','contuvo','contuvimos','contuvisteis','contuvieron'],
+    futuro_simple: ['contendré','contendrás','contendrá','contendremos','contendréis','contendrán'],
+    condicional_simple: ['contendría','contendrías','contendría','contendríamos','contendríais','contendrían'],
+    subjuntivo_presente: ['contenga','contengas','contenga','contengamos','contengáis','contengan'],
+    subjuntivo_imperfecto: ['contuviera','contuvieras','contuviera','contuviéramos','contuvierais','contuvieran'],
+    imperativo_afirmativo: ['contén','contenga','contengamos','contened','contengan'],
+    futuro_subjuntivo: ['contuviere','contuvieres','contuviere','contuviéremos','contuviereis','contuvieren']
+  },
+  'detener': {
+    group: 'Неправильный (как tener)',
+    pp: 'detenido', prp: 'deteniendo',
+    pp_ru: 'задержанный/остановленный', prp_ru: 'задерживая',
+    presente: ['detengo','detienes','detiene','detenemos','detenéis','detienen'],
+    preterito_indefinido: ['detuve','detuviste','detuvo','detuvimos','detuvisteis','detuvieron'],
+    futuro_simple: ['detendré','detendrás','detendrá','detendremos','detendréis','detendrán'],
+    condicional_simple: ['detendría','detendrías','detendría','detendríamos','detendríais','detendrían'],
+    subjuntivo_presente: ['detenga','detengas','detenga','detengamos','detengáis','detengan'],
+    subjuntivo_imperfecto: ['detuviera','detuvieras','detuviera','detuviéramos','detuvierais','detuvieran'],
+    imperativo_afirmativo: ['detén','detenga','detengamos','detened','detengan'],
+    futuro_subjuntivo: ['detuviere','detuvieres','detuviere','detuviéremos','detuviereis','detuvieren']
+  },
+  'entretener': {
+    group: 'Неправильный (как tener)',
+    pp: 'entretenido', prp: 'entreteniendo',
+    pp_ru: 'развлечённый', prp_ru: 'развлекая',
+    presente: ['entretengo','entretienes','entretiene','entretenemos','entretenéis','entretienen'],
+    preterito_indefinido: ['entretuve','entretuviste','entretuvo','entretuvimos','entretuvisteis','entretuvieron'],
+    futuro_simple: ['entretendré','entretendrás','entretendrá','entretendremos','entretendréis','entretendrán'],
+    condicional_simple: ['entretendría','entretendrías','entretendría','entretendríamos','entretendríais','entretendrían'],
+    subjuntivo_presente: ['entretenga','entretengas','entretenga','entretengamos','entretengáis','entretengan'],
+    subjuntivo_imperfecto: ['entretuviera','entretuvieras','entretuviera','entretuviéramos','entretuvierais','entretuvieran'],
+    imperativo_afirmativo: ['entretén','entretenga','entretengamos','entretened','entretengan'],
+    futuro_subjuntivo: ['entretuviere','entretuvieres','entretuviere','entretuviéremos','entretuviereis','entretuvieren']
+  },
+  'convenir': {
+    group: 'Неправильный (как venir)',
+    pp: 'convenido', prp: 'conviniendo',
+    pp_ru: 'условленный', prp_ru: 'договариваясь',
+    presente: ['convengo','convienes','conviene','convenimos','convenís','convienen'],
+    preterito_indefinido: ['convine','conviniste','convino','convinimos','convinisteis','convinieron'],
+    futuro_simple: ['convendré','convendrás','convendrá','convendremos','convendréis','convendrán'],
+    condicional_simple: ['convendría','convendrías','convendría','convendríamos','convendríais','convendrían'],
+    subjuntivo_presente: ['convenga','convengas','convenga','convengamos','convengáis','convengan'],
+    subjuntivo_imperfecto: ['conviniera','convinieras','conviniera','conviniéramos','convinierais','convinieran'],
+    imperativo_afirmativo: ['convén','convenga','convengamos','convenid','convengan'],
+    futuro_subjuntivo: ['conviniere','convinieres','conviniere','conviniéremos','conviniereis','convinieren']
+  },
+  'intervenir': {
+    group: 'Неправильный (как venir)',
+    pp: 'intervenido', prp: 'interviniendo',
+    pp_ru: 'вмешавшийся', prp_ru: 'вмешиваясь',
+    presente: ['intervengo','intervienes','interviene','intervenimos','intervenís','intervienen'],
+    preterito_indefinido: ['intervine','interviniste','intervino','intervinimos','intervinisteis','intervinieron'],
+    futuro_simple: ['intervendré','intervendrás','intervendrá','intervendremos','intervendréis','intervendrán'],
+    condicional_simple: ['intervendría','intervendrías','intervendría','intervendríamos','intervendríais','intervendrían'],
+    subjuntivo_presente: ['intervenga','intervengas','intervenga','intervengamos','intervengáis','intervengan'],
+    subjuntivo_imperfecto: ['interviniera','intervinieras','interviniera','interviniéramos','intervinierais','intervinieran'],
+    imperativo_afirmativo: ['intervén','intervenga','intervengamos','intervenid','intervengan'],
+    futuro_subjuntivo: ['interviniere','intervinieres','interviniere','interviniéremos','interviniereis','intervinieren']
+  },
+  'deshacer': {
+    group: 'Неправильный (как hacer)',
+    pp: 'deshecho', prp: 'deshaciendo',
+    pp_ru: 'разрушенный/развязанный', prp_ru: 'разрушая',
+    presente: ['deshago','deshaces','deshace','deshacemos','deshacéis','deshacen'],
+    preterito_indefinido: ['deshice','deshiciste','deshizo','deshicimos','deshicisteis','deshicieron'],
+    futuro_simple: ['desharé','desharás','deshará','desharemos','desharéis','desharán'],
+    condicional_simple: ['desharía','desharías','desharía','desharíamos','desharíais','desharían'],
+    subjuntivo_presente: ['deshaga','deshagas','deshaga','deshagamos','deshagáis','deshagan'],
+    subjuntivo_imperfecto: ['deshiciera','deshicieras','deshiciera','deshiciéramos','deshicierais','deshicieran'],
+    imperativo_afirmativo: ['deshaz','deshaga','deshagamos','deshaced','deshagan'],
+    futuro_subjuntivo: ['deshiciere','deshicieres','deshiciere','deshiciéremos','deshiciereis','deshicieren']
+  },
+
+  // === OTHER COMMON VERBS ===
+  'construir': {
+    group: 'Неправильный (i→y)',
+    pp: 'construido', prp: 'construyendo',
+    pp_ru: 'построенный', prp_ru: 'строя',
+    presente: ['construyo','construyes','construye','construimos','construís','construyen'],
+    preterito_indefinido: ['construí','construiste','construyó','construimos','construisteis','construyeron'],
+    subjuntivo_presente: ['construya','construyas','construya','construyamos','construyáis','construyan'],
+    subjuntivo_imperfecto: ['construyera','construyeras','construyera','construyéramos','construyerais','construyeran'],
+    imperativo_afirmativo: ['construye','construya','construyamos','construid','construyan'],
+    futuro_subjuntivo: ['construyere','construyeres','construyere','construyéremos','construyereis','construyeren']
+  },
+  'destruir': {
+    group: 'Неправильный (i→y)',
+    pp: 'destruido', prp: 'destruyendo',
+    pp_ru: 'разрушенный', prp_ru: 'разрушая',
+    presente: ['destruyo','destruyes','destruye','destruimos','destruís','destruyen'],
+    preterito_indefinido: ['destruí','destruiste','destruyó','destruimos','destruisteis','destruyeron'],
+    subjuntivo_presente: ['destruya','destruyas','destruya','destruyamos','destruyáis','destruyan'],
+    subjuntivo_imperfecto: ['destruyera','destruyeras','destruyera','destruyéramos','destruyerais','destruyeran'],
+    imperativo_afirmativo: ['destruye','destruya','destruyamos','destruid','destruyan'],
+    futuro_subjuntivo: ['destruyere','destruyeres','destruyere','destruyéremos','destruyereis','destruyeren']
+  },
+  'incluir': {
+    group: 'Неправильный (i→y)',
+    pp: 'incluido', prp: 'incluyendo',
+    pp_ru: 'включённый', prp_ru: 'включая',
+    presente: ['incluyo','incluyes','incluye','incluimos','incluís','incluyen'],
+    preterito_indefinido: ['incluí','incluiste','incluyó','incluimos','incluisteis','incluyeron'],
+    subjuntivo_presente: ['incluya','incluyas','incluya','incluyamos','incluyáis','incluyan'],
+    subjuntivo_imperfecto: ['incluyera','incluyeras','incluyera','incluyéramos','incluyerais','incluyeran'],
+    imperativo_afirmativo: ['incluye','incluya','incluyamos','incluid','incluyan'],
+    futuro_subjuntivo: ['incluyere','incluyeres','incluyere','incluyéremos','incluyereis','incluyeren']
+  },
+  'huir': {
+    group: 'Неправильный (i→y)',
+    pp: 'huido', prp: 'huyendo',
+    pp_ru: 'сбежавший', prp_ru: 'убегая',
+    presente: ['huyo','huyes','huye','huimos','huís','huyen'],
+    preterito_indefinido: ['huí','huiste','huyó','huimos','huisteis','huyeron'],
+    subjuntivo_presente: ['huya','huyas','huya','huyamos','huyáis','huyan'],
+    subjuntivo_imperfecto: ['huyera','huyeras','huyera','huyéramos','huyerais','huyeran'],
+    imperativo_afirmativo: ['huye','huya','huyamos','huid','huyan'],
+    futuro_subjuntivo: ['huyere','huyeres','huyere','huyéremos','huyereis','huyeren']
+  },
+  'contribuir': {
+    group: 'Неправильный (i→y)',
+    pp: 'contribuido', prp: 'contribuyendo',
+    pp_ru: 'внесённый', prp_ru: 'внося вклад',
+    presente: ['contribuyo','contribuyes','contribuye','contribuimos','contribuís','contribuyen'],
+    preterito_indefinido: ['contribuí','contribuiste','contribuyó','contribuimos','contribuisteis','contribuyeron'],
+    subjuntivo_presente: ['contribuya','contribuyas','contribuya','contribuyamos','contribuyáis','contribuyan'],
+    subjuntivo_imperfecto: ['contribuyera','contribuyeras','contribuyera','contribuyéramos','contribuyerais','contribuyeran'],
+    imperativo_afirmativo: ['contribuye','contribuya','contribuyamos','contribuid','contribuyan'],
+    futuro_subjuntivo: ['contribuyere','contribuyeres','contribuyere','contribuyéremos','contribuyereis','contribuyeren']
+  },
+  'sustituir': {
+    group: 'Неправильный (i→y)',
+    pp: 'sustituido', prp: 'sustituyendo',
+    pp_ru: 'заменённый', prp_ru: 'заменяя',
+    presente: ['sustituyo','sustituyes','sustituye','sustituimos','sustituís','sustituyen'],
+    preterito_indefinido: ['sustituí','sustituiste','sustituyó','sustituimos','sustituisteis','sustituyeron'],
+    subjuntivo_presente: ['sustituya','sustituyas','sustituya','sustituyamos','sustituyáis','sustituyan'],
+    subjuntivo_imperfecto: ['sustituyera','sustituyeras','sustituyera','sustituyéramos','sustituyerais','sustituyeran'],
+    imperativo_afirmativo: ['sustituye','sustituya','sustituyamos','sustituid','sustituyan'],
+    futuro_subjuntivo: ['sustituyere','sustituyeres','sustituyere','sustituyéremos','sustituyereis','sustituyeren']
+  },
+
+  // === G-verbs (irregular yo) ===
+  'proteger': {
+    group: 'Неправильный (g→j)',
+    pp: 'protegido', prp: 'protegiendo',
+    pp_ru: 'защищённый', prp_ru: 'защищая',
+    presente: ['protejo','proteges','protege','protegemos','protegéis','protegen'],
+    subjuntivo_presente: ['proteja','protejas','proteja','protejamos','protejáis','protejan'],
+    imperativo_afirmativo: ['protege','proteja','protejamos','proteged','protejan']
+  },
+  'coger': {
+    group: 'Неправильный (g→j)',
+    pp: 'cogido', prp: 'cogiendo',
+    pp_ru: 'схваченный/взятый', prp_ru: 'беря/хватая',
+    presente: ['cojo','coges','coge','cogemos','cogéis','cogen'],
+    subjuntivo_presente: ['coja','cojas','coja','cojamos','cojáis','cojan'],
+    imperativo_afirmativo: ['coge','coja','cojamos','coged','cojan']
+  },
+  'dirigir': {
+    group: 'Неправильный (g→j)',
+    pp: 'dirigido', prp: 'dirigiendo',
+    pp_ru: 'управляемый', prp_ru: 'управляя/направляя',
+    presente: ['dirijo','diriges','dirige','dirigimos','dirigís','dirigen'],
+    subjuntivo_presente: ['dirija','dirijas','dirija','dirijamos','dirijáis','dirijan'],
+    imperativo_afirmativo: ['dirige','dirija','dirijamos','dirigid','dirijan']
+  },
+  'exigir': {
+    group: 'Неправильный (g→j)',
+    pp: 'exigido', prp: 'exigiendo',
+    pp_ru: 'потребованный', prp_ru: 'требуя',
+    presente: ['exijo','exiges','exige','exigimos','exigís','exigen'],
+    subjuntivo_presente: ['exija','exijas','exija','exijamos','exijáis','exijan'],
+    imperativo_afirmativo: ['exige','exija','exijamos','exigid','exijan']
+  },
+  'recoger': {
+    group: 'Неправильный (g→j)',
+    pp: 'recogido', prp: 'recogiendo',
+    pp_ru: 'собранный/подобранный', prp_ru: 'собирая',
+    presente: ['recojo','recoges','recoge','recogemos','recogéis','recogen'],
+    subjuntivo_presente: ['recoja','recojas','recoja','recojamos','recojáis','recojan'],
+    imperativo_afirmativo: ['recoge','recoja','recojamos','recoged','recojan']
+  }
+};
+
+// ============================================================
+// REGULAR CONJUGATION ENGINE
+// ============================================================
+
+function getGroup(inf) {
+  if (inf.endsWith('ar')) return 1;
+  if (inf.endsWith('er')) return 2;
+  if (inf.endsWith('ir')) return 3;
+  return 0;
+}
+
+function regularConjugation(inf) {
+  const g = getGroup(inf);
+  if (!g) return null;
+  const stem = inf.slice(0, -2);
+  const r = { group: g === 1 ? '1-я группа (-ar)' : g === 2 ? '2-я группа (-er)' : '3-я группа (-ir)' };
+
+  if (g === 1) {
+    r.pp = stem + 'ado'; r.prp = stem + 'ando';
+    r.presente = [stem+'o', stem+'as', stem+'a', stem+'amos', stem+'áis', stem+'an'];
+    r.preterito_indefinido = [stem+'é', stem+'aste', stem+'ó', stem+'amos', stem+'asteis', stem+'aron'];
+    r.preterito_imperfecto = [stem+'aba', stem+'abas', stem+'aba', stem+'ábamos', stem+'abais', stem+'aban'];
+    r.futuro_simple = [inf+'é', inf+'ás', inf+'á', inf+'emos', inf+'éis', inf+'án'];
+    r.condicional_simple = [inf+'ía', inf+'ías', inf+'ía', inf+'íamos', inf+'íais', inf+'ían'];
+    r.subjuntivo_presente = [stem+'e', stem+'es', stem+'e', stem+'emos', stem+'éis', stem+'en'];
+    r.subjuntivo_imperfecto = [stem+'ara', stem+'aras', stem+'ara', stem+'áramos', stem+'arais', stem+'aran'];
+    r.imperativo_afirmativo = [stem+'a', stem+'e', stem+'emos', stem+'ad', stem+'en'];
+    r.futuro_subjuntivo = [stem+'are', stem+'ares', stem+'are', stem+'áremos', stem+'areis', stem+'aren'];
+  } else if (g === 2) {
+    r.pp = stem + 'ido'; r.prp = stem + 'iendo';
+    r.presente = [stem+'o', stem+'es', stem+'e', stem+'emos', stem+'éis', stem+'en'];
+    r.preterito_indefinido = [stem+'í', stem+'iste', stem+'ió', stem+'imos', stem+'isteis', stem+'ieron'];
+    r.preterito_imperfecto = [stem+'ía', stem+'ías', stem+'ía', stem+'íamos', stem+'íais', stem+'ían'];
+    r.futuro_simple = [inf+'é', inf+'ás', inf+'á', inf+'emos', inf+'éis', inf+'án'];
+    r.condicional_simple = [inf+'ía', inf+'ías', inf+'ía', inf+'íamos', inf+'íais', inf+'ían'];
+    r.subjuntivo_presente = [stem+'a', stem+'as', stem+'a', stem+'amos', stem+'áis', stem+'an'];
+    r.subjuntivo_imperfecto = [stem+'iera', stem+'ieras', stem+'iera', stem+'iéramos', stem+'ierais', stem+'ieran'];
+    r.imperativo_afirmativo = [stem+'e', stem+'a', stem+'amos', stem+'ed', stem+'an'];
+    r.futuro_subjuntivo = [stem+'iere', stem+'ieres', stem+'iere', stem+'iéremos', stem+'iereis', stem+'ieren'];
+  } else {
+    r.pp = stem + 'ido'; r.prp = stem + 'iendo';
+    r.presente = [stem+'o', stem+'es', stem+'e', stem+'imos', stem+'ís', stem+'en'];
+    r.preterito_indefinido = [stem+'í', stem+'iste', stem+'ió', stem+'imos', stem+'isteis', stem+'ieron'];
+    r.preterito_imperfecto = [stem+'ía', stem+'ías', stem+'ía', stem+'íamos', stem+'íais', stem+'ían'];
+    r.futuro_simple = [inf+'é', inf+'ás', inf+'á', inf+'emos', inf+'éis', inf+'án'];
+    r.condicional_simple = [inf+'ía', inf+'ías', inf+'ía', inf+'íamos', inf+'íais', inf+'ían'];
+    r.subjuntivo_presente = [stem+'a', stem+'as', stem+'a', stem+'amos', stem+'áis', stem+'an'];
+    r.subjuntivo_imperfecto = [stem+'iera', stem+'ieras', stem+'iera', stem+'iéramos', stem+'ierais', stem+'ieran'];
+    r.imperativo_afirmativo = [stem+'e', stem+'a', stem+'amos', stem+'id', stem+'an'];
+    r.futuro_subjuntivo = [stem+'iere', stem+'ieres', stem+'iere', stem+'iéremos', stem+'iereis', stem+'ieren'];
+  }
+  return r;
+}
+
+// ============================================================
+// PP / PRP TRANSLATIONS
+// ============================================================
+const PP_RU = {
+  'hablado':'сказанный/говорённый','comido':'съеденный','vivido':'прожитый',
+  'sido':'бывший','estado':'бывший (в состоянии)','habido':'имевший',
+  'tenido':'имевший','ido':'ушедший','hecho':'сделанный','dicho':'сказанный',
+  'podido':'смогший','querido':'желанный/любимый','sabido':'узнанный',
+  'puesto':'поставленный','venido':'пришедший','salido':'вышедший',
+  'dado':'данный','visto':'увиденный','conocido':'узнанный',
+  'dormido':'уснувший','pedido':'попрошенный','sentido':'почувствованный',
+  'pensado':'обдуманный','vuelto':'вернувшийся','encontrado':'найденный',
+  'escrito':'написанный','abierto':'открытый','muerto':'умерший',
+  'traído':'принесённый','caído':'упавший','creído':'поверивший',
+  'leído':'прочитанный','oído':'услышанный','conducido':'ведённый',
+  'seguido':'следовавший','jugado':'сыгранный','comenzado':'начатый',
+  'roto':'сломанный','cubierto':'покрытый','resuelto':'решённый'
+};
+const PRP_RU = {
+  'hablando':'говоря','comiendo':'съедая','viviendo':'живя',
+  'siendo':'будучи','estando':'находясь','habiendo':'имея',
+  'teniendo':'имея','yendo':'идя','haciendo':'делая','diciendo':'говоря',
+  'pudiendo':'имея возможность','queriendo':'желая','sabiendo':'зная',
+  'poniendo':'ставя','viniendo':'приходя','saliendo':'выходя',
+  'dando':'давая','viendo':'видя','conociendo':'узнавая',
+  'durmiendo':'спя','pidiendo':'прося','sintiendo':'чувствуя',
+  'pensando':'думая','volviendo':'возвращаясь','encontrando':'находя',
+  'escribiendo':'пиша','abriendo':'открывая','muriendo':'умирая',
+  'trayendo':'принося','cayendo':'падая','creyendo':'веря',
+  'leyendo':'читая','oyendo':'слыша','conduciendo':'ведя',
+  'siguiendo':'следуя','jugando':'играя','comenzando':'начиная'
+};
+
+function translatePP(pp) {
+  if (PP_RU[pp]) return PP_RU[pp];
+  if (pp.endsWith('ado')) return 'сделанный/-анный';
+  if (pp.endsWith('ido')) return 'сделавший/-ённый';
+  return '—';
+}
+function translatePRP(prp) {
+  if (!prp) return '—';
+  if (PRP_RU[prp]) return PRP_RU[prp];
+  return 'делая (действие в процессе)';
+}
+
+// ============================================================
+// COMPOUND TENSE BUILDER
+// ============================================================
+function getHaberForms(tenseId) {
+  const h = IRREG['haber'];
+  return h[tenseId] || null;
+}
+
+function buildCompound(auxForms, pp) {
+  if (!auxForms) return null;
+  return auxForms.map(f => f + ' ' + pp);
+}
+
+// ============================================================
+// NEGATIVE IMPERATIVE (uses subjuntivo presente with "no")
+// ============================================================
+function buildNegativeImperative(subjPres) {
+  if (!subjPres) return null;
+  // tú, Ud., nosotros, vosotros, Uds. → indices 1,2,3,4,5 of subjuntivo (skip yo)
+  return [
+    'no ' + subjPres[1],
+    'no ' + subjPres[2],
+    'no ' + subjPres[3],
+    'no ' + subjPres[4],
+    'no ' + subjPres[5]
+  ];
+}
+
+// ============================================================
+// MAIN CONJUGATION FUNCTION
+// ============================================================
+function getConjugation(infinitive) {
+  const verb = infinitive.trim().toLowerCase();
+  let irr = IRREG[verb];
+  let reg = regularConjugation(verb);
+
+  if (!irr && !reg) return null;
+
+  // Merge: irregular overrides regular
+  const data = {};
+  if (reg) Object.assign(data, reg);
+  if (irr) {
+    for (const k of Object.keys(irr)) {
+      if (irr[k] !== undefined) data[k] = irr[k];
+    }
+  }
+
+  const pp = data.pp;
+  const prp = data.prp;
+
+  const result = {
+    infinitive: verb,
+    group: data.group || '—',
+    isKnown: !!irr,
+    pp: pp,
+    pp_ru: data.pp_ru || translatePP(pp),
+    prp: prp,
+    prp_ru: data.prp_ru || translatePRP(prp),
+    tenses: {}
+  };
+
+  for (const tense of TENSES) {
+    if (tense.isNote) continue;
+
+    if (tense.compound) {
+      const auxForms = getHaberForms(tense.auxTense);
+      result.tenses[tense.id] = buildCompound(auxForms, pp);
+    } else if (tense.id === 'imperativo_negativo') {
+      const subjPres = data.subjuntivo_presente;
+      result.tenses[tense.id] = buildNegativeImperative(subjPres);
+    } else {
+      result.tenses[tense.id] = data[tense.id] || null;
+    }
+  }
+
+  return result;
+}
+
+// ============================================================
+// UI
+// ============================================================
+function tryVerb(v) {
+  document.getElementById('verbInput').value = v;
+  conjugate();
+}
+
+function conjugate() {
+  const input = document.getElementById('verbInput').value.trim();
+  const resultsDiv = document.getElementById('results');
+  const verbInfoDiv = document.getElementById('verbInfo');
+  const legendDiv = document.getElementById('legend');
+  const warningBanner = document.getElementById('warningBanner');
+
+  if (!input) {
+    resultsDiv.innerHTML = '';
+    verbInfoDiv.style.display = 'none';
+    legendDiv.style.display = 'none';
+    warningBanner.style.display = 'none';
+    return;
+  }
+
+  const conj = getConjugation(input);
+  if (!conj) {
+    resultsDiv.innerHTML = '<div class="no-result">Глагол «' + input + '» не найден.<br>Попробуйте ввести инфинитив (например: hablar, comer, vivir)</div>';
+    verbInfoDiv.style.display = 'none';
+    legendDiv.style.display = 'none';
+    warningBanner.style.display = 'none';
+    return;
+  }
+
+  // Warning for unknown verbs
+  if (!conj.isKnown) {
+    warningBanner.style.display = 'block';
+    warningBanner.innerHTML = '&#9888; Глагол <b>' + conj.infinitive + '</b> не найден в базе неправильных глаголов — спряжение построено по правилам группы. Если глагол неправильный, формы могут быть неточными.';
+  } else {
+    warningBanner.style.display = 'none';
+  }
+
+  verbInfoDiv.style.display = 'block';
+  legendDiv.style.display = 'block';
+  verbInfoDiv.innerHTML =
+    '<span class="badge badge-group">' + conj.group + '</span>' +
+    '<span class="badge badge-aux">Вспомогательный: haber</span>' +
+    '<span class="badge badge-pp">Причастие (participio pasado): ' + conj.pp + ' <i style="opacity:0.7">(«' + conj.pp_ru + '»)</i></span>' +
+    '<span class="badge badge-gp">Деепричастие (gerundio): ' + conj.prp + ' <i style="opacity:0.7">(«' + conj.prp_ru + '»)</i></span>';
+
+  let html = '';
+  let prevLiterary = null;
+
+  for (const tense of TENSES) {
+    if (tense.isNote) continue;
+
+    if (prevLiterary === null && !tense.literary) {
+      html += '<div class="section-label">Употребительные времена</div>';
+    }
+    if (!prevLiterary && tense.literary && prevLiterary !== null) {
+      html += '<div class="section-label literary">Книжные / архаичные времена</div>';
+    }
+    prevLiterary = tense.literary;
+
+    const forms = conj.tenses[tense.id];
+    const headerClass = tense.literary ? 'literary' : 'active';
+    const cardClass = tense.literary ? 'tense-card literary-card' : 'tense-card';
+    const isImp = tense.isImperative;
+
+    html += '<div class="' + cardClass + '">';
+    html += '<div class="tense-header ' + headerClass + '">';
+    html += '<div class="fr-name">' + tense.name + '</div>';
+    html += '<div class="ru-name">' + tense.ru + '</div>';
+    html += '</div>';
+    html += '<div class="tense-explain">' + tense.explain + '</div>';
+    html += '<div class="tense-body">';
+
+    if (!forms) {
+      html += '<div style="color:#ccc;padding:8px 0;">Не употребляется для этого глагола</div>';
+    } else if (isImp) {
+      const labels = tense.id === 'imperativo_negativo' ? IMP_PRONOUNS_NEG : IMP_PRONOUNS_AF;
+      html += '<table>';
+      for (let i = 0; i < forms.length; i++) {
+        html += '<tr><td class="pronoun">' + labels[i] + '</td><td class="verb-form">' + forms[i] + '</td></tr>';
+      }
+      html += '</table>';
+    } else {
+      html += '<table>';
+      for (let i = 0; i < 6; i++) {
+        html += '<tr><td class="pronoun">' + PRONOUNS[i] + '</td><td class="verb-form">' + (forms[i] || '—') + '</td></tr>';
+      }
+      html += '</table>';
+    }
+
+    html += '</div></div>';
+  }
+
+  resultsDiv.innerHTML = html;
+}
+
+if (location.hash) {
+  document.getElementById('verbInput').value = decodeURIComponent(location.hash.slice(1));
+  conjugate();
+}
+</script>
+
+</body>
+</html>

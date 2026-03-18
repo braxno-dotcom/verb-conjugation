@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📖</text></svg>">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Спряжение глаголов</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f0eb;
+    color: #2c2c2c;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .container {
+    text-align: center;
+    padding: 40px 20px;
+  }
+  h1 {
+    font-size: 1.6em;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #333;
+  }
+  p {
+    color: #888;
+    margin-bottom: 40px;
+    font-size: 0.95em;
+  }
+  .cards {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .card {
+    display: block;
+    text-decoration: none;
+    background: white;
+    border-radius: 16px;
+    padding: 40px 50px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+    min-width: 200px;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+  }
+  .card .flag {
+    font-size: 4em;
+    display: block;
+    margin-bottom: 16px;
+  }
+  .card .label {
+    font-size: 1.15em;
+    font-weight: 600;
+    color: #333;
+  }
+  .card .sub {
+    font-size: 0.85em;
+    color: #999;
+    margin-top: 6px;
+  }
+  .card-fr { border-top: 4px solid #2a4a7f; }
+  .card-es { border-top: 4px solid #c0392b; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Спряжение глаголов</h1>
+  <p>Выберите язык</p>
+  <div class="cards">
+    <a href="french-verbs.html" class="card card-fr">
+      <span class="flag">🇫🇷</span>
+      <span class="label">Французский</span>
+      <span class="sub">Les verbes français</span>
+    </a>
+    <a href="spanish-verbs.html" class="card card-es">
+      <span class="flag">🇪🇸</span>
+      <span class="label">Испанский</span>
+      <span class="sub">Los verbos españoles</span>
+    </a>
+  </div>
+</div>
+
+</body>
+</html>

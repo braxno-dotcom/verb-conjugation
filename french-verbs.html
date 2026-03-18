@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇫🇷</text></svg>">
+<meta name="apple-mobile-web-app-title" content="FR verbes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇫🇷 Французские глаголы — Спряжения</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f0eb;
+    color: #2c2c2c;
+    min-height: 100vh;
+  }
+  header {
+    background: linear-gradient(135deg, #1a365d, #2a4a7f);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switch {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+  header { position: relative; }
+
+  .search-area {
+    max-width: 600px;
+    margin: 30px auto 10px;
+    padding: 0 20px;
+    display: flex;
+    gap: 10px;
+  }
+  .search-area input {
+    flex: 1;
+    padding: 14px 18px;
+    font-size: 1.15em;
+    border: 2px solid #c8bfb6;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-area input:focus { border-color: #2a4a7f; }
+  .search-area button {
+    padding: 14px 28px;
+    font-size: 1.05em;
+    background: #2a4a7f;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .search-area button:hover { background: #1a365d; }
+
+  .hint {
+    max-width: 600px;
+    margin: 8px auto 0;
+    padding: 0 20px;
+    font-size: 0.85em;
+    color: #888;
+  }
+  .hint span { cursor: pointer; color: #2a4a7f; text-decoration: underline; }
+  .hint span:hover { color: #1a365d; }
+
+  .verb-info {
+    max-width: 900px;
+    margin: 18px auto 8px;
+    padding: 0 20px;
+    display: none;
+  }
+  .verb-info .badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 600;
+    margin-right: 8px;
+  }
+  .badge-group { background: #e0ecff; color: #1a365d; }
+  .badge-aux { background: #fce4ec; color: #880e4f; }
+  .badge-pp { background: #e8f5e9; color: #1b5e20; }
+  .badge-gp { background: #fff3e0; color: #e65100; }
+
+  .legend {
+    max-width: 900px;
+    margin: 10px auto;
+    padding: 0 20px;
+    display: none;
+  }
+  .legend-inner {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 0.85em;
+    color: #666;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot {
+    width: 14px; height: 14px; border-radius: 4px;
+  }
+  .dot-active { background: #2a4a7f; }
+  .dot-literary { background: #9e9e9e; }
+
+  #results {
+    max-width: 900px;
+    margin: 10px auto 40px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 16px;
+  }
+  @media (max-width: 500px) {
+    #results { grid-template-columns: 1fr; }
+  }
+
+  .tense-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .tense-header {
+    padding: 12px 16px;
+    color: white;
+    font-weight: 600;
+  }
+  .tense-header.active { background: #2a4a7f; }
+  .tense-header.literary { background: #9e9e9e; }
+  .tense-header .fr-name { font-size: 1.05em; }
+  .tense-header .ru-name { font-size: 0.85em; opacity: 0.9; margin-top: 2px; }
+  .tense-explain {
+    padding: 8px 16px;
+    font-size: 0.88em;
+    color: #666;
+    background: #fafafa;
+    border-bottom: 1px solid #eee;
+    font-style: italic;
+  }
+  .tense-body { padding: 12px 16px; }
+  .tense-body table { width: 100%; }
+  .tense-body td {
+    padding: 3px 0;
+    font-size: 0.95em;
+  }
+  .tense-body .pronoun {
+    color: #999;
+    width: 90px;
+    font-size: 0.9em;
+  }
+  .tense-body .verb-form {
+    font-weight: 600;
+    color: #2c2c2c;
+  }
+  .literary-card .tense-body .verb-form { color: #777; }
+
+  .no-result {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: #999;
+    font-size: 1.1em;
+  }
+  .warning-banner {
+    max-width: 900px;
+    margin: 10px auto;
+    padding: 12px 20px;
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 10px;
+    color: #856404;
+    font-size: 0.92em;
+    display: none;
+  }
+
+  .section-label {
+    grid-column: 1 / -1;
+    font-size: 1.1em;
+    font-weight: 700;
+    color: #2a4a7f;
+    padding: 12px 0 0;
+    border-top: 2px solid #e0e0e0;
+    margin-top: 8px;
+  }
+  .section-label.literary { color: #9e9e9e; }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="spanish-verbs.html" class="lang-switch">🇪🇸 Испанский</a>
+  <h1>🇫🇷 Спряжение французских глаголов</h1>
+  <p>Введите глагол в инфинитиве — получите все времена с объяснениями на русском</p>
+</header>
+
+<div class="search-area">
+  <input type="text" id="verbInput" placeholder="например: parler, être, aller..." autofocus
+    onkeydown="if(event.key==='Enter')conjugate()">
+  <button onclick="conjugate()">Спрягать</button>
+</div>
+<div class="hint">
+  Попробуйте:
+  <span onclick="tryVerb('parler')">parler</span>,
+  <span onclick="tryVerb('être')">être</span>,
+  <span onclick="tryVerb('avoir')">avoir</span>,
+  <span onclick="tryVerb('aller')">aller</span>,
+  <span onclick="tryVerb('faire')">faire</span>,
+  <span onclick="tryVerb('pouvoir')">pouvoir</span>,
+  <span onclick="tryVerb('venir')">venir</span>,
+  <span onclick="tryVerb('prendre')">prendre</span>,
+  <span onclick="tryVerb('finir')">finir</span>,
+  <span onclick="tryVerb('vendre')">vendre</span>
+</div>
+
+<div class="warning-banner" id="warningBanner"></div>
+<div class="verb-info" id="verbInfo"></div>
+<div class="legend" id="legend">
+  <div class="legend-inner">
+    <div class="legend-item"><div class="legend-dot dot-active"></div> Используется в речи</div>
+    <div class="legend-item"><div class="legend-dot dot-literary"></div> Книжное (только в литературе)</div>
+  </div>
+</div>
+
+<div id="results"></div>
+
+<script>
+// ============================================================
+// TENSE DEFINITIONS
+// ============================================================
+const TENSES = [
+  // --- Active (modern) tenses ---
+  {
+    id: 'present', name: 'Présent',
+    ru: 'Настоящее время',
+    explain: '«я делаю», «я делаю прямо сейчас» — то, что происходит в данный момент или вообще регулярно',
+    literary: false, compound: false
+  },
+  {
+    id: 'passe_compose', name: 'Passé composé',
+    ru: 'Прошедшее составное',
+    explain: '«я сделал», «я уже сделал» — завершённое действие в прошлом, самое ходовое прошедшее',
+    literary: false, compound: true, auxTense: 'present'
+  },
+  {
+    id: 'imparfait', name: 'Imparfait',
+    ru: 'Прошедшее незавершённое',
+    explain: '«я делал», «бывало, я делал», «я как раз делал, когда...» — фон, привычка, процесс в прошлом',
+    literary: false, compound: false
+  },
+  {
+    id: 'plus_que_parfait', name: 'Plus-que-parfait',
+    ru: 'Давнопрошедшее',
+    explain: '«я уже сделал (до того, как случилось другое)» — прошлое до прошлого',
+    literary: false, compound: true, auxTense: 'imparfait'
+  },
+  {
+    id: 'futur_simple', name: 'Futur simple',
+    ru: 'Простое будущее',
+    explain: '«я сделаю», «я буду делать» — будущее действие',
+    literary: false, compound: false
+  },
+  {
+    id: 'futur_anterieur', name: 'Futur antérieur',
+    ru: 'Предбудущее',
+    explain: '«я уже сделаю (к тому моменту)» — будущее, которое завершится до другого будущего',
+    literary: false, compound: true, auxTense: 'futur_simple'
+  },
+  {
+    id: 'conditionnel_present', name: 'Conditionnel présent',
+    ru: 'Условное настоящее',
+    explain: '«я бы сделал», «я сделал бы» — вежливость, мечты, условие',
+    literary: false, compound: false
+  },
+  {
+    id: 'conditionnel_passe', name: 'Conditionnel passé',
+    ru: 'Условное прошедшее',
+    explain: '«я бы уже сделал (но не сделал)» — нереализованное условие в прошлом',
+    literary: false, compound: true, auxTense: 'conditionnel_present'
+  },
+  {
+    id: 'subjonctif_present', name: 'Subjonctif présent',
+    ru: 'Сослагательное настоящее',
+    explain: '«чтобы я делал», «хочу, чтобы он делал» — после «il faut que», «je veux que» и т.д.',
+    literary: false, compound: false
+  },
+  {
+    id: 'subjonctif_passe', name: 'Subjonctif passé',
+    ru: 'Сослагательное прошедшее',
+    explain: '«чтобы я уже сделал» — завершённое действие в сослагательном',
+    literary: false, compound: true, auxTense: 'subjonctif_present'
+  },
+  {
+    id: 'imperatif', name: 'Impératif',
+    ru: 'Повелительное наклонение',
+    explain: '«делай!», «давайте делать!», «делайте!» — приказ, просьба, совет',
+    literary: false, compound: false, persons: 3
+  },
+  // --- Literary/archaic tenses ---
+  {
+    id: 'passe_simple', name: 'Passé simple',
+    ru: 'Простое прошедшее (книжное)',
+    explain: '«я сделал» — то же, что passé composé, но только в книгах. В речи не используется!',
+    literary: true, compound: false
+  },
+  {
+    id: 'passe_anterieur', name: 'Passé antérieur',
+    ru: 'Предпрошедшее (книжное)',
+    explain: '«я уже сделал (до того как...)» — книжный аналог plus-que-parfait',
+    literary: true, compound: true, auxTense: 'passe_simple'
+  },
+  {
+    id: 'subjonctif_imparfait', name: 'Subjonctif imparfait',
+    ru: 'Сослагательное незавершённое (книжное)',
+    explain: '«чтобы я делал (тогда)» — встречается только у классиков',
+    literary: true, compound: false
+  },
+  {
+    id: 'subjonctif_pqp', name: 'Subjonctif plus-que-parfait',
+    ru: 'Сослагательное давнопрошедшее (книжное)',
+    explain: '«чтобы я уже сделал (тогда)» — самое редкое время, только в высокой литературе',
+    literary: true, compound: true, auxTense: 'subjonctif_imparfait'
+  }
+];
+
+const PRONOUNS = ['je', 'tu', 'il / elle', 'nous', 'vous', 'ils / elles'];
+const IMP_PRONOUNS = ['(tu)', '(nous)', '(vous)'];
+
+// ============================================================
+// ÊTRE-AUXILIARY VERBS
+// ============================================================
+const ETRE_VERBS = new Set([
+  'aller', 'venir', 'arriver', 'partir', 'entrer', 'sortir',
+  'monter', 'descendre', 'naître', 'mourir', 'rester', 'tomber',
+  'retourner', 'devenir', 'revenir', 'rentrer', 'parvenir',
+  'intervenir', 'survenir', 'advenir'
+]);
+
+// ============================================================
+// IRREGULAR VERBS DATABASE
+// Each verb stores simple tense forms as arrays of 6 (or 3 for imperatif)
+// Compound tenses are built automatically from auxiliary + past participle
+// ============================================================
+const IRREG = {
+  'être': {
+    group: 'Неправильный',
+    aux: 'avoir',
+    pp: 'été',
+    prp: 'étant',
+    present: ['suis','es','est','sommes','êtes','sont'],
+    imparfait: ['étais','étais','était','étions','étiez','étaient'],
+    futur_simple: ['serai','seras','sera','serons','serez','seront'],
+    conditionnel_present: ['serais','serais','serait','serions','seriez','seraient'],
+    subjonctif_present: ['sois','sois','soit','soyons','soyez','soient'],
+    passe_simple: ['fus','fus','fut','fûmes','fûtes','furent'],
+    subjonctif_imparfait: ['fusse','fusses','fût','fussions','fussiez','fussent'],
+    imperatif: ['sois','soyons','soyez']
+  },
+  'avoir': {
+    group: 'Неправильный',
+    aux: 'avoir',
+    pp: 'eu',
+    prp: 'ayant',
+    present: ['ai','as','a','avons','avez','ont'],
+    imparfait: ['avais','avais','avait','avions','aviez','avaient'],
+    futur_simple: ['aurai','auras','aura','aurons','aurez','auront'],
+    conditionnel_present: ['aurais','aurais','aurait','aurions','auriez','auraient'],
+    subjonctif_present: ['aie','aies','ait','ayons','ayez','aient'],
+    passe_simple: ['eus','eus','eut','eûmes','eûtes','eurent'],
+    subjonctif_imparfait: ['eusse','eusses','eût','eussions','eussiez','eussent'],
+    imperatif: ['aie','ayons','ayez']
+  },
+  'aller': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'être',
+    pp: 'allé',
+    prp: 'allant',
+    present: ['vais','vas','va','allons','allez','vont'],
+    imparfait: ['allais','allais','allait','allions','alliez','allaient'],
+    futur_simple: ['irai','iras','ira','irons','irez','iront'],
+    conditionnel_present: ['irais','irais','irait','irions','iriez','iraient'],
+    subjonctif_present: ['aille','ailles','aille','allions','alliez','aillent'],
+    passe_simple: ['allai','allas','alla','allâmes','allâtes','allèrent'],
+    subjonctif_imparfait: ['allasse','allasses','allât','allassions','allassiez','allassent'],
+    imperatif: ['va','allons','allez']
+  },
+  'faire': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'fait',
+    prp: 'faisant',
+    present: ['fais','fais','fait','faisons','faites','font'],
+    imparfait: ['faisais','faisais','faisait','faisions','faisiez','faisaient'],
+    futur_simple: ['ferai','feras','fera','ferons','ferez','feront'],
+    conditionnel_present: ['ferais','ferais','ferait','ferions','feriez','feraient'],
+    subjonctif_present: ['fasse','fasses','fasse','fassions','fassiez','fassent'],
+    passe_simple: ['fis','fis','fit','fîmes','fîtes','firent'],
+    subjonctif_imparfait: ['fisse','fisses','fît','fissions','fissiez','fissent'],
+    imperatif: ['fais','faisons','faites']
+  },
+  'pouvoir': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'pu',
+    prp: 'pouvant',
+    present: ['peux','peux','peut','pouvons','pouvez','peuvent'],
+    imparfait: ['pouvais','pouvais','pouvait','pouvions','pouviez','pouvaient'],
+    futur_simple: ['pourrai','pourras','pourra','pourrons','pourrez','pourront'],
+    conditionnel_present: ['pourrais','pourrais','pourrait','pourrions','pourriez','pourraient'],
+    subjonctif_present: ['puisse','puisses','puisse','puissions','puissiez','puissent'],
+    passe_simple: ['pus','pus','put','pûmes','pûtes','purent'],
+    subjonctif_imparfait: ['pusse','pusses','pût','pussions','pussiez','pussent'],
+    imperatif: null
+  },
+  'vouloir': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'voulu',
+    prp: 'voulant',
+    present: ['veux','veux','veut','voulons','voulez','veulent'],
+    imparfait: ['voulais','voulais','voulait','voulions','vouliez','voulaient'],
+    futur_simple: ['voudrai','voudras','voudra','voudrons','voudrez','voudront'],
+    conditionnel_present: ['voudrais','voudrais','voudrait','voudrions','voudriez','voudraient'],
+    subjonctif_present: ['veuille','veuilles','veuille','voulions','vouliez','veuillent'],
+    passe_simple: ['voulus','voulus','voulut','voulûmes','voulûtes','voulurent'],
+    subjonctif_imparfait: ['voulusse','voulusses','voulût','voulussions','voulussiez','voulussent'],
+    imperatif: ['veuille','voulons','veuillez']
+  },
+  'devoir': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'dû',
+    prp: 'devant',
+    present: ['dois','dois','doit','devons','devez','doivent'],
+    imparfait: ['devais','devais','devait','devions','deviez','devaient'],
+    futur_simple: ['devrai','devras','devra','devrons','devrez','devront'],
+    conditionnel_present: ['devrais','devrais','devrait','devrions','devriez','devraient'],
+    subjonctif_present: ['doive','doives','doive','devions','deviez','doivent'],
+    passe_simple: ['dus','dus','dut','dûmes','dûtes','durent'],
+    subjonctif_imparfait: ['dusse','dusses','dût','dussions','dussiez','dussent'],
+    imperatif: ['dois','devons','devez']
+  },
+  'savoir': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'su',
+    prp: 'sachant',
+    present: ['sais','sais','sait','savons','savez','savent'],
+    imparfait: ['savais','savais','savait','savions','saviez','savaient'],
+    futur_simple: ['saurai','sauras','saura','saurons','saurez','sauront'],
+    conditionnel_present: ['saurais','saurais','saurait','saurions','sauriez','sauraient'],
+    subjonctif_present: ['sache','saches','sache','sachions','sachiez','sachent'],
+    passe_simple: ['sus','sus','sut','sûmes','sûtes','surent'],
+    subjonctif_imparfait: ['susse','susses','sût','sussions','sussiez','sussent'],
+    imperatif: ['sache','sachons','sachez']
+  },
+  'voir': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'vu',
+    prp: 'voyant',
+    present: ['vois','vois','voit','voyons','voyez','voient'],
+    imparfait: ['voyais','voyais','voyait','voyions','voyiez','voyaient'],
+    futur_simple: ['verrai','verras','verra','verrons','verrez','verront'],
+    conditionnel_present: ['verrais','verrais','verrait','verrions','verriez','verraient'],
+    subjonctif_present: ['voie','voies','voie','voyions','voyiez','voient'],
+    passe_simple: ['vis','vis','vit','vîmes','vîtes','virent'],
+    subjonctif_imparfait: ['visse','visses','vît','vissions','vissiez','vissent'],
+    imperatif: ['vois','voyons','voyez']
+  },
+  'prendre': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'pris',
+    prp: 'prenant',
+    present: ['prends','prends','prend','prenons','prenez','prennent'],
+    imparfait: ['prenais','prenais','prenait','prenions','preniez','prenaient'],
+    futur_simple: ['prendrai','prendras','prendra','prendrons','prendrez','prendront'],
+    conditionnel_present: ['prendrais','prendrais','prendrait','prendrions','prendriez','prendraient'],
+    subjonctif_present: ['prenne','prennes','prenne','prenions','preniez','prennent'],
+    passe_simple: ['pris','pris','prit','prîmes','prîtes','prirent'],
+    subjonctif_imparfait: ['prisse','prisses','prît','prissions','prissiez','prissent'],
+    imperatif: ['prends','prenons','prenez']
+  },
+  'mettre': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'mis',
+    prp: 'mettant',
+    present: ['mets','mets','met','mettons','mettez','mettent'],
+    imparfait: ['mettais','mettais','mettait','mettions','mettiez','mettaient'],
+    futur_simple: ['mettrai','mettras','mettra','mettrons','mettrez','mettront'],
+    conditionnel_present: ['mettrais','mettrais','mettrait','mettrions','mettriez','mettraient'],
+    subjonctif_present: ['mette','mettes','mette','mettions','mettiez','mettent'],
+    passe_simple: ['mis','mis','mit','mîmes','mîtes','mirent'],
+    subjonctif_imparfait: ['misse','misses','mît','missions','missiez','missent'],
+    imperatif: ['mets','mettons','mettez']
+  },
+  'dire': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'dit',
+    prp: 'disant',
+    present: ['dis','dis','dit','disons','dites','disent'],
+    imparfait: ['disais','disais','disait','disions','disiez','disaient'],
+    futur_simple: ['dirai','diras','dira','dirons','direz','diront'],
+    conditionnel_present: ['dirais','dirais','dirait','dirions','diriez','diraient'],
+    subjonctif_present: ['dise','dises','dise','disions','disiez','disent'],
+    passe_simple: ['dis','dis','dit','dîmes','dîtes','dirent'],
+    subjonctif_imparfait: ['disse','disses','dît','dissions','dissiez','dissent'],
+    imperatif: ['dis','disons','dites']
+  },
+  'venir': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'être',
+    pp: 'venu',
+    prp: 'venant',
+    present: ['viens','viens','vient','venons','venez','viennent'],
+    imparfait: ['venais','venais','venait','venions','veniez','venaient'],
+    futur_simple: ['viendrai','viendras','viendra','viendrons','viendrez','viendront'],
+    conditionnel_present: ['viendrais','viendrais','viendrait','viendrions','viendriez','viendraient'],
+    subjonctif_present: ['vienne','viennes','vienne','venions','veniez','viennent'],
+    passe_simple: ['vins','vins','vint','vînmes','vîntes','vinrent'],
+    subjonctif_imparfait: ['vinsse','vinsses','vînt','vinssions','vinssiez','vinssent'],
+    imperatif: ['viens','venons','venez']
+  },
+  'tenir': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'tenu',
+    prp: 'tenant',
+    present: ['tiens','tiens','tient','tenons','tenez','tiennent'],
+    imparfait: ['tenais','tenais','tenait','tenions','teniez','tenaient'],
+    futur_simple: ['tiendrai','tiendras','tiendra','tiendrons','tiendrez','tiendront'],
+    conditionnel_present: ['tiendrais','tiendrais','tiendrait','tiendrions','tiendriez','tiendraient'],
+    subjonctif_present: ['tienne','tiennes','tienne','tenions','teniez','tiennent'],
+    passe_simple: ['tins','tins','tint','tînmes','tîntes','tinrent'],
+    subjonctif_imparfait: ['tinsse','tinsses','tînt','tinssions','tinssiez','tinssent'],
+    imperatif: ['tiens','tenons','tenez']
+  },
+  'partir': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'être',
+    pp: 'parti',
+    prp: 'partant',
+    present: ['pars','pars','part','partons','partez','partent'],
+    imparfait: ['partais','partais','partait','partions','partiez','partaient'],
+    futur_simple: ['partirai','partiras','partira','partirons','partirez','partiront'],
+    conditionnel_present: ['partirais','partirais','partirait','partirions','partiriez','partiraient'],
+    subjonctif_present: ['parte','partes','parte','partions','partiez','partent'],
+    passe_simple: ['partis','partis','partit','partîmes','partîtes','partirent'],
+    subjonctif_imparfait: ['partisse','partisses','partît','partissions','partissiez','partissent'],
+    imperatif: ['pars','partons','partez']
+  },
+  'sortir': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'être',
+    pp: 'sorti',
+    prp: 'sortant',
+    present: ['sors','sors','sort','sortons','sortez','sortent'],
+    imparfait: ['sortais','sortais','sortait','sortions','sortiez','sortaient'],
+    futur_simple: ['sortirai','sortiras','sortira','sortirons','sortirez','sortiront'],
+    conditionnel_present: ['sortirais','sortirais','sortirait','sortirions','sortiriez','sortiraient'],
+    subjonctif_present: ['sorte','sortes','sorte','sortions','sortiez','sortent'],
+    passe_simple: ['sortis','sortis','sortit','sortîmes','sortîtes','sortirent'],
+    subjonctif_imparfait: ['sortisse','sortisses','sortît','sortissions','sortissiez','sortissent'],
+    imperatif: ['sors','sortons','sortez']
+  },
+  'dormir': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'dormi',
+    prp: 'dormant',
+    present: ['dors','dors','dort','dormons','dormez','dorment'],
+    imparfait: ['dormais','dormais','dormait','dormions','dormiez','dormaient'],
+    futur_simple: ['dormirai','dormiras','dormira','dormirons','dormirez','dormiront'],
+    conditionnel_present: ['dormirais','dormirais','dormirait','dormirions','dormiriez','dormiraient'],
+    subjonctif_present: ['dorme','dormes','dorme','dormions','dormiez','dorment'],
+    passe_simple: ['dormis','dormis','dormit','dormîmes','dormîtes','dormirent'],
+    subjonctif_imparfait: ['dormisse','dormisses','dormît','dormissions','dormissiez','dormissent'],
+    imperatif: ['dors','dormons','dormez']
+  },
+  'connaître': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'connu',
+    prp: 'connaissant',
+    present: ['connais','connais','connaît','connaissons','connaissez','connaissent'],
+    imparfait: ['connaissais','connaissais','connaissait','connaissions','connaissiez','connaissaient'],
+    futur_simple: ['connaîtrai','connaîtras','connaîtra','connaîtrons','connaîtrez','connaîtront'],
+    conditionnel_present: ['connaîtrais','connaîtrais','connaîtrait','connaîtrions','connaîtriez','connaîtraient'],
+    subjonctif_present: ['connaisse','connaisses','connaisse','connaissions','connaissiez','connaissent'],
+    passe_simple: ['connus','connus','connut','connûmes','connûtes','connurent'],
+    subjonctif_imparfait: ['connusse','connusses','connût','connussions','connussiez','connussent'],
+    imperatif: ['connais','connaissons','connaissez']
+  },
+  'croire': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'cru',
+    prp: 'croyant',
+    present: ['crois','crois','croit','croyons','croyez','croient'],
+    imparfait: ['croyais','croyais','croyait','croyions','croyiez','croyaient'],
+    futur_simple: ['croirai','croiras','croira','croirons','croirez','croiront'],
+    conditionnel_present: ['croirais','croirais','croirait','croirions','croiriez','croiraient'],
+    subjonctif_present: ['croie','croies','croie','croyions','croyiez','croient'],
+    passe_simple: ['crus','crus','crut','crûmes','crûtes','crurent'],
+    subjonctif_imparfait: ['crusse','crusses','crût','crussions','crussiez','crussent'],
+    imperatif: ['crois','croyons','croyez']
+  },
+  'boire': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'bu',
+    prp: 'buvant',
+    present: ['bois','bois','boit','buvons','buvez','boivent'],
+    imparfait: ['buvais','buvais','buvait','buvions','buviez','buvaient'],
+    futur_simple: ['boirai','boiras','boira','boirons','boirez','boiront'],
+    conditionnel_present: ['boirais','boirais','boirait','boirions','boiriez','boiraient'],
+    subjonctif_present: ['boive','boives','boive','buvions','buviez','boivent'],
+    passe_simple: ['bus','bus','but','bûmes','bûtes','burent'],
+    subjonctif_imparfait: ['busse','busses','bût','bussions','bussiez','bussent'],
+    imperatif: ['bois','buvons','buvez']
+  },
+  'écrire': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'écrit',
+    prp: 'écrivant',
+    present: ['écris','écris','écrit','écrivons','écrivez','écrivent'],
+    imparfait: ['écrivais','écrivais','écrivait','écrivions','écriviez','écrivaient'],
+    futur_simple: ['écrirai','écriras','écrira','écrirons','écrirez','écriront'],
+    conditionnel_present: ['écrirais','écrirais','écrirait','écririons','écririez','écriraient'],
+    subjonctif_present: ['écrive','écrives','écrive','écrivions','écriviez','écrivent'],
+    passe_simple: ['écrivis','écrivis','écrivit','écrivîmes','écrivîtes','écrivirent'],
+    subjonctif_imparfait: ['écrivisse','écrivisses','écrivît','écrivissions','écrivissiez','écrivissent'],
+    imperatif: ['écris','écrivons','écrivez']
+  },
+  'lire': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'lu',
+    prp: 'lisant',
+    present: ['lis','lis','lit','lisons','lisez','lisent'],
+    imparfait: ['lisais','lisais','lisait','lisions','lisiez','lisaient'],
+    futur_simple: ['lirai','liras','lira','lirons','lirez','liront'],
+    conditionnel_present: ['lirais','lirais','lirait','lirions','liriez','liraient'],
+    subjonctif_present: ['lise','lises','lise','lisions','lisiez','lisent'],
+    passe_simple: ['lus','lus','lut','lûmes','lûtes','lurent'],
+    subjonctif_imparfait: ['lusse','lusses','lût','lussions','lussiez','lussent'],
+    imperatif: ['lis','lisons','lisez']
+  },
+  'vivre': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'vécu',
+    prp: 'vivant',
+    present: ['vis','vis','vit','vivons','vivez','vivent'],
+    imparfait: ['vivais','vivais','vivait','vivions','viviez','vivaient'],
+    futur_simple: ['vivrai','vivras','vivra','vivrons','vivrez','vivront'],
+    conditionnel_present: ['vivrais','vivrais','vivrait','vivrions','vivriez','vivraient'],
+    subjonctif_present: ['vive','vives','vive','vivions','viviez','vivent'],
+    passe_simple: ['vécus','vécus','vécut','vécûmes','vécûtes','vécurent'],
+    subjonctif_imparfait: ['vécusse','vécusses','vécût','vécussions','vécussiez','vécussent'],
+    imperatif: ['vis','vivons','vivez']
+  },
+  'suivre': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'suivi',
+    prp: 'suivant',
+    present: ['suis','suis','suit','suivons','suivez','suivent'],
+    imparfait: ['suivais','suivais','suivait','suivions','suiviez','suivaient'],
+    futur_simple: ['suivrai','suivras','suivra','suivrons','suivrez','suivront'],
+    conditionnel_present: ['suivrais','suivrais','suivrait','suivrions','suivriez','suivraient'],
+    subjonctif_present: ['suive','suives','suive','suivions','suiviez','suivent'],
+    passe_simple: ['suivis','suivis','suivit','suivîmes','suivîtes','suivirent'],
+    subjonctif_imparfait: ['suivisse','suivisses','suivît','suivissions','suivissiez','suivissent'],
+    imperatif: ['suis','suivons','suivez']
+  },
+  'recevoir': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'reçu',
+    prp: 'recevant',
+    present: ['reçois','reçois','reçoit','recevons','recevez','reçoivent'],
+    imparfait: ['recevais','recevais','recevait','recevions','receviez','recevaient'],
+    futur_simple: ['recevrai','recevras','recevra','recevrons','recevrez','recevront'],
+    conditionnel_present: ['recevrais','recevrais','recevrait','recevrions','recevriez','recevraient'],
+    subjonctif_present: ['reçoive','reçoives','reçoive','recevions','receviez','reçoivent'],
+    passe_simple: ['reçus','reçus','reçut','reçûmes','reçûtes','reçurent'],
+    subjonctif_imparfait: ['reçusse','reçusses','reçût','reçussions','reçussiez','reçussent'],
+    imperatif: ['reçois','recevons','recevez']
+  },
+  'mourir': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'être',
+    pp: 'mort',
+    prp: 'mourant',
+    present: ['meurs','meurs','meurt','mourons','mourez','meurent'],
+    imparfait: ['mourais','mourais','mourait','mourions','mouriez','mouraient'],
+    futur_simple: ['mourrai','mourras','mourra','mourrons','mourrez','mourront'],
+    conditionnel_present: ['mourrais','mourrais','mourrait','mourrions','mourriez','mourraient'],
+    subjonctif_present: ['meure','meures','meure','mourions','mouriez','meurent'],
+    passe_simple: ['mourus','mourus','mourut','mourûmes','mourûtes','moururent'],
+    subjonctif_imparfait: ['mourusse','mourusses','mourût','mourussions','mourussiez','mourussent'],
+    imperatif: ['meurs','mourons','mourez']
+  },
+  'naître': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'être',
+    pp: 'né',
+    prp: 'naissant',
+    present: ['nais','nais','naît','naissons','naissez','naissent'],
+    imparfait: ['naissais','naissais','naissait','naissions','naissiez','naissaient'],
+    futur_simple: ['naîtrai','naîtras','naîtra','naîtrons','naîtrez','naîtront'],
+    conditionnel_present: ['naîtrais','naîtrais','naîtrait','naîtrions','naîtriez','naîtraient'],
+    subjonctif_present: ['naisse','naisses','naisse','naissions','naissiez','naissent'],
+    passe_simple: ['naquis','naquis','naquit','naquîmes','naquîtes','naquirent'],
+    subjonctif_imparfait: ['naquisse','naquisses','naquît','naquissions','naquissiez','naquissent'],
+    imperatif: ['nais','naissons','naissez']
+  },
+  'courir': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'couru',
+    prp: 'courant',
+    present: ['cours','cours','court','courons','courez','courent'],
+    imparfait: ['courais','courais','courait','courions','couriez','couraient'],
+    futur_simple: ['courrai','courras','courra','courrons','courrez','courront'],
+    conditionnel_present: ['courrais','courrais','courrait','courrions','courriez','courraient'],
+    subjonctif_present: ['coure','coures','coure','courions','couriez','courent'],
+    passe_simple: ['courus','courus','courut','courûmes','courûtes','coururent'],
+    subjonctif_imparfait: ['courusse','courusses','courût','courussions','courussiez','courussent'],
+    imperatif: ['cours','courons','courez']
+  },
+  'ouvrir': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'ouvert',
+    prp: 'ouvrant',
+    present: ['ouvre','ouvres','ouvre','ouvrons','ouvrez','ouvrent'],
+    imparfait: ['ouvrais','ouvrais','ouvrait','ouvrions','ouvriez','ouvraient'],
+    futur_simple: ['ouvrirai','ouvriras','ouvrira','ouvrirons','ouvrirez','ouvriront'],
+    conditionnel_present: ['ouvrirais','ouvrirais','ouvrirait','ouvririons','ouvririez','ouvriraient'],
+    subjonctif_present: ['ouvre','ouvres','ouvre','ouvrions','ouvriez','ouvrent'],
+    passe_simple: ['ouvris','ouvris','ouvrit','ouvrîmes','ouvrîtes','ouvrirent'],
+    subjonctif_imparfait: ['ouvrisse','ouvrisses','ouvrît','ouvrissions','ouvrissiez','ouvrissent'],
+    imperatif: ['ouvre','ouvrons','ouvrez']
+  },
+  'conduire': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'conduit',
+    prp: 'conduisant',
+    present: ['conduis','conduis','conduit','conduisons','conduisez','conduisent'],
+    imparfait: ['conduisais','conduisais','conduisait','conduisions','conduisiez','conduisaient'],
+    futur_simple: ['conduirai','conduiras','conduira','conduirons','conduirez','conduiront'],
+    conditionnel_present: ['conduirais','conduirais','conduirait','conduirions','conduiriez','conduiraient'],
+    subjonctif_present: ['conduise','conduises','conduise','conduisions','conduisiez','conduisent'],
+    passe_simple: ['conduisis','conduisis','conduisit','conduisîmes','conduisîtes','conduisirent'],
+    subjonctif_imparfait: ['conduisisse','conduisisses','conduisît','conduisissions','conduisissiez','conduisissent'],
+    imperatif: ['conduis','conduisons','conduisez']
+  },
+  'craindre': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'craint',
+    prp: 'craignant',
+    present: ['crains','crains','craint','craignons','craignez','craignent'],
+    imparfait: ['craignais','craignais','craignait','craignions','craigniez','craignaient'],
+    futur_simple: ['craindrai','craindras','craindra','craindrons','craindrez','craindront'],
+    conditionnel_present: ['craindrais','craindrais','craindrait','craindrions','craindriez','craindraient'],
+    subjonctif_present: ['craigne','craignes','craigne','craignions','craigniez','craignent'],
+    passe_simple: ['craignis','craignis','craignit','craignîmes','craignîtes','craignirent'],
+    subjonctif_imparfait: ['craignisse','craignisses','craignît','craignissions','craignissiez','craignissent'],
+    imperatif: ['crains','craignons','craignez']
+  },
+  'plaire': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'plu',
+    prp: 'plaisant',
+    present: ['plais','plais','plaît','plaisons','plaisez','plaisent'],
+    imparfait: ['plaisais','plaisais','plaisait','plaisions','plaisiez','plaisaient'],
+    futur_simple: ['plairai','plairas','plaira','plairons','plairez','plairont'],
+    conditionnel_present: ['plairais','plairais','plairait','plairions','plairiez','plairaient'],
+    subjonctif_present: ['plaise','plaises','plaise','plaisions','plaisiez','plaisent'],
+    passe_simple: ['plus','plus','plut','plûmes','plûtes','plurent'],
+    subjonctif_imparfait: ['plusse','plusses','plût','plussions','plussiez','plussent'],
+    imperatif: ['plais','plaisons','plaisez']
+  },
+  'rire': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'ri',
+    prp: 'riant',
+    present: ['ris','ris','rit','rions','riez','rient'],
+    imparfait: ['riais','riais','riait','riions','riiez','riaient'],
+    futur_simple: ['rirai','riras','rira','rirons','rirez','riront'],
+    conditionnel_present: ['rirais','rirais','rirait','ririons','ririez','riraient'],
+    subjonctif_present: ['rie','ries','rie','riions','riiez','rient'],
+    passe_simple: ['ris','ris','rit','rîmes','rîtes','rirent'],
+    subjonctif_imparfait: ['risse','risses','rît','rissions','rissiez','rissent'],
+    imperatif: ['ris','rions','riez']
+  },
+  'battre': {
+    group: 'Неправильный (3-я гр.)',
+    aux: 'avoir',
+    pp: 'battu',
+    prp: 'battant',
+    present: ['bats','bats','bat','battons','battez','battent'],
+    imparfait: ['battais','battais','battait','battions','battiez','battaient'],
+    futur_simple: ['battrai','battras','battra','battrons','battrez','battront'],
+    conditionnel_present: ['battrais','battrais','battrait','battrions','battriez','battraient'],
+    subjonctif_present: ['batte','battes','batte','battions','battiez','battent'],
+    passe_simple: ['battis','battis','battit','battîmes','battîtes','battirent'],
+    subjonctif_imparfait: ['battisse','battisses','battît','battissions','battissiez','battissent'],
+    imperatif: ['bats','battons','battez']
+  },
+  'envoyer': {
+    group: 'Неправильный (1-я гр.)',
+    aux: 'avoir',
+    pp: 'envoyé',
+    prp: 'envoyant',
+    present: ['envoie','envoies','envoie','envoyons','envoyez','envoient'],
+    imparfait: ['envoyais','envoyais','envoyait','envoyions','envoyiez','envoyaient'],
+    futur_simple: ['enverrai','enverras','enverra','enverrons','enverrez','enverront'],
+    conditionnel_present: ['enverrais','enverrais','enverrait','enverrions','enverriez','enverraient'],
+    subjonctif_present: ['envoie','envoies','envoie','envoyions','envoyiez','envoient'],
+    passe_simple: ['envoyai','envoyas','envoya','envoyâmes','envoyâtes','envoyèrent'],
+    subjonctif_imparfait: ['envoyasse','envoyasses','envoyât','envoyassions','envoyassiez','envoyassent'],
+    imperatif: ['envoie','envoyons','envoyez']
+  },
+  'appeler': {
+    group: 'Неправильный (1-я гр.)',
+    aux: 'avoir',
+    pp: 'appelé',
+    prp: 'appelant',
+    present: ['appelle','appelles','appelle','appelons','appelez','appellent'],
+    imparfait: ['appelais','appelais','appelait','appelions','appeliez','appelaient'],
+    futur_simple: ['appellerai','appelleras','appellera','appellerons','appellerez','appelleront'],
+    conditionnel_present: ['appellerais','appellerais','appellerait','appellerions','appelleriez','appelleraient'],
+    subjonctif_present: ['appelle','appelles','appelle','appelions','appeliez','appellent'],
+    passe_simple: ['appelai','appelas','appela','appelâmes','appelâtes','appelèrent'],
+    subjonctif_imparfait: ['appelasse','appelasses','appelât','appelassions','appelassiez','appelassent'],
+    imperatif: ['appelle','appelons','appelez']
+  },
+  'acheter': {
+    group: 'Неправильный (1-я гр.)',
+    aux: 'avoir',
+    pp: 'acheté',
+    prp: 'achetant',
+    present: ['achète','achètes','achète','achetons','achetez','achètent'],
+    imparfait: ['achetais','achetais','achetait','achetions','achetiez','achetaient'],
+    futur_simple: ['achèterai','achèteras','achètera','achèterons','achèterez','achèteront'],
+    conditionnel_present: ['achèterais','achèterais','achèterait','achèterions','achèteriez','achèteraient'],
+    subjonctif_present: ['achète','achètes','achète','achetions','achetiez','achètent'],
+    passe_simple: ['achetai','achetas','acheta','achetâmes','achetâtes','achetèrent'],
+    subjonctif_imparfait: ['achetasse','achetasses','achetât','achetassions','achetassiez','achetassent'],
+    imperatif: ['achète','achetons','achetez']
+  },
+  // --- Глаголы на -uire (как conduire) ---
+  'construire': {
+    group: 'Неправильный (3-я гр., как conduire)',
+    aux: 'avoir', pp: 'construit', prp: 'construisant',
+    present: ['construis','construis','construit','construisons','construisez','construisent'],
+    imparfait: ['construisais','construisais','construisait','construisions','construisiez','construisaient'],
+    futur_simple: ['construirai','construiras','construira','construirons','construirez','construiront'],
+    conditionnel_present: ['construirais','construirais','construirait','construirions','construiriez','construiraient'],
+    subjonctif_present: ['construise','construises','construise','construisions','construisiez','construisent'],
+    passe_simple: ['construisis','construisis','construisit','construisîmes','construisîtes','construisirent'],
+    subjonctif_imparfait: ['construisisse','construisisses','construisît','construisissions','construisissiez','construisissent'],
+    imperatif: ['construis','construisons','construisez']
+  },
+  'produire': {
+    group: 'Неправильный (3-я гр., как conduire)',
+    aux: 'avoir', pp: 'produit', prp: 'produisant',
+    present: ['produis','produis','produit','produisons','produisez','produisent'],
+    imparfait: ['produisais','produisais','produisait','produisions','produisiez','produisaient'],
+    futur_simple: ['produirai','produiras','produira','produirons','produirez','produiront'],
+    conditionnel_present: ['produirais','produirais','produirait','produirions','produiriez','produiraient'],
+    subjonctif_present: ['produise','produises','produise','produisions','produisiez','produisent'],
+    passe_simple: ['produisis','produisis','produisit','produisîmes','produisîtes','produisirent'],
+    subjonctif_imparfait: ['produisisse','produisisses','produisît','produisissions','produisissiez','produisissent'],
+    imperatif: ['produis','produisons','produisez']
+  },
+  'traduire': {
+    group: 'Неправильный (3-я гр., как conduire)',
+    aux: 'avoir', pp: 'traduit', prp: 'traduisant',
+    present: ['traduis','traduis','traduit','traduisons','traduisez','traduisent'],
+    imparfait: ['traduisais','traduisais','traduisait','traduisions','traduisiez','traduisaient'],
+    futur_simple: ['traduirai','traduiras','traduira','traduirons','traduirez','traduiront'],
+    conditionnel_present: ['traduirais','traduirais','traduirait','traduirions','traduiriez','traduiraient'],
+    subjonctif_present: ['traduise','traduises','traduise','traduisions','traduisiez','traduisent'],
+    passe_simple: ['traduisis','traduisis','traduisit','traduisîmes','traduisîtes','traduisirent'],
+    subjonctif_imparfait: ['traduisisse','traduisisses','traduisît','traduisissions','traduisissiez','traduisissent'],
+    imperatif: ['traduis','traduisons','traduisez']
+  },
+  'détruire': {
+    group: 'Неправильный (3-я гр., как conduire)',
+    aux: 'avoir', pp: 'détruit', prp: 'détruisant',
+    present: ['détruis','détruis','détruit','détruisons','détruisez','détruisent'],
+    imparfait: ['détruisais','détruisais','détruisait','détruisions','détruisiez','détruisaient'],
+    futur_simple: ['détruirai','détruiras','détruira','détruirons','détruirez','détruiront'],
+    conditionnel_present: ['détruirais','détruirais','détruirait','détruirions','détruiriez','détruiraient'],
+    subjonctif_present: ['détruise','détruises','détruise','détruisions','détruisiez','détruisent'],
+    passe_simple: ['détruisis','détruisis','détruisit','détruisîmes','détruisîtes','détruisirent'],
+    subjonctif_imparfait: ['détruisisse','détruisisses','détruisît','détruisissions','détruisissiez','détruisissent'],
+    imperatif: ['détruis','détruisons','détruisez']
+  },
+  'réduire': {
+    group: 'Неправильный (3-я гр., как conduire)',
+    aux: 'avoir', pp: 'réduit', prp: 'réduisant',
+    present: ['réduis','réduis','réduit','réduisons','réduisez','réduisent'],
+    imparfait: ['réduisais','réduisais','réduisait','réduisions','réduisiez','réduisaient'],
+    futur_simple: ['réduirai','réduiras','réduira','réduirons','réduirez','réduiront'],
+    conditionnel_present: ['réduirais','réduirais','réduirait','réduirions','réduiriez','réduiraient'],
+    subjonctif_present: ['réduise','réduises','réduise','réduisions','réduisiez','réduisent'],
+    passe_simple: ['réduisis','réduisis','réduisit','réduisîmes','réduisîtes','réduisirent'],
+    subjonctif_imparfait: ['réduisisse','réduisisses','réduisît','réduisissions','réduisissiez','réduisissent'],
+    imperatif: ['réduis','réduisons','réduisez']
+  },
+  'introduire': {
+    group: 'Неправильный (3-я гр., как conduire)',
+    aux: 'avoir', pp: 'introduit', prp: 'introduisant',
+    present: ['introduis','introduis','introduit','introduisons','introduisez','introduisent'],
+    imparfait: ['introduisais','introduisais','introduisait','introduisions','introduisiez','introduisaient'],
+    futur_simple: ['introduirai','introduiras','introduira','introduirons','introduirez','introduiront'],
+    conditionnel_present: ['introduirais','introduirais','introduirait','introduirions','introduiriez','introduiraient'],
+    subjonctif_present: ['introduise','introduises','introduise','introduisions','introduisiez','introduisent'],
+    passe_simple: ['introduisis','introduisis','introduisit','introduisîmes','introduisîtes','introduisirent'],
+    subjonctif_imparfait: ['introduisisse','introduisisses','introduisît','introduisissions','introduisissiez','introduisissent'],
+    imperatif: ['introduis','introduisons','introduisez']
+  },
+  // --- Глаголы на -indre (как craindre) ---
+  'plaindre': {
+    group: 'Неправильный (3-я гр., как craindre)',
+    aux: 'avoir', pp: 'plaint', prp: 'plaignant',
+    present: ['plains','plains','plaint','plaignons','plaignez','plaignent'],
+    imparfait: ['plaignais','plaignais','plaignait','plaignions','plaigniez','plaignaient'],
+    futur_simple: ['plaindrai','plaindras','plaindra','plaindrons','plaindrez','plaindront'],
+    conditionnel_present: ['plaindrais','plaindrais','plaindrait','plaindrions','plaindriez','plaindraient'],
+    subjonctif_present: ['plaigne','plaignes','plaigne','plaignions','plaigniez','plaignent'],
+    passe_simple: ['plaignis','plaignis','plaignit','plaignîmes','plaignîtes','plaignirent'],
+    subjonctif_imparfait: ['plaignisse','plaignisses','plaignît','plaignissions','plaignissiez','plaignissent'],
+    imperatif: ['plains','plaignons','plaignez']
+  },
+  'peindre': {
+    group: 'Неправильный (3-я гр., как craindre)',
+    aux: 'avoir', pp: 'peint', prp: 'peignant',
+    present: ['peins','peins','peint','peignons','peignez','peignent'],
+    imparfait: ['peignais','peignais','peignait','peignions','peigniez','peignaient'],
+    futur_simple: ['peindrai','peindras','peindra','peindrons','peindrez','peindront'],
+    conditionnel_present: ['peindrais','peindrais','peindrait','peindrions','peindriez','peindraient'],
+    subjonctif_present: ['peigne','peignes','peigne','peignions','peigniez','peignent'],
+    passe_simple: ['peignis','peignis','peignit','peignîmes','peignîtes','peignirent'],
+    subjonctif_imparfait: ['peignisse','peignisses','peignît','peignissions','peignissiez','peignissent'],
+    imperatif: ['peins','peignons','peignez']
+  },
+  'éteindre': {
+    group: 'Неправильный (3-я гр., как craindre)',
+    aux: 'avoir', pp: 'éteint', prp: 'éteignant',
+    present: ['éteins','éteins','éteint','éteignons','éteignez','éteignent'],
+    imparfait: ['éteignais','éteignais','éteignait','éteignions','éteigniez','éteignaient'],
+    futur_simple: ['éteindrai','éteindras','éteindra','éteindrons','éteindrez','éteindront'],
+    conditionnel_present: ['éteindrais','éteindrais','éteindrait','éteindrions','éteindriez','éteindraient'],
+    subjonctif_present: ['éteigne','éteignes','éteigne','éteignions','éteigniez','éteignent'],
+    passe_simple: ['éteignis','éteignis','éteignit','éteignîmes','éteignîtes','éteignirent'],
+    subjonctif_imparfait: ['éteignisse','éteignisses','éteignît','éteignissions','éteignissiez','éteignissent'],
+    imperatif: ['éteins','éteignons','éteignez']
+  },
+  'atteindre': {
+    group: 'Неправильный (3-я гр., как craindre)',
+    aux: 'avoir', pp: 'atteint', prp: 'atteignant',
+    present: ['atteins','atteins','atteint','atteignons','atteignez','atteignent'],
+    imparfait: ['atteignais','atteignais','atteignait','atteignions','atteigniez','atteignaient'],
+    futur_simple: ['atteindrai','atteindras','atteindra','atteindrons','atteindrez','atteindront'],
+    conditionnel_present: ['atteindrais','atteindrais','atteindrait','atteindrions','atteindriez','atteindraient'],
+    subjonctif_present: ['atteigne','atteignes','atteigne','atteignions','atteigniez','atteignent'],
+    passe_simple: ['atteignis','atteignis','atteignit','atteignîmes','atteignîtes','atteignirent'],
+    subjonctif_imparfait: ['atteignisse','atteignisses','atteignît','atteignissions','atteignissiez','atteignissent'],
+    imperatif: ['atteins','atteignons','atteignez']
+  },
+  // --- offrir, souffrir (как ouvrir, но другая основа) ---
+  'offrir': {
+    group: 'Неправильный (3-я гр., как ouvrir)',
+    aux: 'avoir', pp: 'offert', prp: 'offrant',
+    present: ['offre','offres','offre','offrons','offrez','offrent'],
+    imparfait: ['offrais','offrais','offrait','offrions','offriez','offraient'],
+    futur_simple: ['offrirai','offriras','offrira','offrirons','offrirez','offriront'],
+    conditionnel_present: ['offrirais','offrirais','offrirait','offririons','offririez','offriraient'],
+    subjonctif_present: ['offre','offres','offre','offrions','offriez','offrent'],
+    passe_simple: ['offris','offris','offrit','offrîmes','offrîtes','offrirent'],
+    subjonctif_imparfait: ['offrisse','offrisses','offrît','offrissions','offrissiez','offrissent'],
+    imperatif: ['offre','offrons','offrez']
+  },
+  // --- Глаголы на -crire (как écrire) ---
+  'décrire': {
+    group: 'Неправильный (3-я гр., как écrire)',
+    aux: 'avoir', pp: 'décrit', prp: 'décrivant',
+    present: ['décris','décris','décrit','décrivons','décrivez','décrivent'],
+    imparfait: ['décrivais','décrivais','décrivait','décrivions','décriviez','décrivaient'],
+    futur_simple: ['décrirai','décriras','décrira','décrirons','décrirez','décriront'],
+    conditionnel_present: ['décrirais','décrirais','décrirait','décririons','décririez','décriraient'],
+    subjonctif_present: ['décrive','décrives','décrive','décrivions','décriviez','décrivent'],
+    passe_simple: ['décrivis','décrivis','décrivit','décrivîmes','décrivîtes','décrivirent'],
+    subjonctif_imparfait: ['décrivisse','décrivisses','décrivît','décrivissions','décrivissiez','décrivissent'],
+    imperatif: ['décris','décrivons','décrivez']
+  },
+  'inscrire': {
+    group: 'Неправильный (3-я гр., как écrire)',
+    aux: 'avoir', pp: 'inscrit', prp: 'inscrivant',
+    present: ['inscris','inscris','inscrit','inscrivons','inscrivez','inscrivent'],
+    imparfait: ['inscrivais','inscrivais','inscrivait','inscrivions','inscriviez','inscrivaient'],
+    futur_simple: ['inscrirai','inscriras','inscrira','inscrirons','inscrirez','inscriront'],
+    conditionnel_present: ['inscrirais','inscrirais','inscrirait','inscririons','inscririez','inscriraient'],
+    subjonctif_present: ['inscrive','inscrives','inscrive','inscrivions','inscriviez','inscrivent'],
+    passe_simple: ['inscrivis','inscrivis','inscrivit','inscrivîmes','inscrivîtes','inscrivirent'],
+    subjonctif_imparfait: ['inscrivisse','inscrivisses','inscrivît','inscrivissions','inscrivissiez','inscrivissent'],
+    imperatif: ['inscris','inscrivons','inscrivez']
+  },
+  'prescrire': {
+    group: 'Неправильный (3-я гр., как écrire)',
+    aux: 'avoir', pp: 'prescrit', prp: 'prescrivant',
+    present: ['prescris','prescris','prescrit','prescrivons','prescrivez','prescrivent'],
+    imparfait: ['prescrivais','prescrivais','prescrivait','prescrivions','prescriviez','prescrivaient'],
+    futur_simple: ['prescrirai','prescriras','prescrira','prescrirons','prescrirez','prescriront'],
+    conditionnel_present: ['prescrirais','prescrirais','prescrirait','prescririons','prescririez','prescriraient'],
+    subjonctif_present: ['prescrive','prescrives','prescrive','prescrivions','prescriviez','prescrivent'],
+    passe_simple: ['prescrivis','prescrivis','prescrivit','prescrivîmes','prescrivîtes','prescrivirent'],
+    subjonctif_imparfait: ['prescrivisse','prescrivisses','prescrivît','prescrivissions','prescrivissiez','prescrivissent'],
+    imperatif: ['prescris','prescrivons','prescrivez']
+  },
+  'transcrire': {
+    group: 'Неправильный (3-я гр., как écrire)',
+    aux: 'avoir', pp: 'transcrit', prp: 'transcrivant',
+    present: ['transcris','transcris','transcrit','transcrivons','transcrivez','transcrivent'],
+    imparfait: ['transcrivais','transcrivais','transcrivait','transcrivions','transcriviez','transcrivaient'],
+    futur_simple: ['transcrirai','transcriras','transcrira','transcrirons','transcrirez','transcriront'],
+    conditionnel_present: ['transcrirais','transcrirais','transcrirait','transcririons','transcririez','transcriraient'],
+    subjonctif_present: ['transcrive','transcrives','transcrive','transcrivions','transcriviez','transcrivent'],
+    passe_simple: ['transcrivis','transcrivis','transcrivit','transcrivîmes','transcrivîtes','transcrivirent'],
+    subjonctif_imparfait: ['transcrivisse','transcrivisses','transcrivît','transcrivissions','transcrivissiez','transcrivissent'],
+    imperatif: ['transcris','transcrivons','transcrivez']
+  },
+  'souffrir': {
+    group: 'Неправильный (3-я гр., как ouvrir)',
+    aux: 'avoir', pp: 'souffert', prp: 'souffrant',
+    present: ['souffre','souffres','souffre','souffrons','souffrez','souffrent'],
+    imparfait: ['souffrais','souffrais','souffrait','souffrions','souffriez','souffraient'],
+    futur_simple: ['souffrirai','souffriras','souffrira','souffrirons','souffrirez','souffriront'],
+    conditionnel_present: ['souffrirais','souffrirais','souffrirait','souffririons','souffririez','souffriraient'],
+    subjonctif_present: ['souffre','souffres','souffre','souffrions','souffriez','souffrent'],
+    passe_simple: ['souffris','souffris','souffrit','souffrîmes','souffrîtes','souffrirent'],
+    subjonctif_imparfait: ['souffrisse','souffrisses','souffrît','souffrissions','souffrissiez','souffrissent'],
+    imperatif: ['souffre','souffrons','souffrez']
+  }
+};
+
+// ============================================================
+// DERIVED VERBS (follow pattern of a base verb)
+// ============================================================
+const DERIVED = {
+  'comprendre': { base: 'prendre', prefix: 'com' },
+  'apprendre': { base: 'prendre', prefix: 'ap' },
+  'surprendre': { base: 'prendre', prefix: 'sur' },
+  'reprendre': { base: 'prendre', prefix: 're' },
+  'entreprendre': { base: 'prendre', prefix: 'entre' },
+  'permettre': { base: 'mettre', prefix: 'per' },
+  'promettre': { base: 'mettre', prefix: 'pro' },
+  'admettre': { base: 'mettre', prefix: 'ad' },
+  'soumettre': { base: 'mettre', prefix: 'sou' },
+  'remettre': { base: 'mettre', prefix: 're' },
+  'transmettre': { base: 'mettre', prefix: 'trans' },
+  'devenir': { base: 'venir', prefix: 'de', aux: 'être' },
+  'revenir': { base: 'venir', prefix: 're', aux: 'être' },
+  'parvenir': { base: 'venir', prefix: 'par', aux: 'être' },
+  'intervenir': { base: 'venir', prefix: 'inter', aux: 'être' },
+  'survenir': { base: 'venir', prefix: 'sur', aux: 'être' },
+  'obtenir': { base: 'tenir', prefix: 'ob' },
+  'retenir': { base: 'tenir', prefix: 're' },
+  'maintenir': { base: 'tenir', prefix: 'main' },
+  'appartenir': { base: 'tenir', prefix: 'appar' },
+  'contenir': { base: 'tenir', prefix: 'con' },
+  'soutenir': { base: 'tenir', prefix: 'sou' },
+  'revoir': { base: 'voir', prefix: 're' },
+  'prévoir': { base: 'voir', prefix: 'pré',
+    futur_simple_override: true // prévoir has regular future: prévoirai
+  },
+  'relire': { base: 'lire', prefix: 're' },
+  'élire': { base: 'lire', prefix: 'é' },
+  'couvrir': { base: 'ouvrir', prefix: 'c' },
+  'découvrir': { base: 'ouvrir', prefix: 'déc' },
+  'combattre': { base: 'battre', prefix: 'com' },
+  'abattre': { base: 'battre', prefix: 'a' },
+  'sourire': { base: 'rire', prefix: 'sou' },
+  'endormir': { base: 'dormir', prefix: 'en' },
+  'repartir': { base: 'partir', prefix: 're', aux: 'être' },
+  'renvoyer': { base: 'envoyer', prefix: 'r' },
+  'rappeler': { base: 'appeler', prefix: 'r' },
+  'survivre': { base: 'vivre', prefix: 'sur' },
+  'poursuivre': { base: 'suivre', prefix: 'pour' },
+  'déplaire': { base: 'plaire', prefix: 'dé' },
+};
+
+// ============================================================
+// REGULAR CONJUGATION ENGINE
+// ============================================================
+
+function getGroup(infinitive) {
+  if (infinitive.endsWith('er')) return 1;
+  if (infinitive.endsWith('ir')) return 2;
+  if (infinitive.endsWith('re')) return 3;
+  return 0;
+}
+
+function regularConjugation(infinitive) {
+  const group = getGroup(infinitive);
+  if (group === 0) return null;
+
+  let stem, result = {};
+  result.aux = 'avoir';
+  result.group = group === 1 ? '1-я группа (-er)' : group === 2 ? '2-я группа (-ir)' : '3-я группа (-re)';
+
+  if (group === 1) {
+    stem = infinitive.slice(0, -2);
+    result.pp = stem + 'é';
+    result.prp = stem + 'ant';
+    result.present = [stem+'e', stem+'es', stem+'e', stem+'ons', stem+'ez', stem+'ent'];
+    result.imparfait = [stem+'ais', stem+'ais', stem+'ait', stem+'ions', stem+'iez', stem+'aient'];
+    result.futur_simple = [infinitive+'ai', infinitive+'as', infinitive+'a', infinitive+'ons', infinitive+'ez', infinitive+'ont'];
+    result.conditionnel_present = [infinitive+'ais', infinitive+'ais', infinitive+'ait', infinitive+'ions', infinitive+'iez', infinitive+'aient'];
+    result.subjonctif_present = [stem+'e', stem+'es', stem+'e', stem+'ions', stem+'iez', stem+'ent'];
+    result.passe_simple = [stem+'ai', stem+'as', stem+'a', stem+'âmes', stem+'âtes', stem+'èrent'];
+    result.subjonctif_imparfait = [stem+'asse', stem+'asses', stem+'ât', stem+'assions', stem+'assiez', stem+'assent'];
+    result.imperatif = [stem+'e', stem+'ons', stem+'ez'];
+  } else if (group === 2) {
+    stem = infinitive.slice(0, -2);
+    result.pp = stem + 'i';
+    result.prp = stem + 'issant';
+    result.present = [stem+'is', stem+'is', stem+'it', stem+'issons', stem+'issez', stem+'issent'];
+    result.imparfait = [stem+'issais', stem+'issais', stem+'issait', stem+'issions', stem+'issiez', stem+'issaient'];
+    result.futur_simple = [infinitive+'ai', infinitive+'as', infinitive+'a', infinitive+'ons', infinitive+'ez', infinitive+'ont'];
+    result.conditionnel_present = [infinitive+'ais', infinitive+'ais', infinitive+'ait', infinitive+'ions', infinitive+'iez', infinitive+'aient'];
+    result.subjonctif_present = [stem+'isse', stem+'isses', stem+'isse', stem+'issions', stem+'issiez', stem+'issent'];
+    result.passe_simple = [stem+'is', stem+'is', stem+'it', stem+'îmes', stem+'îtes', stem+'irent'];
+    result.subjonctif_imparfait = [stem+'isse', stem+'isses', stem+'ît', stem+'issions', stem+'issiez', stem+'issent'];
+    result.imperatif = [stem+'is', stem+'issons', stem+'issez'];
+  } else {
+    stem = infinitive.slice(0, -2);
+    result.pp = stem + 'u';
+    result.prp = stem + 'ant';
+    const futurStem = stem + 'r';
+    result.present = [stem+'s', stem+'s', stem+'', stem+'ons', stem+'ez', stem+'ent'];
+    result.imparfait = [stem+'ais', stem+'ais', stem+'ait', stem+'ions', stem+'iez', stem+'aient'];
+    result.futur_simple = [futurStem+'ai', futurStem+'as', futurStem+'a', futurStem+'ons', futurStem+'ez', futurStem+'ont'];
+    result.conditionnel_present = [futurStem+'ais', futurStem+'ais', futurStem+'ait', futurStem+'ions', futurStem+'iez', futurStem+'aient'];
+    result.subjonctif_present = [stem+'e', stem+'es', stem+'e', stem+'ions', stem+'iez', stem+'ent'];
+    result.passe_simple = [stem+'is', stem+'is', stem+'it', stem+'îmes', stem+'îtes', stem+'irent'];
+    result.subjonctif_imparfait = [stem+'isse', stem+'isses', stem+'ît', stem+'issions', stem+'issiez', stem+'issent'];
+    result.imperatif = [stem+'s', stem+'ons', stem+'ez'];
+  }
+
+  return result;
+}
+
+// ============================================================
+// DERIVED VERB BUILDER
+// ============================================================
+function buildDerived(infinitive, info) {
+  const baseData = IRREG[info.base];
+  if (!baseData) return null;
+
+  const result = {};
+  result.group = baseData.group + ' (как ' + info.base + ')';
+  result.aux = info.aux || baseData.aux;
+
+  // For simple prefix-based derivation
+  const baseInf = info.base;
+
+  function deriveForm(form) {
+    // Simple prefix: prepend the prefix to the full base form
+    // e.g. ob + tiens = obtiens, com + prends = comprends
+    return info.prefix + form;
+  }
+
+  // Simple tenses
+  const simpleTenses = ['present','imparfait','futur_simple','conditionnel_present',
+    'subjonctif_present','passe_simple','subjonctif_imparfait'];
+
+  for (const t of simpleTenses) {
+    if (baseData[t]) {
+      result[t] = baseData[t].map(f => deriveForm(f));
+    }
+  }
+
+  if (baseData.imperatif) {
+    result.imperatif = baseData.imperatif.map(f => deriveForm(f));
+  } else {
+    result.imperatif = null;
+  }
+
+  // Past participle and present participle
+  result.pp = deriveForm(baseData.pp);
+  result.prp = deriveForm(baseData.prp);
+
+  return result;
+}
+
+function escapeRegex(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// ============================================================
+// COMPOUND TENSE BUILDER
+// ============================================================
+function getAuxForms(aux, tenseId) {
+  const auxData = IRREG[aux];
+  if (!auxData) return null;
+  return auxData[tenseId] || null;
+}
+
+function buildCompoundForms(auxForms, pp, isEtre) {
+  if (!auxForms) return null;
+  return auxForms.map((f, i) => {
+    const suffix = isEtre ? (i >= 4 ? '(s)' : '') : '';
+    return f + ' ' + pp + suffix;
+  });
+}
+
+// ============================================================
+// RUSSIAN TRANSLATIONS FOR PP / PRP
+// ============================================================
+const PP_TRANSLATIONS = {
+  'été': 'бывший', 'eu': 'имевший', 'allé': 'ушедший/пошедший',
+  'fait': 'сделанный', 'pu': 'смогший', 'voulu': 'захотевший',
+  'dû': 'должный/обязанный', 'su': 'узнавший', 'vu': 'увиденный',
+  'pris': 'взятый', 'mis': 'положенный', 'dit': 'сказанный',
+  'venu': 'пришедший', 'tenu': 'держанный', 'parti': 'уехавший',
+  'sorti': 'вышедший', 'dormi': 'спавший', 'connu': 'узнанный/знакомый',
+  'cru': 'поверивший', 'bu': 'выпитый', 'écrit': 'написанный',
+  'lu': 'прочитанный', 'vécu': 'проживший', 'suivi': 'следовавший',
+  'reçu': 'полученный', 'mort': 'умерший', 'né': 'родившийся',
+  'couru': 'бежавший', 'ouvert': 'открытый', 'conduit': 'ведённый',
+  'craint': 'испуганный', 'plu': 'понравившийся', 'ri': 'смеявшийся',
+  'battu': 'битый', 'envoyé': 'отправленный', 'appelé': 'названный/позванный',
+  'acheté': 'купленный'
+};
+
+const PRP_TRANSLATIONS = {
+  'étant': 'будучи', 'ayant': 'имея', 'allant': 'идя',
+  'faisant': 'делая', 'pouvant': 'имея возможность', 'voulant': 'желая',
+  'devant': 'будучи должным', 'sachant': 'зная', 'voyant': 'видя',
+  'prenant': 'беря', 'mettant': 'кладя', 'disant': 'говоря',
+  'venant': 'приходя', 'tenant': 'держа', 'partant': 'уезжая',
+  'sortant': 'выходя', 'dormant': 'спя', 'connaissant': 'зная',
+  'croyant': 'веря', 'buvant': 'выпивая', 'écrivant': 'пиша/записывая',
+  'lisant': 'читая', 'vivant': 'живя', 'suivant': 'следуя',
+  'recevant': 'получая', 'mourant': 'умирая', 'naissant': 'рождаясь',
+  'courant': 'бегая', 'ouvrant': 'открывая', 'conduisant': 'ведя',
+  'craignant': 'боясь', 'plaisant': 'нравясь', 'riant': 'смеясь',
+  'battant': 'бьюсь/бия', 'envoyant': 'отправляя', 'appelant': 'зовя',
+  'achetant': 'покупая'
+};
+
+function translatePP(verb, pp) {
+  if (PP_TRANSLATIONS[pp]) return PP_TRANSLATIONS[pp];
+  // Generate a rough translation for regular verbs
+  if (pp.endsWith('é')) return 'сделавший/-анный';
+  if (pp.endsWith('i')) return 'сделавший/-ённый';
+  if (pp.endsWith('u')) return 'сделавший/-тый';
+  if (pp.endsWith('t')) return 'сделавший/-тый';
+  if (pp.endsWith('s')) return 'сделавший/-тый';
+  return '—';
+}
+
+function translatePRP(verb, prp) {
+  if (!prp) return '—';
+  if (PRP_TRANSLATIONS[prp]) return PRP_TRANSLATIONS[prp];
+  return 'делая (действие в процессе)';
+}
+
+// ============================================================
+// MAIN CONJUGATION FUNCTION
+// ============================================================
+function getConjugation(infinitive) {
+  const verb = infinitive.trim().toLowerCase();
+  let data = null;
+
+  let isKnown = false;
+
+  // Check irregular verbs first
+  if (IRREG[verb]) {
+    data = { ...IRREG[verb] };
+    isKnown = true;
+  }
+  // Check derived verbs
+  else if (DERIVED[verb]) {
+    data = buildDerived(verb, DERIVED[verb]);
+    isKnown = true;
+  }
+  // Regular conjugation
+  else {
+    data = regularConjugation(verb);
+  }
+
+  if (!data) return null;
+
+  // Determine auxiliary
+  const aux = data.aux || (ETRE_VERBS.has(verb) ? 'être' : 'avoir');
+  const isEtre = aux === 'être';
+  const pp = data.pp;
+
+  // Build all tenses
+  const result = {
+    infinitive: verb,
+    group: data.group,
+    auxiliary: aux,
+    isKnown: isKnown,
+    pp: pp,
+    pp_ru: translatePP(verb, pp),
+    prp: data.prp,
+    prp_ru: translatePRP(verb, data.prp),
+    tenses: {}
+  };
+
+  for (const tense of TENSES) {
+    if (tense.compound) {
+      // Build compound tense
+      const auxTenseId = tense.auxTense;
+      const auxForms = getAuxForms(aux, auxTenseId);
+      if (auxForms) {
+        if (tense.id === 'subjonctif_pqp') {
+          // Subjonctif plus-que-parfait uses subjonctif_imparfait of auxiliary
+          const auxSubjImp = getAuxForms(aux, 'subjonctif_imparfait');
+          result.tenses[tense.id] = buildCompoundForms(auxSubjImp, pp, isEtre);
+        } else {
+          result.tenses[tense.id] = buildCompoundForms(auxForms, pp, isEtre);
+        }
+      }
+    } else if (tense.id === 'imperatif') {
+      result.tenses[tense.id] = data.imperatif || null;
+    } else {
+      result.tenses[tense.id] = data[tense.id] || null;
+    }
+  }
+
+  return result;
+}
+
+// ============================================================
+// ELISION: je -> j' before vowel/h
+// ============================================================
+function elide(pronoun, form) {
+  if (pronoun !== 'je') return pronoun;
+  const first = form.charAt(0).toLowerCase();
+  if ('aeéèêiîoôuûyh'.includes(first)) return "j'";
+  return 'je';
+}
+
+// ============================================================
+// UI
+// ============================================================
+function tryVerb(v) {
+  document.getElementById('verbInput').value = v;
+  conjugate();
+}
+
+function conjugate() {
+  const input = document.getElementById('verbInput').value.trim();
+  const resultsDiv = document.getElementById('results');
+  const verbInfoDiv = document.getElementById('verbInfo');
+  const legendDiv = document.getElementById('legend');
+  const warningBanner = document.getElementById('warningBanner');
+
+  if (!input) {
+    resultsDiv.innerHTML = '';
+    verbInfoDiv.style.display = 'none';
+    legendDiv.style.display = 'none';
+    warningBanner.style.display = 'none';
+    return;
+  }
+
+  const conj = getConjugation(input);
+  if (!conj) {
+    resultsDiv.innerHTML = '<div class="no-result">Глагол «' + input + '» не найден.<br>Попробуйте ввести инфинитив (например: parler, finir, vendre)</div>';
+    verbInfoDiv.style.display = 'none';
+    legendDiv.style.display = 'none';
+    warningBanner.style.display = 'none';
+    return;
+  }
+
+  // Warning for unknown verbs (regular fallback)
+  if (!conj.isKnown) {
+    warningBanner.style.display = 'block';
+    warningBanner.innerHTML = '&#9888; Глагол <b>' + conj.infinitive + '</b> не найден в базе неправильных глаголов — спряжение построено по правилам группы. Если глагол неправильный, формы могут быть неточными.';
+  } else {
+    warningBanner.style.display = 'none';
+  }
+
+  // Show verb info
+  verbInfoDiv.style.display = 'block';
+  legendDiv.style.display = 'block';
+  verbInfoDiv.innerHTML =
+    '<span class="badge badge-group">' + conj.group + '</span>' +
+    '<span class="badge badge-aux">Вспомогательный: ' + conj.auxiliary + '</span>' +
+    '<span class="badge badge-pp">Причастие (participe passé): ' + conj.pp + ' <i style="opacity:0.7">(«' + conj.pp_ru + '»)</i></span>' +
+    '<span class="badge badge-gp">Деепричастие (participe présent): ' + conj.prp + ' <i style="opacity:0.7">(«' + conj.prp_ru + '»)</i></span>';
+
+  // Build tense cards
+  let html = '';
+  let prevLiterary = false;
+
+  for (const tense of TENSES) {
+    // Section labels
+    if (!prevLiterary && tense.literary) {
+      html += '<div class="section-label literary">Книжные времена (не используются в речи)</div>';
+    }
+    if (prevLiterary === false && tense === TENSES[0]) {
+      html += '<div class="section-label">Употребительные времена</div>';
+    }
+    prevLiterary = tense.literary;
+
+    const forms = conj.tenses[tense.id];
+    const headerClass = tense.literary ? 'literary' : 'active';
+    const cardClass = tense.literary ? 'tense-card literary-card' : 'tense-card';
+
+    html += '<div class="' + cardClass + '">';
+    html += '<div class="tense-header ' + headerClass + '">';
+    html += '<div class="fr-name">' + tense.name + '</div>';
+    html += '<div class="ru-name">' + tense.ru + '</div>';
+    html += '</div>';
+    html += '<div class="tense-explain">' + tense.explain + '</div>';
+    html += '<div class="tense-body">';
+
+    if (!forms) {
+      html += '<div style="color:#ccc;padding:8px 0;">Не употребляется для этого глагола</div>';
+    } else if (tense.id === 'imperatif') {
+      html += '<table>';
+      for (let i = 0; i < forms.length; i++) {
+        html += '<tr><td class="pronoun">' + IMP_PRONOUNS[i] + '</td><td class="verb-form">' + forms[i] + '</td></tr>';
+      }
+      html += '</table>';
+    } else {
+      html += '<table>';
+      for (let i = 0; i < 6; i++) {
+        const form = forms[i] || '—';
+        const pron = elide(PRONOUNS[i].split(' ')[0], form);
+        const fullPron = PRONOUNS[i].replace(/^[^ ]+/, pron);
+        html += '<tr><td class="pronoun">' + fullPron + '</td><td class="verb-form">' + form + '</td></tr>';
+      }
+      html += '</table>';
+    }
+
+    html += '</div></div>';
+  }
+
+  resultsDiv.innerHTML = html;
+}
+
+// Auto-conjugate if there's a hash
+if (location.hash) {
+  document.getElementById('verbInput').value = decodeURIComponent(location.hash.slice(1));
+  conjugate();
+}
+</script>
+
+</body>
+</html>
