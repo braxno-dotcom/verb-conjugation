@@ -1,0 +1,5 @@
+Главная:     https://braxno-dotcom.github.io/verb-conjugation/
+Французский: https://braxno-dotcom.github.io/verb-conjugation/french-verbs.html
+Испанский:   https://braxno-dotcom.github.io/verb-conjugation/spanish-verbs.html
+Английский:  https://braxno-dotcom.github.io/verb-conjugation/english-verbs.html
+Французский (отдельный): https://braxno-dotcom.github.io/verb-conjugation/french.html

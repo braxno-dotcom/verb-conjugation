@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇬🇧</text></svg>">
+<meta name="apple-mobile-web-app-title" content="EN verbs">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest-en.json">
+<title>🇬🇧 Английские глаголы — Спряжения</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f0eb;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #1a5c3a, #2d8659);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    display: flex;
+    gap: 8px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+  header { position: relative; }
+
+  .search-area {
+    max-width: 600px;
+    margin: 30px auto 10px;
+    padding: 0 20px;
+    display: flex;
+    gap: 10px;
+  }
+  .search-area input {
+    flex: 1;
+    padding: 14px 18px;
+    font-size: 1.15em;
+    border: 2px solid #c8bfb6;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-area input:focus { border-color: #2d8659; }
+  .search-area button {
+    padding: 14px 28px;
+    font-size: 1.05em;
+    background: #2d8659;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .search-area button:hover { background: #1a5c3a; }
+
+  .hint {
+    max-width: 600px;
+    margin: 8px auto 0;
+    padding: 0 20px;
+    font-size: 0.85em;
+    color: #888;
+  }
+  .hint span { cursor: pointer; color: #2d8659; text-decoration: underline; }
+  .hint span:hover { color: #1a5c3a; }
+
+  .verb-info {
+    max-width: 900px;
+    margin: 18px auto 8px;
+    padding: 0 20px;
+    display: none;
+  }
+  .verb-info .badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 600;
+    margin-right: 8px;
+    margin-bottom: 6px;
+  }
+  .badge-group { background: #e0f2e9; color: #1a5c3a; }
+  .badge-aux { background: #fce4ec; color: #880e4f; }
+  .badge-pp { background: #e8f5e9; color: #1b5e20; }
+  .badge-gp { background: #fff3e0; color: #e65100; }
+  .badge-ru { background: #e3f2fd; color: #0d47a1; }
+
+  .legend {
+    max-width: 900px;
+    margin: 10px auto;
+    padding: 0 20px;
+    display: none;
+  }
+  .legend-inner {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 0.85em;
+    color: #666;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot {
+    width: 14px; height: 14px; border-radius: 4px;
+  }
+  .dot-active { background: #2d8659; }
+  .dot-literary { background: #9e9e9e; }
+
+  #results {
+    max-width: 900px;
+    margin: 10px auto 40px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 16px;
+  }
+  @media (max-width: 500px) {
+    #results { grid-template-columns: 1fr; padding: 0 10px; }
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switches { position: static; display: flex; justify-content: center; margin-bottom: 10px; }
+    .lang-switch { padding: 6px 12px; font-size: 0.85em; }
+    .search-area { padding: 0 10px; flex-direction: column; }
+    .search-area input { font-size: 1em; padding: 12px 14px; width: 100%; }
+    .search-area button { padding: 12px 18px; font-size: 0.95em; width: 100%; }
+    .hint { padding: 0 10px; }
+    .verb-info { padding: 0 10px; }
+    .verb-info .badge { font-size: 0.8em; padding: 4px 10px; }
+    .legend { padding: 0 10px; }
+    .warning-banner { margin: 10px 10px; }
+    .tense-header { padding: 10px 12px; }
+    .tense-header .en-name { font-size: 0.95em; }
+    .tense-body { padding: 10px 12px; }
+    .tense-body .pronoun { width: 70px; font-size: 0.82em; }
+    .tense-body .verb-form { font-size: 0.9em; }
+  }
+
+  .tense-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .tense-header {
+    padding: 12px 16px;
+    color: white;
+    font-weight: 600;
+  }
+  .tense-header.active { background: #2d8659; }
+  .tense-header.literary { background: #9e9e9e; }
+  .tense-header .en-name { font-size: 1.05em; }
+  .tense-header .ru-name { font-size: 0.85em; opacity: 0.9; margin-top: 2px; }
+  .tense-explain {
+    padding: 8px 16px;
+    font-size: 0.88em;
+    color: #666;
+    background: #fafafa;
+    border-bottom: 1px solid #eee;
+    font-style: italic;
+  }
+  .tense-body { padding: 12px 16px; }
+  .tense-body table { width: 100%; }
+  .tense-body td {
+    padding: 3px 0;
+    font-size: 0.95em;
+  }
+  .tense-body .pronoun {
+    color: #999;
+    width: 90px;
+    font-size: 0.9em;
+  }
+  .tense-body .verb-form {
+    font-weight: 600;
+    color: #2c2c2c;
+  }
+  .literary-card .tense-body .verb-form { color: #777; }
+
+  .no-result {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: #999;
+    font-size: 1.1em;
+  }
+  .warning-banner {
+    max-width: 900px;
+    margin: 10px auto;
+    padding: 12px 20px;
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 10px;
+    color: #856404;
+    font-size: 0.92em;
+    display: none;
+  }
+
+  .section-label {
+    grid-column: 1 / -1;
+    font-size: 1.1em;
+    font-weight: 700;
+    color: #2d8659;
+    padding: 12px 0 0;
+    border-top: 2px solid #e0e0e0;
+    margin-top: 8px;
+  }
+  .section-label.literary { color: #9e9e9e; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="french-verbs.html" class="lang-switch">🇫🇷 Французский</a>
+    <a href="spanish-verbs.html" class="lang-switch">🇪🇸 Испанский</a>
+  </div>
+  <h1>🇬🇧 Английские глаголы</h1>
+  <p>Введите глагол — получите все времена с объяснениями на русском</p>
+</header>
+
+<div class="search-area">
+  <input type="text" id="verbInput" placeholder="go, take... или по-русски: идти, брать..." autofocus
+    onkeydown="if(event.key==='Enter')conjugate()">
+  <button onclick="conjugate()">Спрягать</button>
+</div>
+<div class="hint">
+  Попробуйте:
+  <span onclick="tryVerb('go')">go</span>,
+  <span onclick="tryVerb('be')">be</span>,
+  <span onclick="tryVerb('have')">have</span>,
+  <span onclick="tryVerb('take')">take</span>,
+  <span onclick="tryVerb('make')">make</span>,
+  <span onclick="tryVerb('get')">get</span>,
+  <span onclick="tryVerb('do')">do</span>,
+  <span onclick="tryVerb('see')">see</span>,
+  <span onclick="tryVerb('come')">come</span>,
+  <span onclick="tryVerb('give')">give</span>
+  | на русском:
+  <span onclick="tryVerb('делать')">делать</span>,
+  <span onclick="tryVerb('знать')">знать</span>,
+  <span onclick="tryVerb('понимать')">понимать</span>
+</div>
+
+<div class="warning-banner" id="warningBanner"></div>
+<div class="verb-info" id="verbInfo"></div>
+<div class="legend" id="legend">
+  <div class="legend-inner">
+    <div class="legend-item"><div class="legend-dot dot-active"></div> Используется в речи</div>
+    <div class="legend-item"><div class="legend-dot dot-literary"></div> Редкое / книжное</div>
+  </div>
+</div>
+
+<div id="results"></div>
+
+<script>
+// ============================================================
+// TENSE DEFINITIONS
+// ============================================================
+const TENSES = [
+  {
+    id: 'present_simple', name: 'Present Simple',
+    ru: 'Простое настоящее',
+    explain: '«я делаю (вообще / регулярно)» — привычки, факты, расписания',
+    literary: false
+  },
+  {
+    id: 'present_continuous', name: 'Present Continuous',
+    ru: 'Настоящее длительное',
+    explain: '«я делаю (прямо сейчас)» — действие в процессе прямо сейчас',
+    literary: false
+  },
+  {
+    id: 'past_simple', name: 'Past Simple',
+    ru: 'Простое прошедшее',
+    explain: '«я сделал (вчера, в прошлом)» — завершённое действие в прошлом',
+    literary: false
+  },
+  {
+    id: 'past_continuous', name: 'Past Continuous',
+    ru: 'Прошедшее длительное',
+    explain: '«я делал (в тот момент)» — процесс в определённый момент в прошлом',
+    literary: false
+  },
+  {
+    id: 'present_perfect', name: 'Present Perfect',
+    ru: 'Настоящее совершённое',
+    explain: '«я уже сделал (результат важен сейчас)» — связь прошлого с настоящим',
+    literary: false
+  },
+  {
+    id: 'present_perfect_continuous', name: 'Present Perfect Continuous',
+    ru: 'Настоящее совершённое длительное',
+    explain: '«я делаю уже (какое-то время)» — действие началось в прошлом и продолжается',
+    literary: false
+  },
+  {
+    id: 'past_perfect', name: 'Past Perfect',
+    ru: 'Прошедшее совершённое',
+    explain: '«я уже сделал (до другого прошлого события)» — прошлое до прошлого',
+    literary: false
+  },
+  {
+    id: 'future_simple', name: 'Future Simple',
+    ru: 'Простое будущее',
+    explain: '«я сделаю / я буду делать» — будущее действие, решение, обещание',
+    literary: false
+  },
+  {
+    id: 'future_continuous', name: 'Future Continuous',
+    ru: 'Будущее длительное',
+    explain: '«я буду делать (в тот момент)» — процесс в определённый момент в будущем',
+    literary: false
+  },
+  {
+    id: 'future_perfect', name: 'Future Perfect',
+    ru: 'Будущее совершённое',
+    explain: '«я уже сделаю (к тому моменту)» — завершится до определённого момента в будущем',
+    literary: false
+  },
+  {
+    id: 'conditional', name: 'Conditional',
+    ru: 'Условное наклонение',
+    explain: '«я бы сделал» — гипотетические ситуации, вежливые просьбы',
+    literary: false
+  },
+  {
+    id: 'imperative', name: 'Imperative',
+    ru: 'Повелительное наклонение',
+    explain: '«делай!» — приказ, просьба, инструкция',
+    literary: false
+  },
+  // --- Literary / rare ---
+  {
+    id: 'past_perfect_continuous', name: 'Past Perfect Continuous',
+    ru: 'Прошедшее совершённое длительное',
+    explain: '«я делал уже (к тому моменту в прошлом)» — длительное действие до момента в прошлом',
+    literary: true
+  },
+  {
+    id: 'future_perfect_continuous', name: 'Future Perfect Continuous',
+    ru: 'Будущее совершённое длительное',
+    explain: '«я буду делать уже (столько-то времени к тому моменту)» — длительность к будущему моменту',
+    literary: true
+  },
+  {
+    id: 'conditional_perfect', name: 'Conditional Perfect',
+    ru: 'Условное совершённое',
+    explain: '«я бы уже сделал (но не сделал)» — нереализованное условие в прошлом',
+    literary: true
+  }
+];
+
+const PRONOUNS = ['I', 'you', 'he / she', 'we', 'they'];
+
+// ============================================================
+// IRREGULAR VERBS DATABASE  { base: [V2, V3] }
+// Also store special -ing and -s forms where needed
+// ============================================================
+const IRREG = {
+  'be':        { v2: 'was/were', v3: 'been', ing: 'being', s: 'is', special: true },
+  'have':      { v2: 'had', v3: 'had', ing: 'having', s: 'has', special: true },
+  'do':        { v2: 'did', v3: 'done', ing: 'doing', s: 'does' },
+  'say':       { v2: 'said', v3: 'said' },
+  'go':        { v2: 'went', v3: 'gone', s: 'goes' },
+  'get':       { v2: 'got', v3: 'got / gotten' },
+  'make':      { v2: 'made', v3: 'made' },
+  'know':      { v2: 'knew', v3: 'known' },
+  'think':     { v2: 'thought', v3: 'thought' },
+  'take':      { v2: 'took', v3: 'taken' },
+  'see':       { v2: 'saw', v3: 'seen' },
+  'come':      { v2: 'came', v3: 'come' },
+  'give':      { v2: 'gave', v3: 'given' },
+  'find':      { v2: 'found', v3: 'found' },
+  'tell':      { v2: 'told', v3: 'told' },
+  'leave':     { v2: 'left', v3: 'left' },
+  'put':       { v2: 'put', v3: 'put' },
+  'mean':      { v2: 'meant', v3: 'meant' },
+  'keep':      { v2: 'kept', v3: 'kept' },
+  'let':       { v2: 'let', v3: 'let' },
+  'begin':     { v2: 'began', v3: 'begun', ing: 'beginning' },
+  'show':      { v2: 'showed', v3: 'shown' },
+  'hear':      { v2: 'heard', v3: 'heard' },
+  'run':       { v2: 'ran', v3: 'run', ing: 'running' },
+  'pay':       { v2: 'paid', v3: 'paid' },
+  'meet':      { v2: 'met', v3: 'met' },
+  'bring':     { v2: 'brought', v3: 'brought' },
+  'hold':      { v2: 'held', v3: 'held' },
+  'write':     { v2: 'wrote', v3: 'written' },
+  'stand':     { v2: 'stood', v3: 'stood' },
+  'lose':      { v2: 'lost', v3: 'lost' },
+  'sit':       { v2: 'sat', v3: 'sat', ing: 'sitting' },
+  'speak':     { v2: 'spoke', v3: 'spoken' },
+  'read':      { v2: 'read', v3: 'read' },
+  'spend':     { v2: 'spent', v3: 'spent' },
+  'grow':      { v2: 'grew', v3: 'grown' },
+  'win':       { v2: 'won', v3: 'won', ing: 'winning' },
+  'teach':     { v2: 'taught', v3: 'taught', s: 'teaches' },
+  'buy':       { v2: 'bought', v3: 'bought' },
+  'send':      { v2: 'sent', v3: 'sent' },
+  'fall':      { v2: 'fell', v3: 'fallen' },
+  'feel':      { v2: 'felt', v3: 'felt' },
+  'lead':      { v2: 'led', v3: 'led' },
+  'understand':{ v2: 'understood', v3: 'understood' },
+  'build':     { v2: 'built', v3: 'built' },
+  'drive':     { v2: 'drove', v3: 'driven' },
+  'cut':       { v2: 'cut', v3: 'cut', ing: 'cutting' },
+  'eat':       { v2: 'ate', v3: 'eaten' },
+  'catch':     { v2: 'caught', v3: 'caught', s: 'catches' },
+  'choose':    { v2: 'chose', v3: 'chosen' },
+  'draw':      { v2: 'drew', v3: 'drawn' },
+  'break':     { v2: 'broke', v3: 'broken' },
+  'drink':     { v2: 'drank', v3: 'drunk' },
+  'fly':       { v2: 'flew', v3: 'flown', s: 'flies' },
+  'forget':    { v2: 'forgot', v3: 'forgotten', ing: 'forgetting' },
+  'hang':      { v2: 'hung', v3: 'hung' },
+  'hide':      { v2: 'hid', v3: 'hidden' },
+  'hit':       { v2: 'hit', v3: 'hit', ing: 'hitting' },
+  'lay':       { v2: 'laid', v3: 'laid' },
+  'lie':       { v2: 'lay', v3: 'lain', ing: 'lying' },
+  'light':     { v2: 'lit', v3: 'lit' },
+  'ride':      { v2: 'rode', v3: 'ridden' },
+  'ring':      { v2: 'rang', v3: 'rung', ing: 'ringing' },
+  'rise':      { v2: 'rose', v3: 'risen' },
+  'set':       { v2: 'set', v3: 'set', ing: 'setting' },
+  'shake':     { v2: 'shook', v3: 'shaken' },
+  'shoot':     { v2: 'shot', v3: 'shot' },
+  'shut':      { v2: 'shut', v3: 'shut', ing: 'shutting' },
+  'sing':      { v2: 'sang', v3: 'sung', ing: 'singing' },
+  'sleep':     { v2: 'slept', v3: 'slept' },
+  'slide':     { v2: 'slid', v3: 'slid' },
+  'spread':    { v2: 'spread', v3: 'spread' },
+  'steal':     { v2: 'stole', v3: 'stolen' },
+  'stick':     { v2: 'stuck', v3: 'stuck' },
+  'strike':    { v2: 'struck', v3: 'struck' },
+  'swim':      { v2: 'swam', v3: 'swum', ing: 'swimming' },
+  'swing':     { v2: 'swung', v3: 'swung', ing: 'swinging' },
+  'tear':      { v2: 'tore', v3: 'torn' },
+  'throw':     { v2: 'threw', v3: 'thrown' },
+  'wake':      { v2: 'woke', v3: 'woken' },
+  'wear':      { v2: 'wore', v3: 'worn' },
+  'blow':      { v2: 'blew', v3: 'blown' },
+  'burn':      { v2: 'burnt', v3: 'burnt' },
+  'dig':       { v2: 'dug', v3: 'dug', ing: 'digging' },
+  'feed':      { v2: 'fed', v3: 'fed' },
+  'fight':     { v2: 'fought', v3: 'fought' },
+  'freeze':    { v2: 'froze', v3: 'frozen' },
+  'hurt':      { v2: 'hurt', v3: 'hurt' },
+  'kneel':     { v2: 'knelt', v3: 'knelt' },
+  'lean':      { v2: 'leant', v3: 'leant' },
+  'lend':      { v2: 'lent', v3: 'lent' },
+  'quit':      { v2: 'quit', v3: 'quit', ing: 'quitting' },
+  'seek':      { v2: 'sought', v3: 'sought' },
+  'sell':      { v2: 'sold', v3: 'sold' },
+  'shine':     { v2: 'shone', v3: 'shone' },
+  'sink':      { v2: 'sank', v3: 'sunk' },
+  'smell':     { v2: 'smelt', v3: 'smelt' },
+  'spell':     { v2: 'spelt', v3: 'spelt' },
+  'spill':     { v2: 'spilt', v3: 'spilt' },
+  'spit':      { v2: 'spat', v3: 'spat', ing: 'spitting' },
+  'split':     { v2: 'split', v3: 'split', ing: 'splitting' },
+  'spoil':     { v2: 'spoilt', v3: 'spoilt' },
+  'spring':    { v2: 'sprang', v3: 'sprung', ing: 'springing' },
+  'squeeze':   { v2: 'squeezed', v3: 'squeezed' },
+  'sting':     { v2: 'stung', v3: 'stung', ing: 'stinging' },
+  'stink':     { v2: 'stank', v3: 'stunk' },
+  'swear':     { v2: 'swore', v3: 'sworn' },
+  'sweep':     { v2: 'swept', v3: 'swept' },
+  'weep':      { v2: 'wept', v3: 'wept' },
+  'wind':      { v2: 'wound', v3: 'wound' },
+  'bend':      { v2: 'bent', v3: 'bent' },
+  'bet':       { v2: 'bet', v3: 'bet', ing: 'betting' },
+  'bid':       { v2: 'bid', v3: 'bid', ing: 'bidding' },
+  'bind':      { v2: 'bound', v3: 'bound' },
+  'bite':      { v2: 'bit', v3: 'bitten', ing: 'biting' },
+  'bleed':     { v2: 'bled', v3: 'bled' },
+  'breed':     { v2: 'bred', v3: 'bred' },
+  'burst':     { v2: 'burst', v3: 'burst' },
+  'cast':      { v2: 'cast', v3: 'cast' },
+  'cling':     { v2: 'clung', v3: 'clung', ing: 'clinging' },
+  'cost':      { v2: 'cost', v3: 'cost' },
+  'creep':     { v2: 'crept', v3: 'crept' },
+  'deal':      { v2: 'dealt', v3: 'dealt' },
+  'dream':     { v2: 'dreamt', v3: 'dreamt' },
+  'dwell':     { v2: 'dwelt', v3: 'dwelt' },
+  'flee':      { v2: 'fled', v3: 'fled' },
+  'fling':     { v2: 'flung', v3: 'flung', ing: 'flinging' },
+  'forbid':    { v2: 'forbade', v3: 'forbidden', ing: 'forbidding' },
+  'forgive':   { v2: 'forgave', v3: 'forgiven' },
+  'grind':     { v2: 'ground', v3: 'ground' },
+  'leap':      { v2: 'leapt', v3: 'leapt' },
+  'mistake':   { v2: 'mistook', v3: 'mistaken' },
+  'overcome':  { v2: 'overcame', v3: 'overcome' },
+  'overthrow': { v2: 'overthrew', v3: 'overthrown' },
+  'prove':     { v2: 'proved', v3: 'proven' },
+  'sew':       { v2: 'sewed', v3: 'sewn' },
+  'shrink':    { v2: 'shrank', v3: 'shrunk' },
+  'sow':       { v2: 'sowed', v3: 'sown' },
+  'spin':      { v2: 'spun', v3: 'spun', ing: 'spinning' },
+  'stride':    { v2: 'strode', v3: 'stridden' },
+  'strive':    { v2: 'strove', v3: 'striven' },
+  'undergo':   { v2: 'underwent', v3: 'undergone', s: 'undergoes' },
+  'undertake': { v2: 'undertook', v3: 'undertaken' },
+  'upset':     { v2: 'upset', v3: 'upset', ing: 'upsetting' },
+  'weave':     { v2: 'wove', v3: 'woven' },
+  'withdraw':  { v2: 'withdrew', v3: 'withdrawn' },
+  'withstand': { v2: 'withstood', v3: 'withstood' },
+  'wring':     { v2: 'wrung', v3: 'wrung', ing: 'wringing' },
+  'stop':      { v2: 'stopped', v3: 'stopped', ing: 'stopping' },
+  'want':      { v2: 'wanted', v3: 'wanted' },
+  'use':       { v2: 'used', v3: 'used' },
+  'ask':       { v2: 'asked', v3: 'asked' },
+  'work':      { v2: 'worked', v3: 'worked' },
+  'call':      { v2: 'called', v3: 'called' },
+  'try':       { v2: 'tried', v3: 'tried', s: 'tries', ing: 'trying' },
+  'move':      { v2: 'moved', v3: 'moved' },
+  'play':      { v2: 'played', v3: 'played' },
+  'watch':     { v2: 'watched', v3: 'watched', s: 'watches' },
+  'follow':    { v2: 'followed', v3: 'followed' },
+  'reach':     { v2: 'reached', v3: 'reached', s: 'reaches' },
+  'study':     { v2: 'studied', v3: 'studied', s: 'studies', ing: 'studying' }
+};
+
+// ============================================================
+// RUSSIAN → ENGLISH DICTIONARY
+// ============================================================
+const RU_TO_EN = {
+  'быть': 'be', 'являться': 'be', 'иметь': 'have', 'делать': 'do',
+  'мастерить': 'make', 'изготавливать': 'make', 'идти': 'go', 'ходить': 'go',
+  'ехать': 'go', 'говорить': 'speak', 'разговаривать': 'talk', 'беседовать': 'talk',
+  'сказать': 'say', 'рассказывать': 'tell', 'рассказать': 'tell',
+  'знать': 'know', 'мочь': 'can', 'хотеть': 'want', 'видеть': 'see',
+  'давать': 'give', 'дать': 'give', 'брать': 'take', 'взять': 'take',
+  'есть': 'eat', 'кушать': 'eat', 'пить': 'drink', 'спать': 'sleep',
+  'жить': 'live', 'работать': 'work', 'трудиться': 'work',
+  'читать': 'read', 'писать': 'write', 'думать': 'think', 'размышлять': 'think',
+  'понимать': 'understand', 'любить': 'love', 'обожать': 'love',
+  'начинать': 'begin', 'начать': 'start', 'стартовать': 'start',
+  'кончать': 'finish', 'заканчивать': 'finish', 'завершать': 'finish',
+  'открывать': 'open', 'открыть': 'open', 'закрывать': 'close', 'закрыть': 'close',
+  'покупать': 'buy', 'купить': 'buy', 'продавать': 'sell', 'продать': 'sell',
+  'помогать': 'help', 'помочь': 'help', 'играть': 'play',
+  'петь': 'sing', 'спеть': 'sing', 'танцевать': 'dance',
+  'учить': 'learn', 'обучать': 'teach', 'преподавать': 'teach',
+  'учиться': 'study', 'изучать': 'study',
+  'ждать': 'wait', 'подождать': 'wait', 'ожидать': 'wait',
+  'искать': 'look for', 'находить': 'find', 'найти': 'find',
+  'приходить': 'come', 'прийти': 'come', 'уходить': 'leave', 'уйти': 'leave',
+  'бежать': 'run', 'бегать': 'run', 'летать': 'fly', 'лететь': 'fly',
+  'водить': 'drive', 'вести': 'drive', 'ездить': 'drive',
+  'стоять': 'stand', 'вставать': 'stand', 'сидеть': 'sit', 'садиться': 'sit',
+  'класть': 'put', 'положить': 'put', 'ставить': 'put',
+  'падать': 'fall', 'упасть': 'fall', 'умирать': 'die', 'умереть': 'die',
+  'рождаться': 'be born', 'родиться': 'be born',
+  'смеяться': 'laugh', 'плакать': 'cry', 'заплакать': 'cry',
+  'верить': 'believe', 'поверить': 'believe',
+  'бояться': 'fear', 'пугаться': 'fear', 'звать': 'call', 'позвать': 'call',
+  'отвечать': 'answer', 'ответить': 'answer',
+  'спрашивать': 'ask', 'спросить': 'ask', 'просить': 'ask',
+  'получать': 'get', 'получить': 'get',
+  'посылать': 'send', 'послать': 'send', 'отправлять': 'send',
+  'платить': 'pay', 'заплатить': 'pay', 'оплачивать': 'pay',
+  'стоить': 'cost',
+  'следовать': 'follow', 'следить': 'follow',
+  'нравиться': 'like', 'понравиться': 'like',
+  'выбирать': 'choose', 'выбрать': 'choose',
+  'решать': 'decide', 'решить': 'decide',
+  'пробовать': 'try', 'попробовать': 'try', 'пытаться': 'try', 'попытаться': 'try',
+  'предлагать': 'offer', 'предложить': 'suggest',
+  'обещать': 'promise', 'пообещать': 'promise',
+  'строить': 'build', 'построить': 'build',
+  'менять': 'change', 'изменять': 'change', 'поменять': 'change',
+  'готовить': 'cook', 'приготовить': 'cook', 'подготавливать': 'prepare',
+  'мыть': 'wash', 'вымыть': 'wash',
+  'рисовать': 'draw', 'нарисовать': 'draw',
+  'показывать': 'show', 'показать': 'show',
+  'объяснять': 'explain', 'объяснить': 'explain',
+  'слушать': 'listen', 'послушать': 'listen',
+  'слышать': 'hear', 'услышать': 'hear',
+  'чувствовать': 'feel', 'почувствовать': 'feel',
+  'нести': 'carry', 'носить': 'carry', 'переносить': 'carry',
+  'держать': 'hold', 'удерживать': 'hold',
+  'бросать': 'throw', 'бросить': 'throw', 'кидать': 'throw',
+  'ломать': 'break', 'сломать': 'break', 'разбивать': 'break',
+  'резать': 'cut', 'разрезать': 'cut', 'порезать': 'cut',
+  'расти': 'grow', 'вырастать': 'grow', 'выращивать': 'grow',
+  'забывать': 'forget', 'забыть': 'forget',
+  'вспоминать': 'remember', 'вспомнить': 'remember', 'помнить': 'remember',
+  'встречать': 'meet', 'встретить': 'meet', 'знакомиться': 'meet',
+  'входить': 'enter', 'войти': 'enter',
+  'выходить': 'go out', 'выйти': 'exit',
+  'возвращаться': 'return', 'вернуться': 'come back',
+  'останавливать': 'stop', 'остановить': 'stop', 'останавливаться': 'stop',
+  'продолжать': 'continue', 'продолжить': 'continue',
+  'мечтать': 'dream', 'путешествовать': 'travel',
+  'переводить': 'translate', 'перевести': 'translate',
+  'кричать': 'shout', 'крикнуть': 'shout', 'орать': 'scream',
+  'молчать': 'be silent', 'улыбаться': 'smile', 'улыбнуться': 'smile',
+  'двигать': 'move', 'двигаться': 'move', 'перемещать': 'move',
+  'плавать': 'swim', 'плыть': 'swim',
+  'прыгать': 'jump', 'прыгнуть': 'jump', 'скакать': 'jump',
+  'варить': 'boil', 'сварить': 'boil',
+  'жарить': 'fry', 'пожарить': 'fry',
+  'доверять': 'trust', 'довериться': 'trust',
+  'ненавидеть': 'hate', 'возненавидеть': 'hate',
+  'уважать': 'respect',
+  'страдать': 'suffer', 'пострадать': 'suffer',
+  'завтракать': 'have breakfast', 'позавтракать': 'have breakfast',
+  'обедать': 'have lunch', 'пообедать': 'have lunch',
+  'ужинать': 'have dinner', 'поужинать': 'have dinner',
+  'курить': 'smoke', 'закурить': 'smoke',
+  'звонить': 'call', 'позвонить': 'call',
+  'существовать': 'exist',
+  'появляться': 'appear', 'появиться': 'appear',
+  'исчезать': 'disappear', 'исчезнуть': 'disappear',
+  'повторять': 'repeat', 'повторить': 'repeat',
+  'исправлять': 'fix', 'исправить': 'correct',
+  'развивать': 'develop', 'развить': 'develop', 'развиваться': 'develop',
+  'стирать': 'wash', 'постирать': 'wash',
+  'гладить': 'iron', 'погладить': 'iron',
+  'подметать': 'sweep', 'подмести': 'sweep',
+  'кашлять': 'cough',
+  'чихать': 'sneeze', 'чихнуть': 'sneeze',
+  'дышать': 'breathe', 'вздохнуть': 'breathe',
+  'худеть': 'lose weight', 'похудеть': 'lose weight',
+  'толстеть': 'gain weight', 'потолстеть': 'gain weight',
+  'поворачивать': 'turn', 'повернуть': 'turn', 'поворачиваться': 'turn',
+  'тормозить': 'brake', 'затормозить': 'brake',
+  'шутить': 'joke', 'пошутить': 'joke',
+  'врать': 'lie', 'соврать': 'lie', 'лгать': 'lie',
+  'убеждать': 'convince', 'убедить': 'convince',
+  'угрожать': 'threaten', 'пригрозить': 'threaten',
+  'запекать': 'bake', 'запечь': 'bake',
+  'нарезать': 'slice', 'порезать': 'chop',
+  'замораживать': 'freeze', 'заморозить': 'freeze',
+  'фотографировать': 'photograph', 'сфотографировать': 'photograph',
+  'прятать': 'hide', 'спрятать': 'hide', 'прятаться': 'hide',
+  'ошибаться': 'make a mistake', 'ошибиться': 'make a mistake',
+  'запоминать': 'memorize', 'запомнить': 'memorize',
+  'воображать': 'imagine', 'вообразить': 'imagine', 'представлять': 'imagine',
+  'наблюдать': 'observe', 'понаблюдать': 'observe',
+  'сравнивать': 'compare', 'сравнить': 'compare',
+  'подозревать': 'suspect',
+  'рисковать': 'risk', 'рискнуть': 'risk',
+  'успокаивать': 'calm down', 'успокоить': 'calm down', 'успокаиваться': 'calm down',
+  'тренироваться': 'train', 'натренироваться': 'practice',
+  'соревноваться': 'compete',
+  'голосовать': 'vote', 'проголосовать': 'vote',
+  'протестовать': 'protest',
+  // Additional verbs to reach 600+
+  'создавать': 'create', 'создать': 'create',
+  'разрушать': 'destroy', 'разрушить': 'destroy',
+  'защищать': 'protect', 'защитить': 'protect',
+  'атаковать': 'attack',
+  'побеждать': 'win', 'победить': 'win',
+  'проигрывать': 'lose', 'проиграть': 'lose',
+  'описывать': 'describe', 'описать': 'describe',
+  'требовать': 'demand', 'потребовать': 'demand',
+  'предупреждать': 'warn', 'предупредить': 'warn',
+  'советовать': 'advise', 'посоветовать': 'advise',
+  'приглашать': 'invite', 'пригласить': 'invite',
+  'принимать': 'accept', 'принять': 'accept',
+  'отказывать': 'refuse', 'отказаться': 'refuse',
+  'соглашаться': 'agree', 'согласиться': 'agree',
+  'спорить': 'argue', 'поспорить': 'argue',
+  'обсуждать': 'discuss', 'обсудить': 'discuss',
+  'упоминать': 'mention', 'упомянуть': 'mention',
+  'замечать': 'notice', 'заметить': 'notice',
+  'признавать': 'admit', 'признать': 'admit',
+  'отрицать': 'deny',
+  'жаловаться': 'complain', 'пожаловаться': 'complain',
+  'извиняться': 'apologize', 'извиниться': 'apologize',
+  'благодарить': 'thank', 'поблагодарить': 'thank',
+  'поздравлять': 'congratulate', 'поздравить': 'congratulate',
+  'праздновать': 'celebrate', 'отпраздновать': 'celebrate',
+  'организовывать': 'organize', 'организовать': 'organize',
+  'планировать': 'plan', 'запланировать': 'plan',
+  'управлять': 'manage', 'руководить': 'manage',
+  'контролировать': 'control',
+  'проверять': 'check', 'проверить': 'check',
+  'тестировать': 'test', 'протестировать': 'test',
+  'измерять': 'measure', 'измерить': 'measure',
+  'считать': 'count', 'посчитать': 'count', 'подсчитывать': 'count',
+  'вычислять': 'calculate', 'вычислить': 'calculate',
+  'добавлять': 'add', 'добавить': 'add',
+  'удалять': 'delete', 'удалить': 'remove',
+  'заменять': 'replace', 'заменить': 'replace',
+  'копировать': 'copy', 'скопировать': 'copy',
+  'вставлять': 'insert', 'вставить': 'insert',
+  'печатать': 'print', 'напечатать': 'print', 'распечатать': 'print',
+  'сохранять': 'save', 'сохранить': 'save',
+  'загружать': 'download', 'скачивать': 'download', 'скачать': 'download',
+  'отправлять': 'send', 'выслать': 'send',
+  'получать': 'receive', 'принимать': 'receive',
+  'связываться': 'contact', 'связаться': 'contact',
+  'общаться': 'communicate', 'пообщаться': 'communicate',
+  'знакомить': 'introduce', 'представлять': 'introduce',
+  'навещать': 'visit', 'посещать': 'visit', 'посетить': 'visit',
+  'выглядеть': 'look',
+  'казаться': 'seem', 'показаться': 'seem',
+  'становиться': 'become', 'стать': 'become',
+  'оставаться': 'stay', 'остаться': 'stay',
+  'принадлежать': 'belong',
+  'зависеть': 'depend',
+  'включать': 'include', 'содержать': 'contain',
+  'состоять': 'consist',
+  'различаться': 'differ',
+  'совпадать': 'match', 'совпасть': 'match',
+  'подходить': 'fit', 'подойти': 'suit',
+  'удивлять': 'surprise', 'удивить': 'surprise', 'удивляться': 'be surprised',
+  'радовать': 'please', 'обрадовать': 'make happy', 'радоваться': 'rejoice',
+  'грустить': 'be sad', 'печалиться': 'grieve',
+  'волноваться': 'worry', 'беспокоиться': 'worry', 'переживать': 'worry',
+  'сердиться': 'be angry', 'злиться': 'be angry', 'разозлиться': 'get angry',
+  'завидовать': 'envy', 'позавидовать': 'envy',
+  'гордиться': 'be proud',
+  'стыдиться': 'be ashamed',
+  'скучать': 'miss', 'соскучиться': 'miss',
+  'надеяться': 'hope',
+  'сомневаться': 'doubt',
+  'предполагать': 'suppose', 'предположить': 'assume',
+  'считать': 'consider', 'полагать': 'believe',
+  'утверждать': 'claim', 'заявлять': 'state',
+  'объявлять': 'announce', 'объявить': 'announce',
+  'сообщать': 'inform', 'сообщить': 'report',
+  'публиковать': 'publish', 'опубликовать': 'publish',
+  'редактировать': 'edit', 'отредактировать': 'edit',
+  'исследовать': 'research', 'расследовать': 'investigate',
+  'анализировать': 'analyze', 'проанализировать': 'analyze',
+  'оценивать': 'evaluate', 'оценить': 'assess',
+  'определять': 'determine', 'определить': 'define',
+  'достигать': 'achieve', 'достичь': 'reach',
+  'добиваться': 'accomplish',
+  'пытаться': 'attempt',
+  'стараться': 'try',
+  'бороться': 'fight', 'сражаться': 'fight',
+  'сопротивляться': 'resist',
+  'поддерживать': 'support', 'поддержать': 'support',
+  'одобрять': 'approve', 'одобрить': 'approve',
+  'критиковать': 'criticize',
+  'хвалить': 'praise', 'похвалить': 'praise',
+  'ругать': 'scold', 'отругать': 'scold',
+  'наказывать': 'punish', 'наказать': 'punish',
+  'награждать': 'reward', 'наградить': 'reward',
+  'запрещать': 'forbid', 'запретить': 'forbid',
+  'разрешать': 'allow', 'разрешить': 'allow', 'позволять': 'permit',
+  'приказывать': 'order', 'приказать': 'command',
+  'просить': 'request',
+  'молить': 'beg', 'умолять': 'beg',
+  'настаивать': 'insist',
+  'рекомендовать': 'recommend',
+  'гарантировать': 'guarantee',
+  'обеспечивать': 'provide', 'обеспечить': 'ensure',
+  'снабжать': 'supply',
+  'доставлять': 'deliver', 'доставить': 'deliver',
+  'перевозить': 'transport',
+  'грузить': 'load', 'погрузить': 'load', 'загружать': 'load',
+  'разгружать': 'unload',
+  'упаковывать': 'pack', 'упаковать': 'pack',
+  'распаковывать': 'unpack',
+  'взвешивать': 'weigh', 'взвесить': 'weigh',
+  'наливать': 'pour', 'налить': 'pour',
+  'смешивать': 'mix', 'смешать': 'mix',
+  'размешивать': 'stir',
+  'очищать': 'clean', 'почистить': 'clean', 'чистить': 'clean',
+  'сушить': 'dry', 'высушить': 'dry',
+  'вытирать': 'wipe', 'вытереть': 'wipe',
+  'полировать': 'polish',
+  'красить': 'paint', 'покрасить': 'paint',
+  'ремонтировать': 'repair', 'отремонтировать': 'repair', 'чинить': 'fix',
+  'починить': 'fix',
+  'устанавливать': 'install', 'установить': 'install',
+  'подключать': 'connect', 'подключить': 'connect',
+  'отключать': 'disconnect', 'отключить': 'disconnect',
+  'включать': 'turn on', 'выключать': 'turn off',
+  'нажимать': 'press', 'нажать': 'press',
+  'тянуть': 'pull', 'потянуть': 'pull',
+  'толкать': 'push', 'толкнуть': 'push',
+  'поднимать': 'lift', 'поднять': 'raise',
+  'опускать': 'lower', 'опустить': 'lower',
+  'вращать': 'rotate', 'крутить': 'spin',
+  'трясти': 'shake', 'потрясти': 'shake',
+  'качать': 'swing', 'раскачивать': 'swing',
+  'катать': 'roll', 'катить': 'roll',
+  'скользить': 'slide', 'поскользнуться': 'slip',
+  'ползти': 'crawl', 'ползать': 'crawl',
+  'лазить': 'climb', 'залезать': 'climb',
+  'нырять': 'dive', 'нырнуть': 'dive',
+  'тонуть': 'drown', 'утонуть': 'sink',
+  'спасать': 'save', 'спасти': 'rescue',
+  'лечить': 'treat', 'вылечить': 'cure',
+  'болеть': 'be sick', 'заболеть': 'get sick',
+  'выздоравливать': 'recover', 'выздороветь': 'recover',
+  'отдыхать': 'rest', 'отдохнуть': 'relax',
+  'расслабляться': 'relax',
+  'напрягаться': 'strain', 'напрячься': 'tense up',
+  'утомляться': 'get tired', 'устать': 'get tired', 'уставать': 'tire',
+  'просыпаться': 'wake up', 'проснуться': 'wake up',
+  'засыпать': 'fall asleep', 'заснуть': 'fall asleep',
+  'одеваться': 'get dressed', 'одеться': 'dress',
+  'раздеваться': 'undress',
+  'умываться': 'wash face', 'причёсываться': 'comb hair',
+  'бриться': 'shave', 'побриться': 'shave',
+  'краситься': 'put on makeup',
+  'загорать': 'sunbathe',
+  'гулять': 'walk', 'прогуливаться': 'stroll',
+  'бегать': 'jog',
+  'заниматься': 'exercise', 'тренировать': 'train',
+  'растягиваться': 'stretch',
+  'наклоняться': 'bend', 'наклониться': 'lean',
+  'приседать': 'squat',
+  'целовать': 'kiss', 'поцеловать': 'kiss',
+  'обнимать': 'hug', 'обнять': 'hug',
+  'пожимать': 'shake', 'пожать': 'shake',
+  'хлопать': 'clap',
+  'стучать': 'knock', 'постучать': 'knock',
+  'звенеть': 'ring',
+  'свистеть': 'whistle',
+  'шептать': 'whisper', 'прошептать': 'whisper',
+  'мурлыкать': 'purr',
+  'лаять': 'bark',
+  'мяукать': 'meow',
+  'кормить': 'feed', 'покормить': 'feed',
+  'поливать': 'water', 'полить': 'water',
+  'сажать': 'plant', 'посадить': 'plant',
+  'собирать': 'collect', 'собрать': 'gather',
+  'сортировать': 'sort',
+  'выбрасывать': 'throw away', 'выбросить': 'discard',
+  'перерабатывать': 'recycle',
+  'экономить': 'save money', 'сэкономить': 'save money',
+  'тратить': 'spend', 'потратить': 'spend',
+  'инвестировать': 'invest',
+  'зарабатывать': 'earn', 'заработать': 'earn',
+  'одалживать': 'lend', 'одолжить': 'borrow',
+  'возвращать': 'return', 'вернуть': 'return',
+  'обменивать': 'exchange', 'обменять': 'exchange',
+  'торговать': 'trade',
+  'рекламировать': 'advertise',
+  'продвигать': 'promote',
+  'представлять': 'present',
+  'демонстрировать': 'demonstrate',
+  'выступать': 'perform', 'выступить': 'perform',
+  'репетировать': 'rehearse',
+  'аплодировать': 'applaud',
+  'фотографировать': 'photograph',
+  'снимать': 'film', 'записывать': 'record',
+  'транслировать': 'broadcast',
+  'программировать': 'program',
+  'кодировать': 'code',
+  'проектировать': 'design',
+  'моделировать': 'model',
+  'симулировать': 'simulate',
+  'вычислять': 'compute',
+  'шифровать': 'encrypt',
+  'расшифровывать': 'decrypt',
+  'сканировать': 'scan',
+  'форматировать': 'format',
+  'настраивать': 'configure', 'настроить': 'set up',
+  'обновлять': 'update', 'обновить': 'update',
+  'восстанавливать': 'restore', 'восстановить': 'restore',
+  'дублировать': 'duplicate',
+  'синхронизировать': 'synchronize',
+  'активировать': 'activate',
+  'деактивировать': 'deactivate',
+  'блокировать': 'block', 'заблокировать': 'block',
+  'разблокировать': 'unlock',
+  'регистрировать': 'register', 'зарегистрировать': 'register',
+  'авторизовать': 'authorize',
+  'верифицировать': 'verify',
+  'валидировать': 'validate',
+  'оптимизировать': 'optimize',
+  'минимизировать': 'minimize',
+  'максимизировать': 'maximize',
+  'стабилизировать': 'stabilize',
+  'нормализовать': 'normalize',
+  'генерировать': 'generate',
+  'инициализировать': 'initialize',
+  'компилировать': 'compile',
+  'интерпретировать': 'interpret',
+  'адаптировать': 'adapt',
+  'модифицировать': 'modify',
+  'трансформировать': 'transform',
+  'конвертировать': 'convert',
+  'импортировать': 'import',
+  'экспортировать': 'export',
+  'интегрировать': 'integrate',
+  'изолировать': 'isolate',
+  'эвакуировать': 'evacuate',
+  'ликвидировать': 'liquidate',
+  'нейтрализовать': 'neutralize',
+  'парализовать': 'paralyze',
+  'гипнотизировать': 'hypnotize',
+  'медитировать': 'meditate',
+  'концентрироваться': 'concentrate',
+  'фокусироваться': 'focus',
+  'специализироваться': 'specialize',
+  'координировать': 'coordinate',
+  'кооперировать': 'cooperate',
+  'доминировать': 'dominate',
+  'манипулировать': 'manipulate',
+  'провоцировать': 'provoke',
+  'игнорировать': 'ignore',
+  'толерировать': 'tolerate',
+  'компенсировать': 'compensate',
+  'финансировать': 'finance',
+  'спонсировать': 'sponsor',
+  'субсидировать': 'subsidize',
+  'инспектировать': 'inspect',
+  'диагностировать': 'diagnose',
+  'оперировать': 'operate',
+  'ампутировать': 'amputate',
+  'вакцинировать': 'vaccinate',
+  'дезинфицировать': 'disinfect',
+  'стерилизовать': 'sterilize',
+  'реанимировать': 'resuscitate',
+  'реабилитировать': 'rehabilitate',
+  'мотивировать': 'motivate',
+  'стимулировать': 'stimulate',
+  'вдохновлять': 'inspire', 'вдохновить': 'inspire',
+  'разочаровывать': 'disappoint', 'разочаровать': 'disappoint',
+  'раздражать': 'irritate', 'раздражить': 'annoy',
+  'восхищать': 'admire', 'восхищаться': 'admire',
+  'уважать': 'respect',
+  'презирать': 'despise',
+  'ревновать': 'be jealous',
+  'флиртовать': 'flirt',
+  'ухаживать': 'court',
+  'женить': 'marry', 'жениться': 'get married', 'выходить замуж': 'get married',
+  'разводиться': 'divorce',
+  'усыновлять': 'adopt',
+  'воспитывать': 'raise', 'воспитать': 'bring up',
+  'баловать': 'spoil',
+  'наказывать': 'discipline',
+  'ругаться': 'quarrel', 'поссориться': 'quarrel',
+  'мириться': 'make up', 'помириться': 'reconcile',
+  'навещать': 'visit',
+  'приветствовать': 'greet',
+  'прощаться': 'say goodbye',
+  'арестовывать': 'arrest',
+  'судить': 'judge',
+  'штрафовать': 'fine',
+  'конфисковать': 'confiscate',
+  'депортировать': 'deport',
+  'эмигрировать': 'emigrate',
+  'иммигрировать': 'immigrate',
+  'натурализовать': 'naturalize',
+  'голосовать': 'vote',
+  'баллотироваться': 'run for office',
+  'дебатировать': 'debate',
+  'лоббировать': 'lobby',
+  'реформировать': 'reform',
+  'приватизировать': 'privatize',
+  'национализировать': 'nationalize',
+  'монополизировать': 'monopolize',
+  'конкурировать': 'compete',
+  'сотрудничать': 'collaborate',
+  'консультировать': 'consult',
+  'ассистировать': 'assist'
+};
+
+// ============================================================
+// PP/V3 RUSSIAN TRANSLATIONS
+// ============================================================
+const PP_RU = {
+  'be': 'быть', 'have': 'иметь', 'do': 'делать', 'say': 'сказать',
+  'go': 'идти', 'get': 'получать', 'make': 'делать', 'know': 'знать',
+  'think': 'думать', 'take': 'брать', 'see': 'видеть', 'come': 'приходить',
+  'want': 'хотеть', 'give': 'давать', 'use': 'использовать', 'find': 'находить',
+  'tell': 'рассказывать', 'ask': 'спрашивать', 'work': 'работать',
+  'call': 'звонить', 'try': 'пытаться', 'leave': 'уходить', 'put': 'класть',
+  'mean': 'значить', 'keep': 'хранить', 'let': 'позволять', 'begin': 'начинать',
+  'show': 'показывать', 'hear': 'слышать', 'play': 'играть', 'run': 'бежать',
+  'move': 'двигать', 'pay': 'платить', 'meet': 'встречать', 'bring': 'приносить',
+  'hold': 'держать', 'write': 'писать', 'stand': 'стоять', 'lose': 'терять',
+  'sit': 'сидеть', 'speak': 'говорить', 'read': 'читать', 'spend': 'тратить',
+  'grow': 'расти', 'win': 'побеждать', 'teach': 'учить', 'buy': 'покупать',
+  'send': 'отправлять', 'fall': 'падать', 'feel': 'чувствовать', 'lead': 'вести',
+  'understand': 'понимать', 'watch': 'смотреть', 'follow': 'следовать',
+  'stop': 'останавливать', 'build': 'строить', 'drive': 'водить', 'cut': 'резать',
+  'reach': 'достигать', 'eat': 'есть', 'catch': 'ловить', 'choose': 'выбирать',
+  'draw': 'рисовать', 'break': 'ломать', 'drink': 'пить', 'fly': 'летать',
+  'forget': 'забывать', 'hang': 'вешать', 'hide': 'прятать', 'hit': 'ударять',
+  'lay': 'класть', 'lie': 'лежать', 'light': 'зажигать', 'ride': 'ехать',
+  'ring': 'звонить', 'rise': 'подниматься', 'set': 'устанавливать',
+  'shake': 'трясти', 'shoot': 'стрелять', 'shut': 'закрывать', 'sing': 'петь',
+  'sleep': 'спать', 'slide': 'скользить', 'spread': 'распространять',
+  'steal': 'красть', 'stick': 'приклеивать', 'strike': 'ударять',
+  'swim': 'плавать', 'swing': 'качать', 'tear': 'рвать', 'throw': 'бросать',
+  'wake': 'просыпаться', 'wear': 'носить', 'blow': 'дуть', 'burn': 'жечь',
+  'dig': 'копать', 'feed': 'кормить', 'fight': 'сражаться', 'freeze': 'замораживать',
+  'hurt': 'причинять боль', 'kneel': 'стоять на коленях', 'lean': 'наклоняться',
+  'lend': 'одалживать', 'quit': 'бросать', 'seek': 'искать', 'sell': 'продавать',
+  'shine': 'сиять', 'sink': 'тонуть', 'smell': 'нюхать', 'spell': 'писать по буквам',
+  'spill': 'проливать', 'spit': 'плевать', 'split': 'разделять', 'spoil': 'портить',
+  'spring': 'прыгать', 'squeeze': 'сжимать', 'sting': 'жалить', 'stink': 'вонять',
+  'swear': 'клясться', 'sweep': 'подметать', 'weep': 'плакать', 'wind': 'заводить',
+  'bend': 'сгибать', 'bet': 'ставить', 'bid': 'предлагать цену', 'bind': 'связывать',
+  'bite': 'кусать', 'bleed': 'кровоточить', 'breed': 'разводить', 'burst': 'лопаться',
+  'cast': 'бросать', 'cling': 'цепляться', 'cost': 'стоить', 'creep': 'ползти',
+  'deal': 'иметь дело', 'dream': 'мечтать', 'dwell': 'обитать', 'flee': 'бежать',
+  'fling': 'швырять', 'forbid': 'запрещать', 'forgive': 'прощать',
+  'grind': 'молоть', 'leap': 'прыгать', 'mistake': 'ошибаться',
+  'overcome': 'преодолевать', 'overthrow': 'свергать', 'prove': 'доказывать',
+  'sew': 'шить', 'shrink': 'сжиматься', 'sow': 'сеять', 'spin': 'вращать',
+  'stride': 'шагать', 'strive': 'стремиться', 'undergo': 'подвергаться',
+  'undertake': 'предпринимать', 'upset': 'расстраивать', 'weave': 'ткать',
+  'withdraw': 'снимать (деньги)', 'withstand': 'выдерживать', 'wring': 'выжимать',
+  'study': 'учиться', 'love': 'любить', 'live': 'жить', 'open': 'открывать',
+  'close': 'закрывать', 'help': 'помогать', 'dance': 'танцевать',
+  'wait': 'ждать', 'learn': 'учить', 'start': 'начинать', 'finish': 'заканчивать',
+  'change': 'менять', 'cook': 'готовить', 'wash': 'мыть', 'explain': 'объяснять',
+  'listen': 'слушать', 'carry': 'нести', 'remember': 'помнить',
+  'enter': 'входить', 'return': 'возвращаться', 'continue': 'продолжать',
+  'travel': 'путешествовать', 'translate': 'переводить', 'shout': 'кричать',
+  'smile': 'улыбаться', 'jump': 'прыгать', 'boil': 'варить', 'fry': 'жарить',
+  'trust': 'доверять', 'hate': 'ненавидеть', 'respect': 'уважать',
+  'suffer': 'страдать', 'smoke': 'курить', 'exist': 'существовать',
+  'appear': 'появляться', 'disappear': 'исчезать', 'repeat': 'повторять',
+  'correct': 'исправлять', 'develop': 'развивать', 'iron': 'гладить',
+  'cough': 'кашлять', 'sneeze': 'чихать', 'breathe': 'дышать',
+  'turn': 'поворачивать', 'joke': 'шутить', 'convince': 'убеждать',
+  'threaten': 'угрожать', 'bake': 'запекать', 'slice': 'нарезать',
+  'photograph': 'фотографировать', 'memorize': 'запоминать',
+  'imagine': 'воображать', 'observe': 'наблюдать', 'compare': 'сравнивать',
+  'suspect': 'подозревать', 'risk': 'рисковать', 'compete': 'соревноваться',
+  'vote': 'голосовать', 'protest': 'протестовать'
+};
+
+// ============================================================
+// CONJUGATION ENGINE
+// ============================================================
+
+// Regular verb rules
+function addEd(base) {
+  if (base.endsWith('e')) return base + 'd';
+  if (base.endsWith('y') && !isVowel(base[base.length - 2])) return base.slice(0, -1) + 'ied';
+  if (shouldDouble(base)) return base + base[base.length - 1] + 'ed';
+  return base + 'ed';
+}
+
+function addIng(base) {
+  if (base === 'be') return 'being';
+  if (base.endsWith('ie')) return base.slice(0, -2) + 'ying';
+  if (base.endsWith('e') && !base.endsWith('ee') && !base.endsWith('ye') && !base.endsWith('oe')) return base.slice(0, -1) + 'ing';
+  if (shouldDouble(base)) return base + base[base.length - 1] + 'ing';
+  return base + 'ing';
+}
+
+function addS(base) {
+  if (base.endsWith('y') && !isVowel(base[base.length - 2])) return base.slice(0, -1) + 'ies';
+  if (base.endsWith('s') || base.endsWith('sh') || base.endsWith('ch') || base.endsWith('x') || base.endsWith('z') || base.endsWith('o')) return base + 'es';
+  return base + 's';
+}
+
+function isVowel(ch) {
+  return 'aeiou'.includes((ch || '').toLowerCase());
+}
+
+function shouldDouble(base) {
+  if (base.length < 2) return false;
+  const last = base[base.length - 1].toLowerCase();
+  const secondLast = base[base.length - 2].toLowerCase();
+  if ('aeiou'.includes(last)) return false;
+  if (!'aeiou'.includes(secondLast)) return false;
+  if ('wxyz'.includes(last)) return false;
+  // Only double for short (1-syllable) words or words ending in stressed syllable patterns
+  // Simple heuristic: double if word is short (<=5 chars) and CVC pattern
+  if (base.length <= 5) return true;
+  // For longer words like "begin", "forget", "occur", "refer" — these are in IRREG with explicit ing
+  return false;
+}
+
+function getVerbForms(base) {
+  const irr = IRREG[base];
+  const v2 = irr ? irr.v2 : addEd(base);
+  const v3 = irr ? irr.v3 : addEd(base);
+  const ing = (irr && irr.ing) ? irr.ing : addIng(base);
+  const s = (irr && irr.s) ? irr.s : addS(base);
+  const isIrregular = irr && (irr.v2 !== addEd(base) || irr.v3 !== addEd(base));
+  return { base, v2, v3, ing, s, isIrregular, special: irr && irr.special };
+}
+
+// ============================================================
+// BUILD CONJUGATION TABLE FOR EACH TENSE
+// ============================================================
+function conjugateVerb(forms) {
+  const { base, v2, v3, ing, s } = forms;
+  const result = {};
+
+  // Pronouns: I, you, he/she, we, they
+  // Index:     0    1      2     3     4
+
+  // Present Simple
+  if (base === 'be') {
+    result.present_simple = ['am', 'are', 'is', 'are', 'are'];
+  } else if (base === 'have') {
+    result.present_simple = ['have', 'have', 'has', 'have', 'have'];
+  } else {
+    result.present_simple = [base, base, s, base, base];
+  }
+
+  // Present Continuous
+  const amIsAre = ['am', 'are', 'is', 'are', 'are'];
+  result.present_continuous = amIsAre.map(aux => aux + ' ' + ing);
+
+  // Past Simple
+  if (base === 'be') {
+    result.past_simple = ['was', 'were', 'was', 'were', 'were'];
+  } else {
+    result.past_simple = [v2, v2, v2, v2, v2];
+  }
+
+  // Past Continuous
+  const wasWere = ['was', 'were', 'was', 'were', 'were'];
+  result.past_continuous = wasWere.map(aux => aux + ' ' + ing);
+
+  // Present Perfect
+  const haveHas = ['have', 'have', 'has', 'have', 'have'];
+  result.present_perfect = haveHas.map(aux => aux + ' ' + v3);
+
+  // Present Perfect Continuous
+  result.present_perfect_continuous = haveHas.map(aux => aux + ' been ' + ing);
+
+  // Past Perfect
+  result.past_perfect = Array(5).fill('had ' + v3);
+
+  // Past Perfect Continuous
+  result.past_perfect_continuous = Array(5).fill('had been ' + ing);
+
+  // Future Simple
+  result.future_simple = Array(5).fill('will ' + base);
+
+  // Future Continuous
+  result.future_continuous = Array(5).fill('will be ' + ing);
+
+  // Future Perfect
+  result.future_perfect = Array(5).fill('will have ' + v3);
+
+  // Future Perfect Continuous
+  result.future_perfect_continuous = Array(5).fill('will have been ' + ing);
+
+  // Conditional
+  result.conditional = Array(5).fill('would ' + base);
+
+  // Conditional Perfect
+  result.conditional_perfect = Array(5).fill('would have ' + v3);
+
+  // Imperative
+  result.imperative = [base + '!'];
+  if (base === 'be') result.imperative = ['be!'];
+
+  return result;
+}
+
+// ============================================================
+// CYRILLIC DETECTION
+// ============================================================
+function isCyrillic(str) {
+  return /[а-яё]/i.test(str);
+}
+
+// ============================================================
+// MAIN CONJUGATION FUNCTION
+// ============================================================
+function conjugate() {
+  const input = document.getElementById('verbInput').value.trim().toLowerCase();
+  if (!input) return;
+
+  const resultsDiv = document.getElementById('results');
+  const verbInfoDiv = document.getElementById('verbInfo');
+  const legendDiv = document.getElementById('legend');
+  const warningBanner = document.getElementById('warningBanner');
+
+  resultsDiv.innerHTML = '';
+  verbInfoDiv.style.display = 'none';
+  verbInfoDiv.innerHTML = '';
+  legendDiv.style.display = 'none';
+  warningBanner.style.display = 'none';
+
+  let verb = input;
+  let ruTranslation = null;
+
+  // Handle Cyrillic input
+  if (isCyrillic(input)) {
+    const found = RU_TO_EN[input];
+    if (!found) {
+      resultsDiv.innerHTML = '<div class="no-result">Глагол «' + input + '» не найден в словаре. Попробуйте ввести по-английски.</div>';
+      return;
+    }
+    // Handle multi-word translations
+    verb = found.split('/')[0].trim();
+    ruTranslation = input;
+  }
+
+  // Strip "to " prefix if provided
+  if (verb.startsWith('to ')) verb = verb.slice(3);
+
+  // Check if verb is known
+  const isKnown = !!IRREG[verb] || verb.length >= 2;
+
+  if (!isKnown) {
+    resultsDiv.innerHTML = '<div class="no-result">Введите глагол для спряжения.</div>';
+    return;
+  }
+
+  // Warn if not in our database (but still conjugate)
+  if (!IRREG[verb] && !PP_RU[verb]) {
+    warningBanner.innerHTML = '⚠️ Глагол «' + verb + '» не найден в базе. Спряжение сгенерировано по правилам для правильных глаголов — проверьте корректность.';
+    warningBanner.style.display = 'block';
+  }
+
+  const forms = getVerbForms(verb);
+  const conjugation = conjugateVerb(forms);
+
+  // Build info badges
+  let badgesHTML = '';
+  const groupName = forms.isIrregular ? 'неправильный (irregular)' : 'правильный (regular)';
+  const groupClass = forms.isIrregular ? 'badge-aux' : 'badge-group';
+  badgesHTML += '<span class="badge ' + groupClass + '">' + groupName + '</span>';
+  badgesHTML += '<span class="badge badge-pp">Past Simple: ' + forms.v2 + '</span>';
+  badgesHTML += '<span class="badge badge-pp">Past Participle: ' + forms.v3 + '</span>';
+  badgesHTML += '<span class="badge badge-gp">Gerund: ' + forms.ing + '</span>';
+  if (ruTranslation) {
+    badgesHTML += '<span class="badge badge-ru">🇷🇺 ' + ruTranslation + '</span>';
+  } else if (PP_RU[verb]) {
+    badgesHTML += '<span class="badge badge-ru">🇷🇺 ' + PP_RU[verb] + '</span>';
+  }
+  verbInfoDiv.innerHTML = badgesHTML;
+  verbInfoDiv.style.display = 'block';
+  legendDiv.style.display = 'block';
+
+  // Build tense cards
+  let html = '';
+  let lastLiterary = null;
+
+  TENSES.forEach(function(tense) {
+    if (tense.literary !== lastLiterary) {
+      if (!tense.literary) {
+        html += '<div class="section-label">Основные времена (Active)</div>';
+      } else {
+        html += '<div class="section-label literary">Редкие / книжные времена</div>';
+      }
+      lastLiterary = tense.literary;
+    }
+
+    const headerClass = tense.literary ? 'literary' : 'active';
+    const cardClass = tense.literary ? 'tense-card literary-card' : 'tense-card';
+
+    html += '<div class="' + cardClass + '">';
+    html += '<div class="tense-header ' + headerClass + '">';
+    html += '<div class="en-name">' + tense.name + '</div>';
+    html += '<div class="ru-name">' + tense.ru + '</div>';
+    html += '</div>';
+    html += '<div class="tense-explain">' + tense.explain + '</div>';
+    html += '<div class="tense-body"><table>';
+
+    if (tense.id === 'imperative') {
+      html += '<tr><td class="pronoun">(you)</td><td class="verb-form">' + conjugation.imperative[0] + '</td></tr>';
+      html += '<tr><td class="pronoun">(let\'s)</td><td class="verb-form">let\'s ' + forms.base + '!</td></tr>';
+      html += '<tr><td class="pronoun">(don\'t)</td><td class="verb-form">don\'t ' + forms.base + '!</td></tr>';
+    } else {
+      const conj = conjugation[tense.id];
+      if (conj) {
+        PRONOUNS.forEach(function(pronoun, i) {
+          html += '<tr><td class="pronoun">' + pronoun + '</td><td class="verb-form">' + conj[i] + '</td></tr>';
+        });
+      }
+    }
+
+    html += '</table></div></div>';
+  });
+
+  resultsDiv.innerHTML = html;
+}
+
+function tryVerb(v) {
+  document.getElementById('verbInput').value = v;
+  conjugate();
+}
+
+// Auto-conjugate from URL hash
+if (location.hash) {
+  document.getElementById('verbInput').value = decodeURIComponent(location.hash.slice(1));
+  conjugate();
+}
+</script>
+
+</body>
+</html>
