@@ -1,0 +1,2644 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇷🇺</text></svg>">
+<meta name="apple-mobile-web-app-title" content="RU verbes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest-ru-fr.json">
+<title>🇷🇺 Conjugaison des verbes russes</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f0eb;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #4a1a6b, #7b2fa0);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switch {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+  .lang-switch-left {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch-left:hover { background: rgba(255,255,255,0.3); }
+  header { position: relative; }
+
+  .search-area {
+    max-width: 600px;
+    margin: 30px auto 10px;
+    padding: 0 20px;
+    display: flex;
+    gap: 10px;
+  }
+  .search-area input {
+    flex: 1;
+    padding: 14px 18px;
+    font-size: 1.15em;
+    border: 2px solid #c8bfb6;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-area input:focus { border-color: #7b2fa0; }
+  .search-area button {
+    padding: 14px 28px;
+    font-size: 1.05em;
+    background: #7b2fa0;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .search-area button:hover { background: #4a1a6b; }
+
+  .hint {
+    max-width: 600px;
+    margin: 8px auto 0;
+    padding: 0 20px;
+    font-size: 0.85em;
+    color: #888;
+  }
+  .hint span { cursor: pointer; color: #7b2fa0; text-decoration: underline; }
+  .hint span:hover { color: #4a1a6b; }
+
+  .verb-info {
+    max-width: 900px;
+    margin: 18px auto 8px;
+    padding: 0 20px;
+    display: none;
+  }
+  .verb-info .badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 600;
+    margin-right: 8px;
+    margin-bottom: 6px;
+  }
+  .badge-group { background: #f3e5f5; color: #4a1a6b; }
+  .badge-aspect { background: #e8f5e9; color: #1b5e20; }
+  .badge-pair { background: #e3f2fd; color: #0d47a1; }
+  .badge-conj { background: #fff3e0; color: #e65100; }
+
+  .aspect-card {
+    max-width: 900px;
+    margin: 10px auto;
+    padding: 14px 20px;
+    background: #f3e5f5;
+    border: 1px solid #ce93d8;
+    border-radius: 10px;
+    color: #4a148c;
+    font-size: 0.92em;
+    display: none;
+    line-height: 1.5;
+  }
+
+  .legend {
+    max-width: 900px;
+    margin: 10px auto;
+    padding: 0 20px;
+    display: none;
+  }
+  .legend-inner {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 0.85em;
+    color: #666;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot {
+    width: 14px; height: 14px; border-radius: 4px;
+  }
+  .dot-active { background: #7b2fa0; }
+  .dot-literary { background: #9e9e9e; }
+
+  #results {
+    max-width: 900px;
+    margin: 10px auto 40px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 16px;
+  }
+  @media (max-width: 500px) {
+    #results { grid-template-columns: 1fr; padding: 0 10px; }
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switch, .lang-switch-left { position: static; display: inline-block; margin-bottom: 10px; padding: 6px 12px; font-size: 0.85em; }
+    .search-area { padding: 0 10px; flex-direction: column; }
+    .search-area input { font-size: 1em; padding: 12px 14px; width: 100%; }
+    .search-area button { padding: 12px 18px; font-size: 0.95em; width: 100%; }
+    .hint { padding: 0 10px; }
+    .verb-info { padding: 0 10px; }
+    .verb-info .badge { font-size: 0.8em; padding: 4px 10px; }
+    .legend { padding: 0 10px; }
+    .aspect-card { margin: 10px 10px; }
+    .warning-banner { margin: 10px 10px; }
+    .tense-header { padding: 10px 12px; }
+    .tense-header .ru-name { font-size: 0.95em; }
+    .tense-body { padding: 10px 12px; }
+    .tense-body .pronoun { width: 70px; font-size: 0.82em; }
+    .tense-body .verb-form { font-size: 0.9em; }
+  }
+
+  .tense-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .tense-header {
+    padding: 12px 16px;
+    color: white;
+    font-weight: 600;
+  }
+  .tense-header.active { background: #7b2fa0; }
+  .tense-header.literary { background: #9e9e9e; }
+  .tense-header .ru-name { font-size: 1.05em; }
+  .tense-header .fr-name { font-size: 0.85em; opacity: 0.9; margin-top: 2px; }
+  .tense-explain {
+    padding: 8px 16px;
+    font-size: 0.88em;
+    color: #666;
+    background: #fafafa;
+    border-bottom: 1px solid #eee;
+    font-style: italic;
+  }
+  .tense-body { padding: 12px 16px; }
+  .tense-body table { width: 100%; }
+  .tense-body td {
+    padding: 3px 0;
+    font-size: 0.95em;
+  }
+  .tense-body .pronoun {
+    color: #999;
+    width: 90px;
+    font-size: 0.9em;
+  }
+  .tense-body .verb-form {
+    font-weight: 600;
+    color: #2c2c2c;
+  }
+  .literary-card .tense-body .verb-form { color: #777; }
+
+  .no-result {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: #999;
+    font-size: 1.1em;
+  }
+  .warning-banner {
+    max-width: 900px;
+    margin: 10px auto;
+    padding: 12px 20px;
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 10px;
+    color: #856404;
+    font-size: 0.92em;
+    display: none;
+  }
+
+  .section-label {
+    grid-column: 1 / -1;
+    font-size: 1.1em;
+    font-weight: 700;
+    color: #7b2fa0;
+    padding: 12px 0 0;
+    border-top: 2px solid #e0e0e0;
+    margin-top: 8px;
+  }
+  .section-label.literary { color: #9e9e9e; }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="french-verbs.html" class="lang-switch-left">🇫🇷 Francais</a>
+  <a href="english-verbs.html" class="lang-switch">🇬🇧 English</a>
+  <h1>🇷🇺 Conjugaison des verbes russes</h1>
+  <p>Entrez un verbe a l'infinitif — obtenez tous les temps avec des explications en francais</p>
+</header>
+
+<div class="search-area">
+  <input type="text" id="verbInput" placeholder="говорить, делать... ou en francais: parler, faire..." autofocus
+    onkeydown="if(event.key==='Enter')conjugate()">
+  <button onclick="conjugate()">Conjuguer</button>
+</div>
+<div class="hint">
+  Essayez :
+  <span onclick="tryVerb('говорить')">говорить</span>,
+  <span onclick="tryVerb('быть')">быть</span>,
+  <span onclick="tryVerb('делать')">делать</span>,
+  <span onclick="tryVerb('идти')">идти</span>,
+  <span onclick="tryVerb('хотеть')">хотеть</span>,
+  <span onclick="tryVerb('знать')">знать</span>,
+  <span onclick="tryVerb('видеть')">видеть</span>,
+  <span onclick="tryVerb('мочь')">мочь</span>
+  | en francais :
+  <span onclick="tryVerb('parler')">parler</span>,
+  <span onclick="tryVerb('faire')">faire</span>,
+  <span onclick="tryVerb('aller')">aller</span>
+</div>
+
+<div class="warning-banner" id="warningBanner"></div>
+<div class="aspect-card" id="aspectCard"></div>
+<div class="verb-info" id="verbInfo"></div>
+<div class="legend" id="legend">
+  <div class="legend-inner">
+    <div class="legend-item"><div class="legend-dot dot-active"></div> Temps courants</div>
+    <div class="legend-item"><div class="legend-dot dot-literary"></div> Formes moins courantes</div>
+  </div>
+</div>
+
+<div id="results"></div>
+
+<script>
+// ============================================================
+// FRENCH -> RUSSIAN DICTIONARY (~400+ entries)
+// ============================================================
+const FR_TO_RU = {
+  // === VERBES DE BASE ===
+  'etre': 'быть', 'avoir': 'иметь', 'aller': 'идти', 'faire': 'делать',
+  'pouvoir': 'мочь', 'vouloir': 'хотеть', 'devoir': 'быть', 'savoir': 'знать',
+  'voir': 'видеть', 'prendre': 'брать', 'venir': 'приходить', 'dire': 'говорить',
+  'donner': 'давать', 'parler': 'говорить', 'aimer': 'любить', 'manger': 'есть',
+  'boire': 'пить', 'dormir': 'спать', 'vivre': 'жить', 'travailler': 'работать',
+  'lire': 'читать', 'ecrire': 'писать', 'penser': 'думать', 'comprendre': 'понимать',
+  'commencer': 'начинать', 'finir': 'заканчивать', 'ouvrir': 'открывать',
+  'fermer': 'закрывать', 'acheter': 'покупать', 'vendre': 'продавать',
+  'aider': 'помогать', 'jouer': 'играть', 'chanter': 'петь', 'danser': 'танцевать',
+  'apprendre': 'учить', 'etudier': 'учиться', 'attendre': 'ждать',
+  'chercher': 'искать', 'trouver': 'находить', 'partir': 'уходить',
+  'courir': 'бежать', 'conduire': 'водить', 'tomber': 'падать',
+  'mourir': 'умирать', 'naitre': 'рождаться', 'rire': 'смеяться',
+  'pleurer': 'плакать', 'croire': 'верить', 'craindre': 'бояться',
+  'appeler': 'звать', 'repondre': 'отвечать', 'demander': 'спрашивать',
+  'recevoir': 'получать', 'envoyer': 'посылать', 'payer': 'платить',
+  'suivre': 'следовать', 'choisir': 'выбирать', 'decider': 'решать',
+  'essayer': 'пробовать', 'proposer': 'предлагать', 'promettre': 'обещать',
+  'permettre': 'позволять', 'construire': 'строить', 'changer': 'менять',
+  'preparer': 'готовить', 'laver': 'мыть', 'dessiner': 'рисовать',
+  'montrer': 'показывать', 'expliquer': 'объяснять', 'ecouter': 'слушать',
+  'entendre': 'слышать', 'sentir': 'чувствовать', 'tenir': 'держать',
+  'casser': 'ломать', 'couper': 'резать', 'oublier': 'забывать',
+  'rencontrer': 'встречать', 'entrer': 'входить', 'sortir': 'выходить',
+  'revenir': 'возвращаться', 'continuer': 'продолжать', 'voyager': 'путешествовать',
+  'traduire': 'переводить', 'crier': 'кричать', 'sourire': 'улыбаться',
+  'nager': 'плавать', 'sauter': 'прыгать', 'cuisiner': 'готовить',
+  'detester': 'ненавидеть', 'respecter': 'уважать', 'souffrir': 'страдать',
+  'repeter': 'повторять', 'corriger': 'исправлять', 'developper': 'развивать',
+  // === MOUVEMENT ===
+  'marcher': 'ходить', 'monter': 'подниматься', 'descendre': 'спускаться',
+  'voler': 'летать', 'glisser': 'скользить', 'ramper': 'ползти',
+  'se promener': 'гулять', 'traverser': 'переходить', 'fuir': 'бежать',
+  'reculer': 'отступать', 'avancer': 'продвигаться', 'se depecher': 'торопиться',
+  'arreter': 'останавливать', 'tourner': 'поворачивать', 'pousser': 'толкать',
+  'tirer': 'тянуть', 'porter': 'нести', 'jeter': 'бросать',
+  'lancer': 'кидать', 'attraper': 'ловить', 'saisir': 'хватать',
+  'poser': 'класть', 'lever': 'поднимать', 'baisser': 'опускать',
+  'se lever': 'вставать', 'se coucher': 'ложиться', 'se asseoir': 'садиться',
+  // === COMMUNICATION ===
+  'raconter': 'рассказывать', 'expliquer': 'объяснять', 'discuter': 'обсуждать',
+  'annoncer': 'объявлять', 'informer': 'информировать', 'prevenir': 'предупреждать',
+  'conseiller': 'советовать', 'inviter': 'приглашать', 'remercier': 'благодарить',
+  'excuser': 'извинять', 'feliciter': 'поздравлять', 'complimenter': 'делать комплимент',
+  'critiquer': 'критиковать', 'insulter': 'оскорблять', 'mentir': 'лгать',
+  'avouer': 'признавать', 'nier': 'отрицать', 'jurer': 'клясться',
+  'murmurer': 'шептать', 'chuchoter': 'шептать', 'hurler': 'кричать',
+  'supplier': 'умолять', 'exiger': 'требовать', 'ordonner': 'приказывать',
+  'interdire': 'запрещать', 'accepter': 'принимать', 'refuser': 'отказывать',
+  'confirmer': 'подтверждать', 'nier': 'отрицать',
+  // === EMOTIONS ===
+  'adorer': 'обожать', 'hair': 'ненавидеть', 'preferer': 'предпочитать',
+  'esperer': 'надеяться', 'regretter': 'жалеть', 'se rejouir': 'радоваться',
+  'se facher': 'сердиться', 'se plaindre': 'жаловаться', 'se moquer': 'смеяться над',
+  'surprendre': 'удивлять', 'ennuyer': 'скучать', 'inquieter': 'беспокоить',
+  'calmer': 'успокаивать', 'consoler': 'утешать', 'encourager': 'поощрять',
+  'admirer': 'восхищаться', 'envier': 'завидовать', 'mepriser': 'презирать',
+  'se souvenir': 'вспоминать', 'rever': 'мечтать',
+  // === MAISON ===
+  'nettoyer': 'чистить', 'ranger': 'убирать', 'balayer': 'мести',
+  'repasser': 'гладить', 'coudre': 'шить', 'tricoter': 'вязать',
+  'bricoler': 'мастерить', 'reparer': 'чинить', 'peindre': 'красить',
+  'decorer': 'украшать', 'demenager': 'переезжать', 'emmenager': 'вселяться',
+  'chauffer': 'нагревать', 'refroidir': 'охлаждать', 'allumer': 'зажигать',
+  'eteindre': 'гасить', 'brancher': 'подключать', 'debrancher': 'отключать',
+  // === CUISINE ===
+  'cuire': 'варить', 'frire': 'жарить', 'griller': 'жарить на гриле',
+  'rotir': 'запекать', 'bouillir': 'кипятить', 'mijoter': 'тушить',
+  'melanger': 'смешивать', 'remuer': 'помешивать', 'eplucher': 'чистить',
+  'hacher': 'рубить', 'assaisonner': 'приправлять', 'gouter': 'пробовать',
+  'servir': 'подавать', 'verser': 'наливать', 'rechauffer': 'разогревать',
+  'congeler': 'замораживать', 'decongeler': 'размораживать',
+  // === TRAVAIL ===
+  'embaucher': 'нанимать', 'licencier': 'увольнять', 'demissionner': 'увольняться',
+  'diriger': 'управлять', 'organiser': 'организовывать', 'planifier': 'планировать',
+  'realiser': 'реализовывать', 'accomplir': 'выполнять', 'produire': 'производить',
+  'fabriquer': 'изготавливать', 'creer': 'создавать', 'inventer': 'изобретать',
+  'concevoir': 'проектировать', 'ameliorer': 'улучшать', 'developper': 'развивать',
+  'gerer': 'управлять', 'controler': 'контролировать', 'verifier': 'проверять',
+  'examiner': 'осматривать', 'analyser': 'анализировать', 'evaluer': 'оценивать',
+  'calculer': 'считать', 'compter': 'считать', 'mesurer': 'измерять',
+  'peser': 'взвешивать', 'gagner': 'зарабатывать', 'depenser': 'тратить',
+  'economiser': 'экономить', 'investir': 'инвестировать', 'vendre': 'продавать',
+  // === SANTE ===
+  'guerir': 'лечить', 'soigner': 'лечить', 'operer': 'оперировать',
+  'vacciner': 'прививать', 'examiner': 'осматривать', 'diagnostiquer': 'диагностировать',
+  'prescrire': 'прописывать', 'avaler': 'глотать', 'tousser': 'кашлять',
+  'eternuer': 'чихать', 'respirer': 'дышать', 'transpirer': 'потеть',
+  'saigner': 'кровоточить', 'guerir': 'выздоравливать', 'se reposer': 'отдыхать',
+  'maigrir': 'худеть', 'grossir': 'толстеть', 'se blesser': 'пораниться',
+  // === EDUCATION ===
+  'enseigner': 'преподавать', 'apprendre': 'учить', 'reviser': 'повторять',
+  'memoriser': 'запоминать', 'noter': 'записывать', 'recopier': 'переписывать',
+  'resumer': 'резюмировать', 'citer': 'цитировать', 'souligner': 'подчёркивать',
+  'illustrer': 'иллюстрировать', 'demontrer': 'демонстрировать',
+  'prouver': 'доказывать', 'argumenter': 'аргументировать',
+  'questionner': 'спрашивать', 'repondre': 'отвечать', 'corriger': 'исправлять',
+  'punir': 'наказывать', 'recompenser': 'награждать',
+  // === NATURE / METEO ===
+  'pleuvoir': 'идти (о дожде)', 'neiger': 'идти (о снеге)',
+  'geler': 'замерзать', 'fondre': 'таять', 'souffler': 'дуть',
+  'briller': 'светить', 'fleurir': 'цвести', 'pousser': 'расти',
+  'planter': 'сажать', 'arroser': 'поливать', 'recolter': 'собирать урожай',
+  'semer': 'сеять', 'tailler': 'обрезать',
+  // === TECHNOLOGIE ===
+  'programmer': 'программировать', 'telecharger': 'скачивать',
+  'imprimer': 'печатать', 'scanner': 'сканировать', 'sauvegarder': 'сохранять',
+  'supprimer': 'удалять', 'copier': 'копировать', 'coller': 'вставлять',
+  'cliquer': 'кликать', 'naviguer': 'просматривать', 'publier': 'публиковать',
+  'partager': 'делиться', 'connecter': 'подключать',
+  // === SPORTS ===
+  'entrainer': 'тренировать', 'concourir': 'соревноваться',
+  'gagner': 'выигрывать', 'perdre': 'проигрывать', 'marquer': 'забивать',
+  'lancer': 'бросать', 'frapper': 'бить', 'grimper': 'лазить',
+  'plonger': 'нырять', 'skier': 'кататься на лыжах', 'patiner': 'кататься на коньках',
+  'pedaler': 'крутить педали', 'ramer': 'грести',
+  // === VIE SOCIALE ===
+  'marier': 'жениться', 'divorcer': 'разводиться', 'heberger': 'принимать',
+  'presenter': 'представлять', 'accompagner': 'сопровождать',
+  'saluer': 'приветствовать', 'embrasser': 'обнимать', 'serrer': 'пожимать',
+  'photographier': 'фотографировать', 'filmer': 'снимать',
+  'celebrer': 'праздновать', 'feter': 'праздновать',
+  // === DROIT / SOCIETE ===
+  'voter': 'голосовать', 'elire': 'избирать', 'gouverner': 'управлять',
+  'juger': 'судить', 'condamner': 'осуждать', 'arreter': 'арестовывать',
+  'liberer': 'освобождать', 'proteger': 'защищать', 'defendre': 'защищать',
+  'attaquer': 'атаковать', 'sauver': 'спасать', 'secourir': 'помогать',
+  // === VERBES SUPPLEMENTAIRES ===
+  'habiter': 'жить', 'loger': 'проживать', 'stationner': 'парковать',
+  'garer': 'парковать', 'conduire': 'водить', 'piloter': 'пилотировать',
+  'naviguer': 'плыть', 'atterrir': 'приземляться', 'decoller': 'взлетать',
+  'embarquer': 'садиться', 'debarquer': 'высаживаться',
+  'charger': 'загружать', 'decharger': 'разгружать',
+  'emballer': 'упаковывать', 'deballer': 'распаковывать',
+  'accrocher': 'вешать', 'decrocher': 'снимать',
+  'coiffer': 'причёсывать', 'maquiller': 'краситься',
+  'habiller': 'одевать', 'deshabiller': 'раздевать',
+  'se baigner': 'купаться', 'se doucher': 'мыться',
+  'se raser': 'бриться', 'se brosser': 'чистить (зубы)',
+  'nourrir': 'кормить', 'allaiter': 'кормить грудью',
+  'bercer': 'укачивать', 'elever': 'воспитывать',
+  'grandir': 'расти', 'vieillir': 'стареть', 'rajeunir': 'молодеть',
+  'embellir': 'украшать', 'enlaidir': 'уродовать',
+  'enrichir': 'обогащать', 'appauvrir': 'обеднять',
+  'agrandir': 'увеличивать', 'reduire': 'уменьшать',
+  'augmenter': 'увеличивать', 'diminuer': 'уменьшать',
+  'accelerer': 'ускорять', 'ralentir': 'замедлять',
+  'simplifier': 'упрощать', 'compliquer': 'усложнять',
+  'reunir': 'объединять', 'separer': 'разделять',
+  'combiner': 'комбинировать', 'diviser': 'делить',
+  'multiplier': 'умножать', 'soustraire': 'вычитать',
+  'ajouter': 'добавлять', 'retirer': 'убирать',
+  'installer': 'устанавливать', 'desinstaller': 'удалять',
+  'demarrer': 'запускать', 'redemarrer': 'перезапускать',
+  'abandonner': 'бросать', 'renoncer': 'отказываться',
+  'hesiter': 'колебаться', 'oser': 'осмеливаться',
+  'meriter': 'заслуживать', 'profiter': 'пользоваться',
+  'resister': 'сопротивляться', 'ceder': 'уступать',
+  'dominer': 'доминировать', 'soumettre': 'подчинять',
+  'influencer': 'влиять', 'inspirer': 'вдохновлять',
+  'motiver': 'мотивировать', 'stimuler': 'стимулировать',
+  'obliger': 'обязывать', 'forcer': 'заставлять',
+  'empecher': 'мешать', 'faciliter': 'облегчать',
+  'comparer': 'сравнивать', 'distinguer': 'различать',
+  'identifier': 'определять', 'reconnaitre': 'узнавать',
+  'imaginer': 'воображать', 'supposer': 'предполагать',
+  'deviner': 'угадывать', 'soupconner': 'подозревать',
+  'douter': 'сомневаться', 'confirmer': 'подтверждать',
+  'approuver': 'одобрять', 'desapprouver': 'не одобрять',
+  'tolerer': 'терпеть', 'supporter': 'выносить',
+  'ignorer': 'игнорировать', 'negliger': 'пренебрегать',
+  'eviter': 'избегать', 'echapper': 'убегать',
+  'poursuivre': 'преследовать', 'rattraper': 'догонять',
+  'depasser': 'обгонять', 'preceder': 'предшествовать',
+  'succeder': 'следовать', 'remplacer': 'заменять',
+  'substituer': 'замещать', 'echanger': 'обменивать',
+  'emprunter': 'занимать', 'preter': 'давать в долг',
+  'rembourser': 'возвращать деньги', 'commander': 'заказывать',
+  'livrer': 'доставлять', 'distribuer': 'распределять',
+  'collecter': 'собирать', 'rassembler': 'собирать',
+  'disperser': 'рассеивать', 'concentrer': 'сосредотачивать',
+  'focaliser': 'фокусировать', 'orienter': 'ориентировать',
+  'guider': 'направлять', 'mener': 'вести',
+  'accompagner': 'сопровождать', 'escorter': 'сопровождать',
+  'surveiller': 'наблюдать', 'observer': 'наблюдать',
+  'remarquer': 'замечать', 'apercevoir': 'замечать',
+  'contempler': 'созерцать', 'examiner': 'осматривать',
+  'inspecter': 'инспектировать', 'fouiller': 'обыскивать',
+  'explorer': 'исследовать', 'decouvrir': 'открывать',
+  'reveler': 'раскрывать', 'cacher': 'прятать',
+  'dissimuler': 'скрывать', 'exposer': 'выставлять',
+  'afficher': 'показывать', 'projeter': 'проецировать',
+  'diffuser': 'распространять', 'transmettre': 'передавать',
+  'communiquer': 'общаться', 'correspondre': 'переписываться',
+  'collaborer': 'сотрудничать', 'cooperer': 'сотрудничать',
+  'negocier': 'вести переговоры', 'convaincre': 'убеждать',
+  'persuader': 'убеждать', 'seduire': 'соблазнять',
+  'charmer': 'очаровывать', 'fasciner': 'зачаровывать',
+  'impressionner': 'впечатлять', 'etonner': 'удивлять',
+  'choquer': 'шокировать', 'scandaliser': 'возмущать',
+  'indigner': 'возмущать', 'revolter': 'возмущать',
+  'protester': 'протестовать', 'manifester': 'демонстрировать',
+  'revendiquer': 'требовать', 'reclamer': 'требовать',
+  'plaider': 'выступать в суде', 'temoigner': 'свидетельствовать',
+  'accuser': 'обвинять', 'defendre': 'защищать',
+  'pardonner': 'прощать', 'excuser': 'извинять',
+  'punir': 'наказывать', 'recompenser': 'награждать',
+  'feliciter': 'поздравлять', 'applaudir': 'аплодировать',
+  'siffler': 'свистеть', 'huer': 'освистывать'
+};
+
+// ============================================================
+// TENSE DEFINITIONS
+// ============================================================
+const TENSES = [
+  {
+    id: 'present', name: 'Present',
+    ru: 'Настоящее время',
+    fr: 'Present',
+    explain: 'Ce qui se passe maintenant ou regulierement. Seulement pour les verbes IMPERFECTIFS ! Equivalent du present francais.',
+    literary: false, impfOnly: true
+  },
+  {
+    id: 'past', name: 'Passe',
+    ru: 'Прошедшее время',
+    fr: 'Passe',
+    explain: 'Action dans le passe. Change selon le GENRE (masculin/feminin/neutre), pas la personne ! C\'est la grande difference avec le francais.',
+    literary: false
+  },
+  {
+    id: 'future', name: 'Futur',
+    ru: 'Будущее время',
+    fr: 'Futur',
+    explain: 'Action future. Imperfectif : буду + infinitif. Perfectif : conjugaison directe (comme le present).',
+    literary: false
+  },
+  {
+    id: 'imperative', name: 'Imperatif',
+    ru: 'Повелительное наклонение',
+    fr: 'Imperatif',
+    explain: 'Ordre, conseil, demande. Deux formes : ты (informel) et вы (formel/pluriel).',
+    literary: false
+  },
+  {
+    id: 'conditional', name: 'Conditionnel',
+    ru: 'Условное наклонение',
+    fr: 'Conditionnel',
+    explain: 'Passe + бы. Equivalent de \"je ferais\", \"j\'aurais fait\". Meme conjugaison que le passe, avec бы apres.',
+    literary: false
+  },
+  {
+    id: 'participle', name: 'Participes',
+    ru: 'Причастия',
+    fr: 'Participes',
+    explain: 'Formes adjectivales du verbe. Present actif, passe actif, passe passif.',
+    literary: true
+  },
+  {
+    id: 'gerund', name: 'Gerondif',
+    ru: 'Деепричастия',
+    fr: 'Gerondif russe',
+    explain: 'Forme invariable. \"en faisant\" (impf: делая), \"ayant fait\" (pf: сделав).',
+    literary: true
+  }
+];
+
+// ============================================================
+// RUSSIAN VERB DATABASE
+// ============================================================
+const VERBS = {
+  // ---- ДЕЛАТЬ / СДЕЛАТЬ ----
+  'делать': {
+    aspect: 'impf', pair: 'сделать', conjugation: '1ere conjugaison',
+    present: ['делаю','делаешь','делает','делаем','делаете','делают'],
+    past: ['делал','делала','делало','делали'],
+    future: null, // impf future uses буду + inf
+    imperative: ['делай','делайте'],
+    participles: ['делающий','делавший','—'],
+    gerunds: ['делая','—']
+  },
+  'сделать': {
+    aspect: 'pf', pair: 'делать', conjugation: '1ere conjugaison',
+    present: null,
+    past: ['сделал','сделала','сделало','сделали'],
+    future: ['сделаю','сделаешь','сделает','сделаем','сделаете','сделают'],
+    imperative: ['сделай','сделайте'],
+    participles: ['—','—','сделанный'],
+    gerunds: ['—','сделав']
+  },
+  // ---- ГОВОРИТЬ / СКАЗАТЬ ----
+  'говорить': {
+    aspect: 'impf', pair: 'сказать', conjugation: '2eme conjugaison',
+    present: ['говорю','говоришь','говорит','говорим','говорите','говорят'],
+    past: ['говорил','говорила','говорило','говорили'],
+    future: null,
+    imperative: ['говори','говорите'],
+    participles: ['говорящий','говоривший','—'],
+    gerunds: ['говоря','—']
+  },
+  'сказать': {
+    aspect: 'pf', pair: 'говорить', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['сказал','сказала','сказало','сказали'],
+    future: ['скажу','скажешь','скажет','скажем','скажете','скажут'],
+    imperative: ['скажи','скажите'],
+    participles: ['—','—','сказанный'],
+    gerunds: ['—','сказав']
+  },
+  // ---- ИДТИ / ПОЙТИ ----
+  'идти': {
+    aspect: 'impf', pair: 'пойти', conjugation: 'Irregulier',
+    present: ['иду','идёшь','идёт','идём','идёте','идут'],
+    past: ['шёл','шла','шло','шли'],
+    future: null,
+    imperative: ['иди','идите'],
+    participles: ['идущий','шедший','—'],
+    gerunds: ['идя','—']
+  },
+  'пойти': {
+    aspect: 'pf', pair: 'идти', conjugation: 'Irregulier',
+    present: null,
+    past: ['пошёл','пошла','пошло','пошли'],
+    future: ['пойду','пойдёшь','пойдёт','пойдём','пойдёте','пойдут'],
+    imperative: ['пойди','пойдите'],
+    participles: ['—','—','—'],
+    gerunds: ['—','пойдя']
+  },
+  // ---- ХОДИТЬ ----
+  'ходить': {
+    aspect: 'impf', pair: null, conjugation: '2eme conjugaison',
+    present: ['хожу','ходишь','ходит','ходим','ходите','ходят'],
+    past: ['ходил','ходила','ходило','ходили'],
+    future: null,
+    imperative: ['ходи','ходите'],
+    participles: ['ходящий','ходивший','—'],
+    gerunds: ['ходя','—']
+  },
+  // ---- ЕСТЬ / СЪЕСТЬ ----
+  'есть': {
+    aspect: 'impf', pair: 'съесть', conjugation: 'Irregulier',
+    present: ['ем','ешь','ест','едим','едите','едят'],
+    past: ['ел','ела','ело','ели'],
+    future: null,
+    imperative: ['ешь','ешьте'],
+    participles: ['едящий','евший','—'],
+    gerunds: ['—','—']
+  },
+  'съесть': {
+    aspect: 'pf', pair: 'есть', conjugation: 'Irregulier',
+    present: null,
+    past: ['съел','съела','съело','съели'],
+    future: ['съем','съешь','съест','съедим','съедите','съедят'],
+    imperative: ['съешь','съешьте'],
+    participles: ['—','—','съеденный'],
+    gerunds: ['—','съев']
+  },
+  // ---- ПИТЬ / ВЫПИТЬ ----
+  'пить': {
+    aspect: 'impf', pair: 'выпить', conjugation: '1ere conjugaison (irregulier)',
+    present: ['пью','пьёшь','пьёт','пьём','пьёте','пьют'],
+    past: ['пил','пила','пило','пили'],
+    future: null,
+    imperative: ['пей','пейте'],
+    participles: ['пьющий','пивший','—'],
+    gerunds: ['—','—']
+  },
+  'выпить': {
+    aspect: 'pf', pair: 'пить', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['выпил','выпила','выпило','выпили'],
+    future: ['выпью','выпьешь','выпьет','выпьем','выпьете','выпьют'],
+    imperative: ['выпей','выпейте'],
+    participles: ['—','—','выпитый'],
+    gerunds: ['—','выпив']
+  },
+  // ---- СПАТЬ ----
+  'спать': {
+    aspect: 'impf', pair: null, conjugation: '2eme conjugaison (irregulier)',
+    present: ['сплю','спишь','спит','спим','спите','спят'],
+    past: ['спал','спала','спало','спали'],
+    future: null,
+    imperative: ['спи','спите'],
+    participles: ['спящий','спавший','—'],
+    gerunds: ['—','—']
+  },
+  // ---- РАБОТАТЬ ----
+  'работать': {
+    aspect: 'impf', pair: null, conjugation: '1ere conjugaison',
+    present: ['работаю','работаешь','работает','работаем','работаете','работают'],
+    past: ['работал','работала','работало','работали'],
+    future: null,
+    imperative: ['работай','работайте'],
+    participles: ['работающий','работавший','—'],
+    gerunds: ['работая','—']
+  },
+  // ---- ЧИТАТЬ / ПРОЧИТАТЬ ----
+  'читать': {
+    aspect: 'impf', pair: 'прочитать', conjugation: '1ere conjugaison',
+    present: ['читаю','читаешь','читает','читаем','читаете','читают'],
+    past: ['читал','читала','читало','читали'],
+    future: null,
+    imperative: ['читай','читайте'],
+    participles: ['читающий','читавший','—'],
+    gerunds: ['читая','—']
+  },
+  'прочитать': {
+    aspect: 'pf', pair: 'читать', conjugation: '1ere conjugaison',
+    present: null,
+    past: ['прочитал','прочитала','прочитало','прочитали'],
+    future: ['прочитаю','прочитаешь','прочитает','прочитаем','прочитаете','прочитают'],
+    imperative: ['прочитай','прочитайте'],
+    participles: ['—','—','прочитанный'],
+    gerunds: ['—','прочитав']
+  },
+  // ---- ПИСАТЬ / НАПИСАТЬ ----
+  'писать': {
+    aspect: 'impf', pair: 'написать', conjugation: '1ere conjugaison (irregulier)',
+    present: ['пишу','пишешь','пишет','пишем','пишете','пишут'],
+    past: ['писал','писала','писало','писали'],
+    future: null,
+    imperative: ['пиши','пишите'],
+    participles: ['пишущий','писавший','—'],
+    gerunds: ['—','—']
+  },
+  'написать': {
+    aspect: 'pf', pair: 'писать', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['написал','написала','написало','написали'],
+    future: ['напишу','напишешь','напишет','напишем','напишете','напишут'],
+    imperative: ['напиши','напишите'],
+    participles: ['—','—','написанный'],
+    gerunds: ['—','написав']
+  },
+  // ---- ДУМАТЬ / ПОДУМАТЬ ----
+  'думать': {
+    aspect: 'impf', pair: 'подумать', conjugation: '1ere conjugaison',
+    present: ['думаю','думаешь','думает','думаем','думаете','думают'],
+    past: ['думал','думала','думало','думали'],
+    future: null,
+    imperative: ['думай','думайте'],
+    participles: ['думающий','думавший','—'],
+    gerunds: ['думая','—']
+  },
+  'подумать': {
+    aspect: 'pf', pair: 'думать', conjugation: '1ere conjugaison',
+    present: null,
+    past: ['подумал','подумала','подумало','подумали'],
+    future: ['подумаю','подумаешь','подумает','подумаем','подумаете','подумают'],
+    imperative: ['подумай','подумайте'],
+    participles: ['—','—','—'],
+    gerunds: ['—','подумав']
+  },
+  // ---- ПОНИМАТЬ / ПОНЯТЬ ----
+  'понимать': {
+    aspect: 'impf', pair: 'понять', conjugation: '1ere conjugaison',
+    present: ['понимаю','понимаешь','понимает','понимаем','понимаете','понимают'],
+    past: ['понимал','понимала','понимало','понимали'],
+    future: null,
+    imperative: ['понимай','понимайте'],
+    participles: ['понимающий','понимавший','—'],
+    gerunds: ['понимая','—']
+  },
+  'понять': {
+    aspect: 'pf', pair: 'понимать', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['понял','поняла','поняло','поняли'],
+    future: ['пойму','поймёшь','поймёт','поймём','поймёте','поймут'],
+    imperative: ['пойми','поймите'],
+    participles: ['—','—','понятый'],
+    gerunds: ['—','поняв']
+  },
+  // ---- ЗНАТЬ / УЗНАТЬ ----
+  'знать': {
+    aspect: 'impf', pair: 'узнать', conjugation: '1ere conjugaison',
+    present: ['знаю','знаешь','знает','знаем','знаете','знают'],
+    past: ['знал','знала','знало','знали'],
+    future: null,
+    imperative: ['знай','знайте'],
+    participles: ['знающий','знавший','—'],
+    gerunds: ['зная','—']
+  },
+  'узнать': {
+    aspect: 'pf', pair: 'знать', conjugation: '1ere conjugaison',
+    present: null,
+    past: ['узнал','узнала','узнало','узнали'],
+    future: ['узнаю','узнаешь','узнает','узнаем','узнаете','узнают'],
+    imperative: ['узнай','узнайте'],
+    participles: ['—','—','узнанный'],
+    gerunds: ['—','узнав']
+  },
+  // ---- ВИДЕТЬ / УВИДЕТЬ ----
+  'видеть': {
+    aspect: 'impf', pair: 'увидеть', conjugation: '2eme conjugaison (irregulier)',
+    present: ['вижу','видишь','видит','видим','видите','видят'],
+    past: ['видел','видела','видело','видели'],
+    future: null,
+    imperative: ['—','—'],
+    participles: ['видящий','видевший','—'],
+    gerunds: ['видя','—']
+  },
+  'увидеть': {
+    aspect: 'pf', pair: 'видеть', conjugation: '2eme conjugaison (irregulier)',
+    present: null,
+    past: ['увидел','увидела','увидело','увидели'],
+    future: ['увижу','увидишь','увидит','увидим','увидите','увидят'],
+    imperative: ['—','—'],
+    participles: ['—','—','увиденный'],
+    gerunds: ['—','увидев']
+  },
+  // ---- СЛЫШАТЬ / УСЛЫШАТЬ ----
+  'слышать': {
+    aspect: 'impf', pair: 'услышать', conjugation: '2eme conjugaison (irregulier)',
+    present: ['слышу','слышишь','слышит','слышим','слышите','слышат'],
+    past: ['слышал','слышала','слышало','слышали'],
+    future: null,
+    imperative: ['—','—'],
+    participles: ['слышащий','слышавший','—'],
+    gerunds: ['—','—']
+  },
+  'услышать': {
+    aspect: 'pf', pair: 'слышать', conjugation: '2eme conjugaison (irregulier)',
+    present: null,
+    past: ['услышал','услышала','услышало','услышали'],
+    future: ['услышу','услышишь','услышит','услышим','услышите','услышат'],
+    imperative: ['—','—'],
+    participles: ['—','—','услышанный'],
+    gerunds: ['—','услышав']
+  },
+  // ---- ЛЮБИТЬ / ПОЛЮБИТЬ ----
+  'любить': {
+    aspect: 'impf', pair: 'полюбить', conjugation: '2eme conjugaison',
+    present: ['люблю','любишь','любит','любим','любите','любят'],
+    past: ['любил','любила','любило','любили'],
+    future: null,
+    imperative: ['люби','любите'],
+    participles: ['любящий','любивший','—'],
+    gerunds: ['любя','—']
+  },
+  'полюбить': {
+    aspect: 'pf', pair: 'любить', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['полюбил','полюбила','полюбило','полюбили'],
+    future: ['полюблю','полюбишь','полюбит','полюбим','полюбите','полюбят'],
+    imperative: ['полюби','полюбите'],
+    participles: ['—','—','—'],
+    gerunds: ['—','полюбив']
+  },
+  // ---- ХОТЕТЬ / ЗАХОТЕТЬ ----
+  'хотеть': {
+    aspect: 'impf', pair: 'захотеть', conjugation: 'Irregulier (mixte)',
+    present: ['хочу','хочешь','хочет','хотим','хотите','хотят'],
+    past: ['хотел','хотела','хотело','хотели'],
+    future: null,
+    imperative: ['—','—'],
+    participles: ['хотящий','хотевший','—'],
+    gerunds: ['—','—']
+  },
+  'захотеть': {
+    aspect: 'pf', pair: 'хотеть', conjugation: 'Irregulier (mixte)',
+    present: null,
+    past: ['захотел','захотела','захотело','захотели'],
+    future: ['захочу','захочешь','захочет','захотим','захотите','захотят'],
+    imperative: ['—','—'],
+    participles: ['—','—','—'],
+    gerunds: ['—','захотев']
+  },
+  // ---- МОЧЬ / СМОЧЬ ----
+  'мочь': {
+    aspect: 'impf', pair: 'смочь', conjugation: '1ere conjugaison (irregulier)',
+    present: ['могу','можешь','может','можем','можете','могут'],
+    past: ['мог','могла','могло','могли'],
+    future: null,
+    imperative: ['—','—'],
+    participles: ['могущий','могший','—'],
+    gerunds: ['—','—']
+  },
+  'смочь': {
+    aspect: 'pf', pair: 'мочь', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['смог','смогла','смогло','смогли'],
+    future: ['смогу','сможешь','сможет','сможем','сможете','смогут'],
+    imperative: ['—','—'],
+    participles: ['—','—','—'],
+    gerunds: ['—','—']
+  },
+  // ---- ДАВАТЬ / ДАТЬ ----
+  'давать': {
+    aspect: 'impf', pair: 'дать', conjugation: '1ere conjugaison (irregulier)',
+    present: ['даю','даёшь','даёт','даём','даёте','дают'],
+    past: ['давал','давала','давало','давали'],
+    future: null,
+    imperative: ['давай','давайте'],
+    participles: ['дающий','дававший','—'],
+    gerunds: ['давая','—']
+  },
+  'дать': {
+    aspect: 'pf', pair: 'давать', conjugation: 'Irregulier',
+    present: null,
+    past: ['дал','дала','дало','дали'],
+    future: ['дам','дашь','даст','дадим','дадите','дадут'],
+    imperative: ['дай','дайте'],
+    participles: ['—','—','данный'],
+    gerunds: ['—','дав']
+  },
+  // ---- БРАТЬ / ВЗЯТЬ ----
+  'брать': {
+    aspect: 'impf', pair: 'взять', conjugation: '1ere conjugaison (irregulier)',
+    present: ['беру','берёшь','берёт','берём','берёте','берут'],
+    past: ['брал','брала','брало','брали'],
+    future: null,
+    imperative: ['бери','берите'],
+    participles: ['берущий','бравший','—'],
+    gerunds: ['беря','—']
+  },
+  'взять': {
+    aspect: 'pf', pair: 'брать', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['взял','взяла','взяло','взяли'],
+    future: ['возьму','возьмёшь','возьмёт','возьмём','возьмёте','возьмут'],
+    imperative: ['возьми','возьмите'],
+    participles: ['—','—','взятый'],
+    gerunds: ['—','взяв']
+  },
+  // ---- ОТКРЫВАТЬ / ОТКРЫТЬ ----
+  'открывать': {
+    aspect: 'impf', pair: 'открыть', conjugation: '1ere conjugaison',
+    present: ['открываю','открываешь','открывает','открываем','открываете','открывают'],
+    past: ['открывал','открывала','открывало','открывали'],
+    future: null,
+    imperative: ['открывай','открывайте'],
+    participles: ['открывающий','открывавший','—'],
+    gerunds: ['открывая','—']
+  },
+  'открыть': {
+    aspect: 'pf', pair: 'открывать', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['открыл','открыла','открыло','открыли'],
+    future: ['открою','откроешь','откроет','откроем','откроете','откроют'],
+    imperative: ['открой','откройте'],
+    participles: ['—','—','открытый'],
+    gerunds: ['—','открыв']
+  },
+  // ---- ЗАКРЫВАТЬ / ЗАКРЫТЬ ----
+  'закрывать': {
+    aspect: 'impf', pair: 'закрыть', conjugation: '1ere conjugaison',
+    present: ['закрываю','закрываешь','закрывает','закрываем','закрываете','закрывают'],
+    past: ['закрывал','закрывала','закрывало','закрывали'],
+    future: null,
+    imperative: ['закрывай','закрывайте'],
+    participles: ['закрывающий','закрывавший','—'],
+    gerunds: ['закрывая','—']
+  },
+  'закрыть': {
+    aspect: 'pf', pair: 'закрывать', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['закрыл','закрыла','закрыло','закрыли'],
+    future: ['закрою','закроешь','закроет','закроем','закроете','закроют'],
+    imperative: ['закрой','закройте'],
+    participles: ['—','—','закрытый'],
+    gerunds: ['—','закрыв']
+  },
+  // ---- НАЧИНАТЬ / НАЧАТЬ ----
+  'начинать': {
+    aspect: 'impf', pair: 'начать', conjugation: '1ere conjugaison',
+    present: ['начинаю','начинаешь','начинает','начинаем','начинаете','начинают'],
+    past: ['начинал','начинала','начинало','начинали'],
+    future: null,
+    imperative: ['начинай','начинайте'],
+    participles: ['начинающий','начинавший','—'],
+    gerunds: ['начиная','—']
+  },
+  'начать': {
+    aspect: 'pf', pair: 'начинать', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['начал','начала','начало','начали'],
+    future: ['начну','начнёшь','начнёт','начнём','начнёте','начнут'],
+    imperative: ['начни','начните'],
+    participles: ['—','—','начатый'],
+    gerunds: ['—','начав']
+  },
+  // ---- КОНЧАТЬ / КОНЧИТЬ ----
+  'кончать': {
+    aspect: 'impf', pair: 'кончить', conjugation: '1ere conjugaison',
+    present: ['кончаю','кончаешь','кончает','кончаем','кончаете','кончают'],
+    past: ['кончал','кончала','кончало','кончали'],
+    future: null,
+    imperative: ['кончай','кончайте'],
+    participles: ['кончающий','кончавший','—'],
+    gerunds: ['кончая','—']
+  },
+  'кончить': {
+    aspect: 'pf', pair: 'кончать', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['кончил','кончила','кончило','кончили'],
+    future: ['кончу','кончишь','кончит','кончим','кончите','кончат'],
+    imperative: ['кончи','кончите'],
+    participles: ['—','—','конченный'],
+    gerunds: ['—','кончив']
+  },
+  // ---- ЗАКАНЧИВАТЬ / ЗАКОНЧИТЬ ----
+  'заканчивать': {
+    aspect: 'impf', pair: 'закончить', conjugation: '1ere conjugaison',
+    present: ['заканчиваю','заканчиваешь','заканчивает','заканчиваем','заканчиваете','заканчивают'],
+    past: ['заканчивал','заканчивала','заканчивало','заканчивали'],
+    future: null,
+    imperative: ['заканчивай','заканчивайте'],
+    participles: ['заканчивающий','заканчивавший','—'],
+    gerunds: ['заканчивая','—']
+  },
+  'закончить': {
+    aspect: 'pf', pair: 'заканчивать', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['закончил','закончила','закончило','закончили'],
+    future: ['закончу','закончишь','закончит','закончим','закончите','закончат'],
+    imperative: ['закончи','закончите'],
+    participles: ['—','—','законченный'],
+    gerunds: ['—','закончив']
+  },
+  // ---- ПОКУПАТЬ / КУПИТЬ ----
+  'покупать': {
+    aspect: 'impf', pair: 'купить', conjugation: '1ere conjugaison',
+    present: ['покупаю','покупаешь','покупает','покупаем','покупаете','покупают'],
+    past: ['покупал','покупала','покупало','покупали'],
+    future: null,
+    imperative: ['покупай','покупайте'],
+    participles: ['покупающий','покупавший','—'],
+    gerunds: ['покупая','—']
+  },
+  'купить': {
+    aspect: 'pf', pair: 'покупать', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['купил','купила','купило','купили'],
+    future: ['куплю','купишь','купит','купим','купите','купят'],
+    imperative: ['купи','купите'],
+    participles: ['—','—','купленный'],
+    gerunds: ['—','купив']
+  },
+  // ---- ПРОДАВАТЬ / ПРОДАТЬ ----
+  'продавать': {
+    aspect: 'impf', pair: 'продать', conjugation: '1ere conjugaison (irregulier)',
+    present: ['продаю','продаёшь','продаёт','продаём','продаёте','продают'],
+    past: ['продавал','продавала','продавало','продавали'],
+    future: null,
+    imperative: ['продавай','продавайте'],
+    participles: ['продающий','продававший','—'],
+    gerunds: ['продавая','—']
+  },
+  'продать': {
+    aspect: 'pf', pair: 'продавать', conjugation: 'Irregulier',
+    present: null,
+    past: ['продал','продала','продало','продали'],
+    future: ['продам','продашь','продаст','продадим','продадите','продадут'],
+    imperative: ['продай','продайте'],
+    participles: ['—','—','проданный'],
+    gerunds: ['—','продав']
+  },
+  // ---- ПОМОГАТЬ / ПОМОЧЬ ----
+  'помогать': {
+    aspect: 'impf', pair: 'помочь', conjugation: '1ere conjugaison',
+    present: ['помогаю','помогаешь','помогает','помогаем','помогаете','помогают'],
+    past: ['помогал','помогала','помогало','помогали'],
+    future: null,
+    imperative: ['помогай','помогайте'],
+    participles: ['помогающий','помогавший','—'],
+    gerunds: ['помогая','—']
+  },
+  'помочь': {
+    aspect: 'pf', pair: 'помогать', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['помог','помогла','помогло','помогли'],
+    future: ['помогу','поможешь','поможет','поможем','поможете','помогут'],
+    imperative: ['помоги','помогите'],
+    participles: ['—','—','—'],
+    gerunds: ['—','помогши']
+  },
+  // ---- ИГРАТЬ / СЫГРАТЬ ----
+  'играть': {
+    aspect: 'impf', pair: 'сыграть', conjugation: '1ere conjugaison',
+    present: ['играю','играешь','играет','играем','играете','играют'],
+    past: ['играл','играла','играло','играли'],
+    future: null,
+    imperative: ['играй','играйте'],
+    participles: ['играющий','игравший','—'],
+    gerunds: ['играя','—']
+  },
+  'сыграть': {
+    aspect: 'pf', pair: 'играть', conjugation: '1ere conjugaison',
+    present: null,
+    past: ['сыграл','сыграла','сыграло','сыграли'],
+    future: ['сыграю','сыграешь','сыграет','сыграем','сыграете','сыграют'],
+    imperative: ['сыграй','сыграйте'],
+    participles: ['—','—','сыгранный'],
+    gerunds: ['—','сыграв']
+  },
+  // ---- УЧИТЬ / ВЫУЧИТЬ ----
+  'учить': {
+    aspect: 'impf', pair: 'выучить', conjugation: '2eme conjugaison',
+    present: ['учу','учишь','учит','учим','учите','учат'],
+    past: ['учил','учила','учило','учили'],
+    future: null,
+    imperative: ['учи','учите'],
+    participles: ['учащий','учивший','—'],
+    gerunds: ['уча','—']
+  },
+  'выучить': {
+    aspect: 'pf', pair: 'учить', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['выучил','выучила','выучило','выучили'],
+    future: ['выучу','выучишь','выучит','выучим','выучите','выучат'],
+    imperative: ['выучи','выучите'],
+    participles: ['—','—','выученный'],
+    gerunds: ['—','выучив']
+  },
+  // ---- УЧИТЬСЯ ----
+  'учиться': {
+    aspect: 'impf', pair: null, conjugation: '2eme conjugaison',
+    present: ['учусь','учишься','учится','учимся','учитесь','учатся'],
+    past: ['учился','училась','училось','учились'],
+    future: null,
+    imperative: ['учись','учитесь'],
+    participles: ['учащийся','учившийся','—'],
+    gerunds: ['учась','—']
+  },
+  // ---- ЖДАТЬ / ПОДОЖДАТЬ ----
+  'ждать': {
+    aspect: 'impf', pair: 'подождать', conjugation: '1ere conjugaison (irregulier)',
+    present: ['жду','ждёшь','ждёт','ждём','ждёте','ждут'],
+    past: ['ждал','ждала','ждало','ждали'],
+    future: null,
+    imperative: ['жди','ждите'],
+    participles: ['ждущий','ждавший','—'],
+    gerunds: ['—','—']
+  },
+  'подождать': {
+    aspect: 'pf', pair: 'ждать', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['подождал','подождала','подождало','подождали'],
+    future: ['подожду','подождёшь','подождёт','подождём','подождёте','подождут'],
+    imperative: ['подожди','подождите'],
+    participles: ['—','—','—'],
+    gerunds: ['—','подождав']
+  },
+  // ---- ИСКАТЬ / НАЙТИ ----
+  'искать': {
+    aspect: 'impf', pair: 'найти', conjugation: '1ere conjugaison (irregulier)',
+    present: ['ищу','ищешь','ищет','ищем','ищете','ищут'],
+    past: ['искал','искала','искало','искали'],
+    future: null,
+    imperative: ['ищи','ищите'],
+    participles: ['ищущий','искавший','—'],
+    gerunds: ['—','—']
+  },
+  'найти': {
+    aspect: 'pf', pair: 'искать', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['нашёл','нашла','нашло','нашли'],
+    future: ['найду','найдёшь','найдёт','найдём','найдёте','найдут'],
+    imperative: ['найди','найдите'],
+    participles: ['—','—','найденный'],
+    gerunds: ['—','найдя']
+  },
+  // ---- НАХОДИТЬ / НАЙТИ ----
+  'находить': {
+    aspect: 'impf', pair: 'найти', conjugation: '2eme conjugaison',
+    present: ['нахожу','находишь','находит','находим','находите','находят'],
+    past: ['находил','находила','находило','находили'],
+    future: null,
+    imperative: ['находи','находите'],
+    participles: ['находящий','находивший','—'],
+    gerunds: ['находя','—']
+  },
+  // ---- ПРИХОДИТЬ / ПРИЙТИ ----
+  'приходить': {
+    aspect: 'impf', pair: 'прийти', conjugation: '2eme conjugaison',
+    present: ['прихожу','приходишь','приходит','приходим','приходите','приходят'],
+    past: ['приходил','приходила','приходило','приходили'],
+    future: null,
+    imperative: ['приходи','приходите'],
+    participles: ['приходящий','приходивший','—'],
+    gerunds: ['приходя','—']
+  },
+  'прийти': {
+    aspect: 'pf', pair: 'приходить', conjugation: 'Irregulier',
+    present: null,
+    past: ['пришёл','пришла','пришло','пришли'],
+    future: ['приду','придёшь','придёт','придём','придёте','придут'],
+    imperative: ['приди','придите'],
+    participles: ['—','—','—'],
+    gerunds: ['—','придя']
+  },
+  // ---- УХОДИТЬ / УЙТИ ----
+  'уходить': {
+    aspect: 'impf', pair: 'уйти', conjugation: '2eme conjugaison',
+    present: ['ухожу','уходишь','уходит','уходим','уходите','уходят'],
+    past: ['уходил','уходила','уходило','уходили'],
+    future: null,
+    imperative: ['уходи','уходите'],
+    participles: ['уходящий','уходивший','—'],
+    gerunds: ['уходя','—']
+  },
+  'уйти': {
+    aspect: 'pf', pair: 'уходить', conjugation: 'Irregulier',
+    present: null,
+    past: ['ушёл','ушла','ушло','ушли'],
+    future: ['уйду','уйдёшь','уйдёт','уйдём','уйдёте','уйдут'],
+    imperative: ['уйди','уйдите'],
+    participles: ['—','—','—'],
+    gerunds: ['—','уйдя']
+  },
+  // ---- БЕЖАТЬ / ПОБЕЖАТЬ ----
+  'бежать': {
+    aspect: 'impf', pair: 'побежать', conjugation: 'Irregulier (mixte)',
+    present: ['бегу','бежишь','бежит','бежим','бежите','бегут'],
+    past: ['бежал','бежала','бежало','бежали'],
+    future: null,
+    imperative: ['беги','бегите'],
+    participles: ['бегущий','бежавший','—'],
+    gerunds: ['—','—']
+  },
+  'побежать': {
+    aspect: 'pf', pair: 'бежать', conjugation: 'Irregulier (mixte)',
+    present: null,
+    past: ['побежал','побежала','побежало','побежали'],
+    future: ['побегу','побежишь','побежит','побежим','побежите','побегут'],
+    imperative: ['побеги','побегите'],
+    participles: ['—','—','—'],
+    gerunds: ['—','побежав']
+  },
+  // ---- ЛЕТАТЬ / ПОЛЕТЕТЬ ----
+  'летать': {
+    aspect: 'impf', pair: 'полететь', conjugation: '1ere conjugaison',
+    present: ['летаю','летаешь','летает','летаем','летаете','летают'],
+    past: ['летал','летала','летало','летали'],
+    future: null,
+    imperative: ['летай','летайте'],
+    participles: ['летающий','летавший','—'],
+    gerunds: ['летая','—']
+  },
+  'полететь': {
+    aspect: 'pf', pair: 'летать', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['полетел','полетела','полетело','полетели'],
+    future: ['полечу','полетишь','полетит','полетим','полетите','полетят'],
+    imperative: ['полети','полетите'],
+    participles: ['—','—','—'],
+    gerunds: ['—','полетев']
+  },
+  // ---- СТОЯТЬ ----
+  'стоять': {
+    aspect: 'impf', pair: null, conjugation: '2eme conjugaison',
+    present: ['стою','стоишь','стоит','стоим','стоите','стоят'],
+    past: ['стоял','стояла','стояло','стояли'],
+    future: null,
+    imperative: ['стой','стойте'],
+    participles: ['стоящий','стоявший','—'],
+    gerunds: ['стоя','—']
+  },
+  // ---- СИДЕТЬ / СЕСТЬ ----
+  'сидеть': {
+    aspect: 'impf', pair: 'сесть', conjugation: '2eme conjugaison',
+    present: ['сижу','сидишь','сидит','сидим','сидите','сидят'],
+    past: ['сидел','сидела','сидело','сидели'],
+    future: null,
+    imperative: ['сиди','сидите'],
+    participles: ['сидящий','сидевший','—'],
+    gerunds: ['сидя','—']
+  },
+  'сесть': {
+    aspect: 'pf', pair: 'сидеть', conjugation: 'Irregulier',
+    present: null,
+    past: ['сел','села','село','сели'],
+    future: ['сяду','сядешь','сядет','сядем','сядете','сядут'],
+    imperative: ['сядь','сядьте'],
+    participles: ['—','—','—'],
+    gerunds: ['—','сев']
+  },
+  // ---- КЛАСТЬ / ПОЛОЖИТЬ ----
+  'класть': {
+    aspect: 'impf', pair: 'положить', conjugation: '1ere conjugaison (irregulier)',
+    present: ['кладу','кладёшь','кладёт','кладём','кладёте','кладут'],
+    past: ['клал','клала','клало','клали'],
+    future: null,
+    imperative: ['клади','кладите'],
+    participles: ['кладущий','клавший','—'],
+    gerunds: ['—','—']
+  },
+  'положить': {
+    aspect: 'pf', pair: 'класть', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['положил','положила','положило','положили'],
+    future: ['положу','положишь','положит','положим','положите','положат'],
+    imperative: ['положи','положите'],
+    participles: ['—','—','положенный'],
+    gerunds: ['—','положив']
+  },
+  // ---- ВСТАВАТЬ / ВСТАТЬ ----
+  'вставать': {
+    aspect: 'impf', pair: 'встать', conjugation: '1ere conjugaison (irregulier)',
+    present: ['встаю','встаёшь','встаёт','встаём','встаёте','встают'],
+    past: ['вставал','вставала','вставало','вставали'],
+    future: null,
+    imperative: ['вставай','вставайте'],
+    participles: ['встающий','встававший','—'],
+    gerunds: ['вставая','—']
+  },
+  'встать': {
+    aspect: 'pf', pair: 'вставать', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['встал','встала','встало','встали'],
+    future: ['встану','встанешь','встанет','встанем','встанете','встанут'],
+    imperative: ['встань','встаньте'],
+    participles: ['—','—','—'],
+    gerunds: ['—','встав']
+  },
+  // ---- ПАДАТЬ / УПАСТЬ ----
+  'падать': {
+    aspect: 'impf', pair: 'упасть', conjugation: '1ere conjugaison',
+    present: ['падаю','падаешь','падает','падаем','падаете','падают'],
+    past: ['падал','падала','падало','падали'],
+    future: null,
+    imperative: ['падай','падайте'],
+    participles: ['падающий','падавший','—'],
+    gerunds: ['падая','—']
+  },
+  'упасть': {
+    aspect: 'pf', pair: 'падать', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['упал','упала','упало','упали'],
+    future: ['упаду','упадёшь','упадёт','упадём','упадёте','упадут'],
+    imperative: ['упади','упадите'],
+    participles: ['—','—','—'],
+    gerunds: ['—','упав']
+  },
+  // ---- УМИРАТЬ / УМЕРЕТЬ ----
+  'умирать': {
+    aspect: 'impf', pair: 'умереть', conjugation: '1ere conjugaison',
+    present: ['умираю','умираешь','умирает','умираем','умираете','умирают'],
+    past: ['умирал','умирала','умирало','умирали'],
+    future: null,
+    imperative: ['умирай','умирайте'],
+    participles: ['умирающий','умиравший','—'],
+    gerunds: ['умирая','—']
+  },
+  'умереть': {
+    aspect: 'pf', pair: 'умирать', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['умер','умерла','умерло','умерли'],
+    future: ['умру','умрёшь','умрёт','умрём','умрёте','умрут'],
+    imperative: ['умри','умрите'],
+    participles: ['—','—','—'],
+    gerunds: ['—','умерев']
+  },
+  // ---- СМЕЯТЬСЯ / ЗАСМЕЯТЬСЯ ----
+  'смеяться': {
+    aspect: 'impf', pair: 'засмеяться', conjugation: '1ere conjugaison',
+    present: ['смеюсь','смеёшься','смеётся','смеёмся','смеётесь','смеются'],
+    past: ['смеялся','смеялась','смеялось','смеялись'],
+    future: null,
+    imperative: ['смейся','смейтесь'],
+    participles: ['смеющийся','смеявшийся','—'],
+    gerunds: ['смеясь','—']
+  },
+  'засмеяться': {
+    aspect: 'pf', pair: 'смеяться', conjugation: '1ere conjugaison',
+    present: null,
+    past: ['засмеялся','засмеялась','засмеялось','засмеялись'],
+    future: ['засмеюсь','засмеёшься','засмеётся','засмеёмся','засмеётесь','засмеются'],
+    imperative: ['засмейся','засмейтесь'],
+    participles: ['—','—','—'],
+    gerunds: ['—','засмеявшись']
+  },
+  // ---- ПЛАКАТЬ / ЗАПЛАКАТЬ ----
+  'плакать': {
+    aspect: 'impf', pair: 'заплакать', conjugation: '1ere conjugaison (irregulier)',
+    present: ['плачу','плачешь','плачет','плачем','плачете','плачут'],
+    past: ['плакал','плакала','плакало','плакали'],
+    future: null,
+    imperative: ['плачь','плачьте'],
+    participles: ['плачущий','плакавший','—'],
+    gerunds: ['плача','—']
+  },
+  'заплакать': {
+    aspect: 'pf', pair: 'плакать', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['заплакал','заплакала','заплакало','заплакали'],
+    future: ['заплачу','заплачешь','заплачет','заплачем','заплачете','заплачут'],
+    imperative: ['заплачь','заплачьте'],
+    participles: ['—','—','—'],
+    gerunds: ['—','заплакав']
+  },
+  // ---- ЗВАТЬ / ПОЗВАТЬ ----
+  'звать': {
+    aspect: 'impf', pair: 'позвать', conjugation: '1ere conjugaison (irregulier)',
+    present: ['зову','зовёшь','зовёт','зовём','зовёте','зовут'],
+    past: ['звал','звала','звало','звали'],
+    future: null,
+    imperative: ['зови','зовите'],
+    participles: ['зовущий','звавший','—'],
+    gerunds: ['зовя','—']
+  },
+  'позвать': {
+    aspect: 'pf', pair: 'звать', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['позвал','позвала','позвало','позвали'],
+    future: ['позову','позовёшь','позовёт','позовём','позовёте','позовут'],
+    imperative: ['позови','позовите'],
+    participles: ['—','—','позванный'],
+    gerunds: ['—','позвав']
+  },
+  // ---- ОТВЕЧАТЬ / ОТВЕТИТЬ ----
+  'отвечать': {
+    aspect: 'impf', pair: 'ответить', conjugation: '1ere conjugaison',
+    present: ['отвечаю','отвечаешь','отвечает','отвечаем','отвечаете','отвечают'],
+    past: ['отвечал','отвечала','отвечало','отвечали'],
+    future: null,
+    imperative: ['отвечай','отвечайте'],
+    participles: ['отвечающий','отвечавший','—'],
+    gerunds: ['отвечая','—']
+  },
+  'ответить': {
+    aspect: 'pf', pair: 'отвечать', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['ответил','ответила','ответило','ответили'],
+    future: ['отвечу','ответишь','ответит','ответим','ответите','ответят'],
+    imperative: ['ответь','ответьте'],
+    participles: ['—','—','—'],
+    gerunds: ['—','ответив']
+  },
+  // ---- СПРАШИВАТЬ / СПРОСИТЬ ----
+  'спрашивать': {
+    aspect: 'impf', pair: 'спросить', conjugation: '1ere conjugaison',
+    present: ['спрашиваю','спрашиваешь','спрашивает','спрашиваем','спрашиваете','спрашивают'],
+    past: ['спрашивал','спрашивала','спрашивало','спрашивали'],
+    future: null,
+    imperative: ['спрашивай','спрашивайте'],
+    participles: ['спрашивающий','спрашивавший','—'],
+    gerunds: ['спрашивая','—']
+  },
+  'спросить': {
+    aspect: 'pf', pair: 'спрашивать', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['спросил','спросила','спросило','спросили'],
+    future: ['спрошу','спросишь','спросит','спросим','спросите','спросят'],
+    imperative: ['спроси','спросите'],
+    participles: ['—','—','спрошенный'],
+    gerunds: ['—','спросив']
+  },
+  // ---- ПРОСИТЬ / ПОПРОСИТЬ ----
+  'просить': {
+    aspect: 'impf', pair: 'попросить', conjugation: '2eme conjugaison',
+    present: ['прошу','просишь','просит','просим','просите','просят'],
+    past: ['просил','просила','просило','просили'],
+    future: null,
+    imperative: ['проси','просите'],
+    participles: ['просящий','просивший','—'],
+    gerunds: ['прося','—']
+  },
+  'попросить': {
+    aspect: 'pf', pair: 'просить', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['попросил','попросила','попросило','попросили'],
+    future: ['попрошу','попросишь','попросит','попросим','попросите','попросят'],
+    imperative: ['попроси','попросите'],
+    participles: ['—','—','—'],
+    gerunds: ['—','попросив']
+  },
+  // ---- ПОЛУЧАТЬ / ПОЛУЧИТЬ ----
+  'получать': {
+    aspect: 'impf', pair: 'получить', conjugation: '1ere conjugaison',
+    present: ['получаю','получаешь','получает','получаем','получаете','получают'],
+    past: ['получал','получала','получало','получали'],
+    future: null,
+    imperative: ['получай','получайте'],
+    participles: ['получающий','получавший','—'],
+    gerunds: ['получая','—']
+  },
+  'получить': {
+    aspect: 'pf', pair: 'получать', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['получил','получила','получило','получили'],
+    future: ['получу','получишь','получит','получим','получите','получат'],
+    imperative: ['получи','получите'],
+    participles: ['—','—','полученный'],
+    gerunds: ['—','получив']
+  },
+  // ---- ПОСЫЛАТЬ / ПОСЛАТЬ ----
+  'посылать': {
+    aspect: 'impf', pair: 'послать', conjugation: '1ere conjugaison',
+    present: ['посылаю','посылаешь','посылает','посылаем','посылаете','посылают'],
+    past: ['посылал','посылала','посылало','посылали'],
+    future: null,
+    imperative: ['посылай','посылайте'],
+    participles: ['посылающий','посылавший','—'],
+    gerunds: ['посылая','—']
+  },
+  'послать': {
+    aspect: 'pf', pair: 'посылать', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['послал','послала','послало','послали'],
+    future: ['пошлю','пошлёшь','пошлёт','пошлём','пошлёте','пошлют'],
+    imperative: ['пошли','пошлите'],
+    participles: ['—','—','посланный'],
+    gerunds: ['—','послав']
+  },
+  // ---- ПЛАТИТЬ / ЗАПЛАТИТЬ ----
+  'платить': {
+    aspect: 'impf', pair: 'заплатить', conjugation: '2eme conjugaison',
+    present: ['плачу','платишь','платит','платим','платите','платят'],
+    past: ['платил','платила','платило','платили'],
+    future: null,
+    imperative: ['плати','платите'],
+    participles: ['платящий','плативший','—'],
+    gerunds: ['платя','—']
+  },
+  'заплатить': {
+    aspect: 'pf', pair: 'платить', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['заплатил','заплатила','заплатило','заплатили'],
+    future: ['заплачу','заплатишь','заплатит','заплатим','заплатите','заплатят'],
+    imperative: ['заплати','заплатите'],
+    participles: ['—','—','заплаченный'],
+    gerunds: ['—','заплатив']
+  },
+  // ---- ВЫБИРАТЬ / ВЫБРАТЬ ----
+  'выбирать': {
+    aspect: 'impf', pair: 'выбрать', conjugation: '1ere conjugaison',
+    present: ['выбираю','выбираешь','выбирает','выбираем','выбираете','выбирают'],
+    past: ['выбирал','выбирала','выбирало','выбирали'],
+    future: null,
+    imperative: ['выбирай','выбирайте'],
+    participles: ['выбирающий','выбиравший','—'],
+    gerunds: ['выбирая','—']
+  },
+  'выбрать': {
+    aspect: 'pf', pair: 'выбирать', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['выбрал','выбрала','выбрало','выбрали'],
+    future: ['выберу','выберешь','выберет','выберем','выберете','выберут'],
+    imperative: ['выбери','выберите'],
+    participles: ['—','—','выбранный'],
+    gerunds: ['—','выбрав']
+  },
+  // ---- РЕШАТЬ / РЕШИТЬ ----
+  'решать': {
+    aspect: 'impf', pair: 'решить', conjugation: '1ere conjugaison',
+    present: ['решаю','решаешь','решает','решаем','решаете','решают'],
+    past: ['решал','решала','решало','решали'],
+    future: null,
+    imperative: ['решай','решайте'],
+    participles: ['решающий','решавший','—'],
+    gerunds: ['решая','—']
+  },
+  'решить': {
+    aspect: 'pf', pair: 'решать', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['решил','решила','решило','решили'],
+    future: ['решу','решишь','решит','решим','решите','решат'],
+    imperative: ['реши','решите'],
+    participles: ['—','—','решённый'],
+    gerunds: ['—','решив']
+  },
+  // ---- СТРОИТЬ / ПОСТРОИТЬ ----
+  'строить': {
+    aspect: 'impf', pair: 'построить', conjugation: '2eme conjugaison',
+    present: ['строю','строишь','строит','строим','строите','строят'],
+    past: ['строил','строила','строило','строили'],
+    future: null,
+    imperative: ['строй','стройте'],
+    participles: ['строящий','строивший','—'],
+    gerunds: ['строя','—']
+  },
+  'построить': {
+    aspect: 'pf', pair: 'строить', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['построил','построила','построило','построили'],
+    future: ['построю','построишь','построит','построим','построите','построят'],
+    imperative: ['построй','постройте'],
+    participles: ['—','—','построенный'],
+    gerunds: ['—','построив']
+  },
+  // ---- МЕНЯТЬ / ПОМЕНЯТЬ ----
+  'менять': {
+    aspect: 'impf', pair: 'поменять', conjugation: '1ere conjugaison',
+    present: ['меняю','меняешь','меняет','меняем','меняете','меняют'],
+    past: ['менял','меняла','меняло','меняли'],
+    future: null,
+    imperative: ['меняй','меняйте'],
+    participles: ['меняющий','менявший','—'],
+    gerunds: ['меняя','—']
+  },
+  'поменять': {
+    aspect: 'pf', pair: 'менять', conjugation: '1ere conjugaison',
+    present: null,
+    past: ['поменял','поменяла','поменяло','поменяли'],
+    future: ['поменяю','поменяешь','поменяет','поменяем','поменяете','поменяют'],
+    imperative: ['поменяй','поменяйте'],
+    participles: ['—','—','—'],
+    gerunds: ['—','поменяв']
+  },
+  // ---- ГОТОВИТЬ / ПРИГОТОВИТЬ ----
+  'готовить': {
+    aspect: 'impf', pair: 'приготовить', conjugation: '2eme conjugaison',
+    present: ['готовлю','готовишь','готовит','готовим','готовите','готовят'],
+    past: ['готовил','готовила','готовило','готовили'],
+    future: null,
+    imperative: ['готовь','готовьте'],
+    participles: ['готовящий','готовивший','—'],
+    gerunds: ['готовя','—']
+  },
+  'приготовить': {
+    aspect: 'pf', pair: 'готовить', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['приготовил','приготовила','приготовило','приготовили'],
+    future: ['приготовлю','приготовишь','приготовит','приготовим','приготовите','приготовят'],
+    imperative: ['приготовь','приготовьте'],
+    participles: ['—','—','приготовленный'],
+    gerunds: ['—','приготовив']
+  },
+  // ---- МЫТЬ / ПОМЫТЬ ----
+  'мыть': {
+    aspect: 'impf', pair: 'помыть', conjugation: '1ere conjugaison (irregulier)',
+    present: ['мою','моешь','моет','моем','моете','моют'],
+    past: ['мыл','мыла','мыло','мыли'],
+    future: null,
+    imperative: ['мой','мойте'],
+    participles: ['моющий','мывший','—'],
+    gerunds: ['моя','—']
+  },
+  'помыть': {
+    aspect: 'pf', pair: 'мыть', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['помыл','помыла','помыло','помыли'],
+    future: ['помою','помоешь','помоет','помоем','помоете','помоют'],
+    imperative: ['помой','помойте'],
+    participles: ['—','—','помытый'],
+    gerunds: ['—','помыв']
+  },
+  // ---- ПОКАЗЫВАТЬ / ПОКАЗАТЬ ----
+  'показывать': {
+    aspect: 'impf', pair: 'показать', conjugation: '1ere conjugaison',
+    present: ['показываю','показываешь','показывает','показываем','показываете','показывают'],
+    past: ['показывал','показывала','показывало','показывали'],
+    future: null,
+    imperative: ['показывай','показывайте'],
+    participles: ['показывающий','показывавший','—'],
+    gerunds: ['показывая','—']
+  },
+  'показать': {
+    aspect: 'pf', pair: 'показывать', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['показал','показала','показало','показали'],
+    future: ['покажу','покажешь','покажет','покажем','покажете','покажут'],
+    imperative: ['покажи','покажите'],
+    participles: ['—','—','показанный'],
+    gerunds: ['—','показав']
+  },
+  // ---- ОБЪЯСНЯТЬ / ОБЪЯСНИТЬ ----
+  'объяснять': {
+    aspect: 'impf', pair: 'объяснить', conjugation: '1ere conjugaison',
+    present: ['объясняю','объясняешь','объясняет','объясняем','объясняете','объясняют'],
+    past: ['объяснял','объясняла','объясняло','объясняли'],
+    future: null,
+    imperative: ['объясняй','объясняйте'],
+    participles: ['объясняющий','объяснявший','—'],
+    gerunds: ['объясняя','—']
+  },
+  'объяснить': {
+    aspect: 'pf', pair: 'объяснять', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['объяснил','объяснила','объяснило','объяснили'],
+    future: ['объясню','объяснишь','объяснит','объясним','объясните','объяснят'],
+    imperative: ['объясни','объясните'],
+    participles: ['—','—','объяснённый'],
+    gerunds: ['—','объяснив']
+  },
+  // ---- СЛУШАТЬ / ПОСЛУШАТЬ ----
+  'слушать': {
+    aspect: 'impf', pair: 'послушать', conjugation: '1ere conjugaison',
+    present: ['слушаю','слушаешь','слушает','слушаем','слушаете','слушают'],
+    past: ['слушал','слушала','слушало','слушали'],
+    future: null,
+    imperative: ['слушай','слушайте'],
+    participles: ['слушающий','слушавший','—'],
+    gerunds: ['слушая','—']
+  },
+  'послушать': {
+    aspect: 'pf', pair: 'слушать', conjugation: '1ere conjugaison',
+    present: null,
+    past: ['послушал','послушала','послушало','послушали'],
+    future: ['послушаю','послушаешь','послушает','послушаем','послушаете','послушают'],
+    imperative: ['послушай','послушайте'],
+    participles: ['—','—','—'],
+    gerunds: ['—','послушав']
+  },
+  // ---- ЧУВСТВОВАТЬ / ПОЧУВСТВОВАТЬ ----
+  'чувствовать': {
+    aspect: 'impf', pair: 'почувствовать', conjugation: '1ere conjugaison',
+    present: ['чувствую','чувствуешь','чувствует','чувствуем','чувствуете','чувствуют'],
+    past: ['чувствовал','чувствовала','чувствовало','чувствовали'],
+    future: null,
+    imperative: ['чувствуй','чувствуйте'],
+    participles: ['чувствующий','чувствовавший','—'],
+    gerunds: ['чувствуя','—']
+  },
+  'почувствовать': {
+    aspect: 'pf', pair: 'чувствовать', conjugation: '1ere conjugaison',
+    present: null,
+    past: ['почувствовал','почувствовала','почувствовало','почувствовали'],
+    future: ['почувствую','почувствуешь','почувствует','почувствуем','почувствуете','почувствуют'],
+    imperative: ['почувствуй','почувствуйте'],
+    participles: ['—','—','—'],
+    gerunds: ['—','почувствовав']
+  },
+  // ---- ДЕРЖАТЬ / ПОДЕРЖАТЬ ----
+  'держать': {
+    aspect: 'impf', pair: 'подержать', conjugation: '2eme conjugaison',
+    present: ['держу','держишь','держит','держим','держите','держат'],
+    past: ['держал','держала','держало','держали'],
+    future: null,
+    imperative: ['держи','держите'],
+    participles: ['держащий','державший','—'],
+    gerunds: ['держа','—']
+  },
+  'подержать': {
+    aspect: 'pf', pair: 'держать', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['подержал','подержала','подержало','подержали'],
+    future: ['подержу','подержишь','подержит','подержим','подержите','подержат'],
+    imperative: ['подержи','подержите'],
+    participles: ['—','—','—'],
+    gerunds: ['—','подержав']
+  },
+  // ---- БРОСАТЬ / БРОСИТЬ ----
+  'бросать': {
+    aspect: 'impf', pair: 'бросить', conjugation: '1ere conjugaison',
+    present: ['бросаю','бросаешь','бросает','бросаем','бросаете','бросают'],
+    past: ['бросал','бросала','бросало','бросали'],
+    future: null,
+    imperative: ['бросай','бросайте'],
+    participles: ['бросающий','бросавший','—'],
+    gerunds: ['бросая','—']
+  },
+  'бросить': {
+    aspect: 'pf', pair: 'бросать', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['бросил','бросила','бросило','бросили'],
+    future: ['брошу','бросишь','бросит','бросим','бросите','бросят'],
+    imperative: ['брось','бросьте'],
+    participles: ['—','—','брошенный'],
+    gerunds: ['—','бросив']
+  },
+  // ---- ЛОМАТЬ / СЛОМАТЬ ----
+  'ломать': {
+    aspect: 'impf', pair: 'сломать', conjugation: '1ere conjugaison',
+    present: ['ломаю','ломаешь','ломает','ломаем','ломаете','ломают'],
+    past: ['ломал','ломала','ломало','ломали'],
+    future: null,
+    imperative: ['ломай','ломайте'],
+    participles: ['ломающий','ломавший','—'],
+    gerunds: ['ломая','—']
+  },
+  'сломать': {
+    aspect: 'pf', pair: 'ломать', conjugation: '1ere conjugaison',
+    present: null,
+    past: ['сломал','сломала','сломало','сломали'],
+    future: ['сломаю','сломаешь','сломает','сломаем','сломаете','сломают'],
+    imperative: ['сломай','сломайте'],
+    participles: ['—','—','сломанный'],
+    gerunds: ['—','сломав']
+  },
+  // ---- РЕЗАТЬ / ПОРЕЗАТЬ ----
+  'резать': {
+    aspect: 'impf', pair: 'порезать', conjugation: '1ere conjugaison (irregulier)',
+    present: ['режу','режешь','режет','режем','режете','режут'],
+    past: ['резал','резала','резало','резали'],
+    future: null,
+    imperative: ['режь','режьте'],
+    participles: ['режущий','резавший','—'],
+    gerunds: ['—','—']
+  },
+  'порезать': {
+    aspect: 'pf', pair: 'резать', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['порезал','порезала','порезало','порезали'],
+    future: ['порежу','порежешь','порежет','порежем','порежете','порежут'],
+    imperative: ['порежь','порежьте'],
+    participles: ['—','—','порезанный'],
+    gerunds: ['—','порезав']
+  },
+  // ---- ЗАБЫВАТЬ / ЗАБЫТЬ ----
+  'забывать': {
+    aspect: 'impf', pair: 'забыть', conjugation: '1ere conjugaison',
+    present: ['забываю','забываешь','забывает','забываем','забываете','забывают'],
+    past: ['забывал','забывала','забывало','забывали'],
+    future: null,
+    imperative: ['забывай','забывайте'],
+    participles: ['забывающий','забывавший','—'],
+    gerunds: ['забывая','—']
+  },
+  'забыть': {
+    aspect: 'pf', pair: 'забывать', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['забыл','забыла','забыло','забыли'],
+    future: ['забуду','забудешь','забудет','забудем','забудете','забудут'],
+    imperative: ['забудь','забудьте'],
+    participles: ['—','—','забытый'],
+    gerunds: ['—','забыв']
+  },
+  // ---- ВСПОМИНАТЬ / ВСПОМНИТЬ ----
+  'вспоминать': {
+    aspect: 'impf', pair: 'вспомнить', conjugation: '1ere conjugaison',
+    present: ['вспоминаю','вспоминаешь','вспоминает','вспоминаем','вспоминаете','вспоминают'],
+    past: ['вспоминал','вспоминала','вспоминало','вспоминали'],
+    future: null,
+    imperative: ['вспоминай','вспоминайте'],
+    participles: ['вспоминающий','вспоминавший','—'],
+    gerunds: ['вспоминая','—']
+  },
+  'вспомнить': {
+    aspect: 'pf', pair: 'вспоминать', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['вспомнил','вспомнила','вспомнило','вспомнили'],
+    future: ['вспомню','вспомнишь','вспомнит','вспомним','вспомните','вспомнят'],
+    imperative: ['вспомни','вспомните'],
+    participles: ['—','—','—'],
+    gerunds: ['—','вспомнив']
+  },
+  // ---- ВСТРЕЧАТЬ / ВСТРЕТИТЬ ----
+  'встречать': {
+    aspect: 'impf', pair: 'встретить', conjugation: '1ere conjugaison',
+    present: ['встречаю','встречаешь','встречает','встречаем','встречаете','встречают'],
+    past: ['встречал','встречала','встречало','встречали'],
+    future: null,
+    imperative: ['встречай','встречайте'],
+    participles: ['встречающий','встречавший','—'],
+    gerunds: ['встречая','—']
+  },
+  'встретить': {
+    aspect: 'pf', pair: 'встречать', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['встретил','встретила','встретило','встретили'],
+    future: ['встречу','встретишь','встретит','встретим','встретите','встретят'],
+    imperative: ['встреть','встретьте'],
+    participles: ['—','—','встреченный'],
+    gerunds: ['—','встретив']
+  },
+  // ---- ВХОДИТЬ / ВОЙТИ ----
+  'входить': {
+    aspect: 'impf', pair: 'войти', conjugation: '2eme conjugaison',
+    present: ['вхожу','входишь','входит','входим','входите','входят'],
+    past: ['входил','входила','входило','входили'],
+    future: null,
+    imperative: ['входи','входите'],
+    participles: ['входящий','входивший','—'],
+    gerunds: ['входя','—']
+  },
+  'войти': {
+    aspect: 'pf', pair: 'входить', conjugation: 'Irregulier',
+    present: null,
+    past: ['вошёл','вошла','вошло','вошли'],
+    future: ['войду','войдёшь','войдёт','войдём','войдёте','войдут'],
+    imperative: ['войди','войдите'],
+    participles: ['—','—','—'],
+    gerunds: ['—','войдя']
+  },
+  // ---- ВЫХОДИТЬ / ВЫЙТИ ----
+  'выходить': {
+    aspect: 'impf', pair: 'выйти', conjugation: '2eme conjugaison',
+    present: ['выхожу','выходишь','выходит','выходим','выходите','выходят'],
+    past: ['выходил','выходила','выходило','выходили'],
+    future: null,
+    imperative: ['выходи','выходите'],
+    participles: ['выходящий','выходивший','—'],
+    gerunds: ['выходя','—']
+  },
+  'выйти': {
+    aspect: 'pf', pair: 'выходить', conjugation: 'Irregulier',
+    present: null,
+    past: ['вышел','вышла','вышло','вышли'],
+    future: ['выйду','выйдешь','выйдет','выйдем','выйдете','выйдут'],
+    imperative: ['выйди','выйдите'],
+    participles: ['—','—','—'],
+    gerunds: ['—','выйдя']
+  },
+  // ---- ВОЗВРАЩАТЬСЯ / ВЕРНУТЬСЯ ----
+  'возвращаться': {
+    aspect: 'impf', pair: 'вернуться', conjugation: '1ere conjugaison',
+    present: ['возвращаюсь','возвращаешься','возвращается','возвращаемся','возвращаетесь','возвращаются'],
+    past: ['возвращался','возвращалась','возвращалось','возвращались'],
+    future: null,
+    imperative: ['возвращайся','возвращайтесь'],
+    participles: ['возвращающийся','возвращавшийся','—'],
+    gerunds: ['возвращаясь','—']
+  },
+  'вернуться': {
+    aspect: 'pf', pair: 'возвращаться', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['вернулся','вернулась','вернулось','вернулись'],
+    future: ['вернусь','вернёшься','вернётся','вернёмся','вернётесь','вернутся'],
+    imperative: ['вернись','вернитесь'],
+    participles: ['—','—','—'],
+    gerunds: ['—','вернувшись']
+  },
+  // ---- ОСТАНАВЛИВАТЬ / ОСТАНОВИТЬ ----
+  'останавливать': {
+    aspect: 'impf', pair: 'остановить', conjugation: '1ere conjugaison',
+    present: ['останавливаю','останавливаешь','останавливает','останавливаем','останавливаете','останавливают'],
+    past: ['останавливал','останавливала','останавливало','останавливали'],
+    future: null,
+    imperative: ['останавливай','останавливайте'],
+    participles: ['останавливающий','останавливавший','—'],
+    gerunds: ['останавливая','—']
+  },
+  'остановить': {
+    aspect: 'pf', pair: 'останавливать', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['остановил','остановила','остановило','остановили'],
+    future: ['остановлю','остановишь','остановит','остановим','остановите','остановят'],
+    imperative: ['останови','остановите'],
+    participles: ['—','—','остановленный'],
+    gerunds: ['—','остановив']
+  },
+  // ---- ПРОДОЛЖАТЬ / ПРОДОЛЖИТЬ ----
+  'продолжать': {
+    aspect: 'impf', pair: 'продолжить', conjugation: '1ere conjugaison',
+    present: ['продолжаю','продолжаешь','продолжает','продолжаем','продолжаете','продолжают'],
+    past: ['продолжал','продолжала','продолжало','продолжали'],
+    future: null,
+    imperative: ['продолжай','продолжайте'],
+    participles: ['продолжающий','продолжавший','—'],
+    gerunds: ['продолжая','—']
+  },
+  'продолжить': {
+    aspect: 'pf', pair: 'продолжать', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['продолжил','продолжила','продолжило','продолжили'],
+    future: ['продолжу','продолжишь','продолжит','продолжим','продолжите','продолжат'],
+    imperative: ['продолжи','продолжите'],
+    participles: ['—','—','продолженный'],
+    gerunds: ['—','продолжив']
+  },
+  // ---- БЫТЬ ----
+  'быть': {
+    aspect: 'impf', pair: null, conjugation: 'Irregulier',
+    present: null, // not used in modern Russian present tense
+    past: ['был','была','было','были'],
+    future: ['буду','будешь','будет','будем','будете','будут'],
+    imperative: ['будь','будьте'],
+    participles: ['—','бывший','—'],
+    gerunds: ['будучи','—'],
+    note: 'Au present, le verbe быть n\'est pas utilise (on dit: Я студент, sans verbe). Au futur, il sert aussi d\'auxiliaire pour le futur imperfectif.'
+  },
+  // ---- ЖИТЬ ----
+  'жить': {
+    aspect: 'impf', pair: null, conjugation: '1ere conjugaison (irregulier)',
+    present: ['живу','живёшь','живёт','живём','живёте','живут'],
+    past: ['жил','жила','жило','жили'],
+    future: null,
+    imperative: ['живи','живите'],
+    participles: ['живущий','живший','—'],
+    gerunds: ['живя','—']
+  },
+  // ---- ПЕТЬ ----
+  'петь': {
+    aspect: 'impf', pair: 'спеть', conjugation: '1ere conjugaison (irregulier)',
+    present: ['пою','поёшь','поёт','поём','поёте','поют'],
+    past: ['пел','пела','пело','пели'],
+    future: null,
+    imperative: ['пой','пойте'],
+    participles: ['поющий','певший','—'],
+    gerunds: ['—','—']
+  },
+  'спеть': {
+    aspect: 'pf', pair: 'петь', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['спел','спела','спело','спели'],
+    future: ['спою','споёшь','споёт','споём','споёте','споют'],
+    imperative: ['спой','спойте'],
+    participles: ['—','—','спетый'],
+    gerunds: ['—','спев']
+  },
+  // ---- ТАНЦЕВАТЬ ----
+  'танцевать': {
+    aspect: 'impf', pair: null, conjugation: '1ere conjugaison',
+    present: ['танцую','танцуешь','танцует','танцуем','танцуете','танцуют'],
+    past: ['танцевал','танцевала','танцевало','танцевали'],
+    future: null,
+    imperative: ['танцуй','танцуйте'],
+    participles: ['танцующий','танцевавший','—'],
+    gerunds: ['танцуя','—']
+  },
+  // ---- ВЕРИТЬ ----
+  'верить': {
+    aspect: 'impf', pair: 'поверить', conjugation: '2eme conjugaison',
+    present: ['верю','веришь','верит','верим','верите','верят'],
+    past: ['верил','верила','верило','верили'],
+    future: null,
+    imperative: ['верь','верьте'],
+    participles: ['верящий','веривший','—'],
+    gerunds: ['веря','—']
+  },
+  'поверить': {
+    aspect: 'pf', pair: 'верить', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['поверил','поверила','поверило','поверили'],
+    future: ['поверю','поверишь','поверит','поверим','поверите','поверят'],
+    imperative: ['поверь','поверьте'],
+    participles: ['—','—','—'],
+    gerunds: ['—','поверив']
+  },
+  // ---- БОЯТЬСЯ ----
+  'бояться': {
+    aspect: 'impf', pair: null, conjugation: '2eme conjugaison',
+    present: ['боюсь','боишься','боится','боимся','боитесь','боятся'],
+    past: ['боялся','боялась','боялось','боялись'],
+    future: null,
+    imperative: ['бойся','бойтесь'],
+    participles: ['боящийся','боявшийся','—'],
+    gerunds: ['боясь','—']
+  },
+  // ---- ИМЕТЬ ----
+  'иметь': {
+    aspect: 'impf', pair: null, conjugation: '1ere conjugaison',
+    present: ['имею','имеешь','имеет','имеем','имеете','имеют'],
+    past: ['имел','имела','имело','имели'],
+    future: null,
+    imperative: ['имей','имейте'],
+    participles: ['имеющий','имевший','—'],
+    gerunds: ['имея','—']
+  },
+  // ---- НЕНАВИДЕТЬ ----
+  'ненавидеть': {
+    aspect: 'impf', pair: null, conjugation: '2eme conjugaison',
+    present: ['ненавижу','ненавидишь','ненавидит','ненавидим','ненавидите','ненавидят'],
+    past: ['ненавидел','ненавидела','ненавидело','ненавидели'],
+    future: null,
+    imperative: ['ненавидь','ненавидьте'],
+    participles: ['ненавидящий','ненавидевший','—'],
+    gerunds: ['ненавидя','—']
+  },
+  // ---- УВАЖАТЬ ----
+  'уважать': {
+    aspect: 'impf', pair: null, conjugation: '1ere conjugaison',
+    present: ['уважаю','уважаешь','уважает','уважаем','уважаете','уважают'],
+    past: ['уважал','уважала','уважало','уважали'],
+    future: null,
+    imperative: ['уважай','уважайте'],
+    participles: ['уважающий','уважавший','—'],
+    gerunds: ['уважая','—']
+  },
+  // ---- ПУТЕШЕСТВОВАТЬ ----
+  'путешествовать': {
+    aspect: 'impf', pair: null, conjugation: '1ere conjugaison',
+    present: ['путешествую','путешествуешь','путешествует','путешествуем','путешествуете','путешествуют'],
+    past: ['путешествовал','путешествовала','путешествовало','путешествовали'],
+    future: null,
+    imperative: ['путешествуй','путешествуйте'],
+    participles: ['путешествующий','путешествовавший','—'],
+    gerunds: ['путешествуя','—']
+  },
+  // ---- ПЕРЕВОДИТЬ / ПЕРЕВЕСТИ ----
+  'переводить': {
+    aspect: 'impf', pair: 'перевести', conjugation: '2eme conjugaison',
+    present: ['перевожу','переводишь','переводит','переводим','переводите','переводят'],
+    past: ['переводил','переводила','переводило','переводили'],
+    future: null,
+    imperative: ['переводи','переводите'],
+    participles: ['переводящий','переводивший','—'],
+    gerunds: ['переводя','—']
+  },
+  'перевести': {
+    aspect: 'pf', pair: 'переводить', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['перевёл','перевела','перевело','перевели'],
+    future: ['переведу','переведёшь','переведёт','переведём','переведёте','переведут'],
+    imperative: ['переведи','переведите'],
+    participles: ['—','—','переведённый'],
+    gerunds: ['—','переведя']
+  },
+  // ---- КРИЧАТЬ ----
+  'кричать': {
+    aspect: 'impf', pair: 'крикнуть', conjugation: '2eme conjugaison',
+    present: ['кричу','кричишь','кричит','кричим','кричите','кричат'],
+    past: ['кричал','кричала','кричало','кричали'],
+    future: null,
+    imperative: ['кричи','кричите'],
+    participles: ['кричащий','кричавший','—'],
+    gerunds: ['крича','—']
+  },
+  'крикнуть': {
+    aspect: 'pf', pair: 'кричать', conjugation: '1ere conjugaison',
+    present: null,
+    past: ['крикнул','крикнула','крикнуло','крикнули'],
+    future: ['крикну','крикнешь','крикнет','крикнем','крикнете','крикнут'],
+    imperative: ['крикни','крикните'],
+    participles: ['—','—','—'],
+    gerunds: ['—','крикнув']
+  },
+  // ---- УЛЫБАТЬСЯ ----
+  'улыбаться': {
+    aspect: 'impf', pair: 'улыбнуться', conjugation: '1ere conjugaison',
+    present: ['улыбаюсь','улыбаешься','улыбается','улыбаемся','улыбаетесь','улыбаются'],
+    past: ['улыбался','улыбалась','улыбалось','улыбались'],
+    future: null,
+    imperative: ['улыбайся','улыбайтесь'],
+    participles: ['улыбающийся','улыбавшийся','—'],
+    gerunds: ['улыбаясь','—']
+  },
+  'улыбнуться': {
+    aspect: 'pf', pair: 'улыбаться', conjugation: '1ere conjugaison',
+    present: null,
+    past: ['улыбнулся','улыбнулась','улыбнулось','улыбнулись'],
+    future: ['улыбнусь','улыбнёшься','улыбнётся','улыбнёмся','улыбнётесь','улыбнутся'],
+    imperative: ['улыбнись','улыбнитесь'],
+    participles: ['—','—','—'],
+    gerunds: ['—','улыбнувшись']
+  },
+  // ---- ПЛАВАТЬ ----
+  'плавать': {
+    aspect: 'impf', pair: null, conjugation: '1ere conjugaison',
+    present: ['плаваю','плаваешь','плавает','плаваем','плаваете','плавают'],
+    past: ['плавал','плавала','плавало','плавали'],
+    future: null,
+    imperative: ['плавай','плавайте'],
+    participles: ['плавающий','плававший','—'],
+    gerunds: ['плавая','—']
+  },
+  // ---- ПРЫГАТЬ ----
+  'прыгать': {
+    aspect: 'impf', pair: 'прыгнуть', conjugation: '1ere conjugaison',
+    present: ['прыгаю','прыгаешь','прыгает','прыгаем','прыгаете','прыгают'],
+    past: ['прыгал','прыгала','прыгало','прыгали'],
+    future: null,
+    imperative: ['прыгай','прыгайте'],
+    participles: ['прыгающий','прыгавший','—'],
+    gerunds: ['прыгая','—']
+  },
+  'прыгнуть': {
+    aspect: 'pf', pair: 'прыгать', conjugation: '1ere conjugaison',
+    present: null,
+    past: ['прыгнул','прыгнула','прыгнуло','прыгнули'],
+    future: ['прыгну','прыгнешь','прыгнет','прыгнем','прыгнете','прыгнут'],
+    imperative: ['прыгни','прыгните'],
+    participles: ['—','—','—'],
+    gerunds: ['—','прыгнув']
+  },
+  // ---- РИСОВАТЬ ----
+  'рисовать': {
+    aspect: 'impf', pair: 'нарисовать', conjugation: '1ere conjugaison',
+    present: ['рисую','рисуешь','рисует','рисуем','рисуете','рисуют'],
+    past: ['рисовал','рисовала','рисовало','рисовали'],
+    future: null,
+    imperative: ['рисуй','рисуйте'],
+    participles: ['рисующий','рисовавший','—'],
+    gerunds: ['рисуя','—']
+  },
+  'нарисовать': {
+    aspect: 'pf', pair: 'рисовать', conjugation: '1ere conjugaison',
+    present: null,
+    past: ['нарисовал','нарисовала','нарисовало','нарисовали'],
+    future: ['нарисую','нарисуешь','нарисует','нарисуем','нарисуете','нарисуют'],
+    imperative: ['нарисуй','нарисуйте'],
+    participles: ['—','—','нарисованный'],
+    gerunds: ['—','нарисовав']
+  },
+  // ---- ПОВТОРЯТЬ / ПОВТОРИТЬ ----
+  'повторять': {
+    aspect: 'impf', pair: 'повторить', conjugation: '1ere conjugaison',
+    present: ['повторяю','повторяешь','повторяет','повторяем','повторяете','повторяют'],
+    past: ['повторял','повторяла','повторяло','повторяли'],
+    future: null,
+    imperative: ['повторяй','повторяйте'],
+    participles: ['повторяющий','повторявший','—'],
+    gerunds: ['повторяя','—']
+  },
+  'повторить': {
+    aspect: 'pf', pair: 'повторять', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['повторил','повторила','повторило','повторили'],
+    future: ['повторю','повторишь','повторит','повторим','повторите','повторят'],
+    imperative: ['повтори','повторите'],
+    participles: ['—','—','повторённый'],
+    gerunds: ['—','повторив']
+  },
+  // ---- ИСПРАВЛЯТЬ / ИСПРАВИТЬ ----
+  'исправлять': {
+    aspect: 'impf', pair: 'исправить', conjugation: '1ere conjugaison',
+    present: ['исправляю','исправляешь','исправляет','исправляем','исправляете','исправляют'],
+    past: ['исправлял','исправляла','исправляло','исправляли'],
+    future: null,
+    imperative: ['исправляй','исправляйте'],
+    participles: ['исправляющий','исправлявший','—'],
+    gerunds: ['исправляя','—']
+  },
+  'исправить': {
+    aspect: 'pf', pair: 'исправлять', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['исправил','исправила','исправило','исправили'],
+    future: ['исправлю','исправишь','исправит','исправим','исправите','исправят'],
+    imperative: ['исправь','исправьте'],
+    participles: ['—','—','исправленный'],
+    gerunds: ['—','исправив']
+  },
+  // ---- РАЗВИВАТЬ / РАЗВИТЬ ----
+  'развивать': {
+    aspect: 'impf', pair: 'развить', conjugation: '1ere conjugaison',
+    present: ['развиваю','развиваешь','развивает','развиваем','развиваете','развивают'],
+    past: ['развивал','развивала','развивало','развивали'],
+    future: null,
+    imperative: ['развивай','развивайте'],
+    participles: ['развивающий','развивавший','—'],
+    gerunds: ['развивая','—']
+  },
+  'развить': {
+    aspect: 'pf', pair: 'развивать', conjugation: '1ere conjugaison (irregulier)',
+    present: null,
+    past: ['развил','развила','развило','развили'],
+    future: ['разовью','разовьёшь','разовьёт','разовьём','разовьёте','разовьют'],
+    imperative: ['разовьи','разовьите'],
+    participles: ['—','—','развитый'],
+    gerunds: ['—','развив']
+  },
+  // ---- РОЖДАТЬСЯ / РОДИТЬСЯ ----
+  'рождаться': {
+    aspect: 'impf', pair: 'родиться', conjugation: '1ere conjugaison',
+    present: ['рождаюсь','рождаешься','рождается','рождаемся','рождаетесь','рождаются'],
+    past: ['рождался','рождалась','рождалось','рождались'],
+    future: null,
+    imperative: ['—','—'],
+    participles: ['рождающийся','рождавшийся','—'],
+    gerunds: ['рождаясь','—']
+  },
+  'родиться': {
+    aspect: 'pf', pair: 'рождаться', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['родился','родилась','родилось','родились'],
+    future: ['рожусь','родишься','родится','родимся','родитесь','родятся'],
+    imperative: ['—','—'],
+    participles: ['—','—','рождённый'],
+    gerunds: ['—','родившись']
+  },
+  // ---- СТРАДАТЬ ----
+  'страдать': {
+    aspect: 'impf', pair: null, conjugation: '1ere conjugaison',
+    present: ['страдаю','страдаешь','страдает','страдаем','страдаете','страдают'],
+    past: ['страдал','страдала','страдало','страдали'],
+    future: null,
+    imperative: ['страдай','страдайте'],
+    participles: ['страдающий','страдавший','—'],
+    gerunds: ['страдая','—']
+  },
+  // ---- ГУЛЯТЬ ----
+  'гулять': {
+    aspect: 'impf', pair: 'погулять', conjugation: '1ere conjugaison',
+    present: ['гуляю','гуляешь','гуляет','гуляем','гуляете','гуляют'],
+    past: ['гулял','гуляла','гуляло','гуляли'],
+    future: null,
+    imperative: ['гуляй','гуляйте'],
+    participles: ['гуляющий','гулявший','—'],
+    gerunds: ['гуляя','—']
+  },
+  // ---- ДЫШАТЬ ----
+  'дышать': {
+    aspect: 'impf', pair: null, conjugation: '2eme conjugaison',
+    present: ['дышу','дышишь','дышит','дышим','дышите','дышат'],
+    past: ['дышал','дышала','дышало','дышали'],
+    future: null,
+    imperative: ['дыши','дышите'],
+    participles: ['дышащий','дышавший','—'],
+    gerunds: ['дыша','—']
+  },
+  // ---- ОТДЫХАТЬ ----
+  'отдыхать': {
+    aspect: 'impf', pair: 'отдохнуть', conjugation: '1ere conjugaison',
+    present: ['отдыхаю','отдыхаешь','отдыхает','отдыхаем','отдыхаете','отдыхают'],
+    past: ['отдыхал','отдыхала','отдыхало','отдыхали'],
+    future: null,
+    imperative: ['отдыхай','отдыхайте'],
+    participles: ['отдыхающий','отдыхавший','—'],
+    gerunds: ['отдыхая','—']
+  },
+  'отдохнуть': {
+    aspect: 'pf', pair: 'отдыхать', conjugation: '1ere conjugaison',
+    present: null,
+    past: ['отдохнул','отдохнула','отдохнуло','отдохнули'],
+    future: ['отдохну','отдохнёшь','отдохнёт','отдохнём','отдохнёте','отдохнут'],
+    imperative: ['отдохни','отдохните'],
+    participles: ['—','—','—'],
+    gerunds: ['—','отдохнув']
+  },
+  // ---- ВОДИТЬ ----
+  'водить': {
+    aspect: 'impf', pair: null, conjugation: '2eme conjugaison',
+    present: ['вожу','водишь','водит','водим','водите','водят'],
+    past: ['водил','водила','водило','водили'],
+    future: null,
+    imperative: ['води','водите'],
+    participles: ['водящий','водивший','—'],
+    gerunds: ['водя','—']
+  },
+  // ---- ПРОБОВАТЬ / ПОПРОБОВАТЬ ----
+  'пробовать': {
+    aspect: 'impf', pair: 'попробовать', conjugation: '1ere conjugaison',
+    present: ['пробую','пробуешь','пробует','пробуем','пробуете','пробуют'],
+    past: ['пробовал','пробовала','пробовало','пробовали'],
+    future: null,
+    imperative: ['пробуй','пробуйте'],
+    participles: ['пробующий','пробовавший','—'],
+    gerunds: ['пробуя','—']
+  },
+  'попробовать': {
+    aspect: 'pf', pair: 'пробовать', conjugation: '1ere conjugaison',
+    present: null,
+    past: ['попробовал','попробовала','попробовало','попробовали'],
+    future: ['попробую','попробуешь','попробует','попробуем','попробуете','попробуют'],
+    imperative: ['попробуй','попробуйте'],
+    participles: ['—','—','—'],
+    gerunds: ['—','попробовав']
+  },
+  // ---- ПРЕДЛАГАТЬ / ПРЕДЛОЖИТЬ ----
+  'предлагать': {
+    aspect: 'impf', pair: 'предложить', conjugation: '1ere conjugaison',
+    present: ['предлагаю','предлагаешь','предлагает','предлагаем','предлагаете','предлагают'],
+    past: ['предлагал','предлагала','предлагало','предлагали'],
+    future: null,
+    imperative: ['предлагай','предлагайте'],
+    participles: ['предлагающий','предлагавший','—'],
+    gerunds: ['предлагая','—']
+  },
+  'предложить': {
+    aspect: 'pf', pair: 'предлагать', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['предложил','предложила','предложило','предложили'],
+    future: ['предложу','предложишь','предложит','предложим','предложите','предложат'],
+    imperative: ['предложи','предложите'],
+    participles: ['—','—','предложенный'],
+    gerunds: ['—','предложив']
+  },
+  // ---- ОБЕЩАТЬ ----
+  'обещать': {
+    aspect: 'impf', pair: 'пообещать', conjugation: '1ere conjugaison',
+    present: ['обещаю','обещаешь','обещает','обещаем','обещаете','обещают'],
+    past: ['обещал','обещала','обещало','обещали'],
+    future: null,
+    imperative: ['обещай','обещайте'],
+    participles: ['обещающий','обещавший','—'],
+    gerunds: ['обещая','—']
+  },
+  'пообещать': {
+    aspect: 'pf', pair: 'обещать', conjugation: '1ere conjugaison',
+    present: null,
+    past: ['пообещал','пообещала','пообещало','пообещали'],
+    future: ['пообещаю','пообещаешь','пообещает','пообещаем','пообещаете','пообещают'],
+    imperative: ['пообещай','пообещайте'],
+    participles: ['—','—','—'],
+    gerunds: ['—','пообещав']
+  },
+  // ---- ПОЗВОЛЯТЬ / ПОЗВОЛИТЬ ----
+  'позволять': {
+    aspect: 'impf', pair: 'позволить', conjugation: '1ere conjugaison',
+    present: ['позволяю','позволяешь','позволяет','позволяем','позволяете','позволяют'],
+    past: ['позволял','позволяла','позволяло','позволяли'],
+    future: null,
+    imperative: ['позволяй','позволяйте'],
+    participles: ['позволяющий','позволявший','—'],
+    gerunds: ['позволяя','—']
+  },
+  'позволить': {
+    aspect: 'pf', pair: 'позволять', conjugation: '2eme conjugaison',
+    present: null,
+    past: ['позволил','позволила','позволило','позволили'],
+    future: ['позволю','позволишь','позволит','позволим','позволите','позволят'],
+    imperative: ['позволь','позвольте'],
+    participles: ['—','—','—'],
+    gerunds: ['—','позволив']
+  },
+  // ---- СЛЕДОВАТЬ ----
+  'следовать': {
+    aspect: 'impf', pair: null, conjugation: '1ere conjugaison',
+    present: ['следую','следуешь','следует','следуем','следуете','следуют'],
+    past: ['следовал','следовала','следовало','следовали'],
+    future: null,
+    imperative: ['следуй','следуйте'],
+    participles: ['следующий','следовавший','—'],
+    gerunds: ['следуя','—']
+  }
+};
+
+// БУДУ forms for imperfective future
+const BUDU = ['буду','будешь','будет','будем','будете','будут'];
+const PRONOUNS = ['я', 'ты', 'он/она', 'мы', 'вы', 'они'];
+const PAST_LABELS = ['он (м.)', 'она (ж.)', 'оно (ср.)', 'мы/вы/они'];
+const IMP_LABELS = ['(ты)', '(вы)'];
+
+// ============================================================
+// NORMALIZE FRENCH INPUT (strip accents for lookup)
+// ============================================================
+function normalizeFr(s) {
+  return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+}
+
+// ============================================================
+// UI FUNCTIONS
+// ============================================================
+function tryVerb(v) {
+  document.getElementById('verbInput').value = v;
+  conjugate();
+}
+
+function conjugate() {
+  var input = document.getElementById('verbInput').value.trim();
+  var resultsDiv = document.getElementById('results');
+  var verbInfoDiv = document.getElementById('verbInfo');
+  var legendDiv = document.getElementById('legend');
+  var warningBanner = document.getElementById('warningBanner');
+  var aspectCard = document.getElementById('aspectCard');
+
+  if (!input) {
+    resultsDiv.innerHTML = '';
+    verbInfoDiv.style.display = 'none';
+    legendDiv.style.display = 'none';
+    warningBanner.style.display = 'none';
+    aspectCard.style.display = 'none';
+    return;
+  }
+
+  var verb = input.toLowerCase().trim();
+  var frenchInput = null;
+
+  // Check if input is French (Latin script)
+  if (/[a-zA-Z\u00C0-\u024F]/.test(verb) && !/[а-яёА-ЯЁ]/.test(verb)) {
+    var normalized = normalizeFr(verb);
+    if (FR_TO_RU[normalized]) {
+      frenchInput = verb;
+      verb = FR_TO_RU[normalized];
+    } else {
+      // Try with accents preserved
+      var found = false;
+      for (var key in FR_TO_RU) {
+        if (key === verb || normalizeFr(key) === normalized) {
+          frenchInput = verb;
+          verb = FR_TO_RU[key];
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        resultsDiv.innerHTML = '<div class="no-result">Le verbe francais \"' + input + '\" n\'a pas ete trouve dans le dictionnaire.<br>Essayez un infinitif russe (par ex. : делать, говорить)</div>';
+        verbInfoDiv.style.display = 'none';
+        legendDiv.style.display = 'none';
+        warningBanner.style.display = 'none';
+        aspectCard.style.display = 'none';
+        return;
+      }
+    }
+  }
+
+  var data = VERBS[verb];
+  if (!data) {
+    resultsDiv.innerHTML = '<div class="no-result">Le verbe \"' + input + '\" n\'a pas ete trouve.<br>Essayez : говорить, делать, идти, ou en francais : parler, faire, aller</div>';
+    verbInfoDiv.style.display = 'none';
+    legendDiv.style.display = 'none';
+    warningBanner.style.display = 'none';
+    aspectCard.style.display = 'none';
+    return;
+  }
+
+  warningBanner.style.display = 'none';
+
+  // Show aspect card
+  var aspectLabel = data.aspect === 'impf' ? 'IMPERFECTIF (несовершенный вид)' : 'PERFECTIF (совершенный вид)';
+  var aspectDesc = data.aspect === 'impf'
+    ? 'action en cours, repetee ou habituelle — comme l\'imparfait francais'
+    : 'action achevee, resultat obtenu — comme le passe compose francais';
+  var pairInfo = '';
+  if (data.pair && VERBS[data.pair]) {
+    var pairAspect = data.aspect === 'impf' ? 'perfectif' : 'imperfectif';
+    pairInfo = '<br>Son pair ' + pairAspect + ' : <span style="cursor:pointer;text-decoration:underline;font-weight:700;" onclick="tryVerb(\'' + data.pair + '\')">' + data.pair + '</span>';
+  } else if (!data.pair) {
+    pairInfo = '<br><i>Ce verbe n\'a pas de pair aspectuel courant.</i>';
+  }
+  aspectCard.innerHTML = '<b>Aspect :</b> Ce verbe est <b>' + aspectLabel + '</b> — ' + aspectDesc + '.' + pairInfo;
+  aspectCard.style.display = 'block';
+
+  // Show verb info badges
+  verbInfoDiv.style.display = 'block';
+  legendDiv.style.display = 'block';
+  var infoHTML = '';
+  if (frenchInput) {
+    infoHTML += '<span class="badge" style="background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;">francais -> russe : ' + frenchInput + ' -> ' + verb + '</span>';
+  }
+  infoHTML += '<span class="badge badge-group">' + verb + '</span>';
+  infoHTML += '<span class="badge badge-conj">' + data.conjugation + '</span>';
+  infoHTML += '<span class="badge badge-aspect">' + (data.aspect === 'impf' ? 'Imperfectif (НСВ)' : 'Perfectif (СВ)') + '</span>';
+  if (data.pair) {
+    infoHTML += '<span class="badge badge-pair">Pair : ' + data.pair + '</span>';
+  }
+  verbInfoDiv.innerHTML = infoHTML;
+
+  // Build tense cards
+  var html = '';
+
+  for (var t = 0; t < TENSES.length; t++) {
+    var tense = TENSES[t];
+
+    // Section labels
+    if (t === 0) {
+      html += '<div class="section-label">Temps courants</div>';
+    }
+    if (tense.literary && (t === 0 || !TENSES[t-1].literary)) {
+      html += '<div class="section-label literary">Formes moins courantes (litteraire)</div>';
+    }
+
+    var headerClass = tense.literary ? 'literary' : 'active';
+    var cardClass = tense.literary ? 'tense-card literary-card' : 'tense-card';
+
+    html += '<div class="' + cardClass + '">';
+    html += '<div class="tense-header ' + headerClass + '">';
+    html += '<div class="ru-name">' + tense.ru + '</div>';
+    html += '<div class="fr-name">' + tense.fr + '</div>';
+    html += '</div>';
+    html += '<div class="tense-explain">' + tense.explain + '</div>';
+    html += '<div class="tense-body">';
+
+    if (tense.id === 'present') {
+      if (data.aspect === 'pf') {
+        html += '<div style="color:#999;padding:8px 0;">Les verbes perfectifs n\'ont PAS de present.<br>Utilisez le pair imperfectif' + (data.pair ? ' <span style="cursor:pointer;text-decoration:underline;color:#7b2fa0;" onclick="tryVerb(\'' + data.pair + '\')">' + data.pair + '</span>' : '') + '.</div>';
+      } else if (data.present) {
+        html += '<table>';
+        for (var i = 0; i < 6; i++) {
+          html += '<tr><td class="pronoun">' + PRONOUNS[i] + '</td><td class="verb-form">' + data.present[i] + '</td></tr>';
+        }
+        html += '</table>';
+      } else if (verb === 'быть') {
+        html += '<div style="color:#999;padding:8px 0;font-style:italic;">' + (data.note || 'Pas de forme au present.') + '</div>';
+      } else {
+        html += '<div style="color:#999;padding:8px 0;">Pas de forme au present.</div>';
+      }
+    }
+    else if (tense.id === 'past') {
+      if (data.past) {
+        html += '<table>';
+        for (var i = 0; i < 4; i++) {
+          html += '<tr><td class="pronoun">' + PAST_LABELS[i] + '</td><td class="verb-form">' + data.past[i] + '</td></tr>';
+        }
+        html += '</table>';
+      } else {
+        html += '<div style="color:#999;padding:8px 0;">Pas de forme au passe.</div>';
+      }
+    }
+    else if (tense.id === 'future') {
+      if (data.aspect === 'impf') {
+        // Imperfective future: буду + infinitive
+        if (verb === 'быть') {
+          // быть has its own future
+          if (data.future) {
+            html += '<table>';
+            for (var i = 0; i < 6; i++) {
+              html += '<tr><td class="pronoun">' + PRONOUNS[i] + '</td><td class="verb-form">' + data.future[i] + '</td></tr>';
+            }
+            html += '</table>';
+          }
+        } else {
+          html += '<table>';
+          for (var i = 0; i < 6; i++) {
+            html += '<tr><td class="pronoun">' + PRONOUNS[i] + '</td><td class="verb-form">' + BUDU[i] + ' ' + verb + '</td></tr>';
+          }
+          html += '</table>';
+          html += '<div style="font-size:0.85em;color:#888;padding-top:6px;font-style:italic;">Futur imperfectif = буду + infinitif</div>';
+        }
+      } else {
+        // Perfective future: conjugated forms
+        if (data.future) {
+          html += '<table>';
+          for (var i = 0; i < 6; i++) {
+            html += '<tr><td class="pronoun">' + PRONOUNS[i] + '</td><td class="verb-form">' + data.future[i] + '</td></tr>';
+          }
+          html += '</table>';
+          html += '<div style="font-size:0.85em;color:#888;padding-top:6px;font-style:italic;">Futur perfectif = conjugaison directe (comme le present en francais)</div>';
+        } else {
+          html += '<div style="color:#999;padding:8px 0;">Pas de forme au futur.</div>';
+        }
+      }
+    }
+    else if (tense.id === 'imperative') {
+      if (data.imperative && data.imperative[0] !== '—') {
+        html += '<table>';
+        for (var i = 0; i < 2; i++) {
+          html += '<tr><td class="pronoun">' + IMP_LABELS[i] + '</td><td class="verb-form">' + data.imperative[i] + '</td></tr>';
+        }
+        html += '</table>';
+      } else {
+        html += '<div style="color:#999;padding:8px 0;">Pas d\'imperatif pour ce verbe.</div>';
+      }
+    }
+    else if (tense.id === 'conditional') {
+      if (data.past) {
+        html += '<table>';
+        html += '<tr><td class="pronoun">он (м.)</td><td class="verb-form">' + data.past[0] + ' бы</td></tr>';
+        html += '<tr><td class="pronoun">она (ж.)</td><td class="verb-form">' + data.past[1] + ' бы</td></tr>';
+        html += '<tr><td class="pronoun">оно (ср.)</td><td class="verb-form">' + data.past[2] + ' бы</td></tr>';
+        html += '<tr><td class="pronoun">мы/вы/они</td><td class="verb-form">' + data.past[3] + ' бы</td></tr>';
+        html += '</table>';
+        html += '<div style="font-size:0.85em;color:#888;padding-top:6px;font-style:italic;">Conditionnel = passe + бы (place libre)</div>';
+      } else {
+        html += '<div style="color:#999;padding:8px 0;">Pas de conditionnel.</div>';
+      }
+    }
+    else if (tense.id === 'participle') {
+      if (data.participles) {
+        html += '<table>';
+        var pLabels = ['Present actif', 'Passe actif', 'Passe passif'];
+        for (var i = 0; i < 3; i++) {
+          html += '<tr><td class="pronoun" style="width:120px;">' + pLabels[i] + '</td><td class="verb-form">' + data.participles[i] + '</td></tr>';
+        }
+        html += '</table>';
+      } else {
+        html += '<div style="color:#999;padding:8px 0;">—</div>';
+      }
+    }
+    else if (tense.id === 'gerund') {
+      if (data.gerunds) {
+        html += '<table>';
+        var gLabels = ['Present (impf)', 'Passe (pf)'];
+        for (var i = 0; i < 2; i++) {
+          html += '<tr><td class="pronoun" style="width:120px;">' + gLabels[i] + '</td><td class="verb-form">' + data.gerunds[i] + '</td></tr>';
+        }
+        html += '</table>';
+      } else {
+        html += '<div style="color:#999;padding:8px 0;">—</div>';
+      }
+    }
+
+    html += '</div></div>';
+  }
+
+  resultsDiv.innerHTML = html;
+}
+
+// Auto-conjugate if there's a hash
+if (location.hash) {
+  document.getElementById('verbInput').value = decodeURIComponent(location.hash.slice(1));
+  conjugate();
+}
+</script>
+
+</body>
+</html>
