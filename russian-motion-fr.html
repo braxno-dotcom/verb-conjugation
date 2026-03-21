@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇷🇺</text></svg>">
+<title>🇷🇺 Verbes de mouvement russes</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f0eb;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #4a1a6b, #7b2fa0);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switch-left {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch-left:hover { background: rgba(255,255,255,0.3); }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .intro-box {
+    background: #f3e5f5;
+    border: 2px solid #ce93d8;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    color: #4a148c;
+    font-size: 0.95em;
+    line-height: 1.6;
+  }
+
+  .tense-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    margin-bottom: 24px;
+  }
+  .tense-header {
+    padding: 14px 20px;
+    color: white;
+    font-weight: 600;
+  }
+  .tense-header.active { background: #7b2fa0; }
+  .tense-header .ru-name { font-size: 1.1em; }
+  .tense-header .fr-name { font-size: 0.85em; opacity: 0.9; margin-top: 2px; }
+  .tense-body {
+    padding: 16px 20px;
+  }
+  .tense-body p {
+    margin-bottom: 10px;
+    line-height: 1.6;
+    font-size: 0.95em;
+  }
+  .tense-body .explanation {
+    background: #fafafa;
+    border-left: 4px solid #7b2fa0;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.93em;
+    line-height: 1.6;
+  }
+
+  .tense-body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+  }
+  .tense-body th {
+    background: #f3e5f5;
+    color: #4a148c;
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 0.88em;
+    font-weight: 600;
+    border-bottom: 2px solid #ce93d8;
+  }
+  .tense-body td {
+    padding: 8px 12px;
+    font-size: 0.92em;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+  }
+  .tense-body tr:last-child td { border-bottom: none; }
+  .tense-body tr:hover { background: #faf7fc; }
+
+  .ru { font-weight: 600; color: #4a148c; }
+  .example {
+    color: #666;
+    font-style: italic;
+    font-size: 0.88em;
+  }
+
+  .conjugation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .conj-mini-card {
+    background: #fafafa;
+    border: 1px solid #e0d6eb;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .conj-mini-header {
+    background: #7b2fa0;
+    color: white;
+    padding: 8px 14px;
+    font-weight: 600;
+    font-size: 0.95em;
+  }
+  .conj-mini-header span {
+    font-weight: 400;
+    opacity: 0.85;
+    font-size: 0.88em;
+  }
+  .conj-mini-body {
+    padding: 10px 14px;
+  }
+  .conj-mini-body table { width: 100%; border-collapse: collapse; }
+  .conj-mini-body td {
+    padding: 3px 0;
+    font-size: 0.9em;
+    border: none;
+  }
+  .conj-mini-body td:hover { background: transparent; }
+  .conj-mini-body .pronoun {
+    color: #999;
+    width: 90px;
+    font-size: 0.85em;
+  }
+  .conj-mini-body .verb-form {
+    font-weight: 600;
+    color: #2c2c2c;
+  }
+
+  .prefix-example {
+    display: inline-block;
+    background: #e8f5e9;
+    color: #1b5e20;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.88em;
+    font-weight: 600;
+    margin: 1px 0;
+  }
+
+  .decision-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding: 12px 16px;
+    background: #fafafa;
+    border-radius: 10px;
+    border-left: 4px solid #7b2fa0;
+  }
+  .decision-step .step-number {
+    background: #7b2fa0;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9em;
+    flex-shrink: 0;
+  }
+  .decision-step .step-text {
+    font-size: 0.93em;
+    line-height: 1.5;
+  }
+  .decision-step .step-text strong {
+    color: #4a148c;
+  }
+
+  .example-block {
+    background: #f9f6fc;
+    border: 1px solid #e0d6eb;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-top: 16px;
+  }
+  .example-block .ex-row {
+    padding: 6px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 0.92em;
+    line-height: 1.6;
+  }
+  .example-block .ex-row:last-child { border-bottom: none; }
+
+  .mistake-item {
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    background: #fff8e1;
+    border: 1px solid #ffe082;
+    border-radius: 10px;
+    font-size: 0.93em;
+    line-height: 1.6;
+  }
+  .mistake-item .wrong {
+    color: #c62828;
+    font-weight: 600;
+  }
+  .mistake-item .right {
+    color: #2e7d32;
+    font-weight: 600;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switch-left { position: static; display: inline-block; margin-bottom: 10px; padding: 6px 12px; font-size: 0.85em; }
+    .container { padding: 14px 10px; }
+    .intro-box { padding: 14px 16px; font-size: 0.9em; }
+    .tense-header { padding: 10px 14px; }
+    .tense-body { padding: 12px 14px; }
+    .tense-body th, .tense-body td { padding: 6px 8px; font-size: 0.82em; }
+    .conjugation-grid { grid-template-columns: 1fr; }
+    .conj-mini-body .pronoun { width: 70px; }
+    .decision-step { padding: 10px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="russian-fr.html" class="lang-switch-left">&larr; Retour au portail</a>
+  <h1>🇷🇺 Verbes de mouvement russes</h1>
+  <p>Le systeme le plus complexe de la langue russe &mdash; explique clairement</p>
+</header>
+
+<div class="container">
+
+  <!-- INTRO -->
+  <div class="intro-box">
+    En francais, vous avez <strong>UN</strong> verbe &laquo;&nbsp;aller&nbsp;&raquo;. En russe, il y en a au moins <strong>14</strong> &mdash; et chacun a deux formes (unidirectionnel / multidirectionnel) plus des dizaines de variantes avec prefixes. C'est <strong>LE</strong> sujet le plus difficile du russe.
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CARD 1: LES 14 PAIRES DE BASE -->
+  <!-- ============================================================ -->
+  <div class="tense-card">
+    <div class="tense-header active">
+      <div class="ru-name">Les 14 paires de base</div>
+      <div class="fr-name">Unidirectionnel vs. Multidirectionnel</div>
+    </div>
+    <div class="tense-body">
+      <div class="explanation">
+        <strong>Однонаправленные (Unidirectionnels)</strong> = mouvement dans <strong>UNE</strong> direction, <strong>UNE</strong> fois, en ce moment.<br>
+        <span class="ru">Я иду в школу</span> = Je vais a l'ecole <em>(maintenant, dans cette direction)</em><br><br>
+        <strong>Разнонаправленные (Multidirectionnels)</strong> = mouvement habituel, repete, dans plusieurs directions.<br>
+        <span class="ru">Я хожу в школу</span> = Je vais a l'ecole <em>(regulierement, en general)</em>
+      </div>
+
+      <div class="table-wrapper">
+      <table>
+        <tr>
+          <th>Francais</th>
+          <th>Unidirectionnel</th>
+          <th>Multidirectionnel</th>
+          <th>Type de mouvement</th>
+        </tr>
+        <tr>
+          <td>aller (a pied)</td>
+          <td><span class="ru">идти</span></td>
+          <td><span class="ru">ходить</span></td>
+          <td>a pied</td>
+        </tr>
+        <tr>
+          <td>aller (en vehicule)</td>
+          <td><span class="ru">ехать</span></td>
+          <td><span class="ru">ездить</span></td>
+          <td>en transport</td>
+        </tr>
+        <tr>
+          <td>courir</td>
+          <td><span class="ru">бежать</span></td>
+          <td><span class="ru">бегать</span></td>
+          <td>en courant</td>
+        </tr>
+        <tr>
+          <td>voler</td>
+          <td><span class="ru">лететь</span></td>
+          <td><span class="ru">летать</span></td>
+          <td>en volant</td>
+        </tr>
+        <tr>
+          <td>nager</td>
+          <td><span class="ru">плыть</span></td>
+          <td><span class="ru">плавать</span></td>
+          <td>en nageant</td>
+        </tr>
+        <tr>
+          <td>porter (a pied)</td>
+          <td><span class="ru">нести</span></td>
+          <td><span class="ru">носить</span></td>
+          <td>porter en marchant</td>
+        </tr>
+        <tr>
+          <td>transporter</td>
+          <td><span class="ru">везти</span></td>
+          <td><span class="ru">возить</span></td>
+          <td>transporter en vehicule</td>
+        </tr>
+        <tr>
+          <td>mener / conduire</td>
+          <td><span class="ru">вести</span></td>
+          <td><span class="ru">водить</span></td>
+          <td>mener qqn</td>
+        </tr>
+        <tr>
+          <td>tirer / trainer</td>
+          <td><span class="ru">тащить</span></td>
+          <td><span class="ru">таскать</span></td>
+          <td>en tirant</td>
+        </tr>
+        <tr>
+          <td>rouler (intransitif)</td>
+          <td><span class="ru">катиться</span></td>
+          <td><span class="ru">кататься</span></td>
+          <td>en roulant</td>
+        </tr>
+        <tr>
+          <td>grimper</td>
+          <td><span class="ru">лезть</span></td>
+          <td><span class="ru">лазить</span></td>
+          <td>en grimpant</td>
+        </tr>
+        <tr>
+          <td>errer</td>
+          <td><span class="ru">брести</span></td>
+          <td><span class="ru">бродить</span></td>
+          <td>en errant</td>
+        </tr>
+        <tr>
+          <td>ramper</td>
+          <td><span class="ru">ползти</span></td>
+          <td><span class="ru">ползать</span></td>
+          <td>en rampant</td>
+        </tr>
+        <tr>
+          <td>chasser / poursuivre</td>
+          <td><span class="ru">гнать</span></td>
+          <td><span class="ru">гонять</span></td>
+          <td>en poursuivant</td>
+        </tr>
+      </table>
+      </div>
+
+      <div class="example-block">
+        <div class="ex-row"><span class="ru">идти</span>&nbsp;: &laquo;&nbsp;Я иду домой&nbsp;&raquo; &mdash; <em>Je rentre a la maison maintenant</em></div>
+        <div class="ex-row"><span class="ru">ходить</span>&nbsp;: &laquo;&nbsp;Я хожу в спортзал&nbsp;&raquo; &mdash; <em>Je vais a la salle de sport regulierement</em></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CARD 2: CONJUGAISON DES PAIRES PRINCIPALES -->
+  <!-- ============================================================ -->
+  <div class="tense-card">
+    <div class="tense-header active">
+      <div class="ru-name">Conjugaison des paires principales</div>
+      <div class="fr-name">Present de l'indicatif &mdash; les 8 paires les plus importantes</div>
+    </div>
+    <div class="tense-body">
+      <div class="explanation">
+        Voici la conjugaison au present des paires de verbes de mouvement les plus utilisees. Notez les irregularites&nbsp;!
+      </div>
+
+      <div class="conjugation-grid">
+
+        <!-- идти -->
+        <div class="conj-mini-card">
+          <div class="conj-mini-header">идти <span>&mdash; aller (a pied), unidirectionnel</span></div>
+          <div class="conj-mini-body">
+            <table>
+              <tr><td class="pronoun">я</td><td class="verb-form">иду</td></tr>
+              <tr><td class="pronoun">ты</td><td class="verb-form">идёшь</td></tr>
+              <tr><td class="pronoun">он/она</td><td class="verb-form">идёт</td></tr>
+              <tr><td class="pronoun">мы</td><td class="verb-form">идём</td></tr>
+              <tr><td class="pronoun">вы</td><td class="verb-form">идёте</td></tr>
+              <tr><td class="pronoun">они</td><td class="verb-form">идут</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- ходить -->
+        <div class="conj-mini-card">
+          <div class="conj-mini-header">ходить <span>&mdash; aller (a pied), multidirectionnel</span></div>
+          <div class="conj-mini-body">
+            <table>
+              <tr><td class="pronoun">я</td><td class="verb-form">хожу</td></tr>
+              <tr><td class="pronoun">ты</td><td class="verb-form">ходишь</td></tr>
+              <tr><td class="pronoun">он/она</td><td class="verb-form">ходит</td></tr>
+              <tr><td class="pronoun">мы</td><td class="verb-form">ходим</td></tr>
+              <tr><td class="pronoun">вы</td><td class="verb-form">ходите</td></tr>
+              <tr><td class="pronoun">они</td><td class="verb-form">ходят</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- ехать -->
+        <div class="conj-mini-card">
+          <div class="conj-mini-header">ехать <span>&mdash; aller (en vehicule), unidirectionnel</span></div>
+          <div class="conj-mini-body">
+            <table>
+              <tr><td class="pronoun">я</td><td class="verb-form">еду</td></tr>
+              <tr><td class="pronoun">ты</td><td class="verb-form">едешь</td></tr>
+              <tr><td class="pronoun">он/она</td><td class="verb-form">едет</td></tr>
+              <tr><td class="pronoun">мы</td><td class="verb-form">едем</td></tr>
+              <tr><td class="pronoun">вы</td><td class="verb-form">едете</td></tr>
+              <tr><td class="pronoun">они</td><td class="verb-form">едут</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- ездить -->
+        <div class="conj-mini-card">
+          <div class="conj-mini-header">ездить <span>&mdash; aller (en vehicule), multidirectionnel</span></div>
+          <div class="conj-mini-body">
+            <table>
+              <tr><td class="pronoun">я</td><td class="verb-form">езжу</td></tr>
+              <tr><td class="pronoun">ты</td><td class="verb-form">ездишь</td></tr>
+              <tr><td class="pronoun">он/она</td><td class="verb-form">ездит</td></tr>
+              <tr><td class="pronoun">мы</td><td class="verb-form">ездим</td></tr>
+              <tr><td class="pronoun">вы</td><td class="verb-form">ездите</td></tr>
+              <tr><td class="pronoun">они</td><td class="verb-form">ездят</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- бежать -->
+        <div class="conj-mini-card">
+          <div class="conj-mini-header">бежать <span>&mdash; courir, unidirectionnel</span></div>
+          <div class="conj-mini-body">
+            <table>
+              <tr><td class="pronoun">я</td><td class="verb-form">бегу</td></tr>
+              <tr><td class="pronoun">ты</td><td class="verb-form">бежишь</td></tr>
+              <tr><td class="pronoun">он/она</td><td class="verb-form">бежит</td></tr>
+              <tr><td class="pronoun">мы</td><td class="verb-form">бежим</td></tr>
+              <tr><td class="pronoun">вы</td><td class="verb-form">бежите</td></tr>
+              <tr><td class="pronoun">они</td><td class="verb-form">бегут</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- бегать -->
+        <div class="conj-mini-card">
+          <div class="conj-mini-header">бегать <span>&mdash; courir, multidirectionnel</span></div>
+          <div class="conj-mini-body">
+            <table>
+              <tr><td class="pronoun">я</td><td class="verb-form">бегаю</td></tr>
+              <tr><td class="pronoun">ты</td><td class="verb-form">бегаешь</td></tr>
+              <tr><td class="pronoun">он/она</td><td class="verb-form">бегает</td></tr>
+              <tr><td class="pronoun">мы</td><td class="verb-form">бегаем</td></tr>
+              <tr><td class="pronoun">вы</td><td class="verb-form">бегаете</td></tr>
+              <tr><td class="pronoun">они</td><td class="verb-form">бегают</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- лететь -->
+        <div class="conj-mini-card">
+          <div class="conj-mini-header">лететь <span>&mdash; voler, unidirectionnel</span></div>
+          <div class="conj-mini-body">
+            <table>
+              <tr><td class="pronoun">я</td><td class="verb-form">лечу</td></tr>
+              <tr><td class="pronoun">ты</td><td class="verb-form">летишь</td></tr>
+              <tr><td class="pronoun">он/она</td><td class="verb-form">летит</td></tr>
+              <tr><td class="pronoun">мы</td><td class="verb-form">летим</td></tr>
+              <tr><td class="pronoun">вы</td><td class="verb-form">летите</td></tr>
+              <tr><td class="pronoun">они</td><td class="verb-form">летят</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- летать -->
+        <div class="conj-mini-card">
+          <div class="conj-mini-header">летать <span>&mdash; voler, multidirectionnel</span></div>
+          <div class="conj-mini-body">
+            <table>
+              <tr><td class="pronoun">я</td><td class="verb-form">летаю</td></tr>
+              <tr><td class="pronoun">ты</td><td class="verb-form">летаешь</td></tr>
+              <tr><td class="pronoun">он/она</td><td class="verb-form">летает</td></tr>
+              <tr><td class="pronoun">мы</td><td class="verb-form">летаем</td></tr>
+              <tr><td class="pronoun">вы</td><td class="verb-form">летаете</td></tr>
+              <tr><td class="pronoun">они</td><td class="verb-form">летают</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- нести -->
+        <div class="conj-mini-card">
+          <div class="conj-mini-header">нести <span>&mdash; porter, unidirectionnel</span></div>
+          <div class="conj-mini-body">
+            <table>
+              <tr><td class="pronoun">я</td><td class="verb-form">несу</td></tr>
+              <tr><td class="pronoun">ты</td><td class="verb-form">несёшь</td></tr>
+              <tr><td class="pronoun">он/она</td><td class="verb-form">несёт</td></tr>
+              <tr><td class="pronoun">мы</td><td class="verb-form">несём</td></tr>
+              <tr><td class="pronoun">вы</td><td class="verb-form">несёте</td></tr>
+              <tr><td class="pronoun">они</td><td class="verb-form">несут</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- носить -->
+        <div class="conj-mini-card">
+          <div class="conj-mini-header">носить <span>&mdash; porter, multidirectionnel</span></div>
+          <div class="conj-mini-body">
+            <table>
+              <tr><td class="pronoun">я</td><td class="verb-form">ношу</td></tr>
+              <tr><td class="pronoun">ты</td><td class="verb-form">носишь</td></tr>
+              <tr><td class="pronoun">он/она</td><td class="verb-form">носит</td></tr>
+              <tr><td class="pronoun">мы</td><td class="verb-form">носим</td></tr>
+              <tr><td class="pronoun">вы</td><td class="verb-form">носите</td></tr>
+              <tr><td class="pronoun">они</td><td class="verb-form">носят</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- вести -->
+        <div class="conj-mini-card">
+          <div class="conj-mini-header">вести <span>&mdash; mener, unidirectionnel</span></div>
+          <div class="conj-mini-body">
+            <table>
+              <tr><td class="pronoun">я</td><td class="verb-form">веду</td></tr>
+              <tr><td class="pronoun">ты</td><td class="verb-form">ведёшь</td></tr>
+              <tr><td class="pronoun">он/она</td><td class="verb-form">ведёт</td></tr>
+              <tr><td class="pronoun">мы</td><td class="verb-form">ведём</td></tr>
+              <tr><td class="pronoun">вы</td><td class="verb-form">ведёте</td></tr>
+              <tr><td class="pronoun">они</td><td class="verb-form">ведут</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- водить -->
+        <div class="conj-mini-card">
+          <div class="conj-mini-header">водить <span>&mdash; mener, multidirectionnel</span></div>
+          <div class="conj-mini-body">
+            <table>
+              <tr><td class="pronoun">я</td><td class="verb-form">вожу</td></tr>
+              <tr><td class="pronoun">ты</td><td class="verb-form">водишь</td></tr>
+              <tr><td class="pronoun">он/она</td><td class="verb-form">водит</td></tr>
+              <tr><td class="pronoun">мы</td><td class="verb-form">водим</td></tr>
+              <tr><td class="pronoun">вы</td><td class="verb-form">водите</td></tr>
+              <tr><td class="pronoun">они</td><td class="verb-form">водят</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- везти -->
+        <div class="conj-mini-card">
+          <div class="conj-mini-header">везти <span>&mdash; transporter, unidirectionnel</span></div>
+          <div class="conj-mini-body">
+            <table>
+              <tr><td class="pronoun">я</td><td class="verb-form">везу</td></tr>
+              <tr><td class="pronoun">ты</td><td class="verb-form">везёшь</td></tr>
+              <tr><td class="pronoun">он/она</td><td class="verb-form">везёт</td></tr>
+              <tr><td class="pronoun">мы</td><td class="verb-form">везём</td></tr>
+              <tr><td class="pronoun">вы</td><td class="verb-form">везёте</td></tr>
+              <tr><td class="pronoun">они</td><td class="verb-form">везут</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- возить -->
+        <div class="conj-mini-card">
+          <div class="conj-mini-header">возить <span>&mdash; transporter, multidirectionnel</span></div>
+          <div class="conj-mini-body">
+            <table>
+              <tr><td class="pronoun">я</td><td class="verb-form">вожу</td></tr>
+              <tr><td class="pronoun">ты</td><td class="verb-form">возишь</td></tr>
+              <tr><td class="pronoun">он/она</td><td class="verb-form">возит</td></tr>
+              <tr><td class="pronoun">мы</td><td class="verb-form">возим</td></tr>
+              <tr><td class="pronoun">вы</td><td class="verb-form">возите</td></tr>
+              <tr><td class="pronoun">они</td><td class="verb-form">возят</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- плыть -->
+        <div class="conj-mini-card">
+          <div class="conj-mini-header">плыть <span>&mdash; nager, unidirectionnel</span></div>
+          <div class="conj-mini-body">
+            <table>
+              <tr><td class="pronoun">я</td><td class="verb-form">плыву</td></tr>
+              <tr><td class="pronoun">ты</td><td class="verb-form">плывёшь</td></tr>
+              <tr><td class="pronoun">он/она</td><td class="verb-form">плывёт</td></tr>
+              <tr><td class="pronoun">мы</td><td class="verb-form">плывём</td></tr>
+              <tr><td class="pronoun">вы</td><td class="verb-form">плывёте</td></tr>
+              <tr><td class="pronoun">они</td><td class="verb-form">плывут</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- плавать -->
+        <div class="conj-mini-card">
+          <div class="conj-mini-header">плавать <span>&mdash; nager, multidirectionnel</span></div>
+          <div class="conj-mini-body">
+            <table>
+              <tr><td class="pronoun">я</td><td class="verb-form">плаваю</td></tr>
+              <tr><td class="pronoun">ты</td><td class="verb-form">плаваешь</td></tr>
+              <tr><td class="pronoun">он/она</td><td class="verb-form">плавает</td></tr>
+              <tr><td class="pronoun">мы</td><td class="verb-form">плаваем</td></tr>
+              <tr><td class="pronoun">вы</td><td class="verb-form">плаваете</td></tr>
+              <tr><td class="pronoun">они</td><td class="verb-form">плавают</td></tr>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CARD 3: LES PREFIXES -->
+  <!-- ============================================================ -->
+  <div class="tense-card">
+    <div class="tense-header active">
+      <div class="ru-name">Les prefixes &mdash; la cle du systeme</div>
+      <div class="fr-name">Comment creer des dizaines de verbes a partir d'une seule paire</div>
+    </div>
+    <div class="tense-body">
+      <div class="explanation">
+        En ajoutant un prefixe a un verbe de mouvement, vous creez un <strong>NOUVEAU</strong> verbe perfectif. Le multidirectionnel devient alors l'imperfectif correspondant.
+      </div>
+
+      <h3 style="margin: 16px 0 10px; color: #4a148c;">Prefixes avec идти / ходить</h3>
+      <div class="table-wrapper">
+      <table>
+        <tr>
+          <th>Prefixe</th>
+          <th>Sens</th>
+          <th>Perfectif (идти)</th>
+          <th>Imperfectif (ходить)</th>
+          <th>Traduction</th>
+        </tr>
+        <tr>
+          <td><span class="prefix-example">у-</span></td>
+          <td>partir, s'en aller</td>
+          <td><span class="ru">уйти</span></td>
+          <td><span class="ru">уходить</span></td>
+          <td>partir (a pied)</td>
+        </tr>
+        <tr>
+          <td><span class="prefix-example">при-</span></td>
+          <td>arriver</td>
+          <td><span class="ru">прийти</span></td>
+          <td><span class="ru">приходить</span></td>
+          <td>arriver, venir</td>
+        </tr>
+        <tr>
+          <td><span class="prefix-example">вы-</span></td>
+          <td>sortir</td>
+          <td><span class="ru">выйти</span></td>
+          <td><span class="ru">выходить</span></td>
+          <td>sortir</td>
+        </tr>
+        <tr>
+          <td><span class="prefix-example">в- (во-)</span></td>
+          <td>entrer</td>
+          <td><span class="ru">войти</span></td>
+          <td><span class="ru">входить</span></td>
+          <td>entrer</td>
+        </tr>
+        <tr>
+          <td><span class="prefix-example">пере-</span></td>
+          <td>traverser</td>
+          <td><span class="ru">перейти</span></td>
+          <td><span class="ru">переходить</span></td>
+          <td>traverser</td>
+        </tr>
+        <tr>
+          <td><span class="prefix-example">за-</span></td>
+          <td>passer par, s'arreter</td>
+          <td><span class="ru">зайти</span></td>
+          <td><span class="ru">заходить</span></td>
+          <td>passer chez</td>
+        </tr>
+        <tr>
+          <td><span class="prefix-example">до-</span></td>
+          <td>atteindre</td>
+          <td><span class="ru">дойти</span></td>
+          <td><span class="ru">доходить</span></td>
+          <td>atteindre (a pied)</td>
+        </tr>
+        <tr>
+          <td><span class="prefix-example">от-</span></td>
+          <td>s'eloigner</td>
+          <td><span class="ru">отойти</span></td>
+          <td><span class="ru">отходить</span></td>
+          <td>s'eloigner</td>
+        </tr>
+        <tr>
+          <td><span class="prefix-example">по-</span></td>
+          <td>commencer a / un peu</td>
+          <td><span class="ru">пойти</span></td>
+          <td>&mdash;</td>
+          <td>se mettre en route</td>
+        </tr>
+        <tr>
+          <td><span class="prefix-example">под-</span></td>
+          <td>s'approcher</td>
+          <td><span class="ru">подойти</span></td>
+          <td><span class="ru">подходить</span></td>
+          <td>s'approcher</td>
+        </tr>
+        <tr>
+          <td><span class="prefix-example">об-</span></td>
+          <td>contourner</td>
+          <td><span class="ru">обойти</span></td>
+          <td><span class="ru">обходить</span></td>
+          <td>contourner</td>
+        </tr>
+        <tr>
+          <td><span class="prefix-example">про-</span></td>
+          <td>passer a travers/devant</td>
+          <td><span class="ru">пройти</span></td>
+          <td><span class="ru">проходить</span></td>
+          <td>passer, traverser</td>
+        </tr>
+      </table>
+      </div>
+
+      <h3 style="margin: 24px 0 10px; color: #4a148c;">Prefixes avec ехать / ездить</h3>
+      <div class="table-wrapper">
+      <table>
+        <tr>
+          <th>Prefixe</th>
+          <th>Sens</th>
+          <th>Perfectif (ехать)</th>
+          <th>Imperfectif (ездить&rarr;езжать)</th>
+          <th>Traduction</th>
+        </tr>
+        <tr>
+          <td><span class="prefix-example">у-</span></td>
+          <td>partir</td>
+          <td><span class="ru">уехать</span></td>
+          <td><span class="ru">уезжать</span></td>
+          <td>partir (en vehicule)</td>
+        </tr>
+        <tr>
+          <td><span class="prefix-example">при-</span></td>
+          <td>arriver</td>
+          <td><span class="ru">приехать</span></td>
+          <td><span class="ru">приезжать</span></td>
+          <td>arriver (en vehicule)</td>
+        </tr>
+        <tr>
+          <td><span class="prefix-example">вы-</span></td>
+          <td>sortir</td>
+          <td><span class="ru">выехать</span></td>
+          <td><span class="ru">выезжать</span></td>
+          <td>sortir (en vehicule)</td>
+        </tr>
+        <tr>
+          <td><span class="prefix-example">в- (во-)</span></td>
+          <td>entrer</td>
+          <td><span class="ru">въехать</span></td>
+          <td><span class="ru">въезжать</span></td>
+          <td>entrer (en vehicule)</td>
+        </tr>
+        <tr>
+          <td><span class="prefix-example">пере-</span></td>
+          <td>traverser</td>
+          <td><span class="ru">переехать</span></td>
+          <td><span class="ru">переезжать</span></td>
+          <td>traverser / demenager</td>
+        </tr>
+        <tr>
+          <td><span class="prefix-example">за-</span></td>
+          <td>passer par</td>
+          <td><span class="ru">заехать</span></td>
+          <td><span class="ru">заезжать</span></td>
+          <td>passer chez (en vehicule)</td>
+        </tr>
+        <tr>
+          <td><span class="prefix-example">до-</span></td>
+          <td>atteindre</td>
+          <td><span class="ru">доехать</span></td>
+          <td><span class="ru">доезжать</span></td>
+          <td>atteindre (en vehicule)</td>
+        </tr>
+        <tr>
+          <td><span class="prefix-example">от-</span></td>
+          <td>s'eloigner</td>
+          <td><span class="ru">отъехать</span></td>
+          <td><span class="ru">отъезжать</span></td>
+          <td>s'eloigner (en vehicule)</td>
+        </tr>
+        <tr>
+          <td><span class="prefix-example">по-</span></td>
+          <td>se mettre en route</td>
+          <td><span class="ru">поехать</span></td>
+          <td>&mdash;</td>
+          <td>se mettre en route (en vehicule)</td>
+        </tr>
+        <tr>
+          <td><span class="prefix-example">под-</span></td>
+          <td>s'approcher</td>
+          <td><span class="ru">подъехать</span></td>
+          <td><span class="ru">подъезжать</span></td>
+          <td>s'approcher (en vehicule)</td>
+        </tr>
+        <tr>
+          <td><span class="prefix-example">об-</span></td>
+          <td>contourner</td>
+          <td><span class="ru">объехать</span></td>
+          <td><span class="ru">объезжать</span></td>
+          <td>contourner (en vehicule)</td>
+        </tr>
+        <tr>
+          <td><span class="prefix-example">про-</span></td>
+          <td>passer devant</td>
+          <td><span class="ru">проехать</span></td>
+          <td><span class="ru">проезжать</span></td>
+          <td>passer, traverser (en vehicule)</td>
+        </tr>
+      </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CARD 4: RESUME VISUEL -->
+  <!-- ============================================================ -->
+  <div class="tense-card">
+    <div class="tense-header active">
+      <div class="ru-name">Resume visuel &mdash; Comment choisir ?</div>
+      <div class="fr-name">Arbre de decision pour les verbes de mouvement</div>
+    </div>
+    <div class="tense-body">
+
+      <div class="decision-step">
+        <div class="step-number">1</div>
+        <div class="step-text">Le mouvement est-il <strong>en ce moment</strong>, dans <strong>une direction</strong>&nbsp;?<br>&rarr; <strong>Unidirectionnel</strong> (идти, ехать, бежать, лететь...)</div>
+      </div>
+
+      <div class="decision-step">
+        <div class="step-number">2</div>
+        <div class="step-text">Le mouvement est <strong>habituel</strong> ou dans <strong>plusieurs directions</strong>&nbsp;?<br>&rarr; <strong>Multidirectionnel</strong> (ходить, ездить, бегать, летать...)</div>
+      </div>
+
+      <div class="decision-step">
+        <div class="step-number">3</div>
+        <div class="step-text">Voulez-vous ajouter un sens (entrer, sortir, arriver...)&nbsp;?<br>&rarr; <strong>Ajoutez un prefixe</strong> (в-, вы-, при-, у-...)</div>
+      </div>
+
+      <div class="decision-step">
+        <div class="step-number">4</div>
+        <div class="step-text">Avec prefixe&nbsp;: unidirectionnel &rarr; <strong>perfectif</strong>, multidirectionnel &rarr; <strong>imperfectif</strong></div>
+      </div>
+
+      <div class="example-block">
+        <div class="ex-row">
+          &laquo;&nbsp;Je vais a l'ecole <strong>maintenant</strong>&nbsp;&raquo; &rarr; <span class="ru">Я иду в школу</span> <em>(unidirectionnel, maintenant)</em>
+        </div>
+        <div class="ex-row">
+          &laquo;&nbsp;Je vais a l'ecole <strong>chaque jour</strong>&nbsp;&raquo; &rarr; <span class="ru">Я хожу в школу</span> <em>(multidirectionnel, habitude)</em>
+        </div>
+        <div class="ex-row">
+          &laquo;&nbsp;Je <strong>suis sorti</strong> de la maison&nbsp;&raquo; &rarr; <span class="ru">Я вышел из дома</span> <em>(perfectif, prefixe вы-)</em>
+        </div>
+        <div class="ex-row">
+          &laquo;&nbsp;Je <strong>sors</strong> de la maison chaque matin&nbsp;&raquo; &rarr; <span class="ru">Я выхожу из дома каждое утро</span> <em>(imperfectif)</em>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CARD 5: PIEGES COURANTS -->
+  <!-- ============================================================ -->
+  <div class="tense-card">
+    <div class="tense-header active">
+      <div class="ru-name">Pieges courants</div>
+      <div class="fr-name">Erreurs frequentes des francophones</div>
+    </div>
+    <div class="tense-body">
+
+      <div class="mistake-item">
+        <strong>Confondre идти et ходить</strong><br>
+        <span class="wrong">&#10008; Я иду в школу каждый день</span> &mdash; <em>incorrect car &laquo;&nbsp;каждый день&nbsp;&raquo; = habitude</em><br>
+        <span class="right">&#10004; Я хожу в школу каждый день</span> &mdash; <em>multidirectionnel pour une action habituelle</em>
+      </div>
+
+      <div class="mistake-item">
+        <strong>Oublier que ехать est pour les vehicules</strong><br>
+        <span class="wrong">&#10008; Я иду на машине</span> &mdash; <em>идти = a pied uniquement&nbsp;!</em><br>
+        <span class="right">&#10004; Я еду на машине</span> &mdash; <em>ехать pour le transport en vehicule</em>
+      </div>
+
+      <div class="mistake-item">
+        <strong>Ne pas utiliser les formes prefixees quand il le faut</strong><br>
+        <span class="wrong">&#10008; Я шёл из дома</span> &mdash; <em>ambigu, on ne sait pas l'action precise</em><br>
+        <span class="right">&#10004; Я вышел из дома</span> &mdash; <em>le prefixe вы- precise &laquo;&nbsp;sortir de&nbsp;&raquo;</em>
+      </div>
+
+      <div class="mistake-item">
+        <strong>Confondre по- (debut de mouvement) avec les autres prefixes</strong><br>
+        <span class="ru">пойти</span> = <em>se mettre en route</em> (action unique, debut)<br>
+        <span class="ru">прийти</span> = <em>arriver</em> (prefixe при- = arrivee)<br>
+        Le prefixe <span class="prefix-example">по-</span> avec les verbes de mouvement signifie souvent &laquo;&nbsp;commencer a se deplacer&nbsp;&raquo; ou &laquo;&nbsp;se deplacer un peu&nbsp;&raquo;. Il ne forme <strong>pas</strong> de paire imperfective.
+      </div>
+
+      <div class="mistake-item">
+        <strong>Utiliser ходить pour un trajet aller simple en cours</strong><br>
+        <span class="wrong">&#10008; Куда ты ходишь?</span> &mdash; <em>= &laquo;&nbsp;Ou vas-tu habituellement ?&nbsp;&raquo;</em><br>
+        <span class="right">&#10004; Куда ты идёшь?</span> &mdash; <em>= &laquo;&nbsp;Ou vas-tu (maintenant) ?&nbsp;&raquo;</em>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- .container -->
+
+</body>
+</html>

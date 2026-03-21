@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇷🇺</text></svg>">
+<meta name="apple-mobile-web-app-title" content="RU pronoms">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇷🇺 Pronoms russes — Déclinaisons</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f0eb;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #4a1a6b, #7b2fa0);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switch-left {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch-left:hover { background: rgba(255,255,255,0.3); }
+
+  .container {
+    max-width: 960px;
+    margin: 20px auto 40px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .case-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .case-header {
+    padding: 12px 16px;
+    background: #7b2fa0;
+    color: white;
+    font-weight: 600;
+  }
+  .case-header .ru-name { font-size: 1.05em; }
+  .case-header .fr-name { font-size: 0.85em; opacity: 0.9; margin-top: 2px; }
+  .case-body { padding: 14px 16px; }
+
+  .sub-title {
+    font-size: 1em;
+    font-weight: 700;
+    color: #4a1a6b;
+    margin: 16px 0 6px;
+    padding-bottom: 4px;
+    border-bottom: 2px solid #e0d4e8;
+  }
+  .sub-title:first-child { margin-top: 0; }
+
+  .note {
+    background: #faf5ff;
+    border-left: 4px solid #7b2fa0;
+    padding: 10px 14px;
+    margin: 10px 0;
+    font-size: 0.9em;
+    color: #4a1a6b;
+    border-radius: 0 8px 8px 0;
+    line-height: 1.5;
+  }
+
+  .table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .decl-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6px;
+    margin-bottom: 10px;
+  }
+  .decl-table th {
+    text-align: left;
+    padding: 6px 10px;
+    font-size: 0.85em;
+    color: #7b2fa0;
+    font-weight: 600;
+    border-bottom: 2px solid #e0d4e8;
+    background: #faf5ff;
+    white-space: nowrap;
+  }
+  .decl-table td {
+    padding: 6px 10px;
+    font-size: 0.95em;
+    border-bottom: 1px solid #f0f0f0;
+    white-space: nowrap;
+  }
+  .decl-table .case-label {
+    color: #666;
+    font-weight: 600;
+    font-size: 0.88em;
+    white-space: nowrap;
+  }
+  .decl-table .form {
+    font-weight: 600;
+    color: #2c2c2c;
+  }
+  .decl-table tr:hover { background: #faf5ff; }
+
+  .inline-table {
+    display: inline-grid;
+    grid-template-columns: auto auto;
+    gap: 2px 16px;
+    margin: 6px 0 10px;
+    font-size: 0.93em;
+  }
+  .inline-table .il { color: #666; font-weight: 600; }
+  .inline-table .iv { font-weight: 600; color: #2c2c2c; }
+
+  .badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 600;
+    margin-right: 8px;
+    margin-bottom: 6px;
+  }
+  .badge-invariable { background: #fff3e0; color: #e65100; }
+
+  @media (max-width: 600px) {
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switch-left { position: static; display: inline-block; margin-bottom: 10px; padding: 6px 12px; font-size: 0.85em; }
+    .container { padding: 0 10px; margin-top: 14px; }
+    .case-header { padding: 10px 12px; }
+    .case-header .ru-name { font-size: 0.95em; }
+    .case-body { padding: 10px 12px; }
+    .decl-table th, .decl-table td { padding: 4px 6px; font-size: 0.82em; }
+    .decl-table .case-label { font-size: 0.78em; }
+    .note { font-size: 0.84em; padding: 8px 10px; }
+    .sub-title { font-size: 0.93em; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="russian-fr.html" class="lang-switch-left">&larr; Retour au portail</a>
+  <h1>🇷🇺 Pronoms russes &mdash; D&eacute;clinaisons</h1>
+  <p>Tous les pronoms russes dans les 6 cas</p>
+</header>
+
+<div class="container">
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 1. PERSONAL PRONOUNS -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="case-card">
+  <div class="case-header">
+    <div class="ru-name">Личные местоимения</div>
+    <div class="fr-name">Pronoms personnels</div>
+  </div>
+  <div class="case-body">
+    <div class="table-scroll">
+      <table class="decl-table">
+        <tr>
+          <th>Cas</th><th>я</th><th>ты</th><th>он</th><th>она</th><th>оно</th><th>мы</th><th>вы</th><th>они</th>
+        </tr>
+        <tr>
+          <td class="case-label">Nominatif (Кто?)</td>
+          <td class="form">я</td><td class="form">ты</td><td class="form">он</td><td class="form">она</td><td class="form">оно</td><td class="form">мы</td><td class="form">вы</td><td class="form">они</td>
+        </tr>
+        <tr>
+          <td class="case-label">G&eacute;nitif (Кого?)</td>
+          <td class="form">меня</td><td class="form">тебя</td><td class="form">его (него)</td><td class="form">её (неё)</td><td class="form">его (него)</td><td class="form">нас</td><td class="form">вас</td><td class="form">их (них)</td>
+        </tr>
+        <tr>
+          <td class="case-label">Datif (Кому?)</td>
+          <td class="form">мне</td><td class="form">тебе</td><td class="form">ему (нему)</td><td class="form">ей (ней)</td><td class="form">ему (нему)</td><td class="form">нам</td><td class="form">вам</td><td class="form">им (ним)</td>
+        </tr>
+        <tr>
+          <td class="case-label">Accusatif (Кого?)</td>
+          <td class="form">меня</td><td class="form">тебя</td><td class="form">его (него)</td><td class="form">её (неё)</td><td class="form">его (него)</td><td class="form">нас</td><td class="form">вас</td><td class="form">их (них)</td>
+        </tr>
+        <tr>
+          <td class="case-label">Instrumental (Кем?)</td>
+          <td class="form">мной</td><td class="form">тобой</td><td class="form">им (ним)</td><td class="form">ей (ней)</td><td class="form">им (ним)</td><td class="form">нами</td><td class="form">вами</td><td class="form">ими (ними)</td>
+        </tr>
+        <tr>
+          <td class="case-label">Pr&eacute;positionnel (О ком?)</td>
+          <td class="form">мне</td><td class="form">тебе</td><td class="form">нём</td><td class="form">ней</td><td class="form">нём</td><td class="form">нас</td><td class="form">вас</td><td class="form">них</td>
+        </tr>
+      </table>
+    </div>
+    <div class="note">
+      Apr&egrave;s une pr&eacute;position (в, на, с, к, о...), les pronoms de 3&egrave;me personne prennent un &laquo;&nbsp;н&nbsp;&raquo; au d&eacute;but&nbsp;: его &rarr; него, ей &rarr; ней, им &rarr; ним, etc.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 2. POSSESSIVE PRONOUNS -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="case-card">
+  <div class="case-header">
+    <div class="ru-name">Притяжательные местоимения</div>
+    <div class="fr-name">Pronoms possessifs</div>
+  </div>
+  <div class="case-body">
+
+    <!-- мой -->
+    <div class="sub-title">мой / моя / моё / мои &mdash; mon, ma, mes</div>
+    <div class="table-scroll">
+      <table class="decl-table">
+        <tr><th>Cas</th><th>Masculin</th><th>F&eacute;minin</th><th>Neutre</th><th>Pluriel</th></tr>
+        <tr><td class="case-label">Nom.</td><td class="form">мой</td><td class="form">моя</td><td class="form">моё</td><td class="form">мои</td></tr>
+        <tr><td class="case-label">G&eacute;n.</td><td class="form">моего</td><td class="form">моей</td><td class="form">моего</td><td class="form">моих</td></tr>
+        <tr><td class="case-label">Dat.</td><td class="form">моему</td><td class="form">моей</td><td class="form">моему</td><td class="form">моим</td></tr>
+        <tr><td class="case-label">Acc.</td><td class="form">мой / моего</td><td class="form">мою</td><td class="form">моё</td><td class="form">мои / моих</td></tr>
+        <tr><td class="case-label">Instr.</td><td class="form">моим</td><td class="form">моей</td><td class="form">моим</td><td class="form">моими</td></tr>
+        <tr><td class="case-label">Pr&eacute;p.</td><td class="form">моём</td><td class="form">моей</td><td class="form">моём</td><td class="form">моих</td></tr>
+      </table>
+    </div>
+
+    <!-- твой -->
+    <div class="sub-title">твой / твоя / твоё / твои &mdash; ton, ta, tes</div>
+    <div class="table-scroll">
+      <table class="decl-table">
+        <tr><th>Cas</th><th>Masculin</th><th>F&eacute;minin</th><th>Neutre</th><th>Pluriel</th></tr>
+        <tr><td class="case-label">Nom.</td><td class="form">твой</td><td class="form">твоя</td><td class="form">твоё</td><td class="form">твои</td></tr>
+        <tr><td class="case-label">G&eacute;n.</td><td class="form">твоего</td><td class="form">твоей</td><td class="form">твоего</td><td class="form">твоих</td></tr>
+        <tr><td class="case-label">Dat.</td><td class="form">твоему</td><td class="form">твоей</td><td class="form">твоему</td><td class="form">твоим</td></tr>
+        <tr><td class="case-label">Acc.</td><td class="form">твой / твоего</td><td class="form">твою</td><td class="form">твоё</td><td class="form">твои / твоих</td></tr>
+        <tr><td class="case-label">Instr.</td><td class="form">твоим</td><td class="form">твоей</td><td class="form">твоим</td><td class="form">твоими</td></tr>
+        <tr><td class="case-label">Pr&eacute;p.</td><td class="form">твоём</td><td class="form">твоей</td><td class="form">твоём</td><td class="form">твоих</td></tr>
+      </table>
+    </div>
+
+    <!-- наш -->
+    <div class="sub-title">наш / наша / наше / наши &mdash; notre, nos</div>
+    <div class="table-scroll">
+      <table class="decl-table">
+        <tr><th>Cas</th><th>Masculin</th><th>F&eacute;minin</th><th>Neutre</th><th>Pluriel</th></tr>
+        <tr><td class="case-label">Nom.</td><td class="form">наш</td><td class="form">наша</td><td class="form">наше</td><td class="form">наши</td></tr>
+        <tr><td class="case-label">G&eacute;n.</td><td class="form">нашего</td><td class="form">нашей</td><td class="form">нашего</td><td class="form">наших</td></tr>
+        <tr><td class="case-label">Dat.</td><td class="form">нашему</td><td class="form">нашей</td><td class="form">нашему</td><td class="form">нашим</td></tr>
+        <tr><td class="case-label">Acc.</td><td class="form">наш / нашего</td><td class="form">нашу</td><td class="form">наше</td><td class="form">наши / наших</td></tr>
+        <tr><td class="case-label">Instr.</td><td class="form">нашим</td><td class="form">нашей</td><td class="form">нашим</td><td class="form">нашими</td></tr>
+        <tr><td class="case-label">Pr&eacute;p.</td><td class="form">нашем</td><td class="form">нашей</td><td class="form">нашем</td><td class="form">наших</td></tr>
+      </table>
+    </div>
+
+    <!-- ваш -->
+    <div class="sub-title">ваш / ваша / ваше / ваши &mdash; votre, vos</div>
+    <div class="table-scroll">
+      <table class="decl-table">
+        <tr><th>Cas</th><th>Masculin</th><th>F&eacute;minin</th><th>Neutre</th><th>Pluriel</th></tr>
+        <tr><td class="case-label">Nom.</td><td class="form">ваш</td><td class="form">ваша</td><td class="form">ваше</td><td class="form">ваши</td></tr>
+        <tr><td class="case-label">G&eacute;n.</td><td class="form">вашего</td><td class="form">вашей</td><td class="form">вашего</td><td class="form">ваших</td></tr>
+        <tr><td class="case-label">Dat.</td><td class="form">вашему</td><td class="form">вашей</td><td class="form">вашему</td><td class="form">вашим</td></tr>
+        <tr><td class="case-label">Acc.</td><td class="form">ваш / вашего</td><td class="form">вашу</td><td class="form">ваше</td><td class="form">ваши / ваших</td></tr>
+        <tr><td class="case-label">Instr.</td><td class="form">вашим</td><td class="form">вашей</td><td class="form">вашим</td><td class="form">вашими</td></tr>
+        <tr><td class="case-label">Pr&eacute;p.</td><td class="form">вашем</td><td class="form">вашей</td><td class="form">вашем</td><td class="form">ваших</td></tr>
+      </table>
+    </div>
+
+    <!-- его / её / их -->
+    <div class="sub-title">его / её / их &mdash; son (de lui) / son (d'elle) / leur</div>
+    <span class="badge badge-invariable">INVARIABLE</span>
+    <div class="note">
+      Attention&nbsp;! <strong>его</strong>, <strong>её</strong>, <strong>их</strong> comme possessifs ne changent <strong>JAMAIS</strong> de forme. C'est tr&egrave;s diff&eacute;rent du fran&ccedil;ais&nbsp;!<br>
+      Ex.&nbsp;: его дом, его дома, его дому... &mdash; la forme reste toujours <strong>его</strong>.
+    </div>
+
+    <!-- свой -->
+    <div class="sub-title">свой / своя / своё / свои &mdash; son propre</div>
+    <div class="table-scroll">
+      <table class="decl-table">
+        <tr><th>Cas</th><th>Masculin</th><th>F&eacute;minin</th><th>Neutre</th><th>Pluriel</th></tr>
+        <tr><td class="case-label">Nom.</td><td class="form">свой</td><td class="form">своя</td><td class="form">своё</td><td class="form">свои</td></tr>
+        <tr><td class="case-label">G&eacute;n.</td><td class="form">своего</td><td class="form">своей</td><td class="form">своего</td><td class="form">своих</td></tr>
+        <tr><td class="case-label">Dat.</td><td class="form">своему</td><td class="form">своей</td><td class="form">своему</td><td class="form">своим</td></tr>
+        <tr><td class="case-label">Acc.</td><td class="form">свой / своего</td><td class="form">свою</td><td class="form">своё</td><td class="form">свои / своих</td></tr>
+        <tr><td class="case-label">Instr.</td><td class="form">своим</td><td class="form">своей</td><td class="form">своим</td><td class="form">своими</td></tr>
+        <tr><td class="case-label">Pr&eacute;p.</td><td class="form">своём</td><td class="form">своей</td><td class="form">своём</td><td class="form">своих</td></tr>
+      </table>
+    </div>
+    <div class="note">
+      &laquo;&nbsp;свой&nbsp;&raquo; est utilis&eacute; quand le possesseur est le sujet de la phrase.<br>
+      &laquo;&nbsp;Он любит <strong>свою</strong> жену&nbsp;&raquo; = Il aime sa (propre) femme.<br>
+      C'est une notion qui n'existe pas en fran&ccedil;ais&nbsp;!
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 3. DEMONSTRATIVE PRONOUNS -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="case-card">
+  <div class="case-header">
+    <div class="ru-name">Указательные местоимения</div>
+    <div class="fr-name">Pronoms d&eacute;monstratifs</div>
+  </div>
+  <div class="case-body">
+
+    <!-- этот -->
+    <div class="sub-title">этот / эта / это / эти &mdash; ce, cette, ces</div>
+    <div class="table-scroll">
+      <table class="decl-table">
+        <tr><th>Cas</th><th>Masculin</th><th>F&eacute;minin</th><th>Neutre</th><th>Pluriel</th></tr>
+        <tr><td class="case-label">Nom.</td><td class="form">этот</td><td class="form">эта</td><td class="form">это</td><td class="form">эти</td></tr>
+        <tr><td class="case-label">G&eacute;n.</td><td class="form">этого</td><td class="form">этой</td><td class="form">этого</td><td class="form">этих</td></tr>
+        <tr><td class="case-label">Dat.</td><td class="form">этому</td><td class="form">этой</td><td class="form">этому</td><td class="form">этим</td></tr>
+        <tr><td class="case-label">Acc.</td><td class="form">этот / этого</td><td class="form">эту</td><td class="form">это</td><td class="form">эти / этих</td></tr>
+        <tr><td class="case-label">Instr.</td><td class="form">этим</td><td class="form">этой</td><td class="form">этим</td><td class="form">этими</td></tr>
+        <tr><td class="case-label">Pr&eacute;p.</td><td class="form">этом</td><td class="form">этой</td><td class="form">этом</td><td class="form">этих</td></tr>
+      </table>
+    </div>
+
+    <!-- тот -->
+    <div class="sub-title">тот / та / то / те &mdash; celui-l&agrave;, celle-l&agrave;</div>
+    <div class="table-scroll">
+      <table class="decl-table">
+        <tr><th>Cas</th><th>Masculin</th><th>F&eacute;minin</th><th>Neutre</th><th>Pluriel</th></tr>
+        <tr><td class="case-label">Nom.</td><td class="form">тот</td><td class="form">та</td><td class="form">то</td><td class="form">те</td></tr>
+        <tr><td class="case-label">G&eacute;n.</td><td class="form">того</td><td class="form">той</td><td class="form">того</td><td class="form">тех</td></tr>
+        <tr><td class="case-label">Dat.</td><td class="form">тому</td><td class="form">той</td><td class="form">тому</td><td class="form">тем</td></tr>
+        <tr><td class="case-label">Acc.</td><td class="form">тот / того</td><td class="form">ту</td><td class="form">то</td><td class="form">те / тех</td></tr>
+        <tr><td class="case-label">Instr.</td><td class="form">тем</td><td class="form">той</td><td class="form">тем</td><td class="form">теми</td></tr>
+        <tr><td class="case-label">Pr&eacute;p.</td><td class="form">том</td><td class="form">той</td><td class="form">том</td><td class="form">тех</td></tr>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 4. INTERROGATIVE PRONOUNS -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="case-card">
+  <div class="case-header">
+    <div class="ru-name">Вопросительные местоимения</div>
+    <div class="fr-name">Pronoms interrogatifs</div>
+  </div>
+  <div class="case-body">
+
+    <!-- кто -->
+    <div class="sub-title">кто &mdash; qui</div>
+    <div class="table-scroll">
+      <table class="decl-table">
+        <tr><th>Cas</th><th>Forme</th></tr>
+        <tr><td class="case-label">Nom.</td><td class="form">кто</td></tr>
+        <tr><td class="case-label">G&eacute;n.</td><td class="form">кого</td></tr>
+        <tr><td class="case-label">Dat.</td><td class="form">кому</td></tr>
+        <tr><td class="case-label">Acc.</td><td class="form">кого</td></tr>
+        <tr><td class="case-label">Instr.</td><td class="form">кем</td></tr>
+        <tr><td class="case-label">Pr&eacute;p.</td><td class="form">ком</td></tr>
+      </table>
+    </div>
+
+    <!-- что -->
+    <div class="sub-title">что &mdash; quoi, que</div>
+    <div class="table-scroll">
+      <table class="decl-table">
+        <tr><th>Cas</th><th>Forme</th></tr>
+        <tr><td class="case-label">Nom.</td><td class="form">что</td></tr>
+        <tr><td class="case-label">G&eacute;n.</td><td class="form">чего</td></tr>
+        <tr><td class="case-label">Dat.</td><td class="form">чему</td></tr>
+        <tr><td class="case-label">Acc.</td><td class="form">что</td></tr>
+        <tr><td class="case-label">Instr.</td><td class="form">чем</td></tr>
+        <tr><td class="case-label">Pr&eacute;p.</td><td class="form">чём</td></tr>
+      </table>
+    </div>
+
+    <!-- какой -->
+    <div class="sub-title">какой / какая / какое / какие &mdash; quel, quelle</div>
+    <div class="table-scroll">
+      <table class="decl-table">
+        <tr><th>Cas</th><th>Masculin</th><th>F&eacute;minin</th><th>Neutre</th><th>Pluriel</th></tr>
+        <tr><td class="case-label">Nom.</td><td class="form">какой</td><td class="form">какая</td><td class="form">какое</td><td class="form">какие</td></tr>
+        <tr><td class="case-label">G&eacute;n.</td><td class="form">какого</td><td class="form">какой</td><td class="form">какого</td><td class="form">каких</td></tr>
+        <tr><td class="case-label">Dat.</td><td class="form">какому</td><td class="form">какой</td><td class="form">какому</td><td class="form">каким</td></tr>
+        <tr><td class="case-label">Acc.</td><td class="form">какой / какого</td><td class="form">какую</td><td class="form">какое</td><td class="form">какие / каких</td></tr>
+        <tr><td class="case-label">Instr.</td><td class="form">каким</td><td class="form">какой</td><td class="form">каким</td><td class="form">какими</td></tr>
+        <tr><td class="case-label">Pr&eacute;p.</td><td class="form">каком</td><td class="form">какой</td><td class="form">каком</td><td class="form">каких</td></tr>
+      </table>
+    </div>
+
+    <!-- чей -->
+    <div class="sub-title">чей / чья / чьё / чьи &mdash; &agrave; qui, de qui</div>
+    <div class="table-scroll">
+      <table class="decl-table">
+        <tr><th>Cas</th><th>Masculin</th><th>F&eacute;minin</th><th>Neutre</th><th>Pluriel</th></tr>
+        <tr><td class="case-label">Nom.</td><td class="form">чей</td><td class="form">чья</td><td class="form">чьё</td><td class="form">чьи</td></tr>
+        <tr><td class="case-label">G&eacute;n.</td><td class="form">чьего</td><td class="form">чьей</td><td class="form">чьего</td><td class="form">чьих</td></tr>
+        <tr><td class="case-label">Dat.</td><td class="form">чьему</td><td class="form">чьей</td><td class="form">чьему</td><td class="form">чьим</td></tr>
+        <tr><td class="case-label">Acc.</td><td class="form">чей / чьего</td><td class="form">чью</td><td class="form">чьё</td><td class="form">чьи / чьих</td></tr>
+        <tr><td class="case-label">Instr.</td><td class="form">чьим</td><td class="form">чьей</td><td class="form">чьим</td><td class="form">чьими</td></tr>
+        <tr><td class="case-label">Pr&eacute;p.</td><td class="form">чьём</td><td class="form">чьей</td><td class="form">чьём</td><td class="form">чьих</td></tr>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 5. REFLEXIVE PRONOUN -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="case-card">
+  <div class="case-header">
+    <div class="ru-name">Возвратное местоимение</div>
+    <div class="fr-name">Pronom r&eacute;fl&eacute;chi</div>
+  </div>
+  <div class="case-body">
+
+    <div class="sub-title">себя &mdash; soi-m&ecirc;me</div>
+    <div class="table-scroll">
+      <table class="decl-table">
+        <tr><th>Cas</th><th>Forme</th></tr>
+        <tr><td class="case-label">Nom.</td><td class="form" style="color:#999; font-style:italic;">&mdash; (n'existe pas)</td></tr>
+        <tr><td class="case-label">G&eacute;n.</td><td class="form">себя</td></tr>
+        <tr><td class="case-label">Dat.</td><td class="form">себе</td></tr>
+        <tr><td class="case-label">Acc.</td><td class="form">себя</td></tr>
+        <tr><td class="case-label">Instr.</td><td class="form">собой</td></tr>
+        <tr><td class="case-label">Pr&eacute;p.</td><td class="form">себе</td></tr>
+      </table>
+    </div>
+    <div class="note">
+      Pas de nominatif&nbsp;! &laquo;&nbsp;Себя&nbsp;&raquo; renvoie toujours au sujet&nbsp;:<br>
+      &laquo;&nbsp;Он видит <strong>себя</strong>&nbsp;&raquo; = Il se voit.
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 6. NEGATIVE PRONOUNS -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="case-card">
+  <div class="case-header">
+    <div class="ru-name">Отрицательные местоимения</div>
+    <div class="fr-name">Pronoms n&eacute;gatifs</div>
+  </div>
+  <div class="case-body">
+
+    <!-- никто -->
+    <div class="sub-title">никто &mdash; personne</div>
+    <div class="table-scroll">
+      <table class="decl-table">
+        <tr><th>Cas</th><th>Forme</th></tr>
+        <tr><td class="case-label">Nom.</td><td class="form">никто</td></tr>
+        <tr><td class="case-label">G&eacute;n.</td><td class="form">никого</td></tr>
+        <tr><td class="case-label">Dat.</td><td class="form">никому</td></tr>
+        <tr><td class="case-label">Acc.</td><td class="form">никого</td></tr>
+        <tr><td class="case-label">Instr.</td><td class="form">никем</td></tr>
+        <tr><td class="case-label">Pr&eacute;p.</td><td class="form">ни о ком</td></tr>
+      </table>
+    </div>
+
+    <!-- ничто -->
+    <div class="sub-title">ничто &mdash; rien</div>
+    <div class="table-scroll">
+      <table class="decl-table">
+        <tr><th>Cas</th><th>Forme</th></tr>
+        <tr><td class="case-label">Nom.</td><td class="form">ничто</td></tr>
+        <tr><td class="case-label">G&eacute;n.</td><td class="form">ничего</td></tr>
+        <tr><td class="case-label">Dat.</td><td class="form">ничему</td></tr>
+        <tr><td class="case-label">Acc.</td><td class="form">ничто</td></tr>
+        <tr><td class="case-label">Instr.</td><td class="form">ничем</td></tr>
+        <tr><td class="case-label">Pr&eacute;p.</td><td class="form">ни о чём</td></tr>
+      </table>
+    </div>
+
+    <div class="note">
+      Avec une pr&eacute;position, &laquo;&nbsp;ни&nbsp;&raquo; se s&eacute;pare&nbsp;: <strong>ни у кого</strong>, <strong>ни с кем</strong>, <strong>ни о чём</strong>.
+    </div>
+
+  </div>
+</div>
+
+</div><!-- .container -->
+
+</body>
+</html>

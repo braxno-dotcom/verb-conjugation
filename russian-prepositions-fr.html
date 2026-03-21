@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇷🇺</text></svg>">
+<meta name="apple-mobile-web-app-title" content="RU prépositions">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇷🇺 Prépositions russes — Quel cas utiliser ?</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f0eb;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #4a1a6b, #7b2fa0);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switch-left {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch-left:hover { background: rgba(255,255,255,0.3); }
+
+  .content {
+    max-width: 900px;
+    margin: 20px auto 40px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .case-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .case-header {
+    padding: 12px 16px;
+    background: #7b2fa0;
+    color: white;
+    font-weight: 600;
+  }
+  .case-header .ru-name { font-size: 1.05em; }
+  .case-header .fr-name { font-size: 0.85em; opacity: 0.9; margin-top: 2px; }
+  .case-header-gray {
+    padding: 12px 16px;
+    background: #546e7a;
+    color: white;
+    font-weight: 600;
+  }
+  .case-header-gray .ru-name { font-size: 1.05em; }
+  .case-header-gray .fr-name { font-size: 0.85em; opacity: 0.9; margin-top: 2px; }
+  .case-header-memo {
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #4a1a6b, #7b2fa0);
+    color: white;
+    font-weight: 600;
+  }
+  .case-header-memo .ru-name { font-size: 1.05em; }
+  .case-header-memo .fr-name { font-size: 0.85em; opacity: 0.9; margin-top: 2px; }
+
+  .case-body { padding: 16px; }
+
+  .prep-list { list-style: none; padding: 0; margin: 0; }
+  .prep-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+    line-height: 1.5;
+  }
+  .prep-list li:last-child { border-bottom: none; }
+  .prep-ru {
+    font-weight: 700;
+    color: #4a1a6b;
+    font-size: 1.05em;
+  }
+  .prep-fr {
+    color: #888;
+    font-size: 0.92em;
+  }
+  .prep-example {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.93em;
+    color: #555;
+  }
+  .prep-example .ru { font-weight: 600; }
+  .prep-example .fr { color: #888; font-style: italic; }
+
+  .note-box {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: #faf5ff;
+    border-left: 4px solid #7b2fa0;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.9em;
+    color: #555;
+    line-height: 1.5;
+  }
+  .note-box strong { color: #4a1a6b; }
+
+  .warning-box {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: #fff8e1;
+    border-left: 4px solid #ffa000;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.9em;
+    color: #6d5a00;
+    line-height: 1.5;
+  }
+  .warning-box strong { color: #e65100; }
+
+  .comparison-box {
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .compare-col {
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 0.92em;
+    line-height: 1.6;
+  }
+  .compare-movement {
+    background: #e8f5e9;
+    border: 1px solid #a5d6a7;
+  }
+  .compare-movement .compare-label {
+    font-weight: 700;
+    color: #2e7d32;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .compare-location {
+    background: #e3f2fd;
+    border: 1px solid #90caf9;
+  }
+  .compare-location .compare-label {
+    font-weight: 700;
+    color: #1565c0;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .compare-col .ru { font-weight: 600; }
+  .compare-col .fr { color: #666; font-style: italic; }
+
+  .multi-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6px;
+  }
+  .multi-table th {
+    text-align: left;
+    padding: 8px 10px;
+    font-size: 0.85em;
+    color: #7b2fa0;
+    font-weight: 600;
+    border-bottom: 2px solid #e0d4e8;
+    background: #faf5ff;
+  }
+  .multi-table td {
+    padding: 8px 10px;
+    font-size: 0.92em;
+    border-bottom: 1px solid #f0f0f0;
+    line-height: 1.5;
+  }
+  .multi-table tr:hover { background: #faf5ff; }
+  .multi-table .prep-cell {
+    font-weight: 700;
+    color: #4a1a6b;
+    white-space: nowrap;
+    width: 50px;
+  }
+
+  .memo-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6px;
+  }
+  .memo-table th {
+    text-align: left;
+    padding: 8px 10px;
+    font-size: 0.85em;
+    color: white;
+    font-weight: 600;
+    background: #7b2fa0;
+  }
+  .memo-table td {
+    padding: 8px 10px;
+    font-size: 0.92em;
+    border-bottom: 1px solid #f0f0f0;
+    line-height: 1.4;
+  }
+  .memo-table tr:nth-child(even) { background: #faf5ff; }
+  .memo-table .case-col {
+    font-weight: 600;
+    color: #4a1a6b;
+    white-space: nowrap;
+  }
+  .memo-table .question-col {
+    color: #666;
+    font-style: italic;
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switch-left { position: static; display: inline-block; margin-bottom: 10px; padding: 6px 12px; font-size: 0.85em; }
+    .content { padding: 0 10px; }
+    .case-header, .case-header-gray, .case-header-memo { padding: 10px 12px; }
+    .case-header .ru-name, .case-header-gray .ru-name, .case-header-memo .ru-name { font-size: 0.95em; }
+    .case-body { padding: 12px; }
+    .comparison-box { grid-template-columns: 1fr; }
+    .multi-table th, .multi-table td { padding: 6px 8px; font-size: 0.82em; }
+    .memo-table th, .memo-table td { padding: 6px 8px; font-size: 0.82em; }
+    .prep-list li { padding: 6px 0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="russian-fr.html" class="lang-switch-left">&larr; Retour au portail</a>
+  <h1>🇷🇺 Prépositions russes — Quel cas utiliser ?</h1>
+  <p>Chaque préposition exige un cas précis — voici le guide complet</p>
+</header>
+
+<div class="content">
+
+  <!-- CARD 1: GÉNITIF -->
+  <div class="case-card">
+    <div class="case-header">
+      <div class="ru-name">РОДИТЕЛЬНЫЙ ПАДЕЖ (Génitif) — Кого? Чего?</div>
+    </div>
+    <div class="case-body">
+      <ul class="prep-list">
+        <li>
+          <span class="prep-ru">без</span> <span class="prep-fr">(sans)</span>
+          <span class="prep-example"><span class="ru">без воды</span> = <span class="fr">sans eau</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">для</span> <span class="prep-fr">(pour)</span>
+          <span class="prep-example"><span class="ru">для друга</span> = <span class="fr">pour un ami</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">до</span> <span class="prep-fr">(jusqu'à)</span>
+          <span class="prep-example"><span class="ru">до дома</span> = <span class="fr">jusqu'à la maison</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">из</span> <span class="prep-fr">(de, provenance)</span>
+          <span class="prep-example"><span class="ru">из России</span> = <span class="fr">de Russie</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">от</span> <span class="prep-fr">(de, depuis)</span>
+          <span class="prep-example"><span class="ru">от друга</span> = <span class="fr">de la part d'un ami</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">у</span> <span class="prep-fr">(chez, près de)</span>
+          <span class="prep-example"><span class="ru">у врача</span> = <span class="fr">chez le médecin</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">после</span> <span class="prep-fr">(après)</span>
+          <span class="prep-example"><span class="ru">после работы</span> = <span class="fr">après le travail</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">около</span> <span class="prep-fr">(près de)</span>
+          <span class="prep-example"><span class="ru">около дома</span> = <span class="fr">près de la maison</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">вместо</span> <span class="prep-fr">(au lieu de)</span>
+          <span class="prep-example"><span class="ru">вместо чая</span> = <span class="fr">au lieu de thé</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">кроме</span> <span class="prep-fr">(sauf)</span>
+          <span class="prep-example"><span class="ru">кроме меня</span> = <span class="fr">sauf moi</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">среди</span> <span class="prep-fr">(parmi)</span>
+          <span class="prep-example"><span class="ru">среди людей</span> = <span class="fr">parmi les gens</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">против</span> <span class="prep-fr">(contre)</span>
+          <span class="prep-example"><span class="ru">против войны</span> = <span class="fr">contre la guerre</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">вокруг</span> <span class="prep-fr">(autour de)</span>
+          <span class="prep-example"><span class="ru">вокруг дома</span> = <span class="fr">autour de la maison</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">мимо</span> <span class="prep-fr">(devant, en passant)</span>
+          <span class="prep-example"><span class="ru">мимо магазина</span> = <span class="fr">devant le magasin</span></span>
+        </li>
+      </ul>
+      <div class="note-box">
+        <strong>Note :</strong> Le génitif est aussi utilisé après <strong>нет</strong> (il n'y a pas), les nombres à partir de 5, et les mots de quantité (<strong>много</strong>, <strong>мало</strong>, <strong>несколько</strong>).
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 2: DATIF -->
+  <div class="case-card">
+    <div class="case-header">
+      <div class="ru-name">ДАТЕЛЬНЫЙ ПАДЕЖ (Datif) — Кому? Чему?</div>
+    </div>
+    <div class="case-body">
+      <ul class="prep-list">
+        <li>
+          <span class="prep-ru">к</span> <span class="prep-fr">(vers, chez)</span>
+          <span class="prep-example"><span class="ru">к другу</span> = <span class="fr">chez/vers un ami</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">по</span> <span class="prep-fr">(le long de, par, selon)</span>
+          <span class="prep-example"><span class="ru">по улице</span> = <span class="fr">le long de la rue</span> ; <span class="ru">по телефону</span> = <span class="fr">par téléphone</span></span>
+        </li>
+      </ul>
+      <div class="note-box">
+        <strong>Note :</strong> Le datif est aussi utilisé avec certains verbes : <strong>помогать кому</strong> (aider qqn), <strong>звонить кому</strong> (appeler qqn), <strong>нравиться кому</strong> (plaire à qqn).
+      </div>
+      <div class="note-box" style="margin-top: 8px;">
+        <strong>Aussi :</strong> Les expressions d'âge utilisent le datif ! <strong>Мне 25 лет</strong> = J'ai 25 ans (littéralement : « à moi 25 ans »).
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 3: ACCUSATIF -->
+  <div class="case-card">
+    <div class="case-header">
+      <div class="ru-name">ВИНИТЕЛЬНЫЙ ПАДЕЖ (Accusatif) — Кого? Что?</div>
+    </div>
+    <div class="case-body">
+      <ul class="prep-list">
+        <li>
+          <span class="prep-ru">в</span> <span class="prep-fr">(dans, direction)</span>
+          <span class="prep-example"><span class="ru">в школу</span> = <span class="fr">à l'école (j'y vais)</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">на</span> <span class="prep-fr">(sur, direction)</span>
+          <span class="prep-example"><span class="ru">на работу</span> = <span class="fr">au travail (j'y vais)</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">за</span> <span class="prep-fr">(pour, derrière + mouvement)</span>
+          <span class="prep-example"><span class="ru">за хлебом</span> = <span class="fr">pour du pain</span> ; <span class="ru">за дом</span> = <span class="fr">derrière la maison (mouvement)</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">через</span> <span class="prep-fr">(à travers, dans + temps)</span>
+          <span class="prep-example"><span class="ru">через дорогу</span> = <span class="fr">à travers la route</span> ; <span class="ru">через час</span> = <span class="fr">dans une heure</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">про</span> <span class="prep-fr">(à propos de, familier)</span>
+          <span class="prep-example"><span class="ru">про любовь</span> = <span class="fr">à propos de l'amour</span></span>
+        </li>
+      </ul>
+
+      <div class="warning-box">
+        <strong>&#9889; PIÈGE :</strong> <strong>в</strong> et <strong>на</strong> prennent l'accusatif quand il y a <strong>MOUVEMENT</strong> (où vas-tu ?), mais le prépositionnel quand il y a <strong>LIEU</strong> (où es-tu ?). C'est la distinction la plus importante !
+      </div>
+
+      <div class="comparison-box">
+        <div class="compare-col compare-movement">
+          <div class="compare-label">&#10132; Direction / Mouvement (Accusatif)</div>
+          <span class="ru">В школу</span><br>
+          <span class="fr">= à l'école (j'y VAIS)</span><br><br>
+          <span class="ru">На работу</span><br>
+          <span class="fr">= au travail (j'y VAIS)</span>
+        </div>
+        <div class="compare-col compare-location">
+          <div class="compare-label">&#128205; Lieu / Position (Prépositionnel)</div>
+          <span class="ru">В школе</span><br>
+          <span class="fr">= à l'école (j'y SUIS)</span><br><br>
+          <span class="ru">На работе</span><br>
+          <span class="fr">= au travail (j'y SUIS)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 4: INSTRUMENTAL -->
+  <div class="case-card">
+    <div class="case-header">
+      <div class="ru-name">ТВОРИТЕЛЬНЫЙ ПАДЕЖ (Instrumental) — Кем? Чем?</div>
+    </div>
+    <div class="case-body">
+      <ul class="prep-list">
+        <li>
+          <span class="prep-ru">с</span> <span class="prep-fr">(avec)</span>
+          <span class="prep-example"><span class="ru">с другом</span> = <span class="fr">avec un ami</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">за</span> <span class="prep-fr">(derrière, position)</span>
+          <span class="prep-example"><span class="ru">за домом</span> = <span class="fr">derrière la maison (position)</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">над</span> <span class="prep-fr">(au-dessus de)</span>
+          <span class="prep-example"><span class="ru">над столом</span> = <span class="fr">au-dessus de la table</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">под</span> <span class="prep-fr">(sous)</span>
+          <span class="prep-example"><span class="ru">под столом</span> = <span class="fr">sous la table</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">перед</span> <span class="prep-fr">(devant)</span>
+          <span class="prep-example"><span class="ru">перед домом</span> = <span class="fr">devant la maison</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">между</span> <span class="prep-fr">(entre)</span>
+          <span class="prep-example"><span class="ru">между домами</span> = <span class="fr">entre les maisons</span></span>
+        </li>
+      </ul>
+      <div class="note-box">
+        <strong>Note :</strong> L'instrumental est aussi utilisé pour dire « devenir/être » avec les verbes <strong>быть</strong>, <strong>стать</strong>, <strong>работать</strong> : « <strong>Он работает врачом</strong> » = Il travaille comme médecin.
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 5: PRÉPOSITIONNEL -->
+  <div class="case-card">
+    <div class="case-header">
+      <div class="ru-name">ПРЕДЛОЖНЫЙ ПАДЕЖ (Prépositionnel) — О ком? О чём? Где?</div>
+    </div>
+    <div class="case-body">
+      <ul class="prep-list">
+        <li>
+          <span class="prep-ru">в</span> <span class="prep-fr">(dans, lieu)</span>
+          <span class="prep-example"><span class="ru">в школе</span> = <span class="fr">à l'école (j'y suis)</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">на</span> <span class="prep-fr">(sur, lieu)</span>
+          <span class="prep-example"><span class="ru">на работе</span> = <span class="fr">au travail (j'y suis)</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">о / об</span> <span class="prep-fr">(à propos de)</span>
+          <span class="prep-example"><span class="ru">о друге</span> = <span class="fr">à propos d'un ami</span> ; <span class="ru">об Анне</span> = <span class="fr">à propos d'Anna</span></span>
+        </li>
+        <li>
+          <span class="prep-ru">при</span> <span class="prep-fr">(en présence de, du temps de)</span>
+          <span class="prep-example"><span class="ru">при мне</span> = <span class="fr">en ma présence</span></span>
+        </li>
+      </ul>
+      <div class="note-box">
+        <strong>Note :</strong> C'est le seul cas qui n'existe <strong>JAMAIS</strong> sans préposition. D'où son nom : « le cas des prépositions ».
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 6: PRÉPOSITIONS À PLUSIEURS CAS -->
+  <div class="case-card">
+    <div class="case-header-gray">
+      <div class="ru-name">PRÉPOSITIONS À PLUSIEURS CAS</div>
+      <div class="fr-name">Attention — le cas change le sens !</div>
+    </div>
+    <div class="case-body">
+      <div class="table-wrap">
+        <table class="multi-table">
+          <thead>
+            <tr>
+              <th>Prép.</th>
+              <th>Cas 1</th>
+              <th>Cas 2</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="prep-cell">в</td>
+              <td><strong>+ accusatif</strong> = direction<br><span class="ru">в школу</span> <span class="fr">— vers l'école</span></td>
+              <td><strong>+ prépositionnel</strong> = lieu<br><span class="ru">в школе</span> <span class="fr">— à l'école</span></td>
+            </tr>
+            <tr>
+              <td class="prep-cell">на</td>
+              <td><strong>+ accusatif</strong> = direction<br><span class="ru">на работу</span> <span class="fr">— vers le travail</span></td>
+              <td><strong>+ prépositionnel</strong> = lieu<br><span class="ru">на работе</span> <span class="fr">— au travail</span></td>
+            </tr>
+            <tr>
+              <td class="prep-cell">за</td>
+              <td><strong>+ accusatif</strong> = pour / derrière + mouvement<br><span class="ru">за хлебом</span> <span class="fr">— pour du pain</span></td>
+              <td><strong>+ instrumental</strong> = derrière + position<br><span class="ru">за домом</span> <span class="fr">— derrière la maison</span></td>
+            </tr>
+            <tr>
+              <td class="prep-cell">под</td>
+              <td><strong>+ accusatif</strong> = sous + mouvement<br><span class="ru">под стол</span> <span class="fr">— sous la table (mouvement)</span></td>
+              <td><strong>+ instrumental</strong> = sous + position<br><span class="ru">под столом</span> <span class="fr">— sous la table (position)</span></td>
+            </tr>
+            <tr>
+              <td class="prep-cell">с</td>
+              <td><strong>+ génitif</strong> = de, depuis<br><span class="ru">с горы</span> <span class="fr">— de la montagne</span></td>
+              <td><strong>+ instrumental</strong> = avec<br><span class="ru">с другом</span> <span class="fr">— avec un ami</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 7: AIDE-MÉMOIRE -->
+  <div class="case-card">
+    <div class="case-header-memo">
+      <div class="ru-name">AIDE-MÉMOIRE (Шпаргалка)</div>
+      <div class="fr-name">Résumé rapide — quel cas pour quelle préposition ?</div>
+    </div>
+    <div class="case-body">
+      <div class="table-wrap">
+        <table class="memo-table">
+          <thead>
+            <tr>
+              <th>Cas</th>
+              <th>Prépositions principales</th>
+              <th>Question</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="case-col">Génitif</td>
+              <td>без, для, до, из, от, у, после, около</td>
+              <td class="question-col">Кого? Чего?</td>
+            </tr>
+            <tr>
+              <td class="case-col">Datif</td>
+              <td>к, по</td>
+              <td class="question-col">Кому? Чему?</td>
+            </tr>
+            <tr>
+              <td class="case-col">Accusatif</td>
+              <td>в (direction), на (direction), за, через, про</td>
+              <td class="question-col">Кого? Что?</td>
+            </tr>
+            <tr>
+              <td class="case-col">Instrumental</td>
+              <td>с, за (lieu), над, под (lieu), перед, между</td>
+              <td class="question-col">Кем? Чем?</td>
+            </tr>
+            <tr>
+              <td class="case-col">Prépositionnel</td>
+              <td>в (lieu), на (lieu), о/об, при</td>
+              <td class="question-col">О ком? О чём?</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
