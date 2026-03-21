@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇷🇺</text></svg>">
+<meta name="apple-mobile-web-app-title" content="RU nombres">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇷🇺 Déclinaison des nombres russes</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f0eb;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #4a1a6b, #7b2fa0);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switch-left {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch-left:hover { background: rgba(255,255,255,0.3); }
+
+  .search-area {
+    max-width: 600px;
+    margin: 30px auto 10px;
+    padding: 0 20px;
+    display: flex;
+    gap: 10px;
+  }
+  .search-area input {
+    flex: 1;
+    padding: 14px 18px;
+    font-size: 1.15em;
+    border: 2px solid #c8bfb6;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-area input:focus { border-color: #7b2fa0; }
+  .search-area button {
+    padding: 14px 28px;
+    font-size: 1.05em;
+    background: #7b2fa0;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .search-area button:hover { background: #4a1a6b; }
+
+  .hint {
+    max-width: 600px;
+    margin: 8px auto 0;
+    padding: 0 20px;
+    font-size: 0.85em;
+    color: #888;
+  }
+  .hint span { cursor: pointer; color: #7b2fa0; text-decoration: underline; }
+  .hint span:hover { color: #4a1a6b; }
+
+  .intro-box {
+    max-width: 900px;
+    margin: 20px auto 10px;
+    padding: 16px 20px;
+    background: #f3e5f5;
+    border: 1px solid #ce93d8;
+    border-radius: 10px;
+    color: #4a1a6b;
+    font-size: 0.93em;
+    line-height: 1.5;
+  }
+
+  .word-info {
+    max-width: 900px;
+    margin: 18px auto 8px;
+    padding: 0 20px;
+    display: none;
+  }
+  .word-info .badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 600;
+    margin-right: 8px;
+    margin-bottom: 6px;
+  }
+  .badge-number { background: #f3e5f5; color: #4a1a6b; }
+  .badge-words { background: #e3f2fd; color: #0d47a1; }
+  .badge-noun-rule { background: #e8f5e9; color: #1b5e20; }
+
+  .warning-banner {
+    max-width: 900px;
+    margin: 10px auto;
+    padding: 12px 20px;
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 10px;
+    color: #856404;
+    font-size: 0.92em;
+    display: none;
+  }
+
+  #results {
+    max-width: 900px;
+    margin: 10px auto 40px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .case-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .case-header {
+    padding: 12px 16px;
+    background: #7b2fa0;
+    color: white;
+    font-weight: 600;
+  }
+  .case-header .ru-name { font-size: 1.05em; }
+  .case-header .fr-name { font-size: 0.85em; opacity: 0.9; margin-top: 2px; }
+  .case-explain {
+    padding: 8px 16px;
+    font-size: 0.88em;
+    color: #666;
+    background: #fafafa;
+    border-bottom: 1px solid #eee;
+    font-style: italic;
+  }
+  .case-body { padding: 14px 16px; }
+  .case-body .numeral-form {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #2c2c2c;
+    line-height: 1.6;
+  }
+  .case-body .numeral-form .part-hundreds { color: #6a1b9a; }
+  .case-body .numeral-form .part-thousands { color: #1565c0; }
+  .case-body .numeral-form .part-tens { color: #2e7d32; }
+  .case-body .numeral-form .part-units { color: #c62828; }
+  .case-body .acc-note {
+    margin-top: 6px;
+    font-size: 0.85em;
+    color: #888;
+    font-style: italic;
+  }
+
+  .color-legend {
+    max-width: 900px;
+    margin: 10px auto;
+    padding: 8px 20px;
+    display: none;
+    gap: 16px;
+    font-size: 0.85em;
+    flex-wrap: wrap;
+  }
+  .color-legend span {
+    font-weight: 600;
+    margin-right: 4px;
+  }
+  .legend-item { margin-right: 18px; color: #666; }
+
+  .info-section {
+    max-width: 900px;
+    margin: 10px auto 40px;
+    padding: 0 20px;
+  }
+  .info-section details {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    margin-bottom: 12px;
+  }
+  .info-section summary {
+    padding: 14px 16px;
+    font-weight: 600;
+    color: #4a1a6b;
+    cursor: pointer;
+    font-size: 1em;
+  }
+  .info-section .detail-body {
+    padding: 0 16px 14px;
+    font-size: 0.92em;
+    line-height: 1.6;
+    color: #444;
+  }
+  .info-section .detail-body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+  }
+  .info-section .detail-body th {
+    text-align: left;
+    padding: 6px 10px;
+    font-size: 0.85em;
+    color: #7b2fa0;
+    font-weight: 600;
+    border-bottom: 2px solid #e0d4e8;
+    background: #faf5ff;
+  }
+  .info-section .detail-body td {
+    padding: 6px 10px;
+    font-size: 0.9em;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .no-result {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+    font-size: 1.1em;
+  }
+
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switch-left { position: static; display: inline-block; margin-bottom: 10px; padding: 6px 12px; font-size: 0.85em; }
+    .search-area { padding: 0 10px; flex-direction: column; }
+    .search-area input { font-size: 1em; padding: 12px 14px; width: 100%; }
+    .search-area button { padding: 12px 18px; font-size: 0.95em; width: 100%; }
+    .hint { padding: 0 10px; }
+    .intro-box { margin: 14px 10px 10px; }
+    .word-info { padding: 0 10px; }
+    .word-info .badge { font-size: 0.8em; padding: 4px 10px; }
+    .warning-banner { margin: 10px 10px; }
+    #results { padding: 0 10px; }
+    .case-header { padding: 10px 12px; }
+    .case-header .ru-name { font-size: 0.95em; }
+    .case-body { padding: 10px 12px; }
+    .case-body .numeral-form { font-size: 1em; }
+    .color-legend { padding: 8px 10px; font-size: 0.8em; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="russian-fr.html" class="lang-switch-left">&larr; Retour au portail</a>
+  <h1>&#x1f1f7;&#x1f1fa; Declinaison des nombres russes</h1>
+  <p>Entrez un nombre &mdash; obtenez toutes les formes dans les 6 cas</p>
+</header>
+
+<div class="search-area">
+  <input type="text" id="numInput" placeholder="entrez un nombre: 1, 23, 157, 2453..." autofocus
+    onkeydown="if(event.key==='Enter')declineNumber()">
+  <button onclick="declineNumber()">Decliner</button>
+</div>
+<div class="hint">
+  Essayez :
+  <span onclick="tryNum(1)">1</span>,
+  <span onclick="tryNum(2)">2</span>,
+  <span onclick="tryNum(3)">3</span>,
+  <span onclick="tryNum(5)">5</span>,
+  <span onclick="tryNum(12)">12</span>,
+  <span onclick="tryNum(21)">21</span>,
+  <span onclick="tryNum(100)">100</span>,
+  <span onclick="tryNum(253)">253</span>,
+  <span onclick="tryNum(1000)">1000</span>
+</div>
+
+<div class="intro-box">
+  En russe, chaque partie d'un nombre se decline separement dans les 6 cas. C'est l'une des choses les plus difficiles de la langue russe &mdash; meme les Russes font des erreurs&nbsp;!
+</div>
+
+<div class="warning-banner" id="warningBanner"></div>
+<div class="word-info" id="wordInfo"></div>
+<div class="color-legend" id="colorLegend">
+  <div class="legend-item"><span style="color:#1565c0;">&#9632;</span> milliers</div>
+  <div class="legend-item"><span style="color:#6a1b9a;">&#9632;</span> centaines</div>
+  <div class="legend-item"><span style="color:#2e7d32;">&#9632;</span> dizaines</div>
+  <div class="legend-item"><span style="color:#c62828;">&#9632;</span> unites</div>
+</div>
+<div id="results"></div>
+
+<div class="info-section">
+  <details>
+    <summary>Les 6 cas russes (rappel)</summary>
+    <div class="detail-body">
+      <table>
+        <tr><th>Cas</th><th>Russe</th><th>Question</th><th>Usage</th></tr>
+        <tr><td>Nominatif</td><td>Именительный</td><td>Кто? Что?</td><td>Sujet de la phrase</td></tr>
+        <tr><td>Genitif</td><td>Родительный</td><td>Кого? Чего?</td><td>Possession, absence, apres les nombres</td></tr>
+        <tr><td>Datif</td><td>Дательный</td><td>Кому? Чему?</td><td>Destinataire (a qui?)</td></tr>
+        <tr><td>Accusatif</td><td>Винительный</td><td>Кого? Что?</td><td>Objet direct</td></tr>
+        <tr><td>Instrumental</td><td>Творительный</td><td>Кем? Чем?</td><td>Moyen, instrument (avec)</td></tr>
+        <tr><td>Prepositionnel</td><td>Предложный</td><td>О ком? О чём?</td><td>Lieu, sujet (a propos de)</td></tr>
+      </table>
+    </div>
+  </details>
+  <details>
+    <summary>Quel cas utiliser pour le nom apres un nombre ?</summary>
+    <div class="detail-body">
+      <p>Au <strong>nominatif</strong>, le nom qui suit le nombre prend une forme qui depend du dernier chiffre :</p>
+      <table>
+        <tr><th>Dernier chiffre(s)</th><th>Forme du nom</th><th>Exemple</th></tr>
+        <tr><td>1 (sauf 11)</td><td>Nominatif singulier</td><td>двадцать один <strong>дом</strong></td></tr>
+        <tr><td>2, 3, 4 (sauf 12-14)</td><td>Genitif singulier</td><td>два <strong>дома</strong></td></tr>
+        <tr><td>5-20, 25-30, etc.</td><td>Genitif pluriel</td><td>пять <strong>домов</strong></td></tr>
+      </table>
+      <p style="margin-top:10px">Mais dans les <strong>autres cas</strong> (genitif, datif, etc.), le nom se met simplement au <strong>pluriel dans le meme cas</strong> que le nombre.</p>
+    </div>
+  </details>
+</div>
+
+<script>
+// ============================================================
+// CASE DEFINITIONS
+// ============================================================
+const CASES = [
+  { ru: 'Именительный', fr: 'Nominatif', question: 'Кто? Что?',
+    explain: 'Qui ? Quoi ? \u2014 le sujet. \u00ab\u041f\u044f\u0442\u044c \u0434\u043e\u043c\u043e\u0432 \u0441\u0442\u043e\u0438\u0442\u00bb = Cinq maisons se trouvent' },
+  { ru: 'Родительный', fr: 'G\u00e9nitif', question: 'Кого? Чего?',
+    explain: 'De qui ? De quoi ? \u2014 apr\u00e8s \u00abnет\u00bb, \u00abбез\u00bb, \u00abиз\u00bb.' },
+  { ru: 'Дательный', fr: 'Datif', question: 'Кому? Чему?',
+    explain: '\u00c0 qui ? \u00c0 quoi ? \u2014 destinataire. Apr\u00e8s \u00abк\u00bb, \u00abпо\u00bb.' },
+  { ru: 'Винительный', fr: 'Accusatif', question: 'Кого? Что?',
+    explain: 'Qui ? Quoi ? \u2014 objet direct. \u00ab\u042f \u0432\u0438\u0436\u0443 \u043f\u044f\u0442\u044c \u0434\u043e\u043c\u043e\u0432\u00bb = Je vois cinq maisons' },
+  { ru: 'Творительный', fr: 'Instrumental', question: 'Кем? Чем?',
+    explain: 'Avec qui ? Avec quoi ? \u2014 moyen, instrument. Apr\u00e8s \u00abс\u00bb, \u00abмежду\u00bb.' },
+  { ru: 'Предложный', fr: 'Pr\u00e9positionnel', question: 'О ком? О чём?',
+    explain: '\u00c0 propos de qui/quoi ? \u2014 lieu. Apr\u00e8s \u00abо\u00bb, \u00abв\u00bb, \u00abна\u00bb.' }
+];
+
+// ============================================================
+// NUMERAL DATA: [nom, gen, dat, acc_inanim, instr, prep]
+// For 1,2: special handling (gender)
+// ============================================================
+
+// 1: gender-dependent
+const ONE = {
+  m: ['\u043e\u0434\u0438\u043d','\u043e\u0434\u043d\u043e\u0433\u043e','\u043e\u0434\u043d\u043e\u043c\u0443','\u043e\u0434\u0438\u043d','\u043e\u0434\u043d\u0438\u043c','\u043e\u0434\u043d\u043e\u043c'],        // masc inanim
+  m_anim: ['\u043e\u0434\u0438\u043d','\u043e\u0434\u043d\u043e\u0433\u043e','\u043e\u0434\u043d\u043e\u043c\u0443','\u043e\u0434\u043d\u043e\u0433\u043e','\u043e\u0434\u043d\u0438\u043c','\u043e\u0434\u043d\u043e\u043c'], // masc anim
+  f: ['\u043e\u0434\u043d\u0430','\u043e\u0434\u043d\u043e\u0439','\u043e\u0434\u043d\u043e\u0439','\u043e\u0434\u043d\u0443','\u043e\u0434\u043d\u043e\u0439','\u043e\u0434\u043d\u043e\u0439'],
+  n: ['\u043e\u0434\u043d\u043e','\u043e\u0434\u043d\u043e\u0433\u043e','\u043e\u0434\u043d\u043e\u043c\u0443','\u043e\u0434\u043d\u043e','\u043e\u0434\u043d\u0438\u043c','\u043e\u0434\u043d\u043e\u043c'],
+  pl: ['\u043e\u0434\u043d\u0438','\u043e\u0434\u043d\u0438\u0445','\u043e\u0434\u043d\u0438\u043c','\u043e\u0434\u043d\u0438','\u043e\u0434\u043d\u0438\u043c\u0438','\u043e\u0434\u043d\u0438\u0445'],
+  pl_anim: ['\u043e\u0434\u043d\u0438','\u043e\u0434\u043d\u0438\u0445','\u043e\u0434\u043d\u0438\u043c','\u043e\u0434\u043d\u0438\u0445','\u043e\u0434\u043d\u0438\u043c\u0438','\u043e\u0434\u043d\u0438\u0445']
+};
+
+// 2: gender for nom/acc
+const TWO = {
+  mf_nom: {m: '\u0434\u0432\u0430', f: '\u0434\u0432\u0435', n: '\u0434\u0432\u0430'},
+  cases: [null, '\u0434\u0432\u0443\u0445', '\u0434\u0432\u0443\u043c', null, '\u0434\u0432\u0443\u043c\u044f', '\u0434\u0432\u0443\u0445'] // gen,dat,_,instr,prep
+};
+
+// Standard numerals: [nom, gen, dat, acc(=nom for inanim), instr, prep]
+const NUMS = {
+  3:  ['\u0442\u0440\u0438', '\u0442\u0440\u0451\u0445', '\u0442\u0440\u0451\u043c', '\u0442\u0440\u0438', '\u0442\u0440\u0435\u043c\u044f', '\u0442\u0440\u0451\u0445'],
+  4:  ['\u0447\u0435\u0442\u044b\u0440\u0435', '\u0447\u0435\u0442\u044b\u0440\u0451\u0445', '\u0447\u0435\u0442\u044b\u0440\u0451\u043c', '\u0447\u0435\u0442\u044b\u0440\u0435', '\u0447\u0435\u0442\u044b\u0440\u044c\u043c\u044f', '\u0447\u0435\u0442\u044b\u0440\u0451\u0445'],
+  5:  ['\u043f\u044f\u0442\u044c', '\u043f\u044f\u0442\u0438', '\u043f\u044f\u0442\u0438', '\u043f\u044f\u0442\u044c', '\u043f\u044f\u0442\u044c\u044e', '\u043f\u044f\u0442\u0438'],
+  6:  ['\u0448\u0435\u0441\u0442\u044c', '\u0448\u0435\u0441\u0442\u0438', '\u0448\u0435\u0441\u0442\u0438', '\u0448\u0435\u0441\u0442\u044c', '\u0448\u0435\u0441\u0442\u044c\u044e', '\u0448\u0435\u0441\u0442\u0438'],
+  7:  ['\u0441\u0435\u043c\u044c', '\u0441\u0435\u043c\u0438', '\u0441\u0435\u043c\u0438', '\u0441\u0435\u043c\u044c', '\u0441\u0435\u043c\u044c\u044e', '\u0441\u0435\u043c\u0438'],
+  8:  ['\u0432\u043e\u0441\u0435\u043c\u044c', '\u0432\u043e\u0441\u044c\u043c\u0438', '\u0432\u043e\u0441\u044c\u043c\u0438', '\u0432\u043e\u0441\u0435\u043c\u044c', '\u0432\u043e\u0441\u0435\u043c\u044c\u044e', '\u0432\u043e\u0441\u044c\u043c\u0438'],
+  9:  ['\u0434\u0435\u0432\u044f\u0442\u044c', '\u0434\u0435\u0432\u044f\u0442\u0438', '\u0434\u0435\u0432\u044f\u0442\u0438', '\u0434\u0435\u0432\u044f\u0442\u044c', '\u0434\u0435\u0432\u044f\u0442\u044c\u044e', '\u0434\u0435\u0432\u044f\u0442\u0438'],
+  10: ['\u0434\u0435\u0441\u044f\u0442\u044c', '\u0434\u0435\u0441\u044f\u0442\u0438', '\u0434\u0435\u0441\u044f\u0442\u0438', '\u0434\u0435\u0441\u044f\u0442\u044c', '\u0434\u0435\u0441\u044f\u0442\u044c\u044e', '\u0434\u0435\u0441\u044f\u0442\u0438'],
+  11: ['\u043e\u0434\u0438\u043d\u043d\u0430\u0434\u0446\u0430\u0442\u044c', '\u043e\u0434\u0438\u043d\u043d\u0430\u0434\u0446\u0430\u0442\u0438', '\u043e\u0434\u0438\u043d\u043d\u0430\u0434\u0446\u0430\u0442\u0438', '\u043e\u0434\u0438\u043d\u043d\u0430\u0434\u0446\u0430\u0442\u044c', '\u043e\u0434\u0438\u043d\u043d\u0430\u0434\u0446\u0430\u0442\u044c\u044e', '\u043e\u0434\u0438\u043d\u043d\u0430\u0434\u0446\u0430\u0442\u0438'],
+  12: ['\u0434\u0432\u0435\u043d\u0430\u0434\u0446\u0430\u0442\u044c', '\u0434\u0432\u0435\u043d\u0430\u0434\u0446\u0430\u0442\u0438', '\u0434\u0432\u0435\u043d\u0430\u0434\u0446\u0430\u0442\u0438', '\u0434\u0432\u0435\u043d\u0430\u0434\u0446\u0430\u0442\u044c', '\u0434\u0432\u0435\u043d\u0430\u0434\u0446\u0430\u0442\u044c\u044e', '\u0434\u0432\u0435\u043d\u0430\u0434\u0446\u0430\u0442\u0438'],
+  13: ['\u0442\u0440\u0438\u043d\u0430\u0434\u0446\u0430\u0442\u044c', '\u0442\u0440\u0438\u043d\u0430\u0434\u0446\u0430\u0442\u0438', '\u0442\u0440\u0438\u043d\u0430\u0434\u0446\u0430\u0442\u0438', '\u0442\u0440\u0438\u043d\u0430\u0434\u0446\u0430\u0442\u044c', '\u0442\u0440\u0438\u043d\u0430\u0434\u0446\u0430\u0442\u044c\u044e', '\u0442\u0440\u0438\u043d\u0430\u0434\u0446\u0430\u0442\u0438'],
+  14: ['\u0447\u0435\u0442\u044b\u0440\u043d\u0430\u0434\u0446\u0430\u0442\u044c', '\u0447\u0435\u0442\u044b\u0440\u043d\u0430\u0434\u0446\u0430\u0442\u0438', '\u0447\u0435\u0442\u044b\u0440\u043d\u0430\u0434\u0446\u0430\u0442\u0438', '\u0447\u0435\u0442\u044b\u0440\u043d\u0430\u0434\u0446\u0430\u0442\u044c', '\u0447\u0435\u0442\u044b\u0440\u043d\u0430\u0434\u0446\u0430\u0442\u044c\u044e', '\u0447\u0435\u0442\u044b\u0440\u043d\u0430\u0434\u0446\u0430\u0442\u0438'],
+  15: ['\u043f\u044f\u0442\u043d\u0430\u0434\u0446\u0430\u0442\u044c', '\u043f\u044f\u0442\u043d\u0430\u0434\u0446\u0430\u0442\u0438', '\u043f\u044f\u0442\u043d\u0430\u0434\u0446\u0430\u0442\u0438', '\u043f\u044f\u0442\u043d\u0430\u0434\u0446\u0430\u0442\u044c', '\u043f\u044f\u0442\u043d\u0430\u0434\u0446\u0430\u0442\u044c\u044e', '\u043f\u044f\u0442\u043d\u0430\u0434\u0446\u0430\u0442\u0438'],
+  16: ['\u0448\u0435\u0441\u0442\u043d\u0430\u0434\u0446\u0430\u0442\u044c', '\u0448\u0435\u0441\u0442\u043d\u0430\u0434\u0446\u0430\u0442\u0438', '\u0448\u0435\u0441\u0442\u043d\u0430\u0434\u0446\u0430\u0442\u0438', '\u0448\u0435\u0441\u0442\u043d\u0430\u0434\u0446\u0430\u0442\u044c', '\u0448\u0435\u0441\u0442\u043d\u0430\u0434\u0446\u0430\u0442\u044c\u044e', '\u0448\u0435\u0441\u0442\u043d\u0430\u0434\u0446\u0430\u0442\u0438'],
+  17: ['\u0441\u0435\u043c\u043d\u0430\u0434\u0446\u0430\u0442\u044c', '\u0441\u0435\u043c\u043d\u0430\u0434\u0446\u0430\u0442\u0438', '\u0441\u0435\u043c\u043d\u0430\u0434\u0446\u0430\u0442\u0438', '\u0441\u0435\u043c\u043d\u0430\u0434\u0446\u0430\u0442\u044c', '\u0441\u0435\u043c\u043d\u0430\u0434\u0446\u0430\u0442\u044c\u044e', '\u0441\u0435\u043c\u043d\u0430\u0434\u0446\u0430\u0442\u0438'],
+  18: ['\u0432\u043e\u0441\u0435\u043c\u043d\u0430\u0434\u0446\u0430\u0442\u044c', '\u0432\u043e\u0441\u0435\u043c\u043d\u0430\u0434\u0446\u0430\u0442\u0438', '\u0432\u043e\u0441\u0435\u043c\u043d\u0430\u0434\u0446\u0430\u0442\u0438', '\u0432\u043e\u0441\u0435\u043c\u043d\u0430\u0434\u0446\u0430\u0442\u044c', '\u0432\u043e\u0441\u0435\u043c\u043d\u0430\u0434\u0446\u0430\u0442\u044c\u044e', '\u0432\u043e\u0441\u0435\u043c\u043d\u0430\u0434\u0446\u0430\u0442\u0438'],
+  19: ['\u0434\u0435\u0432\u044f\u0442\u043d\u0430\u0434\u0446\u0430\u0442\u044c', '\u0434\u0435\u0432\u044f\u0442\u043d\u0430\u0434\u0446\u0430\u0442\u0438', '\u0434\u0435\u0432\u044f\u0442\u043d\u0430\u0434\u0446\u0430\u0442\u0438', '\u0434\u0435\u0432\u044f\u0442\u043d\u0430\u0434\u0446\u0430\u0442\u044c', '\u0434\u0435\u0432\u044f\u0442\u043d\u0430\u0434\u0446\u0430\u0442\u044c\u044e', '\u0434\u0435\u0432\u044f\u0442\u043d\u0430\u0434\u0446\u0430\u0442\u0438'],
+  20: ['\u0434\u0432\u0430\u0434\u0446\u0430\u0442\u044c', '\u0434\u0432\u0430\u0434\u0446\u0430\u0442\u0438', '\u0434\u0432\u0430\u0434\u0446\u0430\u0442\u0438', '\u0434\u0432\u0430\u0434\u0446\u0430\u0442\u044c', '\u0434\u0432\u0430\u0434\u0446\u0430\u0442\u044c\u044e', '\u0434\u0432\u0430\u0434\u0446\u0430\u0442\u0438'],
+  30: ['\u0442\u0440\u0438\u0434\u0446\u0430\u0442\u044c', '\u0442\u0440\u0438\u0434\u0446\u0430\u0442\u0438', '\u0442\u0440\u0438\u0434\u0446\u0430\u0442\u0438', '\u0442\u0440\u0438\u0434\u0446\u0430\u0442\u044c', '\u0442\u0440\u0438\u0434\u0446\u0430\u0442\u044c\u044e', '\u0442\u0440\u0438\u0434\u0446\u0430\u0442\u0438'],
+  40: ['\u0441\u043e\u0440\u043e\u043a', '\u0441\u043e\u0440\u043e\u043a\u0430', '\u0441\u043e\u0440\u043e\u043a\u0430', '\u0441\u043e\u0440\u043e\u043a', '\u0441\u043e\u0440\u043e\u043a\u0430', '\u0441\u043e\u0440\u043e\u043a\u0430'],
+  50: ['\u043f\u044f\u0442\u044c\u0434\u0435\u0441\u044f\u0442', '\u043f\u044f\u0442\u0438\u0434\u0435\u0441\u044f\u0442\u0438', '\u043f\u044f\u0442\u0438\u0434\u0435\u0441\u044f\u0442\u0438', '\u043f\u044f\u0442\u044c\u0434\u0435\u0441\u044f\u0442', '\u043f\u044f\u0442\u044c\u044e\u0434\u0435\u0441\u044f\u0442\u044c\u044e', '\u043f\u044f\u0442\u0438\u0434\u0435\u0441\u044f\u0442\u0438'],
+  60: ['\u0448\u0435\u0441\u0442\u044c\u0434\u0435\u0441\u044f\u0442', '\u0448\u0435\u0441\u0442\u0438\u0434\u0435\u0441\u044f\u0442\u0438', '\u0448\u0435\u0441\u0442\u0438\u0434\u0435\u0441\u044f\u0442\u0438', '\u0448\u0435\u0441\u0442\u044c\u0434\u0435\u0441\u044f\u0442', '\u0448\u0435\u0441\u0442\u044c\u044e\u0434\u0435\u0441\u044f\u0442\u044c\u044e', '\u0448\u0435\u0441\u0442\u0438\u0434\u0435\u0441\u044f\u0442\u0438'],
+  70: ['\u0441\u0435\u043c\u044c\u0434\u0435\u0441\u044f\u0442', '\u0441\u0435\u043c\u0438\u0434\u0435\u0441\u044f\u0442\u0438', '\u0441\u0435\u043c\u0438\u0434\u0435\u0441\u044f\u0442\u0438', '\u0441\u0435\u043c\u044c\u0434\u0435\u0441\u044f\u0442', '\u0441\u0435\u043c\u044c\u044e\u0434\u0435\u0441\u044f\u0442\u044c\u044e', '\u0441\u0435\u043c\u0438\u0434\u0435\u0441\u044f\u0442\u0438'],
+  80: ['\u0432\u043e\u0441\u0435\u043c\u044c\u0434\u0435\u0441\u044f\u0442', '\u0432\u043e\u0441\u044c\u043c\u0438\u0434\u0435\u0441\u044f\u0442\u0438', '\u0432\u043e\u0441\u044c\u043c\u0438\u0434\u0435\u0441\u044f\u0442\u0438', '\u0432\u043e\u0441\u0435\u043c\u044c\u0434\u0435\u0441\u044f\u0442', '\u0432\u043e\u0441\u0435\u043c\u044c\u044e\u0434\u0435\u0441\u044f\u0442\u044c\u044e', '\u0432\u043e\u0441\u044c\u043c\u0438\u0434\u0435\u0441\u044f\u0442\u0438'],
+  90: ['\u0434\u0435\u0432\u044f\u043d\u043e\u0441\u0442\u043e', '\u0434\u0435\u0432\u044f\u043d\u043e\u0441\u0442\u0430', '\u0434\u0435\u0432\u044f\u043d\u043e\u0441\u0442\u0430', '\u0434\u0435\u0432\u044f\u043d\u043e\u0441\u0442\u043e', '\u0434\u0435\u0432\u044f\u043d\u043e\u0441\u0442\u0430', '\u0434\u0435\u0432\u044f\u043d\u043e\u0441\u0442\u0430'],
+  100: ['\u0441\u0442\u043e', '\u0441\u0442\u0430', '\u0441\u0442\u0430', '\u0441\u0442\u043e', '\u0441\u0442\u0430', '\u0441\u0442\u0430'],
+  200: ['\u0434\u0432\u0435\u0441\u0442\u0438', '\u0434\u0432\u0443\u0445\u0441\u043e\u0442', '\u0434\u0432\u0443\u043c\u0441\u0442\u0430\u043c', '\u0434\u0432\u0435\u0441\u0442\u0438', '\u0434\u0432\u0443\u043c\u044f\u0441\u0442\u0430\u043c\u0438', '\u0434\u0432\u0443\u0445\u0441\u0442\u0430\u0445'],
+  300: ['\u0442\u0440\u0438\u0441\u0442\u0430', '\u0442\u0440\u0451\u0445\u0441\u043e\u0442', '\u0442\u0440\u0451\u043c\u0441\u0442\u0430\u043c', '\u0442\u0440\u0438\u0441\u0442\u0430', '\u0442\u0440\u0435\u043c\u044f\u0441\u0442\u0430\u043c\u0438', '\u0442\u0440\u0451\u0445\u0441\u0442\u0430\u0445'],
+  400: ['\u0447\u0435\u0442\u044b\u0440\u0435\u0441\u0442\u0430', '\u0447\u0435\u0442\u044b\u0440\u0451\u0445\u0441\u043e\u0442', '\u0447\u0435\u0442\u044b\u0440\u0451\u043c\u0441\u0442\u0430\u043c', '\u0447\u0435\u0442\u044b\u0440\u0435\u0441\u0442\u0430', '\u0447\u0435\u0442\u044b\u0440\u044c\u043c\u044f\u0441\u0442\u0430\u043c\u0438', '\u0447\u0435\u0442\u044b\u0440\u0451\u0445\u0441\u0442\u0430\u0445'],
+  500: ['\u043f\u044f\u0442\u044c\u0441\u043e\u0442', '\u043f\u044f\u0442\u0438\u0441\u043e\u0442', '\u043f\u044f\u0442\u0438\u0441\u0442\u0430\u043c', '\u043f\u044f\u0442\u044c\u0441\u043e\u0442', '\u043f\u044f\u0442\u044c\u044e\u0441\u0442\u0430\u043c\u0438', '\u043f\u044f\u0442\u0438\u0441\u0442\u0430\u0445'],
+  600: ['\u0448\u0435\u0441\u0442\u044c\u0441\u043e\u0442', '\u0448\u0435\u0441\u0442\u0438\u0441\u043e\u0442', '\u0448\u0435\u0441\u0442\u0438\u0441\u0442\u0430\u043c', '\u0448\u0435\u0441\u0442\u044c\u0441\u043e\u0442', '\u0448\u0435\u0441\u0442\u044c\u044e\u0441\u0442\u0430\u043c\u0438', '\u0448\u0435\u0441\u0442\u0438\u0441\u0442\u0430\u0445'],
+  700: ['\u0441\u0435\u043c\u044c\u0441\u043e\u0442', '\u0441\u0435\u043c\u0438\u0441\u043e\u0442', '\u0441\u0435\u043c\u0438\u0441\u0442\u0430\u043c', '\u0441\u0435\u043c\u044c\u0441\u043e\u0442', '\u0441\u0435\u043c\u044c\u044e\u0441\u0442\u0430\u043c\u0438', '\u0441\u0435\u043c\u0438\u0441\u0442\u0430\u0445'],
+  800: ['\u0432\u043e\u0441\u0435\u043c\u044c\u0441\u043e\u0442', '\u0432\u043e\u0441\u044c\u043c\u0438\u0441\u043e\u0442', '\u0432\u043e\u0441\u044c\u043c\u0438\u0441\u0442\u0430\u043c', '\u0432\u043e\u0441\u0435\u043c\u044c\u0441\u043e\u0442', '\u0432\u043e\u0441\u0435\u043c\u044c\u044e\u0441\u0442\u0430\u043c\u0438', '\u0432\u043e\u0441\u044c\u043c\u0438\u0441\u0442\u0430\u0445'],
+  900: ['\u0434\u0435\u0432\u044f\u0442\u044c\u0441\u043e\u0442', '\u0434\u0435\u0432\u044f\u0442\u0438\u0441\u043e\u0442', '\u0434\u0435\u0432\u044f\u0442\u0438\u0441\u0442\u0430\u043c', '\u0434\u0435\u0432\u044f\u0442\u044c\u0441\u043e\u0442', '\u0434\u0435\u0432\u044f\u0442\u044c\u044e\u0441\u0442\u0430\u043c\u0438', '\u0434\u0435\u0432\u044f\u0442\u0438\u0441\u0442\u0430\u0445']
+};
+
+// тысяча forms by quantity prefix
+const THOUSAND_FORMS = {
+  // [nom, gen, dat, acc, instr, prep]
+  1: ['\u0442\u044b\u0441\u044f\u0447\u0430', '\u0442\u044b\u0441\u044f\u0447\u0438', '\u0442\u044b\u0441\u044f\u0447\u0435', '\u0442\u044b\u0441\u044f\u0447\u0443', '\u0442\u044b\u0441\u044f\u0447\u0435\u0439', '\u0442\u044b\u0441\u044f\u0447\u0435'],       // одна тысяча
+  2: ['\u0442\u044b\u0441\u044f\u0447\u0438', '\u0442\u044b\u0441\u044f\u0447', '\u0442\u044b\u0441\u044f\u0447\u0430\u043c', '\u0442\u044b\u0441\u044f\u0447\u0438', '\u0442\u044b\u0441\u044f\u0447\u0430\u043c\u0438', '\u0442\u044b\u0441\u044f\u0447\u0430\u0445'],       // две/три/четыре тысячи (gen sg -> nom; gen pl elsewhere)
+  5: ['\u0442\u044b\u0441\u044f\u0447', '\u0442\u044b\u0441\u044f\u0447', '\u0442\u044b\u0441\u044f\u0447\u0430\u043c', '\u0442\u044b\u0441\u044f\u0447', '\u0442\u044b\u0441\u044f\u0447\u0430\u043c\u0438', '\u0442\u044b\u0441\u044f\u0447\u0430\u0445']         // пять+ тысяч
+};
+
+// ============================================================
+// NUMBER DECOMPOSITION
+// ============================================================
+function decompose(n) {
+  // Returns array of {value, type} where type is 'thousands','hundreds','tens','units','teen'
+  if (n < 1 || n > 999999) return null;
+  const parts = [];
+  const thousands = Math.floor(n / 1000);
+  const remainder = n % 1000;
+
+  if (thousands > 0) {
+    parts.push({value: thousands, type: 'thousands'});
+  }
+
+  const hundreds = Math.floor(remainder / 100) * 100;
+  const tensUnits = remainder % 100;
+
+  if (hundreds > 0) {
+    parts.push({value: hundreds, type: 'hundreds'});
+  }
+
+  if (tensUnits > 0) {
+    if (tensUnits <= 20) {
+      // Single token (1-20)
+      parts.push({value: tensUnits, type: tensUnits <= 9 ? 'units' : (tensUnits <= 19 ? 'teen' : 'tens')});
+    } else {
+      const tens = Math.floor(tensUnits / 10) * 10;
+      const units = tensUnits % 10;
+      if (tens > 0) parts.push({value: tens, type: 'tens'});
+      if (units > 0) parts.push({value: units, type: 'units'});
+    }
+  }
+
+  return parts;
+}
+
+// ============================================================
+// GET FORM FOR A SINGLE BASE NUMBER IN A GIVEN CASE
+// ============================================================
+// caseIdx: 0=nom,1=gen,2=dat,3=acc,4=instr,5=prep
+function getBaseForm(value, caseIdx) {
+  if (value === 1) {
+    // Default masculine inanimate for standalone
+    return ONE.m[caseIdx];
+  }
+  if (value === 2) {
+    if (caseIdx === 0 || caseIdx === 3) {
+      return TWO.mf_nom.m; // два (default masc)
+    }
+    return TWO.cases[caseIdx];
+  }
+  if (NUMS[value]) {
+    return NUMS[value][caseIdx];
+  }
+  return null;
+}
+
+// For "1" as part of thousands (одна тысяча - feminine)
+function getOneF(caseIdx) {
+  return ONE.f[caseIdx];
+}
+
+// For "2" as part of thousands (две тысячи - feminine)
+function getTwoF(caseIdx) {
+  if (caseIdx === 0 || caseIdx === 3) {
+    return TWO.mf_nom.f; // две
+  }
+  return TWO.cases[caseIdx];
+}
+
+// ============================================================
+// DETERMINE WHICH тысяча FORM TO USE
+// ============================================================
+function getThousandCategory(thNum) {
+  // thNum is 1-999
+  const lastTwo = thNum % 100;
+  const lastOne = thNum % 10;
+  if (lastTwo >= 11 && lastTwo <= 19) return 5; // gen pl
+  if (lastOne === 1) return 1;
+  if (lastOne >= 2 && lastOne <= 4) return 2;
+  return 5;
+}
+
+// ============================================================
+// DECLINE THE THOUSANDS PART
+// ============================================================
+function declineThousands(thNum, caseIdx) {
+  // thNum: 1-999 (the number of thousands)
+  // Returns the declined string for the thousands portion
+  const cat = getThousandCategory(thNum);
+  const thForm = THOUSAND_FORMS[cat][caseIdx];
+
+  if (thNum === 1) {
+    // одна тысяча (use feminine one)
+    return getOneF(caseIdx) + ' ' + thForm;
+  }
+  if (thNum === 2) {
+    return getTwoF(caseIdx) + ' ' + thForm;
+  }
+
+  // For thNum > 2, we need to decline thNum itself then add тысяч(а/и/...)
+  // thNum can be compound too (e.g., 253 тысячи)
+  const thParts = [];
+  const thHundreds = Math.floor(thNum / 100) * 100;
+  const thTensUnits = thNum % 100;
+
+  if (thHundreds > 0) {
+    thParts.push(getBaseForm(thHundreds, caseIdx));
+  }
+
+  if (thTensUnits > 0) {
+    if (thTensUnits <= 20) {
+      if (thTensUnits === 1) {
+        thParts.push(getOneF(caseIdx));
+      } else if (thTensUnits === 2) {
+        thParts.push(getTwoF(caseIdx));
+      } else {
+        thParts.push(getBaseForm(thTensUnits, caseIdx));
+      }
+    } else {
+      const t = Math.floor(thTensUnits / 10) * 10;
+      const u = thTensUnits % 10;
+      if (t > 0) thParts.push(getBaseForm(t, caseIdx));
+      if (u > 0) {
+        if (u === 1) {
+          thParts.push(getOneF(caseIdx));
+        } else if (u === 2) {
+          thParts.push(getTwoF(caseIdx));
+        } else {
+          thParts.push(getBaseForm(u, caseIdx));
+        }
+      }
+    }
+  }
+
+  thParts.push(thForm);
+  return thParts.join(' ');
+}
+
+// ============================================================
+// DECLINE A FULL NUMBER (1-999999)
+// ============================================================
+function declineFull(n, caseIdx) {
+  // Returns array of {text, cssClass} segments
+  const segments = [];
+  const thousands = Math.floor(n / 1000);
+  const remainder = n % 1000;
+
+  if (thousands > 0) {
+    segments.push({text: declineThousands(thousands, caseIdx), cssClass: 'part-thousands'});
+  }
+
+  // Remainder: hundreds + tens/teens + units
+  const hundreds = Math.floor(remainder / 100) * 100;
+  const tensUnits = remainder % 100;
+
+  if (hundreds > 0) {
+    segments.push({text: getBaseForm(hundreds, caseIdx), cssClass: 'part-hundreds'});
+  }
+
+  if (tensUnits > 0) {
+    if (tensUnits <= 20) {
+      if (tensUnits === 1) {
+        segments.push({text: getBaseForm(1, caseIdx), cssClass: 'part-units'});
+      } else if (tensUnits === 2) {
+        const form = (caseIdx === 0 || caseIdx === 3) ? TWO.mf_nom.m : TWO.cases[caseIdx];
+        segments.push({text: form, cssClass: 'part-units'});
+      } else if (tensUnits <= 9) {
+        segments.push({text: getBaseForm(tensUnits, caseIdx), cssClass: 'part-units'});
+      } else {
+        // 10-20: these are single tokens, color as tens
+        segments.push({text: getBaseForm(tensUnits, caseIdx), cssClass: 'part-tens'});
+      }
+    } else {
+      const tens = Math.floor(tensUnits / 10) * 10;
+      const units = tensUnits % 10;
+      if (tens > 0) {
+        segments.push({text: getBaseForm(tens, caseIdx), cssClass: 'part-tens'});
+      }
+      if (units > 0) {
+        if (units === 1) {
+          segments.push({text: getBaseForm(1, caseIdx), cssClass: 'part-units'});
+        } else if (units === 2) {
+          const form = (caseIdx === 0 || caseIdx === 3) ? TWO.mf_nom.m : TWO.cases[caseIdx];
+          segments.push({text: form, cssClass: 'part-units'});
+        } else {
+          segments.push({text: getBaseForm(units, caseIdx), cssClass: 'part-units'});
+        }
+      }
+    }
+  }
+
+  return segments;
+}
+
+// ============================================================
+// GET ACCUSATIVE (with animate variant)
+// ============================================================
+function declineAccusative(n) {
+  // For numbers ending in 1,2,3,4 (not teens), accusative animate differs
+  const inanim = declineFull(n, 3); // acc inanim = nom for most
+  const lastTwo = n % 100;
+  const lastOne = n % 10;
+
+  // Check if animate form differs
+  let hasAnimDiff = false;
+  if (!(lastTwo >= 11 && lastTwo <= 19)) {
+    if (lastOne >= 1 && lastOne <= 4) {
+      hasAnimDiff = true;
+    }
+  }
+  // Also for standalone 2,3,4 the acc anim = gen
+  if (hasAnimDiff) {
+    const anim = declineFull(n, 1); // genitive = animate accusative for 2,3,4
+    return {inanim, anim};
+  }
+  return {inanim, anim: null};
+}
+
+// ============================================================
+// NOMINATIVE TEXT (for display)
+// ============================================================
+function getNominativeText(n) {
+  const segs = declineFull(n, 0);
+  return segs.map(s => s.text).join(' ');
+}
+
+// ============================================================
+// NOUN AGREEMENT RULE
+// ============================================================
+function getNounRule(n) {
+  const lastTwo = n % 100;
+  const lastOne = n % 10;
+
+  if (lastTwo >= 11 && lastTwo <= 19) {
+    return {
+      rule: 'G\u00e9nitif pluriel',
+      example: '\u043f\u044f\u0442\u044c \u0434\u043e\u043c\u043e\u0432 / \u043a\u043d\u0438\u0433 / \u043e\u043a\u043e\u043d',
+      fr: 'Apr\u00e8s 11-19 (et x11-x19), le nom est au g\u00e9nitif pluriel.'
+    };
+  }
+  if (lastOne === 1) {
+    return {
+      rule: 'Nominatif singulier',
+      example: '\u043e\u0434\u0438\u043d \u0434\u043e\u043c / \u043e\u0434\u043d\u0430 \u043a\u043d\u0438\u0433\u0430 / \u043e\u0434\u043d\u043e \u043e\u043a\u043d\u043e',
+      fr: 'Apr\u00e8s 1 (21, 31, etc.), le nom est au nominatif singulier.'
+    };
+  }
+  if (lastOne >= 2 && lastOne <= 4) {
+    return {
+      rule: 'G\u00e9nitif singulier',
+      example: '\u0434\u0432\u0430 \u0434\u043e\u043c\u0430 / \u0434\u0432\u0435 \u043a\u043d\u0438\u0433\u0438 / \u0434\u0432\u0430 \u043e\u043a\u043d\u0430',
+      fr: 'Apr\u00e8s 2, 3, 4 (22, 23, etc.), le nom est au g\u00e9nitif singulier.'
+    };
+  }
+  return {
+    rule: 'G\u00e9nitif pluriel',
+    example: '\u043f\u044f\u0442\u044c \u0434\u043e\u043c\u043e\u0432 / \u043a\u043d\u0438\u0433 / \u043e\u043a\u043e\u043d',
+    fr: 'Apr\u00e8s 5-20, 25-30, etc., le nom est au g\u00e9nitif pluriel.'
+  };
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function renderSegments(segments) {
+  return segments.map(s => `<span class="${s.cssClass}">${s.text}</span>`).join(' ');
+}
+
+function declineNumber() {
+  const input = document.getElementById('numInput').value.trim();
+  const n = parseInt(input, 10);
+  const results = document.getElementById('results');
+  const wordInfo = document.getElementById('wordInfo');
+  const warning = document.getElementById('warningBanner');
+  const legend = document.getElementById('colorLegend');
+
+  warning.style.display = 'none';
+  wordInfo.style.display = 'none';
+  legend.style.display = 'none';
+  results.innerHTML = '';
+
+  if (isNaN(n) || n < 1 || n > 999999) {
+    warning.textContent = 'Veuillez entrer un nombre entre 1 et 999\u202f999.';
+    warning.style.display = 'block';
+    return;
+  }
+
+  // Word info badges
+  const nomText = getNominativeText(n);
+  const nounRule = getNounRule(n);
+
+  wordInfo.innerHTML = `
+    <span class="badge badge-number">${n.toLocaleString('fr-FR')}</span>
+    <span class="badge badge-words">${nomText}</span>
+    <br style="margin-bottom:6px">
+    <span class="badge badge-noun-rule">Nom apr\u00e8s ce nombre : ${nounRule.rule}</span>
+    <div style="margin-top:6px;font-size:0.88em;color:#555;">
+      ${nounRule.fr}<br>
+      <em>${nounRule.example}</em>
+    </div>
+  `;
+  wordInfo.style.display = 'block';
+
+  // Show color legend if compound
+  const parts = decompose(n);
+  if (parts && parts.length > 1) {
+    legend.style.display = 'flex';
+  }
+
+  // Build case cards
+  let html = '';
+  for (let i = 0; i < 6; i++) {
+    const c = CASES[i];
+
+    if (i === 3) {
+      // Accusative: show inanimate and animate
+      const acc = declineAccusative(n);
+      let bodyContent = `<div class="numeral-form">${renderSegments(acc.inanim)}</div>`;
+      if (acc.anim) {
+        bodyContent += `<div class="acc-note">inanim\u00e9 (неодуш.): ${renderSegments(acc.inanim)}</div>`;
+        bodyContent += `<div class="acc-note">anim\u00e9 (одуш.): ${renderSegments(acc.anim)}</div>`;
+      }
+      html += `
+        <div class="case-card">
+          <div class="case-header">
+            <div class="ru-name">${c.ru} <span style="opacity:0.8;font-size:0.85em;">(${c.question})</span></div>
+            <div class="fr-name">${c.fr}</div>
+          </div>
+          <div class="case-explain">${c.explain}</div>
+          <div class="case-body">${bodyContent}</div>
+        </div>
+      `;
+    } else {
+      const segments = declineFull(n, i);
+      html += `
+        <div class="case-card">
+          <div class="case-header">
+            <div class="ru-name">${c.ru} <span style="opacity:0.8;font-size:0.85em;">(${c.question})</span></div>
+            <div class="fr-name">${c.fr}</div>
+          </div>
+          <div class="case-explain">${c.explain}</div>
+          <div class="case-body">
+            <div class="numeral-form">${renderSegments(segments)}</div>
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  results.innerHTML = html;
+}
+
+// Special handling for number 1: show all gender forms
+function showOneDetails() {
+  const results = document.getElementById('results');
+  const wordInfo = document.getElementById('wordInfo');
+  const warning = document.getElementById('warningBanner');
+  const legend = document.getElementById('colorLegend');
+
+  warning.style.display = 'none';
+  legend.style.display = 'none';
+
+  wordInfo.innerHTML = `
+    <span class="badge badge-number">1</span>
+    <span class="badge badge-words">\u043e\u0434\u0438\u043d / \u043e\u0434\u043d\u0430 / \u043e\u0434\u043d\u043e / \u043e\u0434\u043d\u0438</span>
+    <br style="margin-bottom:6px">
+    <span class="badge badge-noun-rule">Nom apr\u00e8s ce nombre : Nominatif singulier</span>
+    <div style="margin-top:6px;font-size:0.88em;color:#555;">
+      Le nombre 1 s'accorde en genre et en nombre avec le nom qu'il accompagne.
+      <br><em>\u043e\u0434\u0438\u043d \u0434\u043e\u043c (m.), \u043e\u0434\u043d\u0430 \u043a\u043d\u0438\u0433\u0430 (f.), \u043e\u0434\u043d\u043e \u043e\u043a\u043d\u043e (n.), \u043e\u0434\u043d\u0438 \u043d\u043e\u0436\u043d\u0438\u0446\u044b (pl.)</em>
+    </div>
+  `;
+  wordInfo.style.display = 'block';
+
+  const genders = [
+    {label: 'Masculin (\u043c\u0443\u0436\u0441\u043a\u043e\u0439)', forms: ONE.m, accAnim: ONE.m_anim[3]},
+    {label: 'F\u00e9minin (\u0436\u0435\u043d\u0441\u043a\u0438\u0439)', forms: ONE.f, accAnim: null},
+    {label: 'Neutre (\u0441\u0440\u0435\u0434\u043d\u0438\u0439)', forms: ONE.n, accAnim: null},
+    {label: 'Pluriel (\u043c\u043d\u043e\u0436\u0435\u0441\u0442\u0432\u0435\u043d\u043d\u043e\u0435)', forms: ONE.pl, accAnim: ONE.pl_anim[3]}
+  ];
+
+  let html = '';
+  for (const g of genders) {
+    html += `<div class="case-card" style="margin-bottom:16px;">
+      <div class="case-header"><div class="ru-name">${g.label}</div></div>
+      <div class="case-body">
+        <table style="width:100%;border-collapse:collapse;">
+          <tr style="border-bottom:2px solid #e0d4e8;background:#faf5ff;">
+            <th style="text-align:left;padding:6px 10px;font-size:0.85em;color:#7b2fa0;">Cas</th>
+            <th style="text-align:left;padding:6px 10px;font-size:0.85em;color:#7b2fa0;">Forme</th>
+          </tr>`;
+    for (let i = 0; i < 6; i++) {
+      let form = g.forms[i];
+      let extra = '';
+      if (i === 3 && g.accAnim) {
+        extra = ` <span style="color:#888;font-size:0.85em;">(inanim.) / ${g.accAnim} (anim.)</span>`;
+      }
+      html += `<tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:6px 10px;font-size:0.88em;color:#666;font-weight:600;">${CASES[i].fr} (${CASES[i].question})</td>
+        <td style="padding:6px 10px;font-weight:600;">${form}${extra}</td>
+      </tr>`;
+    }
+    html += `</table></div></div>`;
+  }
+  results.innerHTML = html;
+}
+
+// Override for number 1 and 2
+const origDecline = declineNumber;
+declineNumber = function() {
+  const input = document.getElementById('numInput').value.trim();
+  const n = parseInt(input, 10);
+  if (n === 1) {
+    showOneDetails();
+    return;
+  }
+  if (n === 2) {
+    showTwoDetails();
+    return;
+  }
+  origDecline();
+};
+
+function showTwoDetails() {
+  const results = document.getElementById('results');
+  const wordInfo = document.getElementById('wordInfo');
+  const warning = document.getElementById('warningBanner');
+  const legend = document.getElementById('colorLegend');
+
+  warning.style.display = 'none';
+  legend.style.display = 'none';
+
+  wordInfo.innerHTML = `
+    <span class="badge badge-number">2</span>
+    <span class="badge badge-words">\u0434\u0432\u0430 / \u0434\u0432\u0435</span>
+    <br style="margin-bottom:6px">
+    <span class="badge badge-noun-rule">Nom apr\u00e8s ce nombre : G\u00e9nitif singulier</span>
+    <div style="margin-top:6px;font-size:0.88em;color:#555;">
+      Le nombre 2 a deux formes au nominatif/accusatif : <strong>\u0434\u0432\u0430</strong> (masc./neutre) et <strong>\u0434\u0432\u0435</strong> (f\u00e9m.).
+      <br><em>\u0434\u0432\u0430 \u0434\u043e\u043c\u0430, \u0434\u0432\u0435 \u043a\u043d\u0438\u0433\u0438, \u0434\u0432\u0430 \u043e\u043a\u043d\u0430</em>
+    </div>
+  `;
+  wordInfo.style.display = 'block';
+
+  const genders = [
+    {label: 'Masc./Neutre (\u043c\u0443\u0436./\u0441\u0440.)', nomForm: '\u0434\u0432\u0430'},
+    {label: 'F\u00e9minin (\u0436\u0435\u043d\u0441\u043a\u0438\u0439)', nomForm: '\u0434\u0432\u0435'}
+  ];
+
+  const caseForms = [null, '\u0434\u0432\u0443\u0445', '\u0434\u0432\u0443\u043c', null, '\u0434\u0432\u0443\u043c\u044f', '\u0434\u0432\u0443\u0445'];
+
+  let html = '';
+  for (const g of genders) {
+    html += `<div class="case-card" style="margin-bottom:16px;">
+      <div class="case-header"><div class="ru-name">${g.label}</div></div>
+      <div class="case-body">
+        <table style="width:100%;border-collapse:collapse;">
+          <tr style="border-bottom:2px solid #e0d4e8;background:#faf5ff;">
+            <th style="text-align:left;padding:6px 10px;font-size:0.85em;color:#7b2fa0;">Cas</th>
+            <th style="text-align:left;padding:6px 10px;font-size:0.85em;color:#7b2fa0;">Forme</th>
+          </tr>`;
+    for (let i = 0; i < 6; i++) {
+      let form;
+      if (i === 0) {
+        form = g.nomForm;
+      } else if (i === 3) {
+        form = `${g.nomForm} <span style="color:#888;font-size:0.85em;">(inanim.) / \u0434\u0432\u0443\u0445 (anim.)</span>`;
+      } else {
+        form = caseForms[i];
+      }
+      html += `<tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:6px 10px;font-size:0.88em;color:#666;font-weight:600;">${CASES[i].fr} (${CASES[i].question})</td>
+        <td style="padding:6px 10px;font-weight:600;">${form}</td>
+      </tr>`;
+    }
+    html += `</table></div></div>`;
+  }
+  results.innerHTML = html;
+}
+
+function tryNum(n) {
+  document.getElementById('numInput').value = n;
+  declineNumber();
+}
+</script>
+
+</body>
+</html>
