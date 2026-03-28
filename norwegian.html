@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇳🇴</text></svg>">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Norsk">
+<title>🇳🇴 Норвежский язык (букмол)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f0eb;
+    color: #2c2c2c;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .container {
+    text-align: center;
+    padding: 40px 20px;
+    max-width: 700px;
+  }
+  h1 { font-size: 1.8em; font-weight: 600; margin-bottom: 8px; color: #333; }
+  p { color: #888; margin-bottom: 36px; font-size: 0.95em; }
+  .cards { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+  .card {
+    display: block;
+    text-decoration: none;
+    background: white;
+    border-radius: 16px;
+    padding: 36px 40px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+    min-width: 200px;
+    flex: 1;
+    border-top: 4px solid #1a5276;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+  }
+  .card .icon { font-size: 3em; display: block; margin-bottom: 14px; }
+  .card .label { font-size: 1.1em; font-weight: 600; color: #333; display: block; }
+  .card .sub { font-size: 0.82em; color: #999; margin-top: 6px; display: block; }
+  .card .count { font-size: 0.75em; color: #1a5276; margin-top: 8px; display: block; font-weight: 600; }
+
+  .info {
+    margin-top: 36px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    text-align: left;
+    font-size: 0.9em;
+    color: #666;
+    line-height: 1.6;
+  }
+  .info h3 { color: #1a5276; margin-bottom: 8px; font-size: 1em; }
+
+  @media (max-width: 500px) {
+    .cards { flex-direction: column; }
+    .card { padding: 28px 24px; }
+    h1 { font-size: 1.4em; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🇳🇴 Норвежский язык (букмол)</h1>
+  <p>Инструменты норвежской грамматики с объяснениями на русском</p>
+
+  <div class="cards">
+    <a href="norwegian-verbs.html" class="card">
+      <span class="icon">📝</span>
+      <span class="label">Спряжение глаголов</span>
+      <span class="sub">Все времена, группы глаголов, императив</span>
+      <span class="count">~100 глаголов</span>
+    </a>
+    <a href="norwegian-nouns.html" class="card">
+      <span class="icon">📊</span>
+      <span class="label">Существительные</span>
+      <span class="sub">Род, определённая/неопределённая форма, множественное число</span>
+      <span class="count">~90 существительных</span>
+    </a>
+    <a href="norwegian-adjectives.html" class="card">
+      <span class="icon">📐</span>
+      <span class="label">Прилагательные</span>
+      <span class="sub">Согласование по роду, числу и определённости</span>
+      <span class="count">~60 прилагательных</span>
+    </a>
+    <a href="norwegian-prepositions.html" class="card">
+      <span class="icon">📍</span>
+      <span class="label">Предлоги</span>
+      <span class="sub">Место, время, направление</span>
+      <span class="count">~45 предлогов • 5 категорий</span>
+    </a>
+    <a href="norwegian-word-order.html" class="card">
+      <span class="icon">🔀</span>
+      <span class="label">Порядок слов</span>
+      <span class="sub">Правило V2, инверсия, придаточные предложения</span>
+      <span class="count">5 разделов • интерактивный тренажёр</span>
+    </a>
+  </div>
+
+  <div class="info">
+    <h3>💡 Чем норвежский интересен?</h3>
+    <p>
+      <b>Глаголы</b> не спрягаются по лицам — одна форма для всех: «я ем», «ты ешь», «он ест» = «jeg spiser», «du spiser», «han spiser».<br>
+      <b>Существительные</b> имеют три рода (мужской, женский, средний), а определённый артикль стоит в конце слова: «en bil» (машина) → «bilen» (та машина).<br>
+      <b>Порядок слов</b> строгий: глагол ВСЕГДА на втором месте (правило V2). «Я люблю кофе» = «Jeg liker kaffe», но «Вчера любил(а) я кофе» = «I går likte jeg kaffe».<br>
+      <b>Два письменных стандарта</b>: букмол (bokmål) и нюнорск (nynorsk). Мы используем букмол — на нём пишет ~85% норвежцев.
+    </p>
+  </div>
+</div>
+
+</body>
+</html>

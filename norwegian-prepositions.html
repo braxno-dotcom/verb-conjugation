@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇳🇴</text></svg>">
+<meta name="apple-mobile-web-app-title" content="NO prep">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇳🇴 Норвежские предлоги (букмол)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #eef3f8;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #003366, #1a5276);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  .search-area {
+    max-width: 600px;
+    margin: 30px auto 10px;
+    padding: 0 20px;
+  }
+  .search-area input {
+    width: 100%;
+    padding: 14px 18px;
+    font-size: 1.15em;
+    border: 2px solid #b8c9d9;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-area input:focus { border-color: #1a5276; }
+  .search-hint {
+    max-width: 600px;
+    margin: 8px auto 0;
+    padding: 0 20px;
+    font-size: 0.85em;
+    color: #888;
+  }
+
+  .content {
+    max-width: 900px;
+    margin: 20px auto 40px;
+    padding: 0 20px;
+  }
+
+  .category {
+    margin-bottom: 20px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .category-header {
+    padding: 14px 18px;
+    font-weight: 600;
+    font-size: 1.1em;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    transition: filter 0.2s;
+  }
+  .category-header:hover { filter: brightness(0.95); }
+  .category-header .chevron {
+    font-size: 0.8em;
+    transition: transform 0.3s;
+  }
+  .category-header.collapsed .chevron { transform: rotate(-90deg); }
+  .category-body {
+    background: white;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+  .category-body.collapsed {
+    max-height: 0 !important;
+  }
+
+  /* Category color tints */
+  .cat-place .category-header { background: #d6e8f7; color: #003366; }
+  .cat-direction .category-header { background: #d4edda; color: #155724; }
+  .cat-time .category-header { background: #fff3cd; color: #856404; }
+  .cat-other .category-header { background: #e2d9f3; color: #4a235a; }
+  .cat-tricky .category-header { background: #f8d7da; color: #721c24; }
+
+  .prep-card {
+    padding: 14px 18px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.15s;
+  }
+  .prep-card:last-child { border-bottom: none; }
+  .prep-card:hover { background: #fafcfe; }
+  .prep-word {
+    font-weight: 700;
+    font-size: 1.15em;
+    color: #1a5276;
+    display: inline;
+  }
+  .prep-translation {
+    font-size: 0.95em;
+    color: #666;
+    margin-left: 4px;
+    display: inline;
+  }
+  .prep-examples {
+    margin-top: 6px;
+    padding-left: 2px;
+  }
+  .prep-example {
+    font-size: 0.92em;
+    line-height: 1.6;
+    color: #444;
+  }
+  .prep-example .no-text { font-weight: 500; }
+  .prep-example .ru-text { color: #888; font-style: italic; }
+
+  /* i vs. på comparison table */
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 4px 0;
+  }
+  .comparison-table th {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 0.92em;
+    font-weight: 600;
+    border-bottom: 2px solid #ddd;
+  }
+  .comparison-table th.col-i { color: #1a5276; }
+  .comparison-table th.col-pa { color: #c0392b; }
+  .comparison-table td {
+    padding: 10px 14px;
+    font-size: 0.92em;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: top;
+  }
+  .comparison-table tr:last-child td { border-bottom: none; }
+  .comparison-table .no-text { font-weight: 600; }
+  .comparison-table .ru-text { color: #888; font-size: 0.9em; }
+  .comparison-table .col-i-cell { background: #f0f7ff; }
+  .comparison-table .col-pa-cell { background: #fff5f5; }
+
+  .no-results-msg {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+    font-size: 1.1em;
+    display: none;
+  }
+
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switch { padding: 6px 12px; font-size: 0.85em; }
+    .search-area { padding: 0 10px; }
+    .search-area input { font-size: 1em; padding: 12px 14px; }
+    .content { padding: 0 10px; }
+    .category-header { padding: 12px 14px; font-size: 1em; }
+    .prep-card { padding: 12px 14px; }
+    .comparison-table th, .comparison-table td { padding: 8px 10px; font-size: 0.85em; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="norwegian.html" class="lang-switch">📖 Портал</a>
+    <a href="norwegian-verbs.html" class="lang-switch">📝 Глаголы</a>
+  </div>
+  <h1>🇳🇴 Норвежские предлоги (букмол)</h1>
+  <p>Предлоги места, времени и направления с примерами</p>
+</header>
+
+<div class="search-area">
+  <input type="text" id="searchInput" placeholder="Поиск по предлогу или переводу..." oninput="filterPrepositions()">
+</div>
+<div class="search-hint">Введите норвежский предлог или русское слово для фильтрации</div>
+
+<div class="content" id="content">
+
+  <!-- 📍 Место -->
+  <div class="category cat-place" data-category="place">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>📍 Место (Sted)</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div class="prep-card" data-search="i в внутри">
+        <span class="prep-word">i</span>
+        <span class="prep-translation">— в, внутри</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Jeg bor i Oslo.</span> — <span class="ru-text">Я живу в Осло.</span></div>
+          <div class="prep-example"><span class="no-text">Boka er i sekken.</span> — <span class="ru-text">Книга в рюкзаке.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="på на">
+        <span class="prep-word">på</span>
+        <span class="prep-translation">— на</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Boka er på bordet.</span> — <span class="ru-text">Книга на столе.</span></div>
+          <div class="prep-example"><span class="no-text">Jeg er på jobb.</span> — <span class="ru-text">Я на работе.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="ved у около возле">
+        <span class="prep-word">ved</span>
+        <span class="prep-translation">— у, около, возле</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Hun sitter ved vinduet.</span> — <span class="ru-text">Она сидит у окна.</span></div>
+          <div class="prep-example"><span class="no-text">Huset ved sjøen.</span> — <span class="ru-text">Дом у моря.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="hos у кого-то дома на приёме">
+        <span class="prep-word">hos</span>
+        <span class="prep-translation">— у кого-то дома / на приёме</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Jeg er hos legen.</span> — <span class="ru-text">Я у врача.</span></div>
+          <div class="prep-example"><span class="no-text">Vi var hos bestemor.</span> — <span class="ru-text">Мы были у бабушки.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="mellom между">
+        <span class="prep-word">mellom</span>
+        <span class="prep-translation">— между</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Stolen står mellom bordet og veggen.</span> — <span class="ru-text">Стул стоит между столом и стеной.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="bak за позади">
+        <span class="prep-word">bak</span>
+        <span class="prep-translation">— за, позади</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Hunden er bak huset.</span> — <span class="ru-text">Собака за домом.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="foran перед впереди">
+        <span class="prep-word">foran</span>
+        <span class="prep-translation">— перед, впереди</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Bilen står foran huset.</span> — <span class="ru-text">Машина стоит перед домом.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="over над через">
+        <span class="prep-word">over</span>
+        <span class="prep-translation">— над, через</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Lampen henger over bordet.</span> — <span class="ru-text">Лампа висит над столом.</span></div>
+          <div class="prep-example"><span class="no-text">Brua over elven.</span> — <span class="ru-text">Мост через реку.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="under под">
+        <span class="prep-word">under</span>
+        <span class="prep-translation">— под</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Katten er under bordet.</span> — <span class="ru-text">Кот под столом.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="ved siden av рядом с">
+        <span class="prep-word">ved siden av</span>
+        <span class="prep-translation">— рядом с</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Banken er ved siden av butikken.</span> — <span class="ru-text">Банк рядом с магазином.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="utenfor снаружи">
+        <span class="prep-word">utenfor</span>
+        <span class="prep-translation">— снаружи</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Han venter utenfor døra.</span> — <span class="ru-text">Он ждёт снаружи двери.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="innenfor внутри">
+        <span class="prep-word">innenfor</span>
+        <span class="prep-translation">— внутри</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Alt er innenfor huset.</span> — <span class="ru-text">Всё внутри дома.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🧭 Направление -->
+  <div class="category cat-direction" data-category="direction">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>🧭 Направление (Retning)</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div class="prep-card" data-search="til в к до направление">
+        <span class="prep-word">til</span>
+        <span class="prep-translation">— в, к, до (направление)</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Jeg går til skolen.</span> — <span class="ru-text">Я иду в школу.</span></div>
+          <div class="prep-example"><span class="no-text">Toget til Bergen.</span> — <span class="ru-text">Поезд до Бергена.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="fra из от">
+        <span class="prep-word">fra</span>
+        <span class="prep-translation">— из, от</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Hun kommer fra Norge.</span> — <span class="ru-text">Она из Норвегии.</span></div>
+          <div class="prep-example"><span class="no-text">Brevet fra mor.</span> — <span class="ru-text">Письмо от мамы.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="gjennom через сквозь">
+        <span class="prep-word">gjennom</span>
+        <span class="prep-translation">— через, сквозь</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Vi gikk gjennom skogen.</span> — <span class="ru-text">Мы прошли через лес.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="mot к по направлению против">
+        <span class="prep-word">mot</span>
+        <span class="prep-translation">— к, по направлению к, против</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Han gikk mot døra.</span> — <span class="ru-text">Он пошёл к двери.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="inn i внутрь">
+        <span class="prep-word">inn i</span>
+        <span class="prep-translation">— внутрь</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Hun gikk inn i rommet.</span> — <span class="ru-text">Она вошла в комнату.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="ut av из наружу">
+        <span class="prep-word">ut av</span>
+        <span class="prep-translation">— из, наружу из</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Han gikk ut av huset.</span> — <span class="ru-text">Он вышел из дома.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="opp вверх">
+        <span class="prep-word">opp</span>
+        <span class="prep-translation">— вверх</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Vi gikk opp trappa.</span> — <span class="ru-text">Мы поднялись по лестнице.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="ned вниз">
+        <span class="prep-word">ned</span>
+        <span class="prep-translation">— вниз</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">De gikk ned bakken.</span> — <span class="ru-text">Они спустились с горки.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="langs вдоль">
+        <span class="prep-word">langs</span>
+        <span class="prep-translation">— вдоль</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Vi gikk langs elven.</span> — <span class="ru-text">Мы шли вдоль реки.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="rundt вокруг">
+        <span class="prep-word">rundt</span>
+        <span class="prep-translation">— вокруг</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Vi gikk rundt huset.</span> — <span class="ru-text">Мы обошли вокруг дома.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⏰ Время -->
+  <div class="category cat-time" data-category="time">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>⏰ Время (Tid)</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div class="prep-card" data-search="i в для длительности периодов">
+        <span class="prep-word">i</span>
+        <span class="prep-translation">— в (для длительности и некоторых периодов)</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">i to timer</span> — <span class="ru-text">в течение двух часов</span></div>
+          <div class="prep-example"><span class="no-text">i dag / i morgen / i går</span> — <span class="ru-text">сегодня / завтра / вчера</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="på в для дней">
+        <span class="prep-word">på</span>
+        <span class="prep-translation">— в (для дней)</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">på mandag</span> — <span class="ru-text">в понедельник</span></div>
+          <div class="prep-example"><span class="no-text">på sommeren</span> — <span class="ru-text">летом</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="om через будущее по утрам">
+        <span class="prep-word">om</span>
+        <span class="prep-translation">— через (будущее)</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">om to timer</span> — <span class="ru-text">через два часа</span></div>
+          <div class="prep-example"><span class="no-text">om morgenen</span> — <span class="ru-text">по утрам</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="for siden назад">
+        <span class="prep-word">for ... siden</span>
+        <span class="prep-translation">— ... назад</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">for to år siden</span> — <span class="ru-text">два года назад</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="etter после">
+        <span class="prep-word">etter</span>
+        <span class="prep-translation">— после</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">etter frokost</span> — <span class="ru-text">после завтрака</span></div>
+          <div class="prep-example"><span class="no-text">etter skolen</span> — <span class="ru-text">после школы</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="før до перед">
+        <span class="prep-word">før</span>
+        <span class="prep-translation">— до, перед</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">før lunsj</span> — <span class="ru-text">до обеда</span></div>
+          <div class="prep-example"><span class="no-text">før klokka tre</span> — <span class="ru-text">до трёх часов</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="siden с тех пор">
+        <span class="prep-word">siden</span>
+        <span class="prep-translation">— с тех пор</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">siden i fjor</span> — <span class="ru-text">с прошлого года</span></div>
+          <div class="prep-example"><span class="no-text">siden mandag</span> — <span class="ru-text">с понедельника</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="under во время">
+        <span class="prep-word">under</span>
+        <span class="prep-translation">— во время</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">under krigen</span> — <span class="ru-text">во время войны</span></div>
+          <div class="prep-example"><span class="no-text">under middagen</span> — <span class="ru-text">во время ужина</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="til до предел">
+        <span class="prep-word">til</span>
+        <span class="prep-translation">— до (предел)</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">fra mandag til fredag</span> — <span class="ru-text">с понедельника до пятницы</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔗 Другие важные предлоги -->
+  <div class="category cat-other" data-category="other">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>🔗 Другие важные предлоги</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div class="prep-card" data-search="med с">
+        <span class="prep-word">med</span>
+        <span class="prep-translation">— с</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Jeg bor med familien.</span> — <span class="ru-text">Я живу с семьёй.</span></div>
+          <div class="prep-example"><span class="no-text">Skriv med blyant.</span> — <span class="ru-text">Пиши карандашом.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="uten без">
+        <span class="prep-word">uten</span>
+        <span class="prep-translation">— без</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Kaffe uten melk.</span> — <span class="ru-text">Кофе без молока.</span></div>
+          <div class="prep-example"><span class="no-text">Uten deg.</span> — <span class="ru-text">Без тебя.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="for для за">
+        <span class="prep-word">for</span>
+        <span class="prep-translation">— для, за</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Dette er for deg.</span> — <span class="ru-text">Это для тебя.</span></div>
+          <div class="prep-example"><span class="no-text">Takk for hjelpen.</span> — <span class="ru-text">Спасибо за помощь.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="om о про">
+        <span class="prep-word">om</span>
+        <span class="prep-translation">— о, про</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Vi snakker om filmen.</span> — <span class="ru-text">Мы говорим о фильме.</span></div>
+          <div class="prep-example"><span class="no-text">En bok om Norge.</span> — <span class="ru-text">Книга о Норвегии.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="av из от происхождение материал">
+        <span class="prep-word">av</span>
+        <span class="prep-translation">— из, от (происхождение / материал)</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Et glass av tre.</span> — <span class="ru-text">Стакан из дерева.</span></div>
+          <div class="prep-example"><span class="no-text">En av oss.</span> — <span class="ru-text">Один из нас.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="som как в качестве">
+        <span class="prep-word">som</span>
+        <span class="prep-translation">— как, в качестве</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Hun jobber som lærer.</span> — <span class="ru-text">Она работает учителем.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="etter по согласно">
+        <span class="prep-word">etter</span>
+        <span class="prep-translation">— по, согласно</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Etter min mening...</span> — <span class="ru-text">По моему мнению...</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="blant среди">
+        <span class="prep-word">blant</span>
+        <span class="prep-translation">— среди</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Blant vennene mine.</span> — <span class="ru-text">Среди моих друзей.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="ifølge согласно">
+        <span class="prep-word">ifølge</span>
+        <span class="prep-translation">— согласно</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Ifølge avisen...</span> — <span class="ru-text">Согласно газете...</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="på grunn av из-за">
+        <span class="prep-word">på grunn av</span>
+        <span class="prep-translation">— из-за</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">På grunn av regnet.</span> — <span class="ru-text">Из-за дождя.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="i stedet for вместо">
+        <span class="prep-word">i stedet for</span>
+        <span class="prep-translation">— вместо</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">I stedet for kaffe.</span> — <span class="ru-text">Вместо кофе.</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="til tross for несмотря на">
+        <span class="prep-word">til tross for</span>
+        <span class="prep-translation">— несмотря на</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="no-text">Til tross for problemene.</span> — <span class="ru-text">Несмотря на проблемы.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⚠️ Сложные случаи: i vs. på -->
+  <div class="category cat-tricky" data-category="tricky">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>⚠️ Сложные случаи: i vs. på</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div style="padding: 16px 18px;">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th class="col-i">i</th>
+              <th class="col-pa">på</th>
+              <th>Правило</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="col-i-cell"><span class="no-text">i Norge</span><br><span class="ru-text">в Норвегии</span></td>
+              <td class="col-pa-cell"><span class="no-text">på Island</span><br><span class="ru-text">в Исландии</span></td>
+              <td><span class="ru-text">Острова и полуострова — <b>på</b>!</span></td>
+            </tr>
+            <tr>
+              <td class="col-i-cell"><span class="no-text">i byen</span><br><span class="ru-text">в городе</span></td>
+              <td class="col-pa-cell"><span class="no-text">på landet</span><br><span class="ru-text">в деревне</span></td>
+              <td><span class="ru-text">Город — <b>i</b>, деревня — <b>på</b></span></td>
+            </tr>
+            <tr>
+              <td class="col-i-cell"><span class="no-text">i senga</span><br><span class="ru-text">в кровати</span></td>
+              <td class="col-pa-cell"><span class="no-text">på bordet</span><br><span class="ru-text">на столе</span></td>
+              <td><span class="ru-text">Внутри — <b>i</b>, на поверхности — <b>på</b></span></td>
+            </tr>
+            <tr>
+              <td class="col-i-cell"><span class="no-text">i morgen</span><br><span class="ru-text">завтра</span></td>
+              <td class="col-pa-cell"><span class="no-text">om morgenen</span><br><span class="ru-text">по утрам</span></td>
+              <td><span class="ru-text">Конкретное время vs. регулярное</span></td>
+            </tr>
+            <tr>
+              <td class="col-i-cell"><span class="no-text">i to timer</span><br><span class="ru-text">за / в течение 2 часов</span></td>
+              <td class="col-pa-cell"><span class="no-text">om to timer</span><br><span class="ru-text">через 2 часа</span></td>
+              <td><span class="ru-text">Длительность (<b>i</b>) vs. «через» (<b>om</b>)</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-results-msg" id="noResults">Ничего не найдено. Попробуйте другой запрос.</div>
+</div>
+
+<script>
+function toggleCategory(header) {
+  header.classList.toggle('collapsed');
+  const body = header.nextElementSibling;
+  body.classList.toggle('collapsed');
+}
+
+function filterPrepositions() {
+  const query = document.getElementById('searchInput').value.toLowerCase().trim();
+  const categories = document.querySelectorAll('.category');
+  let anyVisible = false;
+
+  categories.forEach(cat => {
+    const isTricky = cat.dataset.category === 'tricky';
+
+    if (isTricky) {
+      // For the comparison table, search in all text content
+      const text = cat.textContent.toLowerCase();
+      const match = !query || text.includes(query);
+      cat.style.display = match ? '' : 'none';
+      if (match) anyVisible = true;
+      return;
+    }
+
+    const cards = cat.querySelectorAll('.prep-card');
+    let catHasVisible = false;
+
+    cards.forEach(card => {
+      const searchData = card.getAttribute('data-search').toLowerCase();
+      const cardText = card.textContent.toLowerCase();
+      const match = !query || searchData.includes(query) || cardText.includes(query);
+      card.style.display = match ? '' : 'none';
+      if (match) catHasVisible = true;
+    });
+
+    cat.style.display = catHasVisible ? '' : 'none';
+    if (catHasVisible) anyVisible = true;
+
+    // Expand category if filtering
+    if (query && catHasVisible) {
+      const header = cat.querySelector('.category-header');
+      const body = cat.querySelector('.category-body');
+      header.classList.remove('collapsed');
+      body.classList.remove('collapsed');
+    }
+  });
+
+  document.getElementById('noResults').style.display = anyVisible ? 'none' : 'block';
+}
+
+// Set initial max-height for all category bodies (for smooth collapse animation)
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.category-body').forEach(body => {
+    body.style.maxHeight = body.scrollHeight + 'px';
+  });
+
+  // Observe for changes
+  const observer = new MutationObserver(() => {
+    document.querySelectorAll('.category-body:not(.collapsed)').forEach(body => {
+      body.style.maxHeight = body.scrollHeight + 'px';
+    });
+  });
+  observer.observe(document.getElementById('content'), { childList: true, subtree: true, attributes: true });
+});
+</script>
+
+</body>
+</html>

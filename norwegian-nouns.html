@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇳🇴</text></svg>">
+<meta name="apple-mobile-web-app-title" content="NO noun">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇳🇴 Норвежские существительные (букмол)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #eef3f8;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #003366, #1a5276);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  .search-area {
+    max-width: 600px;
+    margin: 30px auto 10px;
+    padding: 0 20px;
+    display: flex;
+    gap: 10px;
+  }
+  .search-area input {
+    flex: 1;
+    padding: 14px 18px;
+    font-size: 1.15em;
+    border: 2px solid #b8c9d9;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-area input:focus { border-color: #1a5276; }
+  .search-area button {
+    padding: 14px 28px;
+    font-size: 1.05em;
+    background: #1a5276;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .search-area button:hover { background: #003366; }
+
+  .hint {
+    max-width: 600px;
+    margin: 8px auto 0;
+    padding: 0 20px;
+    font-size: 0.85em;
+    color: #888;
+  }
+  .hint span { cursor: pointer; color: #1a5276; text-decoration: underline; }
+  .hint span:hover { color: #003366; }
+
+  .noun-info {
+    max-width: 900px;
+    margin: 18px auto 8px;
+    padding: 0 20px;
+    display: none;
+  }
+  .noun-info .badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 600;
+    margin-right: 8px;
+    margin-bottom: 6px;
+  }
+  .badge-m { background: #d6e8f7; color: #003366; }
+  .badge-f { background: #fce4ec; color: #880e4f; }
+  .badge-n { background: #e8f5e9; color: #2e7d32; }
+  .badge-ru { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+
+  #results {
+    max-width: 900px;
+    margin: 10px auto 40px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 16px;
+  }
+
+  .form-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .form-header {
+    padding: 12px 16px;
+    background: #1a5276;
+    color: white;
+    font-weight: 600;
+  }
+  .form-header .no-name { font-size: 1.05em; }
+  .form-header .ru-name { font-size: 0.85em; opacity: 0.9; margin-top: 2px; }
+  .form-header .ru-translation { float: right; font-size: 0.9em; opacity: 0.85; font-weight: 400; font-style: italic; }
+  .form-body { padding: 14px 16px; }
+  .form-body .noun-form {
+    font-size: 1.35em;
+    font-weight: 700;
+    color: #2c2c2c;
+    margin-bottom: 4px;
+  }
+  .form-body .article-note {
+    font-size: 0.88em;
+    color: #888;
+    font-style: italic;
+  }
+
+  .no-result {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: #999;
+    font-size: 1.1em;
+  }
+
+  .info-section {
+    max-width: 900px;
+    margin: 10px auto 40px;
+    padding: 0 20px;
+  }
+  .info-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    line-height: 1.7;
+    font-size: 0.92em;
+    color: #555;
+  }
+  .info-card h3 { color: #1a5276; margin-bottom: 10px; font-size: 1.05em; }
+  .info-card b { color: #333; }
+  .info-card code {
+    background: #eef3f8;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.92em;
+    color: #1a5276;
+    font-weight: 600;
+  }
+  .gender-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+  .dot-m { background: #1a5276; }
+  .dot-f { background: #c2185b; }
+  .dot-n { background: #2e7d32; }
+
+  @media (max-width: 500px) {
+    #results { grid-template-columns: 1fr; padding: 0 10px; }
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switch { padding: 6px 12px; font-size: 0.85em; }
+    .search-area { padding: 0 10px; flex-direction: column; }
+    .search-area input { font-size: 1em; padding: 12px 14px; width: 100%; }
+    .search-area button { padding: 12px 18px; font-size: 0.95em; width: 100%; }
+    .hint { padding: 0 10px; }
+    .noun-info { padding: 0 10px; }
+    .noun-info .badge { font-size: 0.8em; padding: 4px 10px; }
+    .info-section { padding: 0 10px; }
+    .form-header { padding: 10px 12px; }
+    .form-body { padding: 10px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="norwegian.html" class="lang-switch">📖 Портал</a>
+    <a href="norwegian-verbs.html" class="lang-switch">📝 Глаголы</a>
+  </div>
+  <h1>🇳🇴 Норвежские существительные (букмол)</h1>
+  <p>Введите существительное — получите все формы с переводом на русский</p>
+</header>
+
+<div class="search-area">
+  <input type="text" id="nounInput" placeholder="bil, bok, hus... или по-русски: машина, книга, дом..." autofocus
+    onkeydown="if(event.key==='Enter')decline()">
+  <button onclick="decline()">Склонять</button>
+</div>
+<div class="hint">
+  Попробуйте:
+  <span onclick="tryNoun('bil')">bil</span>,
+  <span onclick="tryNoun('bok')">bok</span>,
+  <span onclick="tryNoun('hus')">hus</span>,
+  <span onclick="tryNoun('mann')">mann</span>,
+  <span onclick="tryNoun('barn')">barn</span>,
+  <span onclick="tryNoun('jente')">jente</span>,
+  <span onclick="tryNoun('vindu')">vindu</span>,
+  <span onclick="tryNoun('natt')">natt</span>
+  | на русском:
+  <span onclick="tryNoun('машина')">машина</span>,
+  <span onclick="tryNoun('книга')">книга</span>,
+  <span onclick="tryNoun('дом')">дом</span>,
+  <span onclick="tryNoun('ребёнок')">ребёнок</span>
+</div>
+
+<div class="noun-info" id="nounInfo"></div>
+<div id="results"></div>
+
+<div class="info-section" id="infoSection">
+  <div class="info-card">
+    <h3>📚 Норвежские существительные — как это устроено</h3>
+    <p>
+      В норвежском языке <b>3 рода</b> существительных:
+      <span class="gender-dot dot-m"></span><b>мужской</b> (maskulin, артикль <code>en</code>),
+      <span class="gender-dot dot-f"></span><b>женский</b> (feminin, артикль <code>ei</code> или <code>en</code>),
+      <span class="gender-dot dot-n"></span><b>средний</b> (nøytrum, артикль <code>et</code>).
+    </p>
+    <br>
+    <p>
+      <b>Определённая форма</b> образуется не отдельным словом, а <b>суффиксом</b> — артикль «приклеивается» к концу слова:<br>
+      <code>en bil</code> (машина) → <code>bilen</code> (та самая машина)<br>
+      <code>ei bok</code> (книга) → <code>boka</code> (та самая книга)<br>
+      <code>et hus</code> (дом) → <code>huset</code> (тот самый дом)
+    </p>
+    <br>
+    <p>
+      <b>Множественное число</b> чаще всего образуется окончанием <code>-er</code> или <code>-r</code>.<br>
+      Средний род односложных слов часто не меняется: <code>et hus</code> → <code>hus</code> (дома).<br>
+      Есть и <b>нерегулярные</b> формы: <code>mann → menn</code>, <code>barn → barn</code>, <code>bok → bøker</code>.
+    </p>
+    <br>
+    <p>
+      <b>4 формы</b> каждого существительного:<br>
+      1. <b>Ubestemt entall</b> — неопределённая единственного числа (<code>en bil</code>)<br>
+      2. <b>Bestemt entall</b> — определённая единственного числа (<code>bilen</code>)<br>
+      3. <b>Ubestemt flertall</b> — неопределённая множественного числа (<code>biler</code>)<br>
+      4. <b>Bestemt flertall</b> — определённая множественного числа (<code>bilene</code>)
+    </p>
+  </div>
+</div>
+
+<script>
+const nouns = [
+  // Maskulin (en)
+  { word: "bil", gender: "m", bestemt_entall: "bilen", ubestemt_flertall: "biler", bestemt_flertall: "bilene", ru: "машина" },
+  { word: "dag", gender: "m", bestemt_entall: "dagen", ubestemt_flertall: "dager", bestemt_flertall: "dagene", ru: "день" },
+  { word: "gutt", gender: "m", bestemt_entall: "gutten", ubestemt_flertall: "gutter", bestemt_flertall: "guttene", ru: "мальчик" },
+  { word: "mann", gender: "m", bestemt_entall: "mannen", ubestemt_flertall: "menn", bestemt_flertall: "mennene", ru: "мужчина" },
+  { word: "stol", gender: "m", bestemt_entall: "stolen", ubestemt_flertall: "stoler", bestemt_flertall: "stolene", ru: "стул" },
+  { word: "venn", gender: "m", bestemt_entall: "vennen", ubestemt_flertall: "venner", bestemt_flertall: "vennene", ru: "друг" },
+  { word: "hund", gender: "m", bestemt_entall: "hunden", ubestemt_flertall: "hunder", bestemt_flertall: "hundene", ru: "собака" },
+  { word: "by", gender: "m", bestemt_entall: "byen", ubestemt_flertall: "byer", bestemt_flertall: "byene", ru: "город" },
+  { word: "telefon", gender: "m", bestemt_entall: "telefonen", ubestemt_flertall: "telefoner", bestemt_flertall: "telefonene", ru: "телефон" },
+  { word: "student", gender: "m", bestemt_entall: "studenten", ubestemt_flertall: "studenter", bestemt_flertall: "studentene", ru: "студент" },
+  { word: "lærer", gender: "m", bestemt_entall: "læreren", ubestemt_flertall: "lærere", bestemt_flertall: "lærerne", ru: "учитель" },
+  { word: "bror", gender: "m", bestemt_entall: "broren", ubestemt_flertall: "brødre", bestemt_flertall: "brødrene", ru: "брат" },
+  { word: "far", gender: "m", bestemt_entall: "faren", ubestemt_flertall: "fedre", bestemt_flertall: "fedrene", ru: "отец" },
+  { word: "sønn", gender: "m", bestemt_entall: "sønnen", ubestemt_flertall: "sønner", bestemt_flertall: "sønnene", ru: "сын" },
+  { word: "nøkkel", gender: "m", bestemt_entall: "nøkkelen", ubestemt_flertall: "nøkler", bestemt_flertall: "nøklene", ru: "ключ" },
+  { word: "buss", gender: "m", bestemt_entall: "bussen", ubestemt_flertall: "busser", bestemt_flertall: "bussene", ru: "автобус" },
+  { word: "time", gender: "m", bestemt_entall: "timen", ubestemt_flertall: "timer", bestemt_flertall: "timene", ru: "час" },
+  { word: "vei", gender: "m", bestemt_entall: "veien", ubestemt_flertall: "veier", bestemt_flertall: "veiene", ru: "дорога" },
+  { word: "fisk", gender: "m", bestemt_entall: "fisken", ubestemt_flertall: "fisker", bestemt_flertall: "fiskene", ru: "рыба" },
+  { word: "katt", gender: "m", bestemt_entall: "katten", ubestemt_flertall: "katter", bestemt_flertall: "kattene", ru: "кот" },
+  { word: "fot", gender: "m", bestemt_entall: "foten", ubestemt_flertall: "føtter", bestemt_flertall: "føttene", ru: "нога/стопа" },
+  { word: "tann", gender: "m", bestemt_entall: "tannen", ubestemt_flertall: "tenner", bestemt_flertall: "tennene", ru: "зуб" },
+  { word: "båt", gender: "m", bestemt_entall: "båten", ubestemt_flertall: "båter", bestemt_flertall: "båtene", ru: "лодка" },
+  { word: "skog", gender: "m", bestemt_entall: "skogen", ubestemt_flertall: "skoger", bestemt_flertall: "skogene", ru: "лес" },
+  { word: "vegg", gender: "m", bestemt_entall: "veggen", ubestemt_flertall: "vegger", bestemt_flertall: "veggene", ru: "стена" },
+  { word: "film", gender: "m", bestemt_entall: "filmen", ubestemt_flertall: "filmer", bestemt_flertall: "filmene", ru: "фильм" },
+  { word: "sang", gender: "m", bestemt_entall: "sangen", ubestemt_flertall: "sanger", bestemt_flertall: "sangene", ru: "песня" },
+  { word: "pris", gender: "m", bestemt_entall: "prisen", ubestemt_flertall: "priser", bestemt_flertall: "prisene", ru: "цена" },
+  { word: "kopp", gender: "m", bestemt_entall: "koppen", ubestemt_flertall: "kopper", bestemt_flertall: "koppene", ru: "чашка" },
+  { word: "blomst", gender: "m", bestemt_entall: "blomsten", ubestemt_flertall: "blomster", bestemt_flertall: "blomstene", ru: "цветок" },
+  { word: "måned", gender: "m", bestemt_entall: "måneden", ubestemt_flertall: "måneder", bestemt_flertall: "månedene", ru: "месяц" },
+  { word: "drøm", gender: "m", bestemt_entall: "drømmen", ubestemt_flertall: "drømmer", bestemt_flertall: "drømmene", ru: "мечта/сон" },
+  { word: "sommer", gender: "m", bestemt_entall: "sommeren", ubestemt_flertall: "somre", bestemt_flertall: "somrene", ru: "лето" },
+  { word: "vinter", gender: "m", bestemt_entall: "vinteren", ubestemt_flertall: "vintre", bestemt_flertall: "vintrene", ru: "зима" },
+
+  // Feminin (ei/en)
+  { word: "bok", gender: "f", bestemt_entall: "boka", ubestemt_flertall: "bøker", bestemt_flertall: "bøkene", ru: "книга" },
+  { word: "jente", gender: "f", bestemt_entall: "jenta", ubestemt_flertall: "jenter", bestemt_flertall: "jentene", ru: "девочка" },
+  { word: "kvinne", gender: "f", bestemt_entall: "kvinna", ubestemt_flertall: "kvinner", bestemt_flertall: "kvinnene", ru: "женщина" },
+  { word: "dør", gender: "f", bestemt_entall: "døra", ubestemt_flertall: "dører", bestemt_flertall: "dørene", ru: "дверь" },
+  { word: "sol", gender: "f", bestemt_entall: "sola", ubestemt_flertall: "soler", bestemt_flertall: "solene", ru: "солнце" },
+  { word: "ku", gender: "f", bestemt_entall: "kua", ubestemt_flertall: "kuer", bestemt_flertall: "kuene", ru: "корова" },
+  { word: "natt", gender: "f", bestemt_entall: "natta", ubestemt_flertall: "netter", bestemt_flertall: "nettene", ru: "ночь" },
+  { word: "tid", gender: "f", bestemt_entall: "tida", ubestemt_flertall: "tider", bestemt_flertall: "tidene", ru: "время" },
+  { word: "mor", gender: "f", bestemt_entall: "mora", ubestemt_flertall: "mødre", bestemt_flertall: "mødrene", ru: "мать" },
+  { word: "søster", gender: "f", bestemt_entall: "søstera", ubestemt_flertall: "søstre", bestemt_flertall: "søstrene", ru: "сестра" },
+  { word: "datter", gender: "f", bestemt_entall: "dattera", ubestemt_flertall: "døtre", bestemt_flertall: "døtrene", ru: "дочь" },
+  { word: "hånd", gender: "f", bestemt_entall: "hånda", ubestemt_flertall: "hender", bestemt_flertall: "hendene", ru: "рука" },
+  { word: "avis", gender: "f", bestemt_entall: "avisa", ubestemt_flertall: "aviser", bestemt_flertall: "avisene", ru: "газета" },
+  { word: "bygd", gender: "f", bestemt_entall: "bygda", ubestemt_flertall: "bygder", bestemt_flertall: "bygdene", ru: "деревня" },
+  { word: "klokke", gender: "f", bestemt_entall: "klokka", ubestemt_flertall: "klokker", bestemt_flertall: "klokkene", ru: "часы" },
+  { word: "lampe", gender: "f", bestemt_entall: "lampa", ubestemt_flertall: "lamper", bestemt_flertall: "lampene", ru: "лампа" },
+  { word: "seng", gender: "f", bestemt_entall: "senga", ubestemt_flertall: "senger", bestemt_flertall: "sengene", ru: "кровать" },
+  { word: "gate", gender: "f", bestemt_entall: "gata", ubestemt_flertall: "gater", bestemt_flertall: "gatene", ru: "улица" },
+  { word: "øy", gender: "f", bestemt_entall: "øya", ubestemt_flertall: "øyer", bestemt_flertall: "øyene", ru: "остров" },
+  { word: "elv", gender: "f", bestemt_entall: "elva", ubestemt_flertall: "elver", bestemt_flertall: "elvene", ru: "река" },
+  { word: "uke", gender: "f", bestemt_entall: "uka", ubestemt_flertall: "uker", bestemt_flertall: "ukene", ru: "неделя" },
+  { word: "flaske", gender: "f", bestemt_entall: "flaska", ubestemt_flertall: "flasker", bestemt_flertall: "flaskene", ru: "бутылка" },
+  { word: "hytte", gender: "f", bestemt_entall: "hytta", ubestemt_flertall: "hytter", bestemt_flertall: "hyttene", ru: "хижина/дача" },
+  { word: "kirke", gender: "f", bestemt_entall: "kirka", ubestemt_flertall: "kirker", bestemt_flertall: "kirkene", ru: "церковь" },
+  { word: "kone", gender: "f", bestemt_entall: "kona", ubestemt_flertall: "koner", bestemt_flertall: "konene", ru: "жена" },
+  { word: "strand", gender: "f", bestemt_entall: "stranda", ubestemt_flertall: "strender", bestemt_flertall: "strendene", ru: "пляж" },
+  { word: "trapp", gender: "f", bestemt_entall: "trappa", ubestemt_flertall: "trapper", bestemt_flertall: "trappene", ru: "лестница" },
+  { word: "jakke", gender: "f", bestemt_entall: "jakka", ubestemt_flertall: "jakker", bestemt_flertall: "jakkene", ru: "куртка" },
+
+  // Nøytrum (et)
+  { word: "hus", gender: "n", bestemt_entall: "huset", ubestemt_flertall: "hus", bestemt_flertall: "husene", ru: "дом" },
+  { word: "barn", gender: "n", bestemt_entall: "barnet", ubestemt_flertall: "barn", bestemt_flertall: "barna", ru: "ребёнок" },
+  { word: "bord", gender: "n", bestemt_entall: "bordet", ubestemt_flertall: "bord", bestemt_flertall: "bordene", ru: "стол" },
+  { word: "vindu", gender: "n", bestemt_entall: "vinduet", ubestemt_flertall: "vinduer", bestemt_flertall: "vinduene", ru: "окно" },
+  { word: "år", gender: "n", bestemt_entall: "året", ubestemt_flertall: "år", bestemt_flertall: "årene", ru: "год" },
+  { word: "land", gender: "n", bestemt_entall: "landet", ubestemt_flertall: "land", bestemt_flertall: "landene", ru: "страна" },
+  { word: "vann", gender: "n", bestemt_entall: "vannet", ubestemt_flertall: "vann", bestemt_flertall: "vannene", ru: "вода" },
+  { word: "eple", gender: "n", bestemt_entall: "eplet", ubestemt_flertall: "epler", bestemt_flertall: "eplene", ru: "яблоко" },
+  { word: "øye", gender: "n", bestemt_entall: "øyet", ubestemt_flertall: "øyne", bestemt_flertall: "øynene", ru: "глаз" },
+  { word: "hjerte", gender: "n", bestemt_entall: "hjertet", ubestemt_flertall: "hjerter", bestemt_flertall: "hjertene", ru: "сердце" },
+  { word: "dyr", gender: "n", bestemt_entall: "dyret", ubestemt_flertall: "dyr", bestemt_flertall: "dyrene", ru: "животное" },
+  { word: "sted", gender: "n", bestemt_entall: "stedet", ubestemt_flertall: "steder", bestemt_flertall: "stedene", ru: "место" },
+  { word: "ord", gender: "n", bestemt_entall: "ordet", ubestemt_flertall: "ord", bestemt_flertall: "ordene", ru: "слово" },
+  { word: "brød", gender: "n", bestemt_entall: "brødet", ubestemt_flertall: "brød", bestemt_flertall: "brødene", ru: "хлеб" },
+  { word: "tog", gender: "n", bestemt_entall: "toget", ubestemt_flertall: "tog", bestemt_flertall: "togene", ru: "поезд" },
+  { word: "fly", gender: "n", bestemt_entall: "flyet", ubestemt_flertall: "fly", bestemt_flertall: "flyene", ru: "самолёт" },
+  { word: "navn", gender: "n", bestemt_entall: "navnet", ubestemt_flertall: "navn", bestemt_flertall: "navnene", ru: "имя" },
+  { word: "rom", gender: "n", bestemt_entall: "rommet", ubestemt_flertall: "rom", bestemt_flertall: "rommene", ru: "комната" },
+  { word: "tre", gender: "n", bestemt_entall: "treet", ubestemt_flertall: "trær", bestemt_flertall: "trærne", ru: "дерево" },
+  { word: "brev", gender: "n", bestemt_entall: "brevet", ubestemt_flertall: "brev", bestemt_flertall: "brevene", ru: "письмо" },
+  { word: "språk", gender: "n", bestemt_entall: "språket", ubestemt_flertall: "språk", bestemt_flertall: "språkene", ru: "язык" },
+  { word: "problem", gender: "n", bestemt_entall: "problemet", ubestemt_flertall: "problemer", bestemt_flertall: "problemene", ru: "проблема" },
+  { word: "sykehus", gender: "n", bestemt_entall: "sykehuset", ubestemt_flertall: "sykehus", bestemt_flertall: "sykehusene", ru: "больница" },
+  { word: "museum", gender: "n", bestemt_entall: "museet", ubestemt_flertall: "museer", bestemt_flertall: "museene", ru: "музей" },
+  { word: "hotell", gender: "n", bestemt_entall: "hotellet", ubestemt_flertall: "hoteller", bestemt_flertall: "hotellene", ru: "отель" },
+  { word: "bilde", gender: "n", bestemt_entall: "bildet", ubestemt_flertall: "bilder", bestemt_flertall: "bildene", ru: "картина/фото" },
+  { word: "møte", gender: "n", bestemt_entall: "møtet", ubestemt_flertall: "møter", bestemt_flertall: "møtene", ru: "встреча" },
+  { word: "kjøkken", gender: "n", bestemt_entall: "kjøkkenet", ubestemt_flertall: "kjøkken", bestemt_flertall: "kjøkkenene", ru: "кухня" },
+  { word: "kontor", gender: "n", bestemt_entall: "kontoret", ubestemt_flertall: "kontorer", bestemt_flertall: "kontorene", ru: "офис" },
+  { word: "svar", gender: "n", bestemt_entall: "svaret", ubestemt_flertall: "svar", bestemt_flertall: "svarene", ru: "ответ" },
+  { word: "eksempel", gender: "n", bestemt_entall: "eksempelet", ubestemt_flertall: "eksempler", bestemt_flertall: "eksemplene", ru: "пример" },
+  { word: "spørsmål", gender: "n", bestemt_entall: "spørsmålet", ubestemt_flertall: "spørsmål", bestemt_flertall: "spørsmålene", ru: "вопрос" },
+];
+
+const genderLabels = {
+  m: { no: "Maskulin", ru: "мужской род", article: "en", badgeClass: "badge-m" },
+  f: { no: "Feminin", ru: "женский род", article: "ei", badgeClass: "badge-f" },
+  n: { no: "Nøytrum", ru: "средний род", article: "et", badgeClass: "badge-n" }
+};
+
+function tryNoun(w) {
+  document.getElementById('nounInput').value = w;
+  decline();
+}
+
+function decline() {
+  const q = document.getElementById('nounInput').value.trim().toLowerCase();
+  if (!q) return;
+
+  const found = nouns.find(n =>
+    n.word === q ||
+    n.ru.toLowerCase() === q ||
+    n.ru.toLowerCase().includes(q) ||
+    n.bestemt_entall === q ||
+    n.ubestemt_flertall === q ||
+    n.bestemt_flertall === q
+  );
+
+  const resultsDiv = document.getElementById('results');
+  const infoDiv = document.getElementById('nounInfo');
+  const infoSection = document.getElementById('infoSection');
+
+  if (!found) {
+    infoDiv.style.display = 'none';
+    infoSection.style.display = 'none';
+    resultsDiv.innerHTML = '<div class="no-result">Существительное не найдено. Попробуйте другое слово.</div>';
+    return;
+  }
+
+  infoSection.style.display = 'none';
+
+  const g = genderLabels[found.gender];
+  const article = g.article;
+
+  infoDiv.style.display = 'block';
+  infoDiv.innerHTML = `
+    <span class="badge ${g.badgeClass}">${g.no} — ${g.ru}</span>
+    <span class="badge badge-ru">🇷🇺 ${found.ru}</span>
+  `;
+
+  const forms = [
+    {
+      noName: "Ubestemt entall",
+      ruName: "неопределённая ед. ч.",
+      form: `${article} ${found.word}`,
+      note: `артикль ${article} + основа`
+    },
+    {
+      noName: "Bestemt entall",
+      ruName: "определённая ед. ч.",
+      form: found.bestemt_entall,
+      note: "артикль присоединяется к слову"
+    },
+    {
+      noName: "Ubestemt flertall",
+      ruName: "неопределённая мн. ч.",
+      form: found.ubestemt_flertall,
+      note: "множественное число без артикля"
+    },
+    {
+      noName: "Bestemt flertall",
+      ruName: "определённая мн. ч.",
+      form: found.bestemt_flertall,
+      note: "определённое множественное число"
+    }
+  ];
+
+  resultsDiv.innerHTML = forms.map(f => `
+    <div class="form-card">
+      <div class="form-header">
+        <span class="ru-translation">${found.ru}</span>
+        <div class="no-name">${f.noName}</div>
+        <div class="ru-name">${f.ruName}</div>
+      </div>
+      <div class="form-body">
+        <div class="noun-form">${f.form}</div>
+        <div class="article-note">${f.note}</div>
+      </div>
+    </div>
+  `).join('');
+}
+</script>
+
+</body>
+</html>

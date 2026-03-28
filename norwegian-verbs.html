@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇳🇴</text></svg>">
+<meta name="apple-mobile-web-app-title" content="NO verb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇳🇴 Норвежские глаголы — Спряжения</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #eef3f8;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #003366, #1a5276);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  .search-area {
+    max-width: 600px;
+    margin: 30px auto 10px;
+    padding: 0 20px;
+    display: flex;
+    gap: 10px;
+  }
+  .search-area input {
+    flex: 1;
+    padding: 14px 18px;
+    font-size: 1.15em;
+    border: 2px solid #b8c9d9;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-area input:focus { border-color: #1a5276; }
+  .search-area button {
+    padding: 14px 28px;
+    font-size: 1.05em;
+    background: #1a5276;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .search-area button:hover { background: #003366; }
+
+  .hint {
+    max-width: 600px;
+    margin: 8px auto 0;
+    padding: 0 20px;
+    font-size: 0.85em;
+    color: #888;
+  }
+  .hint span { cursor: pointer; color: #1a5276; text-decoration: underline; }
+  .hint span:hover { color: #003366; }
+
+  .verb-info {
+    max-width: 900px;
+    margin: 18px auto 8px;
+    padding: 0 20px;
+    display: none;
+  }
+  .verb-info .badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 600;
+    margin-right: 8px;
+    margin-bottom: 6px;
+  }
+  .badge-group { background: #d6e8f7; color: #003366; }
+  .badge-ru { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+  .badge-pp { background: #e8f5e9; color: #1b5e20; }
+  .badge-prp { background: #fff3e0; color: #e65100; }
+
+  #results {
+    max-width: 900px;
+    margin: 10px auto 40px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 16px;
+  }
+  @media (max-width: 500px) {
+    #results { grid-template-columns: 1fr; padding: 0 10px; }
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switch { padding: 6px 12px; font-size: 0.85em; }
+    .search-area { padding: 0 10px; flex-direction: column; }
+    .search-area input { font-size: 1em; padding: 12px 14px; width: 100%; }
+    .search-area button { padding: 12px 18px; font-size: 0.95em; width: 100%; }
+    .hint { padding: 0 10px; }
+    .verb-info { padding: 0 10px; }
+    .verb-info .badge { font-size: 0.8em; padding: 4px 10px; }
+    .warning-banner { margin: 10px 10px; }
+    .tense-header { padding: 10px 12px; }
+    .tense-header .no-name { font-size: 0.95em; }
+    .tense-body { padding: 10px 12px; }
+  }
+
+  .tense-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .tense-header {
+    padding: 12px 16px;
+    background: #1a5276;
+    color: white;
+    font-weight: 600;
+  }
+  .tense-header .no-name { font-size: 1.05em; }
+  .tense-header .ru-name { font-size: 0.85em; opacity: 0.9; margin-top: 2px; }
+  .tense-header .ru-translation { float: right; font-size: 0.9em; opacity: 0.85; font-weight: 400; font-style: italic; }
+  .tense-explain {
+    padding: 8px 16px;
+    font-size: 0.88em;
+    color: #666;
+    background: #fafafa;
+    border-bottom: 1px solid #eee;
+    font-style: italic;
+  }
+  .tense-body { padding: 12px 16px; }
+  .tense-body table { width: 100%; }
+  .tense-body td { padding: 3px 0; font-size: 0.95em; }
+  .tense-body .pronoun { color: #999; width: 90px; font-size: 0.9em; }
+  .tense-body .verb-form { font-weight: 600; color: #2c2c2c; }
+  .tense-body .example {
+    font-size: 0.88em;
+    color: #777;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #eee;
+    line-height: 1.5;
+  }
+  .tense-body .example b { color: #1a5276; }
+
+  .no-result {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: #999;
+    font-size: 1.1em;
+  }
+  .warning-banner {
+    max-width: 900px;
+    margin: 10px auto;
+    padding: 12px 20px;
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 10px;
+    color: #856404;
+    font-size: 0.92em;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="french-verbs.html" class="lang-switch">🇫🇷 Французский</a>
+    <a href="spanish-verbs.html" class="lang-switch">🇪🇸 Испанский</a>
+    <a href="english-verbs.html" class="lang-switch">🇬🇧 Английский</a>
+    <a href="norwegian.html" class="lang-switch">📖 Портал</a>
+  </div>
+  <h1>🇳🇴 Спряжение норвежских глаголов (букмол)</h1>
+  <p>Введите глагол в инфинитиве — получите все времена с объяснениями на русском</p>
+</header>
+
+<div class="search-area">
+  <input type="text" id="verbInput" placeholder="skrive, være... или по-русски: писать, быть..." autofocus
+    onkeydown="if(event.key==='Enter')conjugate()">
+  <button onclick="conjugate()">Спрягать</button>
+</div>
+<div class="hint">
+  Попробуйте:
+  <span onclick="tryVerb('være')">være</span>,
+  <span onclick="tryVerb('ha')">ha</span>,
+  <span onclick="tryVerb('gjøre')">gjøre</span>,
+  <span onclick="tryVerb('gå')">gå</span>,
+  <span onclick="tryVerb('komme')">komme</span>,
+  <span onclick="tryVerb('skrive')">skrive</span>,
+  <span onclick="tryVerb('lese')">lese</span>,
+  <span onclick="tryVerb('snakke')">snakke</span>,
+  <span onclick="tryVerb('kjøpe')">kjøpe</span>,
+  <span onclick="tryVerb('bo')">bo</span>
+  | на русском:
+  <span onclick="tryVerb('делать')">делать</span>,
+  <span onclick="tryVerb('быть')">быть</span>,
+  <span onclick="tryVerb('хотеть')">хотеть</span>
+</div>
+
+<div class="warning-banner" id="warningBanner"></div>
+<div class="verb-info" id="verbInfo"></div>
+
+<div id="results"></div>
+
+<script>
+// ============================================================
+// TENSE DEFINITIONS
+// ============================================================
+const TENSES = [
+  {
+    id: 'infinitiv', name: 'Infinitiv',
+    ru: 'Инфинитив',
+    explain: '«делать» — неопределённая форма глагола, используется после å, модальных глаголов и др.'
+  },
+  {
+    id: 'presens', name: 'Presens',
+    ru: 'Настоящее время',
+    explain: '«я делаю», «он делает» — действие происходит сейчас или регулярно. Одна форма для всех лиц!'
+  },
+  {
+    id: 'preteritum', name: 'Preteritum',
+    ru: 'Прошедшее время',
+    explain: '«я делал / я сделал» — завершённое действие в прошлом'
+  },
+  {
+    id: 'presens_perfektum', name: 'Presens perfektum',
+    ru: 'Перфект (прошедшее с har)',
+    explain: '«я сделал (и это важно сейчас)» — har + причастие прошедшего времени'
+  },
+  {
+    id: 'pluskvamperfektum', name: 'Pluskvamperfektum',
+    ru: 'Плюсквамперфект',
+    explain: '«я уже сделал (до того, как...)» — hadde + причастие прошедшего времени'
+  },
+  {
+    id: 'futurum', name: 'Futurum',
+    ru: 'Будущее время',
+    explain: '«я буду делать / я сделаю» — skal или vil + инфинитив'
+  },
+  {
+    id: 'imperativ', name: 'Imperativ',
+    ru: 'Повелительное наклонение',
+    explain: '«делай! делайте!» — приказ, просьба, совет. В норвежском одна форма для всех'
+  }
+];
+
+// ============================================================
+// VERB DATABASE
+// Each verb: [infinitive, group, presens, preteritum, perfektum_partisipp, imperativ, russian]
+// group: 1 = Gruppe 1 (-et), '2a' = Gruppe 2a (-te/-t), '2b' = Gruppe 2b (-te/-t),
+//        3 = Gruppe 3 (-dde/-dd), 'sterk' = strong, 'ureg' = irregular
+// ============================================================
+const VERBS = {
+  // === IRREGULAR / UREGELMESSIG ===
+  'være': { group: 'ureg', presens: 'er', preteritum: 'var', pp: 'vært', imperativ: 'vær', prp: 'værende', ru: 'быть' },
+  'ha': { group: 'ureg', presens: 'har', preteritum: 'hadde', pp: 'hatt', imperativ: 'ha', prp: 'havende', ru: 'иметь' },
+  'bli': { group: 'ureg', presens: 'blir', preteritum: 'ble', pp: 'blitt', imperativ: 'bli', prp: 'blivende', ru: 'становиться' },
+  'gjøre': { group: 'ureg', presens: 'gjør', preteritum: 'gjorde', pp: 'gjort', imperativ: 'gjør', prp: 'gjørende', ru: 'делать' },
+  'gå': { group: 'ureg', presens: 'går', preteritum: 'gikk', pp: 'gått', imperativ: 'gå', prp: 'gående', ru: 'идти, ходить' },
+  'komme': { group: 'sterk', presens: 'kommer', preteritum: 'kom', pp: 'kommet', imperativ: 'kom', prp: 'kommende', ru: 'приходить' },
+  'si': { group: 'ureg', presens: 'sier', preteritum: 'sa', pp: 'sagt', imperativ: 'si', prp: 'siende', ru: 'говорить, сказать' },
+  'se': { group: 'sterk', presens: 'ser', preteritum: 'så', pp: 'sett', imperativ: 'se', prp: 'seende', ru: 'видеть, смотреть' },
+  'ta': { group: 'sterk', presens: 'tar', preteritum: 'tok', pp: 'tatt', imperativ: 'ta', prp: 'tagende', ru: 'брать' },
+  'gi': { group: 'sterk', presens: 'gir', preteritum: 'ga', pp: 'gitt', imperativ: 'gi', prp: 'givende', ru: 'давать' },
+  'finne': { group: 'sterk', presens: 'finner', preteritum: 'fant', pp: 'funnet', imperativ: 'finn', prp: 'finnende', ru: 'находить' },
+  'stå': { group: 'sterk', presens: 'står', preteritum: 'sto', pp: 'stått', imperativ: 'stå', prp: 'stående', ru: 'стоять' },
+  'ligge': { group: 'sterk', presens: 'ligger', preteritum: 'lå', pp: 'ligget', imperativ: 'ligg', prp: 'liggende', ru: 'лежать' },
+  'sitte': { group: 'sterk', presens: 'sitter', preteritum: 'satt', pp: 'sittet', imperativ: 'sitt', prp: 'sittende', ru: 'сидеть' },
+  'drikke': { group: 'sterk', presens: 'drikker', preteritum: 'drakk', pp: 'drukket', imperativ: 'drikk', prp: 'drikkende', ru: 'пить' },
+  'spise': { group: '2a', presens: 'spiser', preteritum: 'spiste', pp: 'spist', imperativ: 'spis', prp: 'spisende', ru: 'есть, кушать' },
+  'skrive': { group: 'sterk', presens: 'skriver', preteritum: 'skrev', pp: 'skrevet', imperativ: 'skriv', prp: 'skrivende', ru: 'писать' },
+  'lese': { group: '2a', presens: 'leser', preteritum: 'leste', pp: 'lest', imperativ: 'les', prp: 'lesende', ru: 'читать' },
+  'sove': { group: 'sterk', presens: 'sover', preteritum: 'sov', pp: 'sovet', imperativ: 'sov', prp: 'sovende', ru: 'спать' },
+  'dø': { group: 'ureg', presens: 'dør', preteritum: 'døde', pp: 'dødd', imperativ: 'dø', prp: 'døende', ru: 'умирать' },
+  'vite': { group: 'ureg', presens: 'vet', preteritum: 'visste', pp: 'visst', imperativ: 'vit', prp: 'vitende', ru: 'знать' },
+  'kunne': { group: 'ureg', presens: 'kan', preteritum: 'kunne', pp: 'kunnet', imperativ: null, prp: 'kunnende', ru: 'мочь, уметь' },
+  'ville': { group: 'ureg', presens: 'vil', preteritum: 'ville', pp: 'villet', imperativ: null, prp: null, ru: 'хотеть' },
+  'skulle': { group: 'ureg', presens: 'skal', preteritum: 'skulle', pp: 'skullet', imperativ: null, prp: null, ru: 'быть должным, собираться' },
+  'måtte': { group: 'ureg', presens: 'må', preteritum: 'måtte', pp: 'måttet', imperativ: null, prp: null, ru: 'быть вынужденным, долженствовать' },
+  'få': { group: 'sterk', presens: 'får', preteritum: 'fikk', pp: 'fått', imperativ: 'få', prp: 'fående', ru: 'получать, доставать' },
+  'holde': { group: 'sterk', presens: 'holder', preteritum: 'holdt', pp: 'holdt', imperativ: 'hold', prp: 'holdende', ru: 'держать' },
+  'la': { group: 'ureg', presens: 'lar', preteritum: 'lot', pp: 'latt', imperativ: 'la', prp: 'latende', ru: 'позволять, пускать' },
+  'løpe': { group: 'sterk', presens: 'løper', preteritum: 'løp', pp: 'løpt', imperativ: 'løp', prp: 'løpende', ru: 'бежать' },
+  'bryte': { group: 'sterk', presens: 'bryter', preteritum: 'brøt', pp: 'brutt', imperativ: 'bryt', prp: 'brytende', ru: 'ломать, разбивать' },
+  'bære': { group: 'sterk', presens: 'bærer', preteritum: 'bar', pp: 'båret', imperativ: 'bær', prp: 'bærende', ru: 'нести' },
+  'falle': { group: 'sterk', presens: 'faller', preteritum: 'falt', pp: 'falt', imperativ: 'fall', prp: 'fallende', ru: 'падать' },
+  'fly': { group: 'sterk', presens: 'flyr', preteritum: 'fløy', pp: 'fløyet', imperativ: 'fly', prp: 'flyende', ru: 'летать' },
+  'fryse': { group: 'sterk', presens: 'fryser', preteritum: 'frøs', pp: 'frosset', imperativ: 'frys', prp: 'frysende', ru: 'замерзать, мёрзнуть' },
+  'hjelpe': { group: 'sterk', presens: 'hjelper', preteritum: 'hjalp', pp: 'hjulpet', imperativ: 'hjelp', prp: 'hjelpende', ru: 'помогать' },
+  'synge': { group: 'sterk', presens: 'synger', preteritum: 'sang', pp: 'sunget', imperativ: 'syng', prp: 'syngende', ru: 'петь' },
+  'slippe': { group: 'sterk', presens: 'slipper', preteritum: 'slapp', pp: 'sluppet', imperativ: 'slipp', prp: 'slippende', ru: 'отпускать' },
+  'trekke': { group: 'sterk', presens: 'trekker', preteritum: 'trakk', pp: 'trukket', imperativ: 'trekk', prp: 'trekkende', ru: 'тянуть' },
+  'vinne': { group: 'sterk', presens: 'vinner', preteritum: 'vant', pp: 'vunnet', imperativ: 'vinn', prp: 'vinnende', ru: 'побеждать, выигрывать' },
+  'treffe': { group: 'sterk', presens: 'treffer', preteritum: 'traff', pp: 'truffet', imperativ: 'treff', prp: 'treffende', ru: 'встречать, попадать' },
+  'forstå': { group: 'sterk', presens: 'forstår', preteritum: 'forsto', pp: 'forstått', imperativ: 'forstå', prp: 'forstående', ru: 'понимать' },
+  'fortelle': { group: 'sterk', presens: 'forteller', preteritum: 'fortalte', pp: 'fortalt', imperativ: 'fortell', prp: 'fortellende', ru: 'рассказывать' },
+  'le': { group: 'ureg', presens: 'ler', preteritum: 'lo', pp: 'ledd', imperativ: 'le', prp: 'leende', ru: 'смеяться' },
+  'gråte': { group: 'sterk', presens: 'gråter', preteritum: 'gråt', pp: 'grått', imperativ: 'grått', prp: 'gråtende', ru: 'плакать' },
+  'selge': { group: 'ureg', presens: 'selger', preteritum: 'solgte', pp: 'solgt', imperativ: 'selg', prp: 'selgende', ru: 'продавать' },
+  'spørre': { group: 'ureg', presens: 'spør', preteritum: 'spurte', pp: 'spurt', imperativ: 'spør', prp: 'spørrende', ru: 'спрашивать' },
+  'svømme': { group: 'sterk', presens: 'svømmer', preteritum: 'svømte', pp: 'svømt', imperativ: 'svøm', prp: 'svømmende', ru: 'плавать' },
+  'kjøre': { group: '2a', presens: 'kjører', preteritum: 'kjørte', pp: 'kjørt', imperativ: 'kjør', prp: 'kjørende', ru: 'водить, ехать' },
+
+  // === GRUPPE 1 (-et) ===
+  'kaste': { group: 1, presens: 'kaster', preteritum: 'kastet', pp: 'kastet', imperativ: 'kast', prp: 'kastende', ru: 'бросать' },
+  'snakke': { group: 1, presens: 'snakker', preteritum: 'snakket', pp: 'snakket', imperativ: 'snakk', prp: 'snakkende', ru: 'говорить, болтать' },
+  'jobbe': { group: 1, presens: 'jobber', preteritum: 'jobbet', pp: 'jobbet', imperativ: 'jobb', prp: 'jobbende', ru: 'работать' },
+  'leke': { group: 1, presens: 'leker', preteritum: 'lekte', pp: 'lekt', imperativ: 'lek', prp: 'lekende', ru: 'играть' },
+  'handle': { group: 1, presens: 'handler', preteritum: 'handlet', pp: 'handlet', imperativ: 'handl', prp: 'handlende', ru: 'покупать, действовать' },
+  'vaske': { group: 1, presens: 'vasker', preteritum: 'vasket', pp: 'vasket', imperativ: 'vask', prp: 'vaskende', ru: 'мыть, стирать' },
+  'lage': { group: 1, presens: 'lager', preteritum: 'laget', pp: 'laget', imperativ: 'lag', prp: 'lagende', ru: 'готовить, делать' },
+  'åpne': { group: 1, presens: 'åpner', preteritum: 'åpnet', pp: 'åpnet', imperativ: 'åpne', prp: 'åpnende', ru: 'открывать' },
+  'lukke': { group: 1, presens: 'lukker', preteritum: 'lukket', pp: 'lukket', imperativ: 'lukk', prp: 'lukkende', ru: 'закрывать' },
+  'begynne': { group: '2a', presens: 'begynner', preteritum: 'begynte', pp: 'begynt', imperativ: 'begynn', prp: 'begynnende', ru: 'начинать' },
+  'forsøke': { group: '2a', presens: 'forsøker', preteritum: 'forsøkte', pp: 'forsøkt', imperativ: 'forsøk', prp: 'forsøkende', ru: 'пытаться' },
+  'elske': { group: 1, presens: 'elsker', preteritum: 'elsket', pp: 'elsket', imperativ: 'elsk', prp: 'elskende', ru: 'любить' },
+  'hate': { group: 1, presens: 'hater', preteritum: 'hatet', pp: 'hatet', imperativ: 'hat', prp: 'hatende', ru: 'ненавидеть' },
+  'ønske': { group: 1, presens: 'ønsker', preteritum: 'ønsket', pp: 'ønsket', imperativ: 'ønsk', prp: 'ønskende', ru: 'желать' },
+  'trenge': { group: '2a', presens: 'trenger', preteritum: 'trengte', pp: 'trengt', imperativ: 'treng', prp: 'trengende', ru: 'нуждаться' },
+  'vente': { group: 1, presens: 'venter', preteritum: 'ventet', pp: 'ventet', imperativ: 'vent', prp: 'ventende', ru: 'ждать' },
+  'svare': { group: '2a', presens: 'svarer', preteritum: 'svarte', pp: 'svart', imperativ: 'svar', prp: 'svarende', ru: 'отвечать' },
+  'lære': { group: '2a', presens: 'lærer', preteritum: 'lærte', pp: 'lært', imperativ: 'lær', prp: 'lærende', ru: 'учить, учиться' },
+  'kjøpe': { group: '2b', presens: 'kjøper', preteritum: 'kjøpte', pp: 'kjøpt', imperativ: 'kjøp', prp: 'kjøpende', ru: 'покупать' },
+  'tenke': { group: '2a', presens: 'tenker', preteritum: 'tenkte', pp: 'tenkt', imperativ: 'tenk', prp: 'tenkende', ru: 'думать' },
+  'føle': { group: '2a', presens: 'føler', preteritum: 'følte', pp: 'følt', imperativ: 'føl', prp: 'følende', ru: 'чувствовать' },
+  'prøve': { group: '2a', presens: 'prøver', preteritum: 'prøvde', pp: 'prøvd', imperativ: 'prøv', prp: 'prøvende', ru: 'пробовать, пытаться' },
+  'like': { group: '2a', presens: 'liker', preteritum: 'likte', pp: 'likt', imperativ: 'lik', prp: 'likende', ru: 'нравиться, любить' },
+  'tro': { group: '2b', presens: 'tror', preteritum: 'trodde', pp: 'trodd', imperativ: 'tro', prp: 'troende', ru: 'верить, думать' },
+  'bo': { group: 3, presens: 'bor', preteritum: 'bodde', pp: 'bodd', imperativ: 'bo', prp: 'boende', ru: 'жить, проживать' },
+  'leve': { group: '2a', presens: 'lever', preteritum: 'levde', pp: 'levd', imperativ: 'lev', prp: 'levende', ru: 'жить' },
+  'reise': { group: '2a', presens: 'reiser', preteritum: 'reiste', pp: 'reist', imperativ: 'reis', prp: 'reisende', ru: 'путешествовать, ехать' },
+  'flytte': { group: 1, presens: 'flytter', preteritum: 'flyttet', pp: 'flyttet', imperativ: 'flytt', prp: 'flyttende', ru: 'переезжать' },
+  'ringe': { group: '2a', presens: 'ringer', preteritum: 'ringte', pp: 'ringt', imperativ: 'ring', prp: 'ringende', ru: 'звонить' },
+  'sende': { group: '2a', presens: 'sender', preteritum: 'sendte', pp: 'sendt', imperativ: 'send', prp: 'sendende', ru: 'отправлять' },
+  'motta': { group: 'sterk', presens: 'mottar', preteritum: 'mottok', pp: 'mottatt', imperativ: 'motta', prp: 'mottakende', ru: 'получать' },
+  'betale': { group: '2a', presens: 'betaler', preteritum: 'betalte', pp: 'betalt', imperativ: 'betal', prp: 'betalende', ru: 'платить' },
+  'koste': { group: 1, presens: 'koster', preteritum: 'kostet', pp: 'kostet', imperativ: 'kost', prp: 'kostende', ru: 'стоить' },
+  'arbeide': { group: 1, presens: 'arbeider', preteritum: 'arbeidet', pp: 'arbeidet', imperativ: 'arbeid', prp: 'arbeidende', ru: 'работать' },
+  'studere': { group: '2a', presens: 'studerer', preteritum: 'studerte', pp: 'studert', imperativ: 'studer', prp: 'studerende', ru: 'учиться, изучать' },
+  'huske': { group: 1, presens: 'husker', preteritum: 'husket', pp: 'husket', imperativ: 'husk', prp: 'huskende', ru: 'помнить' },
+  'glemme': { group: '2a', presens: 'glemmer', preteritum: 'glemte', pp: 'glemt', imperativ: 'glem', prp: 'glemmende', ru: 'забывать' },
+  'vise': { group: '2a', presens: 'viser', preteritum: 'viste', pp: 'vist', imperativ: 'vis', prp: 'visende', ru: 'показывать' },
+  'møte': { group: '2a', presens: 'møter', preteritum: 'møtte', pp: 'møtt', imperativ: 'møt', prp: 'møtende', ru: 'встречать' },
+  'bade': { group: 1, presens: 'bader', preteritum: 'badet', pp: 'badet', imperativ: 'bad', prp: 'badende', ru: 'купаться' },
+  'høre': { group: '2a', presens: 'hører', preteritum: 'hørte', pp: 'hørt', imperativ: 'hør', prp: 'hørende', ru: 'слышать' },
+  'lukte': { group: 1, presens: 'lukter', preteritum: 'luktet', pp: 'luktet', imperativ: 'lukt', prp: 'luktende', ru: 'нюхать, пахнуть' },
+  'smake': { group: '2a', presens: 'smaker', preteritum: 'smakte', pp: 'smakt', imperativ: 'smak', prp: 'smakende', ru: 'пробовать на вкус' },
+  'smile': { group: '2a', presens: 'smiler', preteritum: 'smilte', pp: 'smilt', imperativ: 'smil', prp: 'smilende', ru: 'улыбаться' },
+
+  // === ADDITIONAL COMMON VERBS ===
+  'bruke': { group: '2a', presens: 'bruker', preteritum: 'brukte', pp: 'brukt', imperativ: 'bruk', prp: 'brukende', ru: 'использовать' },
+  'legge': { group: 'ureg', presens: 'legger', preteritum: 'la', pp: 'lagt', imperativ: 'legg', prp: 'leggende', ru: 'класть, положить' },
+  'sette': { group: 'ureg', presens: 'setter', preteritum: 'satte', pp: 'satt', imperativ: 'sett', prp: 'settende', ru: 'ставить, сажать' },
+  'mene': { group: '2a', presens: 'mener', preteritum: 'mente', pp: 'ment', imperativ: 'men', prp: 'menende', ru: 'считать, полагать' },
+  'hete': { group: 'ureg', presens: 'heter', preteritum: 'het', pp: 'hett', imperativ: null, prp: 'hetende', ru: 'называться, зваться' },
+  'synes': { group: '2a', presens: 'synes', preteritum: 'syntes', pp: 'syntes', imperativ: null, prp: null, ru: 'считать, казаться' },
+  'snakke': { group: 1, presens: 'snakker', preteritum: 'snakket', pp: 'snakket', imperativ: 'snakk', prp: 'snakkende', ru: 'говорить, болтать' },
+  'spille': { group: '2a', presens: 'spiller', preteritum: 'spilte', pp: 'spilt', imperativ: 'spill', prp: 'spillende', ru: 'играть (в игры, на инструменте)' },
+  'bety': { group: 'ureg', presens: 'betyr', preteritum: 'betydde', pp: 'betydd', imperativ: 'bety', prp: 'betydende', ru: 'означать, значить' },
+  'følge': { group: '2a', presens: 'følger', preteritum: 'fulgte', pp: 'fulgt', imperativ: 'følg', prp: 'følgende', ru: 'следовать' },
+  'ligge': { group: 'sterk', presens: 'ligger', preteritum: 'lå', pp: 'ligget', imperativ: 'ligg', prp: 'liggende', ru: 'лежать' },
+  'løfte': { group: 1, presens: 'løfter', preteritum: 'løftet', pp: 'løftet', imperativ: 'løft', prp: 'løftende', ru: 'поднимать' },
+  'lete': { group: '2a', presens: 'leter', preteritum: 'lette', pp: 'lett', imperativ: 'let', prp: 'letende', ru: 'искать' },
+  'stoppe': { group: 1, presens: 'stopper', preteritum: 'stoppet', pp: 'stoppet', imperativ: 'stopp', prp: 'stoppende', ru: 'останавливать' },
+  'feire': { group: 1, presens: 'feirer', preteritum: 'feiret', pp: 'feiret', imperativ: 'feir', prp: 'feirende', ru: 'праздновать' },
+  'takke': { group: 1, presens: 'takker', preteritum: 'takket', pp: 'takket', imperativ: 'takk', prp: 'takkende', ru: 'благодарить' },
+  'passe': { group: 1, presens: 'passer', preteritum: 'passet', pp: 'passet', imperativ: 'pass', prp: 'passende', ru: 'подходить, следить' },
+  'velge': { group: 'sterk', presens: 'velger', preteritum: 'valgte', pp: 'valgt', imperativ: 'velg', prp: 'velgende', ru: 'выбирать' },
+  'besøke': { group: '2a', presens: 'besøker', preteritum: 'besøkte', pp: 'besøkt', imperativ: 'besøk', prp: 'besøkende', ru: 'навещать, посещать' },
+  'handle': { group: 1, presens: 'handler', preteritum: 'handlet', pp: 'handlet', imperativ: 'handl', prp: 'handlende', ru: 'покупать, действовать' },
+  'sove': { group: 'sterk', presens: 'sover', preteritum: 'sov', pp: 'sovet', imperativ: 'sov', prp: 'sovende', ru: 'спать' },
+};
+
+// ============================================================
+// EXAMPLE SENTENCES
+// ============================================================
+const EXAMPLES = {
+  'være': {
+    presens: ['Jeg <b>er</b> glad. — Я рад.', 'De <b>er</b> hjemme. — Они дома.'],
+    preteritum: ['Hun <b>var</b> trøtt i går. — Она была уставшей вчера.'],
+    perfektum: ['Vi <b>har vært</b> i Norge. — Мы были в Норвегии.'],
+    futurum: ['Jeg <b>skal være</b> forsiktig. — Я буду осторожен.'],
+    imperativ: ['<b>Vær</b> snill! — Будь добрым!']
+  },
+  'ha': {
+    presens: ['Jeg <b>har</b> en katt. — У меня есть кошка.', 'Han <b>har</b> det bra. — У него всё хорошо.'],
+    preteritum: ['Vi <b>hadde</b> det gøy. — Нам было весело.'],
+    perfektum: ['De <b>har hatt</b> problemer. — У них были проблемы.'],
+    futurum: ['Vi <b>skal ha</b> fest. — У нас будет праздник.'],
+    imperativ: ['<b>Ha</b> det bra! — Всего хорошего!']
+  },
+  'gjøre': {
+    presens: ['Hva <b>gjør</b> du? — Что ты делаешь?'],
+    preteritum: ['Jeg <b>gjorde</b> leksene. — Я сделал уроки.'],
+    perfektum: ['Han <b>har gjort</b> alt. — Он сделал всё.'],
+    futurum: ['Vi <b>skal gjøre</b> det i morgen. — Мы сделаем это завтра.'],
+    imperativ: ['<b>Gjør</b> det nå! — Сделай это сейчас!']
+  },
+  'gå': {
+    presens: ['Jeg <b>går</b> til skolen. — Я иду в школу.'],
+    preteritum: ['Vi <b>gikk</b> en tur. — Мы ходили на прогулку.'],
+    perfektum: ['Hun <b>har gått</b> hjem. — Она ушла домой.'],
+    futurum: ['Jeg <b>skal gå</b> nå. — Я сейчас пойду.'],
+    imperativ: ['<b>Gå</b> hjem! — Иди домой!']
+  },
+  'komme': {
+    presens: ['Han <b>kommer</b> snart. — Он скоро придёт.'],
+    preteritum: ['De <b>kom</b> i går. — Они пришли вчера.'],
+    perfektum: ['Har du <b>kommet</b>? — Ты пришёл?'],
+    futurum: ['Jeg <b>skal komme</b> klokka tre. — Я приду в три часа.'],
+    imperativ: ['<b>Kom</b> hit! — Иди сюда!']
+  },
+  'skrive': {
+    presens: ['Hun <b>skriver</b> en bok. — Она пишет книгу.'],
+    preteritum: ['Jeg <b>skrev</b> et brev. — Я написал письмо.'],
+    perfektum: ['Vi <b>har skrevet</b> rapporten. — Мы написали отчёт.'],
+    futurum: ['Jeg <b>skal skrive</b> til deg. — Я тебе напишу.'],
+    imperativ: ['<b>Skriv</b> navnet ditt! — Напиши своё имя!']
+  },
+  'snakke': {
+    presens: ['Vi <b>snakker</b> norsk. — Мы говорим по-норвежски.'],
+    preteritum: ['De <b>snakket</b> lenge. — Они долго разговаривали.'],
+    perfektum: ['Har dere <b>snakket</b> med ham? — Вы с ним разговаривали?'],
+    futurum: ['Vi <b>skal snakke</b> om det. — Мы поговорим об этом.'],
+    imperativ: ['<b>Snakk</b> saktere! — Говори медленнее!']
+  },
+  'lese': {
+    presens: ['Jeg <b>leser</b> avisen. — Я читаю газету.'],
+    preteritum: ['Han <b>leste</b> boken i går. — Он прочитал книгу вчера.'],
+    perfektum: ['Vi <b>har lest</b> alt. — Мы всё прочитали.'],
+    futurum: ['Jeg <b>skal lese</b> mer. — Я буду больше читать.'],
+    imperativ: ['<b>Les</b> dette! — Прочитай это!']
+  },
+  'kjøpe': {
+    presens: ['Hun <b>kjøper</b> mat. — Она покупает еду.'],
+    preteritum: ['Jeg <b>kjøpte</b> en ny bil. — Я купил новую машину.'],
+    perfektum: ['De <b>har kjøpt</b> hus. — Они купили дом.'],
+    futurum: ['Vi <b>skal kjøpe</b> billetter. — Мы купим билеты.'],
+    imperativ: ['<b>Kjøp</b> melk! — Купи молоко!']
+  },
+  'bo': {
+    presens: ['Vi <b>bor</b> i Oslo. — Мы живём в Осло.'],
+    preteritum: ['Hun <b>bodde</b> i Bergen. — Она жила в Бергене.'],
+    perfektum: ['Jeg <b>har bodd</b> her lenge. — Я здесь давно живу.'],
+    futurum: ['De <b>skal bo</b> i Tromsø. — Они будут жить в Тромсё.'],
+    imperativ: ['<b>Bo</b> her! — Живи здесь!']
+  }
+};
+
+// ============================================================
+// RUSSIAN TO NORWEGIAN MAPPING
+// ============================================================
+const RU_TO_NO = {
+  'быть': 'være', 'иметь': 'ha', 'становиться': 'bli', 'делать': 'gjøre',
+  'идти': 'gå', 'ходить': 'gå', 'приходить': 'komme', 'говорить': 'si',
+  'сказать': 'si', 'видеть': 'se', 'смотреть': 'se', 'брать': 'ta',
+  'давать': 'gi', 'находить': 'finne', 'стоять': 'stå', 'лежать': 'ligge',
+  'сидеть': 'sitte', 'пить': 'drikke', 'есть': 'spise', 'кушать': 'spise',
+  'писать': 'skrive', 'читать': 'lese', 'спать': 'sove', 'умирать': 'dø',
+  'знать': 'vite', 'мочь': 'kunne', 'уметь': 'kunne', 'хотеть': 'ville',
+  'получать': 'få', 'держать': 'holde', 'позволять': 'la',
+  'бежать': 'løpe', 'ломать': 'bryte', 'нести': 'bære', 'падать': 'falle',
+  'летать': 'fly', 'замерзать': 'fryse', 'помогать': 'hjelpe', 'петь': 'synge',
+  'отпускать': 'slippe', 'тянуть': 'trekke', 'побеждать': 'vinne',
+  'встречать': 'treffe', 'бросать': 'kaste', 'болтать': 'snakke',
+  'работать': 'jobbe', 'играть': 'leke', 'покупать': 'kjøpe',
+  'мыть': 'vaske', 'стирать': 'vaske', 'готовить': 'lage',
+  'открывать': 'åpne', 'закрывать': 'lukke', 'начинать': 'begynne',
+  'пытаться': 'forsøke', 'любить': 'elske', 'ненавидеть': 'hate',
+  'желать': 'ønske', 'нуждаться': 'trenge', 'ждать': 'vente',
+  'отвечать': 'svare', 'учить': 'lære', 'учиться': 'lære',
+  'думать': 'tenke', 'чувствовать': 'føle', 'пробовать': 'prøve',
+  'нравиться': 'like', 'верить': 'tro', 'жить': 'bo',
+  'путешествовать': 'reise', 'переезжать': 'flytte', 'звонить': 'ringe',
+  'отправлять': 'sende', 'платить': 'betale', 'стоить': 'koste',
+  'изучать': 'studere', 'помнить': 'huske', 'забывать': 'glemme',
+  'рассказывать': 'fortelle', 'показывать': 'vise', 'купаться': 'bade',
+  'плавать': 'svømme', 'водить': 'kjøre', 'ехать': 'kjøre',
+  'слышать': 'høre', 'нюхать': 'lukte', 'пахнуть': 'lukte',
+  'улыбаться': 'smile', 'смеяться': 'le', 'плакать': 'gråte',
+  'продавать': 'selge', 'спрашивать': 'spørre', 'понимать': 'forstå',
+  'использовать': 'bruke', 'класть': 'legge', 'ставить': 'sette',
+  'считать': 'mene', 'называться': 'hete', 'выбирать': 'velge',
+  'навещать': 'besøke', 'посещать': 'besøke', 'следовать': 'følge',
+  'искать': 'lete', 'останавливать': 'stoppe', 'праздновать': 'feire',
+  'благодарить': 'takke', 'означать': 'bety', 'поднимать': 'løfte',
+  'пробовать на вкус': 'smake'
+};
+
+// ============================================================
+// GROUP LABELS
+// ============================================================
+function groupLabel(g) {
+  if (g === 1) return 'Gruppe 1 (-et)';
+  if (g === '2a') return 'Gruppe 2a (-te/-t)';
+  if (g === '2b') return 'Gruppe 2b (-te/-t)';
+  if (g === 3) return 'Gruppe 3 (-dde/-dd)';
+  if (g === 'sterk') return 'Sterk (сильный)';
+  if (g === 'ureg') return 'Uregelmessig (неправильный)';
+  return g;
+}
+
+// ============================================================
+// DEFAULT EXAMPLES BUILDER
+// ============================================================
+function buildDefaultExamples(inf, v) {
+  const ex = {};
+  ex.presens = ['Jeg <b>' + v.presens + '</b>. — Я ' + v.ru.split(',')[0].trim() + '.'];
+  ex.preteritum = ['Jeg <b>' + v.preteritum + '</b> i går. — Я ' + v.ru.split(',')[0].trim().replace(/ть$/, 'л') + ' вчера.'];
+  ex.perfektum = ['Jeg <b>har ' + v.pp + '</b>. — Я ' + v.ru.split(',')[0].trim().replace(/ть$/, 'л') + '.'];
+  ex.futurum = ['Jeg <b>skal ' + inf + '</b>. — Я буду ' + v.ru.split(',')[0].trim().replace(/ть$/, '') + 'ть.'];
+  if (v.imperativ) {
+    ex.imperativ = ['<b>' + v.imperativ.charAt(0).toUpperCase() + v.imperativ.slice(1) + '</b>! — ' + v.ru.split(',')[0].trim().replace(/ть$/, 'й') + '!'];
+  }
+  return ex;
+}
+
+// ============================================================
+// UI
+// ============================================================
+function tryVerb(v) {
+  document.getElementById('verbInput').value = v;
+  conjugate();
+}
+
+function conjugate() {
+  const input = document.getElementById('verbInput').value.trim();
+  const resultsDiv = document.getElementById('results');
+  const verbInfoDiv = document.getElementById('verbInfo');
+  const warningBanner = document.getElementById('warningBanner');
+
+  if (!input) {
+    resultsDiv.innerHTML = '';
+    verbInfoDiv.style.display = 'none';
+    warningBanner.style.display = 'none';
+    return;
+  }
+
+  // Check if input is Russian
+  let russianInput = null;
+  let norwegianVerb = input.toLowerCase().trim();
+  if (/[а-яё]/i.test(input)) {
+    const lowerInput = input.toLowerCase().trim();
+    if (RU_TO_NO[lowerInput]) {
+      russianInput = lowerInput;
+      norwegianVerb = RU_TO_NO[lowerInput];
+    } else {
+      resultsDiv.innerHTML = '<div class="no-result">Русский глагол \u00ab' + input + '\u00bb не найден в словаре.<br>Попробуйте ввести норвежский инфинитив (например: snakke, skrive, v\u00e6re)</div>';
+      verbInfoDiv.style.display = 'none';
+      warningBanner.style.display = 'none';
+      return;
+    }
+  }
+
+  // Strip leading "å " if user typed it
+  norwegianVerb = norwegianVerb.replace(/^\u00e5\s+/, '');
+
+  const v = VERBS[norwegianVerb];
+  if (!v) {
+    resultsDiv.innerHTML = '<div class="no-result">Глагол \u00ab' + norwegianVerb + '\u00bb не найден в базе.<br>Попробуйте ввести инфинитив без \u00ab\u00e5\u00bb (например: snakke, skrive, v\u00e6re)</div>';
+    verbInfoDiv.style.display = 'none';
+    warningBanner.style.display = 'none';
+    return;
+  }
+
+  warningBanner.style.display = 'none';
+
+  // Show verb info badges
+  verbInfoDiv.style.display = 'block';
+  let infoHTML = '';
+  if (russianInput) {
+    infoHTML += '<span class="badge badge-ru">&#128270; русский \u2192 norsk: ' + russianInput + ' \u2192 ' + norwegianVerb + '</span>';
+  }
+  infoHTML += '<span class="badge badge-group">' + groupLabel(v.group) + '</span>';
+  infoHTML += '<span class="badge badge-ru">\ud83c\uddf7\ud83c\uddfa ' + v.ru + '</span>';
+  infoHTML += '<span class="badge badge-pp">Perfektum partisipp: ' + v.pp + '</span>';
+  if (v.prp) {
+    infoHTML += '<span class="badge badge-prp">Presens partisipp: ' + v.prp + '</span>';
+  }
+  verbInfoDiv.innerHTML = infoHTML;
+
+  // Get examples
+  const ex = EXAMPLES[norwegianVerb] || buildDefaultExamples(norwegianVerb, v);
+
+  const PRONOUNS = ['jeg', 'du', 'han / hun', 'vi', 'dere', 'de'];
+  const PRONOUNS_RU = ['я', 'ты', 'он / она', 'мы', 'вы', 'они'];
+
+  // Build tense cards
+  let html = '';
+
+  for (const tense of TENSES) {
+    let form = '';
+    let examples = [];
+    let isImperativ = false;
+    let isInfinitiv = false;
+
+    if (tense.id === 'infinitiv') {
+      form = 'å ' + norwegianVerb;
+      isInfinitiv = true;
+      examples = ['Han liker <b>å ' + norwegianVerb + '</b>. — Он любит ' + v.ru.split(',')[0].trim() + '.'];
+    } else if (tense.id === 'presens') {
+      form = v.presens;
+      examples = ex.presens || [];
+    } else if (tense.id === 'preteritum') {
+      form = v.preteritum;
+      examples = ex.preteritum || [];
+    } else if (tense.id === 'presens_perfektum') {
+      form = 'har ' + v.pp;
+      examples = ex.perfektum || [];
+    } else if (tense.id === 'pluskvamperfektum') {
+      form = 'hadde ' + v.pp;
+      examples = [];
+    } else if (tense.id === 'futurum') {
+      form = 'skal ' + norwegianVerb;
+      examples = ex.futurum || [];
+      examples = examples.concat(['<i>Также: vil ' + norwegianVerb + ' (хочу/буду ' + v.ru.split(',')[0].trim() + ')</i>']);
+    } else if (tense.id === 'imperativ') {
+      isImperativ = true;
+      if (!v.imperativ) {
+        form = null;
+      } else {
+        form = v.imperativ + '!';
+        examples = ex.imperativ || [];
+      }
+    }
+
+    // Build Russian translation for this tense
+    let ruForm = v.ru.split(',')[0].trim();
+    let ruTenseLabel = '';
+    if (tense.id === 'infinitiv') ruTenseLabel = ruForm;
+    else if (tense.id === 'presens') ruTenseLabel = ruForm.replace(/ть(ся)?$/, (m, s) => (s ? 'ю(сь)' : 'ю'));
+    else if (tense.id === 'preteritum') ruTenseLabel = ruForm.replace(/ть(ся)?$/, (m, s) => (s ? 'л(ся)' : 'л'));
+    else if (tense.id === 'presens_perfektum') ruTenseLabel = ruForm.replace(/ть(ся)?$/, (m, s) => (s ? 'л(ся)' : 'л'));
+    else if (tense.id === 'pluskvamperfektum') ruTenseLabel = 'уже ' + ruForm.replace(/ть(ся)?$/, (m, s) => (s ? 'л(ся)' : 'л'));
+    else if (tense.id === 'futurum') ruTenseLabel = 'буду ' + ruForm;
+    else if (tense.id === 'imperativ') ruTenseLabel = ruForm.replace(/ть(ся)?$/, (m, s) => (s ? 'й(ся)' : 'й')) + '!';
+
+    html += '<div class="tense-card">';
+    html += '<div class="tense-header">';
+    html += '<div class="no-name">' + tense.name + '<span class="ru-translation">' + ruTenseLabel + '</span></div>';
+    html += '<div class="ru-name">' + tense.ru + '</div>';
+    html += '</div>';
+    html += '<div class="tense-explain">' + tense.explain + '</div>';
+    html += '<div class="tense-body">';
+
+    if (form === null) {
+      html += '<div style="color:#ccc;padding:8px 0;">Не употребляется для этого глагола</div>';
+    } else if (isInfinitiv) {
+      html += '<table><tr><td class="verb-form">' + form + '</td><td class="pronoun" style="text-align:right">' + v.ru + '</td></tr></table>';
+      for (const e of examples) { html += '<div class="example">' + e + '</div>'; }
+    } else if (isImperativ) {
+      html += '<table><tr><td class="verb-form">' + form + '</td></tr></table>';
+      for (const e of examples) { html += '<div class="example">' + e + '</div>'; }
+    } else {
+      html += '<table>';
+      for (let i = 0; i < 6; i++) {
+        html += '<tr><td class="pronoun">' + PRONOUNS[i] + '</td><td class="verb-form">' + form + '</td><td class="pronoun" style="text-align:right;width:auto;">' + PRONOUNS_RU[i] + '</td></tr>';
+      }
+      html += '</table>';
+      if (examples.length > 0) {
+        html += '<div class="example">';
+        for (const e of examples) { html += e + '<br>'; }
+        html += '</div>';
+      }
+    }
+
+    html += '</div></div>';
+  }
+
+  resultsDiv.innerHTML = html;
+}
+
+// Auto-conjugate if there's a hash
+if (location.hash) {
+  document.getElementById('verbInput').value = decodeURIComponent(location.hash.slice(1));
+  conjugate();
+}
+</script>
+
+</body>
+</html>

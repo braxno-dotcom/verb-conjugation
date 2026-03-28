@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇳🇴</text></svg>">
+<meta name="apple-mobile-web-app-title" content="NO adj">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇳🇴 Норвежские прилагательные (букмол)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #eef3f8;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #003366, #1a5276);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  .search-area {
+    max-width: 600px;
+    margin: 30px auto 10px;
+    padding: 0 20px;
+    display: flex;
+    gap: 10px;
+  }
+  .search-area input {
+    flex: 1;
+    padding: 14px 18px;
+    font-size: 1.15em;
+    border: 2px solid #b8c9d9;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-area input:focus { border-color: #1a5276; }
+  .search-area button {
+    padding: 14px 28px;
+    font-size: 1.05em;
+    background: #1a5276;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .search-area button:hover { background: #003366; }
+
+  .hint {
+    max-width: 600px;
+    margin: 8px auto 0;
+    padding: 0 20px;
+    font-size: 0.85em;
+    color: #888;
+  }
+  .hint span { cursor: pointer; color: #1a5276; text-decoration: underline; }
+  .hint span:hover { color: #003366; }
+
+  #result {
+    max-width: 900px;
+    margin: 20px auto 40px;
+    padding: 0 20px;
+    display: none;
+  }
+
+  .adj-header {
+    background: white;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .adj-word {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #1a5276;
+  }
+  .adj-ru {
+    font-size: 1.1em;
+    color: #555;
+    font-style: italic;
+  }
+  .badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.82em;
+    font-weight: 600;
+  }
+  .badge-irreg {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffc107;
+  }
+
+  .forms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .form-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .form-card-header {
+    padding: 10px 16px;
+    color: white;
+    font-weight: 600;
+    font-size: 0.92em;
+  }
+  .form-card-body {
+    padding: 14px 16px;
+  }
+  .form-value {
+    font-size: 1.4em;
+    font-weight: 700;
+    color: #2c2c2c;
+  }
+  .form-label-ru {
+    font-size: 0.82em;
+    color: #999;
+    margin-top: 2px;
+  }
+
+  .color-base .form-card-header { background: #1a5276; }
+  .color-neuter .form-card-header { background: #2e7d32; }
+  .color-plural .form-card-header { background: #e65100; }
+  .color-comp .form-card-header { background: #6a1b9a; }
+  .color-super .form-card-header { background: #c62828; }
+
+  .example-box {
+    background: white;
+    border-radius: 12px;
+    padding: 16px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    margin-bottom: 16px;
+  }
+  .example-box h3 {
+    font-size: 0.95em;
+    color: #1a5276;
+    margin-bottom: 10px;
+  }
+  .example-box .ex-line {
+    font-size: 0.95em;
+    color: #555;
+    line-height: 1.7;
+  }
+  .example-box .ex-line b { color: #1a5276; }
+
+  .no-result {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+    font-size: 1.1em;
+  }
+
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switch { padding: 6px 12px; font-size: 0.85em; }
+    .search-area { padding: 0 10px; flex-direction: column; }
+    .search-area input { font-size: 1em; padding: 12px 14px; width: 100%; }
+    .search-area button { padding: 12px 18px; font-size: 0.95em; width: 100%; }
+    .hint { padding: 0 10px; }
+    #result { padding: 0 10px; }
+    .forms-grid { grid-template-columns: 1fr; }
+    .adj-header { padding: 16px; }
+    .adj-word { font-size: 1.4em; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="norwegian.html" class="lang-switch">📖 Портал</a>
+    <a href="norwegian-verbs.html" class="lang-switch">📝 Глаголы</a>
+  </div>
+  <h1>🇳🇴 Норвежские прилагательные (букмол)</h1>
+  <p>Введите прилагательное — получите все формы согласования</p>
+</header>
+
+<div class="search-area">
+  <input type="text" id="adjInput" placeholder="stor, liten... или по-русски: большой, маленький..." autofocus
+    onkeydown="if(event.key==='Enter')lookup()">
+  <button onclick="lookup()">Найти</button>
+</div>
+<div class="hint">
+  Попробуйте:
+  <span onclick="tryAdj('stor')">stor</span>,
+  <span onclick="tryAdj('liten')">liten</span>,
+  <span onclick="tryAdj('god')">god</span>,
+  <span onclick="tryAdj('gammel')">gammel</span>,
+  <span onclick="tryAdj('ny')">ny</span>,
+  <span onclick="tryAdj('blå')">blå</span>,
+  <span onclick="tryAdj('dårlig')">dårlig</span>,
+  <span onclick="tryAdj('ung')">ung</span>
+  | на русском:
+  <span onclick="tryAdj('большой')">большой</span>,
+  <span onclick="tryAdj('хороший')">хороший</span>,
+  <span onclick="tryAdj('красный')">красный</span>
+</div>
+
+<div id="result"></div>
+
+<script>
+// ============================================================
+// ADJECTIVE DATABASE
+// ============================================================
+// [base, neuter, plural/definite, comparative, superlative, russian, irregular, example]
+const ADJECTIVES = [
+  ["stor","stort","store","større","størst","большой",true,
+    "En stor bil. Et stort hus. Store biler. Den store bilen."],
+  ["liten","lite/lita","små","mindre","minst","маленький",true,
+    "En liten gutt. Et lite barn. Små barn. Den lille gutten."],
+  ["god","godt","gode","bedre","best","хороший",true,
+    "En god bok. Et godt måltid. Gode venner. Den gode boka."],
+  ["dårlig","dårlig","dårlige","dårligere/verre","dårligst/verst","плохой",true,
+    "En dårlig idé. Et dårlig forslag. Dårlige nyheter."],
+  ["ny","nytt","nye","nyere","nyest","новый",false,
+    "En ny bil. Et nytt hus. Nye biler. Den nye bilen."],
+  ["gammel","gammelt","gamle","eldre","eldst","старый",true,
+    "En gammel mann. Et gammelt hus. Gamle hus. Den gamle mannen."],
+  ["ung","ungt","unge","yngre","yngst","молодой",true,
+    "En ung kvinne. Et ungt par. Unge mennesker."],
+  ["lang","langt","lange","lengre","lengst","длинный",true,
+    "En lang vei. Et langt bord. Lange dager."],
+  ["kort","kort","korte","kortere","kortest","короткий",false,
+    "En kort tekst. Et kort svar. Korte setninger."],
+  ["høy","høyt","høye","høyere","høyest","высокий",false,
+    "En høy mann. Et høyt fjell. Høye trær."],
+  ["lav","lavt","lave","lavere","lavest","низкий",false,
+    "En lav pris. Et lavt bord. Lave priser."],
+  ["fin","fint","fine","finere","finest","красивый/хороший",false,
+    "En fin dag. Et fint sted. Fine klær."],
+  ["pen","pent","pene","penere","penest","красивый",false,
+    "En pen jente. Et pent hus. Pene blomster."],
+  ["stygg","stygt","stygge","styggere","styggest","некрасивый",false,
+    "En stygg bygning. Et stygt ord. Stygge tegninger."],
+  ["bred","bredt","brede","bredere","bredest","широкий",false,
+    "En bred vei. Et bredt smil. Brede skuldre."],
+  ["smal","smalt","smale","smalere","smalest","узкий",false,
+    "En smal gate. Et smalt belte. Smale gater."],
+  ["tung","tungt","tunge","tyngre","tyngst","тяжёлый",true,
+    "En tung boks. Et tungt bord. Tunge kofferter."],
+  ["lett","lett","lette","lettere","lettest","лёгкий",false,
+    "En lett oppgave. Et lett spørsmål. Lette oppgaver."],
+  ["varm","varmt","varme","varmere","varmest","тёплый",false,
+    "En varm dag. Et varmt bad. Varme dager."],
+  ["kald","kaldt","kalde","kaldere","kaldest","холодный",false,
+    "En kald vinter. Et kaldt glass. Kalde netter."],
+  ["rask","raskt","raske","raskere","raskest","быстрый",false,
+    "En rask løper. Et raskt svar. Raske biler."],
+  ["treg","tregt","trege","tregere","tregest","медленный",false,
+    "En treg prosess. Et tregt system. Trege maskiner."],
+  ["rik","rikt","rike","rikere","rikest","богатый",false,
+    "En rik mann. Et rikt land. Rike familier."],
+  ["fattig","fattig","fattige","fattigere","fattigst","бедный",false,
+    "En fattig familie. Et fattig land. Fattige mennesker."],
+  ["sterk","sterkt","sterke","sterkere","sterkest","сильный",false,
+    "En sterk mann. Et sterkt lys. Sterke armer."],
+  ["svak","svakt","svake","svakere","svakest","слабый",false,
+    "En svak stemme. Et svakt signal. Svake argumenter."],
+  ["glad","glad","glade","gladere","gladest","рад/весёлый",false,
+    "En glad gutt. Et glad barn. Glade barn."],
+  ["trist","trist","triste","tristere","tristest","грустный",false,
+    "En trist historie. Et trist øyeblikk. Triste nyheter."],
+  ["sint","sint","sinte","sintere","sintest","злой",false,
+    "En sint mann. Et sint blikk. Sinte naboer."],
+  ["redd","redd","redde","reddere","reddest","испуганный",false,
+    "En redd hund. Et redd barn. Redde barn."],
+  ["sulten","sultent","sultne","sultnere","sultnest","голодный",false,
+    "En sulten gutt. Et sultent barn. Sultne barn."],
+  ["tørst","tørst","tørste","tørstere","tørstest","жаждущий",false,
+    "En tørst mann. Et tørst barn. Tørste barn."],
+  ["trøtt","trøtt","trøtte","trøttere","trøttest","усталый",false,
+    "En trøtt student. Et trøtt barn. Trøtte studenter."],
+  ["hvit","hvitt","hvite","hvitere","hvitest","белый",false,
+    "En hvit katt. Et hvitt hus. Hvite roser."],
+  ["svart","svart","svarte","svartere","svartest","чёрный",false,
+    "En svart bil. Et svart hull. Svarte klær."],
+  ["rød","rødt","røde","rødere","rødest","красный",false,
+    "En rød rose. Et rødt lys. Røde biler."],
+  ["blå","blått","blå","blåere","blåest","синий",false,
+    "En blå himmel. Et blått hav. Blå øyne. Den blå himmelen."],
+  ["grønn","grønt","grønne","grønnere","grønnest","зелёный",false,
+    "En grønn skog. Et grønt blad. Grønne trær."],
+  ["gul","gult","gule","gulere","gulest","жёлтый",false,
+    "En gul blomst. Et gult hus. Gule blomster."],
+  ["brun","brunt","brune","brunere","brunest","коричневый",false,
+    "En brun hund. Et brunt bord. Brune sko."],
+  ["grå","grått","grå","gråere","gråest","серый",false,
+    "En grå dag. Et grått teppe. Grå skyer."],
+  ["billig","billig","billige","billigere","billigst","дешёвый",false,
+    "En billig bok. Et billig hotell. Billige billetter."],
+  ["dyr","dyrt","dyre","dyrere","dyrest","дорогой",false,
+    "En dyr bil. Et dyrt hus. Dyre klær."],
+  ["enkel","enkelt","enkle","enklere","enklest","простой",false,
+    "En enkel oppgave. Et enkelt spørsmål. Enkle regler."],
+  ["vanskelig","vanskelig","vanskelige","vanskeligere","vanskeligst","сложный",false,
+    "En vanskelig eksamen. Et vanskelig valg. Vanskelige oppgaver."],
+  ["viktig","viktig","viktige","viktigere","viktigst","важный",false,
+    "En viktig beskjed. Et viktig møte. Viktige dokumenter."],
+  ["morsom","morsomt","morsomme","morsommere","morsomst","смешной",false,
+    "En morsom film. Et morsomt spill. Morsomme historier."],
+  ["kjedelig","kjedelig","kjedelige","kjedeligere","kjedeligst","скучный",false,
+    "En kjedelig bok. Et kjedelig møte. Kjedelige oppgaver."],
+  ["søt","søtt","søte","søtere","søtest","милый/сладкий",false,
+    "En søt katt. Et søtt barn. Søte dyr."],
+  ["ren","rent","rene","renere","renest","чистый",false,
+    "En ren skjorte. Et rent rom. Rene klær."],
+  ["skitten","skittent","skitne","skitnere","skitnest","грязный",false,
+    "En skitten genser. Et skittent gulv. Skitne klær."],
+  ["våt","vått","våte","våtere","våtest","мокрый",false,
+    "En våt hund. Et vått håndkle. Våte klær."],
+  ["tørr","tørt","tørre","tørrere","tørrest","сухой",false,
+    "En tørr sommer. Et tørt klima. Tørre blader."],
+  ["full","fullt","fulle","fullere","fullest","полный",false,
+    "En full kopp. Et fullt glass. Fulle hyller."],
+  ["tom","tomt","tomme","tommere","tommest","пустой",false,
+    "En tom flaske. Et tomt rom. Tomme hyller."],
+  ["åpen","åpent","åpne","åpnere","åpnest","открытый",false,
+    "En åpen dør. Et åpent vindu. Åpne dører."],
+  ["lukket","lukket","lukkede","—","—","закрытый",false,
+    "En lukket dør. Et lukket vindu. Lukkede dører."],
+  ["ferdig","ferdig","ferdige","—","—","готовый",false,
+    "En ferdig oppgave. Et ferdig prosjekt. Ferdige oppgaver."],
+  ["norsk","norsk","norske","—","—","норвежский",false,
+    "En norsk film. Et norsk ord. Norske fjorder."],
+  ["russisk","russisk","russiske","—","—","русский",false,
+    "En russisk bok. Et russisk navn. Russiske filmer."],
+  ["fransk","fransk","franske","—","—","французский",false,
+    "En fransk restaurant. Et fransk ord. Franske viner."]
+];
+
+// ============================================================
+// LOOKUP LOGIC
+// ============================================================
+function tryAdj(word) {
+  document.getElementById('adjInput').value = word;
+  lookup();
+}
+
+function lookup() {
+  const raw = document.getElementById('adjInput').value.trim().toLowerCase();
+  if (!raw) return;
+
+  const resultDiv = document.getElementById('result');
+
+  // Search by Norwegian base form or by any form, or by Russian
+  let found = null;
+  for (const adj of ADJECTIVES) {
+    const [base, neuter, plural, comp, superl, ru] = adj;
+    if (base === raw || neuter === raw || plural === raw ||
+        comp === raw || superl === raw) {
+      found = adj;
+      break;
+    }
+    // check slash-separated forms
+    if (neuter.includes('/') && neuter.split('/').some(f => f === raw)) { found = adj; break; }
+    if (comp.includes('/') && comp.split('/').some(f => f === raw)) { found = adj; break; }
+    if (superl.includes('/') && superl.split('/').some(f => f === raw)) { found = adj; break; }
+  }
+
+  if (!found) {
+    // Search by Russian
+    for (const adj of ADJECTIVES) {
+      const ru = adj[5].toLowerCase();
+      if (ru === raw || ru.includes(raw) || raw.includes(ru.split('/')[0])) {
+        found = adj;
+        break;
+      }
+    }
+  }
+
+  if (!found) {
+    resultDiv.style.display = 'block';
+    resultDiv.innerHTML = '<div class="no-result">Прилагательное не найдено. Попробуйте другое слово.</div>';
+    return;
+  }
+
+  const [base, neuter, plural, comp, superl, ru, irreg, example] = found;
+  renderResult(base, neuter, plural, comp, superl, ru, irreg, example);
+}
+
+function renderResult(base, neuter, plural, comp, superl, ru, irreg, example) {
+  const resultDiv = document.getElementById('result');
+  resultDiv.style.display = 'block';
+
+  let html = '';
+
+  // Header
+  html += '<div class="adj-header">';
+  html += `<span class="adj-word">${base}</span>`;
+  html += `<span class="adj-ru">— ${ru}</span>`;
+  if (irreg) {
+    html += '<span class="badge badge-irreg">⚠ Нерегулярное степенирование</span>';
+  }
+  html += '</div>';
+
+  // Form cards
+  html += '<div class="forms-grid">';
+
+  // Base form
+  html += formCard('Maskulin / Feminin ubestemt', 'м./ж. неопределённая', base, 'en/ei + прил.', 'color-base');
+
+  // Neuter
+  html += formCard('Nøytrum ubestemt', 'ср. неопределённая', neuter, 'et + прил.', 'color-neuter');
+
+  // Plural / definite
+  html += formCard('Flertall / Bestemt form', 'мн.ч. / определённая', plural, 'den/det/de + прил.', 'color-plural');
+
+  // Comparative
+  if (comp !== '—') {
+    html += formCard('Komparativ', 'сравнительная степень', comp, 'mer/mindre + ...', 'color-comp');
+  } else {
+    html += formCard('Komparativ', 'сравнительная степень', '—', 'не образуется', 'color-comp');
+  }
+
+  // Superlative
+  if (superl !== '—') {
+    html += formCard('Superlativ', 'превосходная степень', superl, 'mest/minst + ...', 'color-super');
+  } else {
+    html += formCard('Superlativ', 'превосходная степень', '—', 'не образуется', 'color-super');
+  }
+
+  html += '</div>';
+
+  // Example
+  if (example) {
+    html += '<div class="example-box">';
+    html += '<h3>📝 Примеры употребления</h3>';
+    const sentences = example.split('. ').filter(s => s.length > 0);
+    for (const s of sentences) {
+      const clean = s.endsWith('.') ? s : s + '.';
+      // Bold the adjective forms
+      let highlighted = clean;
+      const allForms = [base, neuter, plural, comp, superl]
+        .flatMap(f => f.split('/'))
+        .filter(f => f !== '—' && f.length > 0);
+      // Also add "lille" for "liten"
+      if (base === 'liten') allForms.push('lille');
+      // Sort by length descending so longer forms match first
+      allForms.sort((a, b) => b.length - a.length);
+      for (const form of allForms) {
+        const re = new RegExp('\\b(' + form.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')\\b', 'gi');
+        highlighted = highlighted.replace(re, '<b>$1</b>');
+      }
+      html += `<div class="ex-line">${highlighted}</div>`;
+    }
+    html += '</div>';
+  }
+
+  resultDiv.innerHTML = html;
+}
+
+function formCard(noName, ruName, value, hint, colorClass) {
+  const dimmed = value === '—' ? ' style="opacity:0.4"' : '';
+  return `<div class="form-card ${colorClass}"${dimmed}>
+    <div class="form-card-header">
+      <div>${noName}</div>
+    </div>
+    <div class="form-card-body">
+      <div class="form-value">${value}</div>
+      <div class="form-label-ru">${ruName}</div>
+    </div>
+  </div>`;
+}
+
+// Auto-lookup if URL has hash
+if (location.hash) {
+  document.getElementById('adjInput').value = decodeURIComponent(location.hash.slice(1));
+  lookup();
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇳🇴</text></svg>">
+<meta name="apple-mobile-web-app-title" content="NO V2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇳🇴 Порядок слов в норвежском (букмол)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #eef3f8;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #003366, #1a5276);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 20px 60px;
+  }
+
+  /* Section nav */
+  .section-nav {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px 0 10px;
+  }
+  .section-nav a {
+    background: white;
+    color: #1a5276;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    transition: background 0.2s, color 0.2s;
+  }
+  .section-nav a:hover { background: #1a5276; color: white; }
+
+  /* Cards / sections */
+  .card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    margin-top: 20px;
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 14px 20px;
+    background: #1a5276;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1em;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+  }
+  .card-header:hover { background: #174a6a; }
+  .card-header .toggle { font-size: 1.2em; transition: transform 0.3s; }
+  .card-header.collapsed .toggle { transform: rotate(-90deg); }
+  .card-body {
+    padding: 20px;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    overflow: hidden;
+  }
+  .card-body.collapsed {
+    max-height: 0 !important;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  /* Subsection headers */
+  .sub-header {
+    font-size: 1em;
+    font-weight: 600;
+    color: #1a5276;
+    margin: 18px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #d6e8f7;
+  }
+  .sub-header:first-child { margin-top: 0; }
+
+  .explanation {
+    font-size: 0.92em;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+
+  /* Example rows */
+  .example-row {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+    flex-wrap: wrap;
+  }
+  .example-row:last-child { border-bottom: none; }
+  .example-no {
+    font-size: 1.1em;
+    line-height: 1.5;
+    flex: 1;
+    min-width: 200px;
+  }
+  .example-ru {
+    font-size: 0.9em;
+    color: #888;
+    flex-shrink: 0;
+  }
+
+  /* Color-coded spans */
+  .pos1 {
+    background: #d6e8f7;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  .verb {
+    background: #ffcdd2;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+  }
+  .subj {
+    background: #c8e6c9;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  .ikke {
+    background: #fff3e0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+  }
+
+  /* Color legend */
+  .legend {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    font-size: 0.85em;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .legend-swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    display: inline-block;
+  }
+
+  /* Summary table */
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92em;
+  }
+  .summary-table th {
+    background: #1a5276;
+    color: white;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .summary-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+  }
+  .summary-table tr:nth-child(even) td { background: #f8fafc; }
+  .summary-table code {
+    background: #f0f4f8;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.95em;
+    white-space: nowrap;
+  }
+
+  /* Sentence builder */
+  .builder-area {
+    background: #f8fafc;
+    border: 2px dashed #b8c9d9;
+    border-radius: 10px;
+    padding: 16px;
+    margin: 14px 0;
+    min-height: 56px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    transition: border-color 0.3s;
+  }
+  .builder-area.correct { border-color: #4caf50; background: #e8f5e9; }
+  .builder-area.wrong { border-color: #e53935; background: #ffebee; }
+  .word-block {
+    background: white;
+    border: 2px solid #b8c9d9;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: grab;
+    font-size: 1em;
+    font-weight: 600;
+    user-select: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .word-block:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+  .word-block.dragging { opacity: 0.5; }
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+  }
+  .builder-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .builder-btn {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-check { background: #1a5276; color: white; }
+  .btn-check:hover { background: #003366; }
+  .btn-reset { background: #e0e0e0; color: #333; }
+  .btn-reset:hover { background: #ccc; }
+  .btn-next { background: #2e7d32; color: white; }
+  .btn-next:hover { background: #1b5e20; }
+  .builder-feedback {
+    font-weight: 600;
+    font-size: 0.95em;
+    min-height: 1.4em;
+  }
+  .feedback-correct { color: #2e7d32; }
+  .feedback-wrong { color: #c62828; }
+
+  /* Conjunction list */
+  .conj-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .conj-chip {
+    background: #f0f4f8;
+    border: 1px solid #d6e8f7;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.9em;
+  }
+  .conj-chip b { color: #1a5276; }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switch { padding: 6px 12px; font-size: 0.85em; }
+    .container { padding: 12px 10px 40px; }
+    .card-body { padding: 14px; }
+    .example-row { flex-direction: column; gap: 4px; }
+    .example-no { min-width: auto; }
+    .section-nav a { padding: 6px 12px; font-size: 0.82em; }
+    .summary-table { font-size: 0.82em; }
+    .summary-table th, .summary-table td { padding: 7px 6px; }
+    .word-block { padding: 6px 10px; font-size: 0.9em; }
+  }
+
+  html { scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="norwegian.html" class="lang-switch">📖 Портал</a>
+    <a href="norwegian-verbs.html" class="lang-switch">📝 Глаголы</a>
+  </div>
+  <h1>🇳🇴 Порядок слов в норвежском (букмол)</h1>
+  <p>Правило V2, инверсия и структура предложений</p>
+</header>
+
+<div class="container">
+
+  <nav class="section-nav">
+    <a href="#v2">V2 правило</a>
+    <a href="#questions">Вопросы</a>
+    <a href="#negation">Отрицание</a>
+    <a href="#subclauses">Придаточные</a>
+    <a href="#summary">Шпаргалка</a>
+    <a href="#practice">Практика</a>
+  </nav>
+
+  <!-- ===== 1. V2 Rule ===== -->
+  <div class="card" id="v2">
+    <div class="card-header" onclick="toggleSection(this)">
+      <span>1. Правило V2 (Verb Second Rule)</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+      <p class="explanation">
+        В норвежских повествовательных предложениях <b>глагол ВСЕГДА стоит на втором месте</b>.
+        Это главное правило норвежского синтаксиса. Если первую позицию занимает не подлежащее,
+        а обстоятельство или другой член предложения, подлежащее сдвигается за глагол — это называется <b>инверсией</b>.
+      </p>
+
+      <div class="legend">
+        <div class="legend-item"><span class="legend-swatch" style="background:#d6e8f7"></span> 1-я позиция</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#ffcdd2"></span> Глагол (всегда 2-й)</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#c8e6c9"></span> Подлежащее (сдвинутое)</div>
+      </div>
+
+      <div class="sub-header">Прямой порядок (SVO)</div>
+      <div class="example-row">
+        <div class="example-no"><span class="pos1">Jeg</span> <span class="verb">liker</span> kaffe</div>
+        <div class="example-ru">Я люблю кофе</div>
+      </div>
+      <div class="example-row">
+        <div class="example-no"><span class="pos1">Hun</span> <span class="verb">leser</span> ei bok</div>
+        <div class="example-ru">Она читает книгу</div>
+      </div>
+      <div class="example-row">
+        <div class="example-no"><span class="pos1">Vi</span> <span class="verb">bor</span> i Oslo</div>
+        <div class="example-ru">Мы живём в Осло</div>
+      </div>
+
+      <div class="sub-header">Инверсия (когда на 1-м месте НЕ подлежащее)</div>
+      <div class="example-row">
+        <div class="example-no"><span class="pos1">I dag</span> <span class="verb">liker</span> <span class="subj">jeg</span> kaffe</div>
+        <div class="example-ru">Сегодня я люблю кофе</div>
+      </div>
+      <div class="example-row">
+        <div class="example-no"><span class="pos1">I går</span> <span class="verb">leste</span> <span class="subj">hun</span> ei bok</div>
+        <div class="example-ru">Вчера она читала книгу</div>
+      </div>
+      <div class="example-row">
+        <div class="example-no"><span class="pos1">Nå</span> <span class="verb">bor</span> <span class="subj">vi</span> i Oslo</div>
+        <div class="example-ru">Сейчас мы живём в Осло</div>
+      </div>
+      <div class="example-row">
+        <div class="example-no"><span class="pos1">Kanskje</span> <span class="verb">kommer</span> <span class="subj">han</span> i morgen</div>
+        <div class="example-ru">Может, он придёт завтра</div>
+      </div>
+      <div class="example-row">
+        <div class="example-no"><span class="pos1">Her</span> <span class="verb">snakker</span> <span class="subj">man</span> norsk</div>
+        <div class="example-ru">Здесь говорят по-норвежски</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 2. Questions ===== -->
+  <div class="card" id="questions">
+    <div class="card-header" onclick="toggleSection(this)">
+      <span>2. Вопросы (Spørsmål)</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+
+      <div class="sub-header">Да/нет вопросы — глагол на 1-м месте</div>
+      <div class="example-row">
+        <div class="example-no"><span class="verb">Liker</span> <span class="subj">du</span> kaffe?</div>
+        <div class="example-ru">Ты любишь кофе?</div>
+      </div>
+      <div class="example-row">
+        <div class="example-no"><span class="verb">Bor</span> <span class="subj">du</span> i Norge?</div>
+        <div class="example-ru">Ты живёшь в Норвегии?</div>
+      </div>
+      <div class="example-row">
+        <div class="example-no"><span class="verb">Har</span> <span class="subj">du</span> vært der?</div>
+        <div class="example-ru">Ты был там?</div>
+      </div>
+
+      <div class="sub-header">Вопросы с вопросительным словом — V2 сохраняется</div>
+      <div class="example-row">
+        <div class="example-no"><span class="pos1">Hva</span> <span class="verb">liker</span> <span class="subj">du</span>?</div>
+        <div class="example-ru">Что ты любишь?</div>
+      </div>
+      <div class="example-row">
+        <div class="example-no"><span class="pos1">Hvor</span> <span class="verb">bor</span> <span class="subj">du</span>?</div>
+        <div class="example-ru">Где ты живёшь?</div>
+      </div>
+      <div class="example-row">
+        <div class="example-no"><span class="pos1">Når</span> <span class="verb">kommer</span> <span class="subj">du</span>?</div>
+        <div class="example-ru">Когда ты придёшь?</div>
+      </div>
+      <div class="example-row">
+        <div class="example-no"><span class="pos1">Hvorfor</span> <span class="verb">lærer</span> <span class="subj">du</span> norsk?</div>
+        <div class="example-ru">Почему ты учишь норвежский?</div>
+      </div>
+      <div class="example-row">
+        <div class="example-no"><span class="pos1">Hvem</span> <span class="verb">er</span> <span class="subj">du</span>?</div>
+        <div class="example-ru">Кто ты?</div>
+      </div>
+      <div class="example-row">
+        <div class="example-no"><span class="pos1">Hvordan</span> <span class="verb">har</span> <span class="subj">du</span> det?</div>
+        <div class="example-ru">Как дела?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 3. Negation ===== -->
+  <div class="card" id="negation">
+    <div class="card-header" onclick="toggleSection(this)">
+      <span>3. Отрицание (Nektelse)</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+
+      <div class="legend">
+        <div class="legend-item"><span class="legend-swatch" style="background:#fff3e0"></span> «ikke» — отрицание</div>
+      </div>
+
+      <div class="sub-header">В главном предложении — «ikke» ПОСЛЕ глагола</div>
+      <div class="example-row">
+        <div class="example-no">Jeg <span class="verb">liker</span> <span class="ikke">ikke</span> kaffe</div>
+        <div class="example-ru">Я не люблю кофе</div>
+      </div>
+      <div class="example-row">
+        <div class="example-no">Hun <span class="verb">leser</span> <span class="ikke">ikke</span> boka</div>
+        <div class="example-ru">Она не читает книгу</div>
+      </div>
+      <div class="example-row">
+        <div class="example-no">Vi <span class="verb">bor</span> <span class="ikke">ikke</span> i Oslo</div>
+        <div class="example-ru">Мы не живём в Осло</div>
+      </div>
+
+      <div class="sub-header">С модальными глаголами — «ikke» между модальным и основным</div>
+      <div class="example-row">
+        <div class="example-no">Jeg <span class="verb">kan</span> <span class="ikke">ikke</span> svømme</div>
+        <div class="example-ru">Я не умею плавать</div>
+      </div>
+      <div class="example-row">
+        <div class="example-no">Du <span class="verb">må</span> <span class="ikke">ikke</span> gå</div>
+        <div class="example-ru">Ты не должен идти</div>
+      </div>
+      <div class="example-row">
+        <div class="example-no">Vi <span class="verb">skal</span> <span class="ikke">ikke</span> reise</div>
+        <div class="example-ru">Мы не поедем</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 4. Subordinate clauses ===== -->
+  <div class="card" id="subclauses">
+    <div class="card-header" onclick="toggleSection(this)">
+      <span>4. Придаточные предложения (Leddsetninger)</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+      <p class="explanation">
+        <b>Главное отличие:</b> в придаточных предложениях <span class="ikke">ikke</span> стоит <b>ПЕРЕД глаголом</b>.<br>
+        Это правило известно как <b>BIFF-regelen</b>: <b>B</b>are <b>I</b> at-setninger <b>F</b>lyttes «ikke» <b>F</b>ram.
+      </p>
+
+      <div class="sub-header">Примеры</div>
+      <div class="example-row">
+        <div class="example-no">Jeg vet <b>at</b> han <span class="ikke">ikke</span> <span class="verb">liker</span> kaffe</div>
+        <div class="example-ru">Я знаю, что он не любит кофе</div>
+      </div>
+      <div class="example-row">
+        <div class="example-no">Hun sa <b>at</b> hun <span class="ikke">ikke</span> <span class="verb">kommer</span></div>
+        <div class="example-ru">Она сказала, что не придёт</div>
+      </div>
+      <div class="example-row">
+        <div class="example-no"><b>Fordi</b> jeg <span class="ikke">ikke</span> <span class="verb">har</span> tid</div>
+        <div class="example-ru">Потому что у меня нет времени</div>
+      </div>
+
+      <div class="sub-header">Союзы для придаточных предложений</div>
+      <div class="conj-list">
+        <span class="conj-chip"><b>at</b> — что</span>
+        <span class="conj-chip"><b>fordi</b> — потому что</span>
+        <span class="conj-chip"><b>når</b> — когда</span>
+        <span class="conj-chip"><b>hvis</b> — если</span>
+        <span class="conj-chip"><b>som</b> — который</span>
+        <span class="conj-chip"><b>selv om</b> — хотя</span>
+        <span class="conj-chip"><b>mens</b> — пока / тогда как</span>
+        <span class="conj-chip"><b>før</b> — прежде чем</span>
+        <span class="conj-chip"><b>etter at</b> — после того как</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 5. Summary ===== -->
+  <div class="card" id="summary">
+    <div class="card-header" onclick="toggleSection(this)">
+      <span>5. Шпаргалка (Oppsummering)</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+      <table class="summary-table">
+        <thead>
+          <tr>
+            <th>Тип предложения</th>
+            <th>Схема</th>
+            <th>Пример</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Обычное</td>
+            <td><code>S + V + O</code></td>
+            <td>Jeg <span class="verb">liker</span> kaffe</td>
+          </tr>
+          <tr>
+            <td>С обстоятельством вначале</td>
+            <td><code>X + V + S + O</code></td>
+            <td><span class="pos1">I dag</span> <span class="verb">liker</span> <span class="subj">jeg</span> kaffe</td>
+          </tr>
+          <tr>
+            <td>Вопрос да/нет</td>
+            <td><code>V + S + O?</code></td>
+            <td><span class="verb">Liker</span> <span class="subj">du</span> kaffe?</td>
+          </tr>
+          <tr>
+            <td>Вопрос с вопр. словом</td>
+            <td><code>Q + V + S + O?</code></td>
+            <td><span class="pos1">Hva</span> <span class="verb">liker</span> <span class="subj">du</span>?</td>
+          </tr>
+          <tr>
+            <td>Отрицание</td>
+            <td><code>S + V + ikke + O</code></td>
+            <td>Jeg <span class="verb">liker</span> <span class="ikke">ikke</span> kaffe</td>
+          </tr>
+          <tr>
+            <td>Придаточное</td>
+            <td><code>conj + S + ikke + V + O</code></td>
+            <td>...at han <span class="ikke">ikke</span> <span class="verb">liker</span> kaffe</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== 6. Practice: Sentence Builder ===== -->
+  <div class="card" id="practice">
+    <div class="card-header" onclick="toggleSection(this)">
+      <span>6. Практика — Составь предложение</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+      <p class="explanation">
+        Перетаскивайте слова в правильном порядке. Затем нажмите «Проверить».
+      </p>
+      <div id="builder-task" style="font-size:0.95em; color:#1a5276; font-weight:600; margin-bottom:10px;"></div>
+      <div class="builder-area" id="builder-drop"></div>
+      <div class="word-bank" id="builder-bank"></div>
+      <div class="builder-controls">
+        <button class="builder-btn btn-check" onclick="checkBuilder()">Проверить</button>
+        <button class="builder-btn btn-reset" onclick="resetBuilder()">Сбросить</button>
+        <button class="builder-btn btn-next" onclick="nextChallenge()">Следующее →</button>
+        <div class="builder-feedback" id="builder-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// === Collapsible sections ===
+function toggleSection(headerEl) {
+  const body = headerEl.nextElementSibling;
+  headerEl.classList.toggle('collapsed');
+  body.classList.toggle('collapsed');
+}
+
+// === Sentence Builder ===
+const challenges = [
+  { words: ['jeg', 'liker', 'kaffe'], correct: 'jeg liker kaffe', hint: 'Я люблю кофе (SVO)' },
+  { words: ['i dag', 'jeg', 'liker', 'kaffe'], correct: 'i dag liker jeg kaffe', hint: 'Сегодня я люблю кофе (инверсия)' },
+  { words: ['du', 'liker', 'kaffe'], correct: 'liker du kaffe', hint: 'Ты любишь кофе? (вопрос да/нет)', suffix: '?' },
+  { words: ['hva', 'du', 'liker'], correct: 'hva liker du', hint: 'Что ты любишь? (вопрос с вопр. словом)', suffix: '?' },
+  { words: ['jeg', 'liker', 'ikke', 'kaffe'], correct: 'jeg liker ikke kaffe', hint: 'Я не люблю кофе (отрицание)' },
+  { words: ['i går', 'hun', 'leste', 'ei bok'], correct: 'i går leste hun ei bok', hint: 'Вчера она читала книгу (инверсия)' },
+  { words: ['hvor', 'du', 'bor'], correct: 'hvor bor du', hint: 'Где ты живёшь? (вопрос)', suffix: '?' },
+  { words: ['vi', 'bor', 'ikke', 'i Oslo'], correct: 'vi bor ikke i oslo', hint: 'Мы не живём в Осло (отрицание)' },
+  { words: ['kan', 'du', 'svømme'], correct: 'kan du svømme', hint: 'Ты умеешь плавать? (вопрос)', suffix: '?' },
+  { words: ['nå', 'vi', 'bor', 'i Oslo'], correct: 'nå bor vi i oslo', hint: 'Сейчас мы живём в Осло (инверсия)' },
+  { words: ['hun', 'kan', 'ikke', 'svømme'], correct: 'hun kan ikke svømme', hint: 'Она не умеет плавать (отрицание с модальным)' },
+  { words: ['kanskje', 'han', 'kommer', 'i morgen'], correct: 'kanskje kommer han i morgen', hint: 'Может, он придёт завтра (инверсия)' },
+];
+
+let currentChallenge = 0;
+let dropZone, bank, feedback, taskEl;
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function loadChallenge(idx) {
+  const ch = challenges[idx % challenges.length];
+  taskEl.textContent = ch.hint;
+  feedback.textContent = '';
+  feedback.className = 'builder-feedback';
+  dropZone.innerHTML = '';
+  dropZone.className = 'builder-area';
+  bank.innerHTML = '';
+  const shuffled = shuffle(ch.words);
+  shuffled.forEach(w => {
+    const el = createWordBlock(w);
+    bank.appendChild(el);
+  });
+}
+
+function createWordBlock(text) {
+  const el = document.createElement('div');
+  el.className = 'word-block';
+  el.textContent = text;
+  el.draggable = true;
+  el.addEventListener('dragstart', e => {
+    e.dataTransfer.setData('text/plain', '');
+    el.classList.add('dragging');
+  });
+  el.addEventListener('dragend', () => el.classList.remove('dragging'));
+  el.addEventListener('click', () => {
+    const parent = el.parentElement;
+    if (parent === bank) {
+      dropZone.appendChild(el);
+    } else {
+      bank.appendChild(el);
+    }
+    dropZone.className = 'builder-area';
+    feedback.textContent = '';
+    feedback.className = 'builder-feedback';
+  });
+  return el;
+}
+
+function setupDragDrop(container) {
+  container.addEventListener('dragover', e => {
+    e.preventDefault();
+    const dragging = document.querySelector('.dragging');
+    if (!dragging) return;
+    const afterEl = getDragAfterElement(container, e.clientX);
+    if (afterEl == null) {
+      container.appendChild(dragging);
+    } else {
+      container.insertBefore(dragging, afterEl);
+    }
+  });
+}
+
+function getDragAfterElement(container, x) {
+  const els = [...container.querySelectorAll('.word-block:not(.dragging)')];
+  return els.reduce((closest, child) => {
+    const box = child.getBoundingClientRect();
+    const offset = x - box.left - box.width / 2;
+    if (offset < 0 && offset > closest.offset) {
+      return { offset, element: child };
+    }
+    return closest;
+  }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
+function checkBuilder() {
+  const ch = challenges[currentChallenge % challenges.length];
+  const words = [...dropZone.querySelectorAll('.word-block')].map(el => el.textContent.toLowerCase());
+  const answer = words.join(' ');
+  if (answer === ch.correct) {
+    feedback.textContent = 'Правильно!';
+    feedback.className = 'builder-feedback feedback-correct';
+    dropZone.className = 'builder-area correct';
+  } else {
+    feedback.textContent = 'Неправильно. Попробуйте ещё раз!';
+    feedback.className = 'builder-feedback feedback-wrong';
+    dropZone.className = 'builder-area wrong';
+  }
+}
+
+function resetBuilder() {
+  loadChallenge(currentChallenge);
+}
+
+function nextChallenge() {
+  currentChallenge++;
+  loadChallenge(currentChallenge);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  dropZone = document.getElementById('builder-drop');
+  bank = document.getElementById('builder-bank');
+  feedback = document.getElementById('builder-feedback');
+  taskEl = document.getElementById('builder-task');
+  setupDragDrop(dropZone);
+  setupDragDrop(bank);
+  loadChallenge(0);
+});
+</script>
+
+</body>
+</html>
