@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇳🇴</text></svg>">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="NO quiz">
+<title>🇳🇴 Тренажёр норвежской грамматики</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #eef1f5;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #102040, #1a5276);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px 20px 60px;
+  }
+  .topics {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0 0 18px;
+  }
+  .topic-btn {
+    padding: 10px 18px;
+    border: 2px solid #1a5276;
+    background: white;
+    color: #1a5276;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .topic-btn:hover { background: #e4edf5; }
+  .topic-btn.active { background: #1a5276; color: white; }
+  .score-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    background: white;
+    border-radius: 12px;
+    padding: 14px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    margin-bottom: 18px;
+    font-size: 0.95em;
+  }
+  .score-item { display: flex; align-items: center; gap: 5px; }
+  .score-item .label { color: #888; }
+  .score-item .value { font-weight: 700; color: #102040; }
+  .streak-fire { font-size: 1.2em; }
+  .score-bar .reset-btn {
+    padding: 6px 14px;
+    background: #e4edf5;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85em;
+    color: #555;
+    transition: background 0.2s;
+  }
+  .score-bar .reset-btn:hover { background: #cdd8e6; }
+  .progress-wrap {
+    height: 6px;
+    background: #d5dce5;
+    border-radius: 3px;
+    margin-bottom: 18px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #1a5276, #2980b9);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  .quiz-card {
+    background: white;
+    border-radius: 16px;
+    padding: 36px 30px 30px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    text-align: center;
+    transition: background-color 0.3s;
+    min-height: 260px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .quiz-card.flash-correct { background-color: #e6f9ec; }
+  .quiz-card.flash-wrong { background-color: #fde8e8; }
+  .q-type {
+    font-size: 0.85em;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+  }
+  .q-sentence {
+    font-size: 1.5em;
+    font-weight: 600;
+    color: #102040;
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .q-hint {
+    font-size: 0.9em;
+    color: #888;
+    margin-bottom: 24px;
+    font-style: italic;
+  }
+  .q-blank {
+    background: #edf2f7;
+    border: 2px dashed #a4b8cc;
+    border-radius: 8px;
+    padding: 4px 14px;
+    display: inline-block;
+    min-width: 60px;
+    color: #1a5276;
+    font-weight: 700;
+  }
+  .answers {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  .ans-btn {
+    padding: 14px 24px;
+    min-width: 100px;
+    min-height: 48px;
+    border: 2px solid #bcc8d6;
+    background: white;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #2c2c2c;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .ans-btn:hover:not(.disabled) {
+    border-color: #1a5276;
+    background: #edf2f7;
+    transform: translateY(-1px);
+  }
+  .ans-btn.correct { border-color: #38a169; background: #e6f9ec; color: #22653a; }
+  .ans-btn.wrong { border-color: #e53e3e; background: #fde8e8; color: #9b2c2c; }
+  .ans-btn.disabled { cursor: default; opacity: 0.6; }
+  .ans-btn .key-hint {
+    position: absolute;
+    top: 3px;
+    right: 7px;
+    font-size: 0.6em;
+    color: #aaa;
+    font-weight: 400;
+  }
+  .feedback {
+    margin-top: 18px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-size: 0.95em;
+    line-height: 1.5;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct-fb { background: #e6f9ec; color: #22653a; border: 1px solid #b2e5c5; }
+  .feedback.wrong-fb { background: #fde8e8; color: #9b2c2c; border: 1px solid #f5b8b8; }
+  .feedback strong { display: block; margin-bottom: 4px; font-size: 1.05em; }
+  .feedback .explanation { font-size: 0.9em; opacity: 0.85; }
+  .continue-btn {
+    margin-top: 16px;
+    padding: 14px 36px;
+    background: linear-gradient(135deg, #1a5276, #2980b9);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.05em;
+    font-weight: 600;
+    cursor: pointer;
+    display: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .continue-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(26,82,118,0.3); }
+  .continue-btn.show { display: inline-block; }
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.3em; }
+    header p { font-size: 0.85em; }
+    .quiz-card { padding: 24px 16px 22px; }
+    .q-sentence { font-size: 1.25em; }
+    .ans-btn { padding: 12px 16px; min-width: 80px; font-size: 1em; }
+    .topic-btn { padding: 8px 12px; font-size: 0.85em; }
+    .score-bar { gap: 10px; font-size: 0.85em; padding: 10px 14px; }
+    .container { padding: 14px 12px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="norwegian.html" class="lang-switch">📖 Портал</a>
+  </div>
+  <h1>🇳🇴 Тренажёр норвежской грамматики</h1>
+  <p>Интерактивные упражнения — букмол</p>
+</header>
+
+<div class="container">
+  <div class="topics" id="topics"></div>
+  <div class="score-bar">
+    <div class="score-item"><span class="streak-fire">🔥</span> <span class="label">Серия:</span> <span class="value" id="streak">0</span></div>
+    <div class="score-item"><span class="label">Верно:</span> <span class="value" id="correctCount">0</span> / <span class="value" id="totalCount">0</span></div>
+    <div class="score-item"><span class="label">Точность:</span> <span class="value" id="pct">0%</span></div>
+    <button class="reset-btn" onclick="resetScore()">Сбросить</button>
+  </div>
+  <div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="quiz-card" id="quizCard">
+    <div class="q-type" id="qType"></div>
+    <div class="q-sentence" id="qSentence"></div>
+    <div class="q-hint" id="qHint"></div>
+    <div class="answers" id="answers"></div>
+    <div class="feedback" id="feedback"></div>
+    <button class="continue-btn" id="continueBtn" onclick="nextQuestion()">Далее →</button>
+  </div>
+</div>
+
+<script>
+// ===================== DATA =====================
+
+// ---- Topic 1: Nouns — gender & declension ----
+const nouns = [
+  // [word, gender, bestemt_ent, ubest_fl, best_fl, ru]
+  ["bil","m","bilen","biler","bilene","машина"],
+  ["dag","m","dagen","dager","dagene","день"],
+  ["mann","m","mannen","menn","mennene","мужчина"],
+  ["gutt","m","gutten","gutter","guttene","мальчик"],
+  ["hund","m","hunden","hunder","hundene","собака"],
+  ["stol","m","stolen","stoler","stolene","стул"],
+  ["venn","m","vennen","venner","vennene","друг"],
+  ["by","m","byen","byer","byene","город"],
+  ["film","m","filmen","filmer","filmene","фильм"],
+  ["båt","m","båten","båter","båtene","лодка"],
+  ["skole","m","skolen","skoler","skolene","школа"],
+  ["time","m","timen","timer","timene","час/урок"],
+  ["nøkkel","m","nøkkelen","nøkler","nøklene","ключ"],
+  ["sommer","m","sommeren","somre","somrene","лето"],
+  ["vinter","m","vinteren","vintre","vintrene","зима"],
+  ["bok","f","boka","bøker","bøkene","книга"],
+  ["jente","f","jenta","jenter","jentene","девочка"],
+  ["dør","f","døra","dører","dørene","дверь"],
+  ["sol","f","sola","soler","solene","солнце"],
+  ["klokke","f","klokka","klokker","klokkene","часы"],
+  ["avis","f","avisa","aviser","avisene","газета"],
+  ["lampe","f","lampa","lamper","lampene","лампа"],
+  ["hytte","f","hytta","hytter","hyttene","домик/дача"],
+  ["ku","f","kua","kuer","kuene","корова"],
+  ["seng","f","senga","senger","sengene","кровать"],
+  ["øy","f","øya","øyer","øyene","остров"],
+  ["hus","n","huset","hus","husene","дом"],
+  ["barn","n","barnet","barn","barna","ребёнок"],
+  ["år","n","året","år","årene","год"],
+  ["land","n","landet","land","landene","страна"],
+  ["vann","n","vannet","vann","vannene","вода"],
+  ["brev","n","brevet","brev","brevene","письмо"],
+  ["bord","n","bordet","bord","bordene","стол"],
+  ["eple","n","eplet","epler","eplene","яблоко"],
+  ["vindu","n","vinduet","vinduer","vinduene","окно"],
+  ["tog","n","toget","tog","togene","поезд"],
+  ["fly","n","flyet","fly","flyene","самолёт"],
+  ["fjell","n","fjellet","fjell","fjellene","гора"],
+  ["tre","n","treet","trær","trærne","дерево"],
+  ["øl","n","ølet","øl","ølene","пиво"],
+  ["brød","n","brødet","brød","brødene","хлеб"],
+  ["språk","n","språket","språk","språkene","язык"],
+];
+
+function makeNounQuestions() {
+  const qs = [];
+  const genderMap = {m:"en (мужской)",f:"ei (женский)",n:"et (средний)"};
+  const artMap = {m:"en",f:"ei",n:"et"};
+
+  for (const [word,g,best,ufl,bfl,ru] of nouns) {
+    // Gender
+    qs.push({
+      type:"Какой род?",
+      sentence: word,
+      hint: ru,
+      options:["en (мужской)","ei (женский)","et (средний)"],
+      correct: genderMap[g],
+      explanation:`${artMap[g]} ${word} (${ru}) — ${genderMap[g]}`
+    });
+
+    // Definite singular
+    qs.push({
+      type:"Определённая форма (ед.)",
+      sentence: `${artMap[g]} ${word} → ___`,
+      hint: `${ru} — добавьте артикль-суффикс`,
+      options: shuffle([best, ...getWrong(best, nouns.map(n=>n[2]))]).slice(0,4),
+      correct: best,
+      explanation:`${artMap[g]} ${word} → ${best} (${ru})`
+    });
+
+    // Plural indefinite
+    qs.push({
+      type:"Множественное число",
+      sentence: `${word} → ___`,
+      hint: `${ru} (мн. ч., неопр.)`,
+      options: shuffle([ufl, ...getWrong(ufl, nouns.map(n=>n[3]))]).slice(0,4),
+      correct: ufl,
+      explanation:`${word} → ${ufl} → ${bfl} (${ru})`
+    });
+  }
+  return qs;
+}
+
+// ---- Topic 2: Verbs — conjugation ----
+const verbs = [
+  // [infinitiv, presens, preteritum, pp, group, ru]
+  ["å snakke","snakker","snakket","snakket","1","говорить"],
+  ["å spille","spiller","spilte","spilt","2a","играть"],
+  ["å lese","leser","leste","lest","2a","читать"],
+  ["å kjøpe","kjøper","kjøpte","kjøpt","2a","покупать"],
+  ["å bo","bor","bodde","bodd","3","жить"],
+  ["å leve","lever","levde","levd","3","жить/существовать"],
+  ["å spise","spiser","spiste","spist","2a","есть"],
+  ["å drikke","drikker","drakk","drukket","sterk","пить"],
+  ["å skrive","skriver","skrev","skrevet","sterk","писать"],
+  ["å finne","finner","fant","funnet","sterk","находить"],
+  ["å komme","kommer","kom","kommet","sterk","приходить"],
+  ["å gå","går","gikk","gått","sterk","идти"],
+  ["å ta","tar","tok","tatt","sterk","брать"],
+  ["å gi","gir","ga","gitt","sterk","давать"],
+  ["å se","ser","så","sett","sterk","видеть"],
+  ["å si","sier","sa","sagt","sterk","говорить/сказать"],
+  ["å sove","sover","sov","sovet","sterk","спать"],
+  ["å ligge","ligger","lå","ligget","sterk","лежать"],
+  ["å sitte","sitter","satt","sittet","sterk","сидеть"],
+  ["å stå","står","sto","stått","sterk","стоять"],
+  ["å være","er","var","vært","ureg","быть"],
+  ["å ha","har","hadde","hatt","ureg","иметь"],
+  ["å bli","blir","ble","blitt","ureg","становиться"],
+  ["å gjøre","gjør","gjorde","gjort","ureg","делать"],
+  ["å kunne","kan","kunne","kunnet","modal","мочь/уметь"],
+  ["å ville","vil","ville","villet","modal","хотеть"],
+  ["å skulle","skal","skulle","skullet","modal","быть должным"],
+  ["å måtte","må","måtte","måttet","modal","быть обязанным"],
+  ["å vite","vet","visste","visst","ureg","знать"],
+  ["å like","liker","likte","likt","2a","нравиться"],
+  ["å jobbe","jobber","jobbet","jobbet","1","работать"],
+  ["å hjelpe","hjelper","hjalp","hjulpet","sterk","помогать"],
+  ["å synge","synger","sang","sunget","sterk","петь"],
+  ["å fly","flyr","fløy","fløyet","sterk","летать"],
+  ["å lage","lager","laget","laget","1","готовить/делать"],
+  ["å handle","handler","handlet","handlet","1","покупать/действовать"],
+  ["å reise","reiser","reiste","reist","2a","путешествовать"],
+  ["å begynne","begynner","begynte","begynt","2a","начинать"],
+  ["å forstå","forstår","forsto","forstått","sterk","понимать"],
+  ["å tenke","tenker","tenkte","tenkt","2a","думать"],
+];
+
+function makeVerbQuestions() {
+  const qs = [];
+  for (const [inf,pres,pret,pp,grp,ru] of verbs) {
+    // Presens
+    qs.push({
+      type:"Presens",
+      sentence:`${inf} → ___`,
+      hint:`${ru} (настоящее время)`,
+      options: shuffle([pres, ...getWrong(pres, verbs.map(v=>v[1]))]).slice(0,4),
+      correct: pres,
+      explanation:`${inf} → ${pres} (presens). ${ru}`
+    });
+    // Preteritum
+    qs.push({
+      type:"Preteritum",
+      sentence:`${inf} → ___`,
+      hint:`${ru} (прошедшее время)`,
+      options: shuffle([pret, ...getWrong(pret, verbs.map(v=>v[2]))]).slice(0,4),
+      correct: pret,
+      explanation:`${inf} → ${pret} (preteritum). ${ru}`
+    });
+    // Perfektum (past participle)
+    qs.push({
+      type:"Perfektum (har + ___)",
+      sentence:`${inf} → har ___`,
+      hint:`${ru} (причастие прошедшего времени)`,
+      options: shuffle([pp, ...getWrong(pp, verbs.map(v=>v[3]))]).slice(0,4),
+      correct: pp,
+      explanation:`${inf} → har ${pp} (presens perfektum). ${ru}`
+    });
+  }
+  return qs;
+}
+
+// ---- Topic 3: Adjectives — agreement ----
+const adjectives = [
+  // [base(m/f), neuter, plural/def, ru]
+  ["stor","stort","store","большой"],
+  ["liten","lite","små","маленький"],
+  ["god","godt","gode","хороший"],
+  ["ny","nytt","nye","новый"],
+  ["gammel","gammelt","gamle","старый"],
+  ["lang","langt","lange","длинный"],
+  ["kort","kort","korte","короткий"],
+  ["fin","fint","fine","хороший/красивый"],
+  ["pen","pent","pene","красивый"],
+  ["stygg","stygt","stygge","некрасивый"],
+  ["ung","ungt","unge","молодой"],
+  ["varm","varmt","varme","тёплый"],
+  ["kald","kaldt","kalde","холодный"],
+  ["dyr","dyrt","dyre","дорогой"],
+  ["billig","billig","billige","дешёвый"],
+  ["rik","rikt","rike","богатый"],
+  ["sterk","sterkt","sterke","сильный"],
+  ["svak","svakt","svake","слабый"],
+  ["rask","raskt","raske","быстрый"],
+  ["hvit","hvitt","hvite","белый"],
+  ["svart","svart","svarte","чёрный"],
+  ["rød","rødt","røde","красный"],
+  ["blå","blått","blå","синий"],
+  ["grønn","grønt","grønne","зелёный"],
+  ["gul","gult","gule","жёлтый"],
+  ["norsk","norsk","norske","норвежский"],
+  ["glad","glad","glade","весёлый/рад"],
+  ["sint","sint","sinte","злой"],
+  ["trøtt","trøtt","trøtte","усталый"],
+  ["sulten","sultent","sultne","голодный"],
+  ["tørst","tørstt","tørste","жаждущий"],
+];
+
+function makeAdjQuestions() {
+  const qs = [];
+  for (const [base, neut, pl, ru] of adjectives) {
+    // en-word agreement
+    qs.push({
+      type:"Согласование (en-слово)",
+      sentence:`en ___ bil`,
+      hint:`${ru} — мужской/женский род, ед.ч.`,
+      options: shuffle([base, neut, pl]).slice(0,3),
+      correct: base,
+      explanation:`en ${base} bil — en/ei-слова → основная форма: ${base} (${ru})`
+    });
+    // et-word agreement
+    qs.push({
+      type:"Согласование (et-слово)",
+      sentence:`et ___ hus`,
+      hint:`${ru} — средний род, ед.ч.`,
+      options: shuffle([base, neut, pl]).slice(0,3),
+      correct: neut,
+      explanation:`et ${neut} hus — et-слова → форма среднего рода: ${neut} (${ru})`
+    });
+    // plural / definite
+    qs.push({
+      type:"Согласование (мн.ч. / определённое)",
+      sentence:`de ___ husene`,
+      hint:`${ru} — мн.ч. или определённая форма`,
+      options: shuffle([base, neut, pl]).slice(0,3),
+      correct: pl,
+      explanation:`de ${pl} husene — мн.ч./определённое → форма: ${pl} (${ru})`
+    });
+  }
+  return qs;
+}
+
+// ---- Topic 4: Prepositions ----
+const prepQuestions = [
+  // Time: i/på/om
+  {type:"Предлог времени",sentence:"Jeg er født ___ 1995.",hint:"Год",options:["i","på","om"],correct:"i",explanation:"i 1995 — годы → i"},
+  {type:"Предлог времени",sentence:"Vi ses ___ mandag.",hint:"День недели",options:["i","på","om"],correct:"på",explanation:"på mandag — дни недели → på"},
+  {type:"Предлог времени",sentence:"Jeg våkner ___ morgenen.",hint:"Утро (время суток с артиклем)",options:["i","på","om"],correct:"om",explanation:"om morgenen — время суток → om"},
+  {type:"Предлог времени",sentence:"Hun kommer ___ tre uker.",hint:"Через три недели",options:["i","om","på"],correct:"om",explanation:"om tre uker — через (будущее) → om"},
+  {type:"Предлог времени",sentence:"Jeg jobbet ___ to timer.",hint:"В течение двух часов",options:["i","om","på"],correct:"i",explanation:"i to timer — длительность → i"},
+  {type:"Предлог времени",sentence:"Butikken åpner ___ ti minutter.",hint:"Через десять минут",options:["i","om","på"],correct:"om",explanation:"om ti minutter — через → om"},
+  {type:"Предлог времени",sentence:"___ sommeren reiser vi til Norge.",hint:"Летом",options:["I","Om","På"],correct:"Om",explanation:"Om sommeren — времена года → om"},
+  {type:"Предлог времени",sentence:"Vi spiser middag ___ seks.",hint:"В шесть (время)",options:["klokka","i","på"],correct:"klokka",explanation:"klokka seks — точное время → klokka"},
+
+  // Place: i/på
+  {type:"Предлог места",sentence:"Jeg bor ___ Oslo.",hint:"Город",options:["i","på"],correct:"i",explanation:"i Oslo — города → i"},
+  {type:"Предлог места",sentence:"Boka ligger ___ bordet.",hint:"На столе",options:["i","på"],correct:"på",explanation:"på bordet — на поверхности → på"},
+  {type:"Предлог места",sentence:"Hun er ___ skolen.",hint:"В школе",options:["i","på"],correct:"på",explanation:"på skolen — учреждения (школа, работа) → på"},
+  {type:"Предлог места",sentence:"Katten sitter ___ stolen.",hint:"На стуле",options:["i","på"],correct:"på",explanation:"på stolen — на поверхности → på"},
+  {type:"Предлог места",sentence:"Nøklene er ___ lomma.",hint:"В кармане",options:["i","på"],correct:"i",explanation:"i lomma — внутри → i"},
+  {type:"Предлог места",sentence:"Vi bor ___ et stort hus.",hint:"В доме",options:["i","på"],correct:"i",explanation:"i et hus — внутри помещения → i"},
+  {type:"Предлог места",sentence:"Han jobber ___ et kontor.",hint:"В офисе",options:["i","på"],correct:"på",explanation:"på et kontor — рабочее место → på"},
+  {type:"Предлог места",sentence:"De er ___ ferie.",hint:"В отпуске",options:["i","på"],correct:"på",explanation:"på ferie — устойчивое: на каникулах/в отпуске → på"},
+  {type:"Предлог места",sentence:"Jeg så det ___ TV.",hint:"По телевизору",options:["i","på"],correct:"på",explanation:"på TV — на экране/устройстве → på"},
+  {type:"Предлог места",sentence:"Han er ___ sykehuset.",hint:"В больнице",options:["i","på"],correct:"på",explanation:"på sykehuset — учреждения → på"},
+
+  // Direction: til/fra/gjennom
+  {type:"Предлог направления",sentence:"Vi reiser ___ Bergen.",hint:"Куда? В Берген",options:["til","i","fra"],correct:"til",explanation:"til Bergen — направление → til"},
+  {type:"Предлог направления",sentence:"Hun kommer ___ Sverige.",hint:"Откуда? Из Швеции",options:["til","fra","av"],correct:"fra",explanation:"fra Sverige — откуда → fra"},
+  {type:"Предлог направления",sentence:"Vi gikk ___ parken.",hint:"Через парк",options:["gjennom","til","i"],correct:"gjennom",explanation:"gjennom parken — через/сквозь → gjennom"},
+  {type:"Предлог направления",sentence:"Katten hoppet ___ vinduet.",hint:"Через (наружу из) окно",options:["ut av","gjennom","til"],correct:"ut av",explanation:"ut av vinduet — наружу из → ut av"},
+
+  // Other
+  {type:"Какой предлог?",sentence:"Jeg bor ___ foreldrene mine.",hint:"С (вместе)",options:["med","hos","ved"],correct:"hos",explanation:"hos foreldrene = у родителей (жить у кого-то → hos)"},
+  {type:"Какой предлог?",sentence:"Jeg snakker ___ en venn.",hint:"С другом (разговариваю)",options:["med","til","hos"],correct:"med",explanation:"snakke med = разговаривать с → med"},
+  {type:"Какой предлог?",sentence:"Jeg er interessert ___ musikk.",hint:"Интересуюсь чем-то",options:["i","av","på"],correct:"i",explanation:"interessert i = интересоваться чем-то → i"},
+  {type:"Какой предлог?",sentence:"Jeg er redd ___ edderkopper.",hint:"Бояться чего-то",options:["for","av","om"],correct:"for",explanation:"redd for = бояться → for"},
+  {type:"Какой предлог?",sentence:"Boka handler ___ en gutt.",hint:"Книга о мальчике",options:["om","av","for"],correct:"om",explanation:"handle om = быть о, рассказывать о → om"},
+  {type:"Какой предлог?",sentence:"Huset er laget ___ tre.",hint:"Сделан из дерева",options:["av","med","fra"],correct:"av",explanation:"laget av = сделан из (материал) → av"},
+];
+
+// ---- Topic 5: Word Order (V2 rule) ----
+const wordOrderQuestions = [
+  {type:"Порядок слов",sentence:"Jeg / liker / kaffe",hint:"Обычное утверждение (SVO)",options:["Jeg liker kaffe","Liker jeg kaffe","Kaffe liker jeg","Jeg kaffe liker"],correct:"Jeg liker kaffe",explanation:"SVO: Jeg (S) liker (V) kaffe (O) — глагол на 2-м месте"},
+  {type:"Порядок слов (инверсия)",sentence:"I går / jeg / leste / ei bok",hint:"Наречие на первом месте → инверсия!",options:["I går leste jeg ei bok","I går jeg leste ei bok","Jeg leste i går ei bok","Jeg i går leste ei bok"],correct:"I går leste jeg ei bok",explanation:"V2: I går (X) leste (V) jeg (S) — наречие первое → глагол 2-й, подлежащее 3-е"},
+  {type:"Порядок слов (инверсия)",sentence:"Nå / vi / bor / i Oslo",hint:"Nå (сейчас) на первом месте",options:["Nå bor vi i Oslo","Nå vi bor i Oslo","Vi bor nå i Oslo","Vi nå bor i Oslo"],correct:"Nå bor vi i Oslo",explanation:"V2: Nå (X) bor (V) vi (S) i Oslo — инверсия"},
+  {type:"Порядок слов (вопрос)",sentence:"Liker / du / kaffe / ?",hint:"Да/нет вопрос",options:["Liker du kaffe?","Du liker kaffe?","Kaffe du liker?","Du kaffe liker?"],correct:"Liker du kaffe?",explanation:"Да/нет вопрос: V (liker) + S (du) + O — глагол на 1-м месте"},
+  {type:"Порядок слов (вопрос)",sentence:"Hva / liker / du / ?",hint:"Вопрос с вопросительным словом",options:["Hva liker du?","Liker hva du?","Hva du liker?","Du liker hva?"],correct:"Hva liker du?",explanation:"Вопрос: Hva (Q) liker (V) du (S)? — V2 сохраняется"},
+  {type:"Порядок слов (вопрос)",sentence:"Hvor / bor / du / ?",hint:"Где ты живёшь?",options:["Hvor bor du?","Hvor du bor?","Bor du hvor?","Du bor hvor?"],correct:"Hvor bor du?",explanation:"Hvor (Q) bor (V) du (S)? — вопросительное слово + V2"},
+  {type:"Отрицание (главное предл.)",sentence:"Jeg / liker / ikke / kaffe",hint:"Где стоит ikke в главном предложении?",options:["Jeg liker ikke kaffe","Jeg ikke liker kaffe","Ikke jeg liker kaffe","Jeg liker kaffe ikke"],correct:"Jeg liker ikke kaffe",explanation:"Главное предложение: S + V + ikke + O. Ikke ПОСЛЕ глагола"},
+  {type:"Отрицание (придаточное)",sentence:"...fordi / jeg / ikke / liker / kaffe",hint:"Где стоит ikke в придаточном? (BIFF-правило)",options:["...fordi jeg ikke liker kaffe","...fordi jeg liker ikke kaffe","...fordi ikke jeg liker kaffe","...fordi liker jeg ikke kaffe"],correct:"...fordi jeg ikke liker kaffe",explanation:"Придаточное (BIFF): ...fordi S + ikke + V + O. Ikke ПЕРЕД глаголом!"},
+  {type:"Отрицание (придаточное)",sentence:"...at / hun / ikke / kan / svømme",hint:"Придаточное с модальным глаголом",options:["...at hun ikke kan svømme","...at hun kan ikke svømme","...at ikke hun kan svømme","...at kan hun ikke svømme"],correct:"...at hun ikke kan svømme",explanation:"Придаточное: ...at S + ikke + V. Ikke перед глаголом (BIFF)"},
+  {type:"Порядок слов (инверсия)",sentence:"Kanskje / han / kommer / i morgen",hint:"Kanskje на первом месте",options:["Kanskje kommer han i morgen","Kanskje han kommer i morgen","Han kanskje kommer i morgen","Kommer kanskje han i morgen"],correct:"Kanskje kommer han i morgen",explanation:"V2: Kanskje (X) kommer (V) han (S) — инверсия"},
+  {type:"Порядок слов",sentence:"Hun / kan / ikke / svømme",hint:"Модальный глагол + отрицание (главное предл.)",options:["Hun kan ikke svømme","Hun ikke kan svømme","Kan hun ikke svømme","Ikke hun kan svømme"],correct:"Hun kan ikke svømme",explanation:"Главное: S + V(modal) + ikke + infinitiv. Ikke после модального глагола"},
+  {type:"Порядок слов (инверсия)",sentence:"Hver dag / spiser / jeg / frokost",hint:"Каждый день...",options:["Hver dag spiser jeg frokost","Hver dag jeg spiser frokost","Jeg spiser hver dag frokost","Jeg hver dag spiser frokost"],correct:"Hver dag spiser jeg frokost",explanation:"V2: Hver dag (X) spiser (V) jeg (S) frokost (O) — инверсия"},
+
+  // Identify rule
+  {type:"Какое правило?",sentence:"I morgen reiser vi til Bergen.",hint:"Что произошло в этом предложении?",options:["Инверсия (V2)","Обычный порядок SVO","Вопрос","Придаточное"],correct:"Инверсия (V2)",explanation:"I morgen (X) reiser (V) vi (S) — наречие времени на 1-м месте → инверсия, глагол остаётся на 2-м"},
+  {type:"Какое правило?",sentence:"Jeg vet at hun ikke liker fisk.",hint:"Обратите внимание на at hun ikke liker",options:["BIFF (ikke перед V)","Инверсия","Обычный SVO","Вопрос"],correct:"BIFF (ikke перед V)",explanation:"...at hun ikke liker — в придаточном (после at) ikke стоит ПЕРЕД глаголом = BIFF-правило"},
+];
+
+// ===================== HELPERS =====================
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function getWrong(correct, pool) {
+  const unique = [...new Set(pool.filter(x => x !== correct))];
+  return shuffle(unique).slice(0, 3);
+}
+
+// ===================== APP STATE =====================
+const TOPICS = [
+  { id: "nouns", label: "Существительные" },
+  { id: "verbs", label: "Глаголы" },
+  { id: "adjectives", label: "Прилагательные" },
+  { id: "prepositions", label: "Предлоги" },
+  { id: "wordorder", label: "Порядок слов" },
+  { id: "all", label: "Все темы" },
+];
+
+let currentTopic = "all";
+let questions = [];
+let qIndex = 0;
+let score = { correct: 0, total: 0, streak: 0, maxStreak: 0 };
+let answered = false;
+
+function init() {
+  renderTopics();
+  loadScore();
+  buildQuestions();
+  showQuestion();
+  document.addEventListener("keydown", handleKey);
+}
+
+function renderTopics() {
+  const el = document.getElementById("topics");
+  el.innerHTML = TOPICS.map(t =>
+    `<button class="topic-btn${t.id === currentTopic ? ' active' : ''}" data-topic="${t.id}">${t.label}</button>`
+  ).join("");
+  el.querySelectorAll(".topic-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      currentTopic = btn.dataset.topic;
+      renderTopics();
+      buildQuestions();
+      showQuestion();
+    });
+  });
+}
+
+function buildQuestions() {
+  let pool = [];
+  if (currentTopic === "nouns" || currentTopic === "all") pool = pool.concat(makeNounQuestions());
+  if (currentTopic === "verbs" || currentTopic === "all") pool = pool.concat(makeVerbQuestions());
+  if (currentTopic === "adjectives" || currentTopic === "all") pool = pool.concat(makeAdjQuestions());
+  if (currentTopic === "prepositions" || currentTopic === "all") pool = pool.concat(prepQuestions);
+  if (currentTopic === "wordorder" || currentTopic === "all") pool = pool.concat(wordOrderQuestions);
+  questions = shuffle(pool);
+  qIndex = 0;
+}
+
+function showQuestion() {
+  if (questions.length === 0) return;
+  if (qIndex >= questions.length) {
+    questions = shuffle(questions);
+    qIndex = 0;
+  }
+  answered = false;
+  const q = questions[qIndex];
+  const card = document.getElementById("quizCard");
+  card.classList.remove("flash-correct", "flash-wrong");
+  document.getElementById("qType").textContent = q.type;
+  document.getElementById("qSentence").innerHTML = formatSentence(q.sentence);
+  document.getElementById("qHint").textContent = q.hint || "";
+  const answersEl = document.getElementById("answers");
+  answersEl.innerHTML = q.options.map((opt, i) =>
+    `<button class="ans-btn" data-idx="${i}"><span class="key-hint">${i + 1}</span>${opt}</button>`
+  ).join("");
+  answersEl.querySelectorAll(".ans-btn").forEach(btn => {
+    btn.addEventListener("click", () => selectAnswer(btn, q));
+  });
+  document.getElementById("feedback").className = "feedback";
+  document.getElementById("feedback").innerHTML = "";
+  document.getElementById("continueBtn").classList.remove("show");
+  updateProgress();
+  updateScoreDisplay();
+}
+
+function formatSentence(s) {
+  return s.replace(/\[([^\]]+)\]/g, '<span class="q-blank">$1</span>')
+          .replace(/___/g, '<span class="q-blank">???</span>');
+}
+
+function selectAnswer(btn, q) {
+  if (answered) return;
+  answered = true;
+  const selected = q.options[parseInt(btn.dataset.idx)];
+  const isCorrect = selected === q.correct;
+  const card = document.getElementById("quizCard");
+  document.getElementById("answers").querySelectorAll(".ans-btn").forEach(b => {
+    b.classList.add("disabled");
+    if (q.options[parseInt(b.dataset.idx)] === q.correct) b.classList.add("correct");
+  });
+  if (isCorrect) {
+    btn.classList.add("correct");
+    card.classList.add("flash-correct");
+    score.correct++;
+    score.streak++;
+    if (score.streak > score.maxStreak) score.maxStreak = score.streak;
+    showFeedback(true, q.explanation);
+  } else {
+    btn.classList.add("wrong");
+    card.classList.add("flash-wrong");
+    score.streak = 0;
+    showFeedback(false, q.explanation);
+  }
+  score.total++;
+  saveScore();
+  updateScoreDisplay();
+  document.getElementById("continueBtn").classList.add("show");
+}
+
+function showFeedback(correct, explanation) {
+  const fb = document.getElementById("feedback");
+  fb.className = "feedback show " + (correct ? "correct-fb" : "wrong-fb");
+  fb.innerHTML = `<strong>${correct ? "Riktig! ✓" : "Feil ✗"}</strong><span class="explanation">${explanation}</span>`;
+}
+
+function nextQuestion() { qIndex++; showQuestion(); }
+
+function updateScoreDisplay() {
+  document.getElementById("streak").textContent = score.streak;
+  document.getElementById("correctCount").textContent = score.correct;
+  document.getElementById("totalCount").textContent = score.total;
+  const pct = score.total > 0 ? Math.round(score.correct / score.total * 100) : 0;
+  document.getElementById("pct").textContent = pct + "%";
+}
+
+function updateProgress() {
+  const pct = questions.length > 0 ? Math.min(100, Math.round((qIndex / questions.length) * 100)) : 0;
+  document.getElementById("progressFill").style.width = pct + "%";
+}
+
+function resetScore() {
+  score = { correct: 0, total: 0, streak: 0, maxStreak: 0 };
+  saveScore();
+  updateScoreDisplay();
+  buildQuestions();
+  showQuestion();
+}
+
+function saveScore() {
+  try { localStorage.setItem("no-quiz-score", JSON.stringify(score)); } catch(e) {}
+}
+
+function loadScore() {
+  try {
+    const s = JSON.parse(localStorage.getItem("no-quiz-score"));
+    if (s) score = { correct: s.correct || 0, total: s.total || 0, streak: s.streak || 0, maxStreak: s.maxStreak || 0 };
+  } catch(e) {}
+}
+
+function handleKey(e) {
+  if (answered) {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); nextQuestion(); }
+    return;
+  }
+  const keyMap = { "1": 0, "2": 1, "3": 2, "4": 3 };
+  if (keyMap[e.key] !== undefined) {
+    const btns = document.querySelectorAll("#answers .ans-btn");
+    if (btns[keyMap[e.key]]) btns[keyMap[e.key]].click();
+  }
+  if (e.key === "Escape") {
+    currentTopic = "all";
+    renderTopics();
+    buildQuestions();
+    showQuestion();
+  }
+}
+
+init();
+</script>
+</body>
+</html>
