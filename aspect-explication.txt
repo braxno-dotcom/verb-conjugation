@@ -1,0 +1,88 @@
+L'ASPECT DU VERBE RUSSE — la chose la plus difficile de la langue russe
+=========================================================================
+
+En russe, presque chaque verbe existe en DEUX versions :
+- IMPERFECTIF (несовершенный вид) → le processus, l'action en cours
+- PERFECTIF (совершенный вид) → le résultat, l'action achevée
+
+C'est comme si en français, « écrire » et « avoir fini d'écrire » étaient deux verbes différents. En russe, c'est exactement le cas.
+
+
+ПИСАЛ vs НАПИСАЛ (écrire)
+--------------------------
+
+ПИСАЛ (imperfectif) = il écrivait / il a écrit (sans accent sur le résultat)
+  « Я вчера весь вечер писал письмо »
+  = J'ai écrit une lettre toute la soirée hier
+  → Peut-être qu'il ne l'a même pas terminée. On parle du PROCESSUS.
+  → L'accent est sur : QU'EST-CE QU'IL FAISAIT ?
+
+НАПИСАЛ (perfectif) = il a écrit (avec résultat)
+  « Я написал письмо и отправил »
+  = J'ai écrit la lettre et je l'ai envoyée
+  → C'est TERMINÉ. Le résultat est là.
+  → L'accent est sur : QU'EST-CE QU'IL A FAIT ? (= accompli)
+
+
+ЗВОНИЛ vs ПОЗВОНИЛ (appeler/téléphoner)
+-----------------------------------------
+
+ЗВОНИЛ (imperfectif) :
+  « Я тебе звонил »
+  = Je t'ai appelé (mais tu n'as pas décroché, ou j'ai appelé plusieurs fois)
+  → Le processus, la tentative, la répétition
+
+ПОЗВОНИЛ (perfectif) :
+  « Я тебе позвонил »
+  = Je t'ai appelé (une fois, et l'appel a eu lieu)
+  → Le fait accompli, le résultat
+
+
+LE TEST SIMPLE
+--------------
+
+Pose la question en russe :
+
+  ЧТО ДЕЛАЛ ?  (que faisait-il ?)     → verbe IMPERFECTIF
+  ЧТО СДЕЛАЛ ? (qu'a-t-il fait/accompli ?) → verbe PERFECTIF
+
+La seule lettre « С » change tout !
+
+  делал  → faisait (processus)
+  Сделал → a fait (résultat)
+
+  писал  → écrivait
+  наПисал → a écrit (terminé)
+
+  звонил → appelait
+  поЗвонил → a appelé (fait accompli)
+
+
+TABLEAU RÉCAPITULATIF
+---------------------
+
+  Imperfectif          Perfectif            Français
+  (что делал?)         (что сделал?)
+  ─────────────────    ─────────────────    ──────────────────
+  делать / делал       сделать / сделал     faire
+  писать / писал       написать / написал   écrire
+  читать / читал       прочитать / прочитал lire
+  говорить / говорил   сказать / сказал     dire / parler
+  звонить / звонил     позвонить / позвонил appeler
+  открывать / открывал открыть / открыл     ouvrir
+  покупать / покупал   купить / купил       acheter
+  учить / учил         выучить / выучил     apprendre
+
+
+ASTUCE POUR UN FRANCOPHONE
+---------------------------
+
+Pense à ça :
+
+  IMPERFECTIF = imparfait français (il écrivait, il appelait)
+               ou passé composé SANS insister sur le résultat
+
+  PERFECTIF   = passé composé AVEC résultat clair
+               (il a écrit → c'est fait, c'est fini)
+
+Ce n'est pas une correspondance parfaite, mais c'est un bon point de départ !

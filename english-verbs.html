@@ -1239,9 +1239,9 @@ function conjugate() {
   badgesHTML += '<span class="badge badge-pp">Past Participle: ' + forms.v3 + '</span>';
   badgesHTML += '<span class="badge badge-gp">Gerund: ' + forms.ing + '</span>';
   if (ruTranslation) {
-    badgesHTML += '<span class="badge badge-ru">🇷🇺 ' + ruTranslation + '</span>';
+    badgesHTML += '<span class="badge badge-ru">RU ' + ruTranslation + '</span>';
   } else if (PP_RU[verb]) {
-    badgesHTML += '<span class="badge badge-ru">🇷🇺 ' + PP_RU[verb] + '</span>';
+    badgesHTML += '<span class="badge badge-ru">RU ' + PP_RU[verb] + '</span>';
   }
   verbInfoDiv.innerHTML = badgesHTML;
   verbInfoDiv.style.display = 'block';
