@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://braxno-dotcom.github.io/verb-conjugation/sitemap.xml
