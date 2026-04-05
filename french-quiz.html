@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇫🇷</text></svg>">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="FR quiz">
+<title>🇫🇷 Тренажёр французской грамматики</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #eef0f5;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #1a365d, #2a4a7f);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px 20px 60px;
+  }
+
+  /* Topic selector */
+  .topics {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0 0 18px;
+  }
+  .topic-btn {
+    padding: 10px 18px;
+    border: 2px solid #2a4a7f;
+    background: white;
+    color: #2a4a7f;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .topic-btn:hover { background: #e8ecf4; }
+  .topic-btn.active {
+    background: #2a4a7f;
+    color: white;
+  }
+
+  /* Score bar */
+  .score-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    background: white;
+    border-radius: 12px;
+    padding: 14px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    margin-bottom: 18px;
+    font-size: 0.95em;
+  }
+  .score-item { display: flex; align-items: center; gap: 5px; }
+  .score-item .label { color: #888; }
+  .score-item .value { font-weight: 700; color: #1a365d; }
+  .streak-fire { font-size: 1.2em; }
+  .score-bar .reset-btn {
+    padding: 6px 14px;
+    background: #e8ecf4;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85em;
+    color: #555;
+    transition: background 0.2s;
+  }
+  .score-bar .reset-btn:hover { background: #d0d6e4; }
+
+  /* Progress bar */
+  .progress-wrap {
+    height: 6px;
+    background: #dde1ea;
+    border-radius: 3px;
+    margin-bottom: 18px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #2a4a7f, #4a7abf);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  /* Quiz card */
+  .quiz-card {
+    background: white;
+    border-radius: 16px;
+    padding: 36px 30px 30px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    text-align: center;
+    transition: background-color 0.3s;
+    min-height: 260px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .quiz-card.flash-correct { background-color: #e6f9ec; }
+  .quiz-card.flash-wrong { background-color: #fde8e8; }
+
+  .q-type {
+    font-size: 0.85em;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+  }
+  .q-sentence {
+    font-size: 1.5em;
+    font-weight: 600;
+    color: #1a365d;
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .q-hint {
+    font-size: 0.9em;
+    color: #888;
+    margin-bottom: 24px;
+    font-style: italic;
+  }
+  .q-blank {
+    background: #f0f3fa;
+    border: 2px dashed #b8c3d9;
+    border-radius: 8px;
+    padding: 4px 14px;
+    display: inline-block;
+    min-width: 60px;
+    color: #2a4a7f;
+    font-weight: 700;
+  }
+
+  /* Answer buttons */
+  .answers {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  .ans-btn {
+    padding: 14px 24px;
+    min-width: 100px;
+    min-height: 48px;
+    border: 2px solid #c8d0e0;
+    background: white;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #2c2c2c;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .ans-btn:hover:not(.disabled) {
+    border-color: #2a4a7f;
+    background: #f0f3fa;
+    transform: translateY(-1px);
+  }
+  .ans-btn.correct {
+    border-color: #38a169;
+    background: #e6f9ec;
+    color: #22653a;
+  }
+  .ans-btn.wrong {
+    border-color: #e53e3e;
+    background: #fde8e8;
+    color: #9b2c2c;
+  }
+  .ans-btn.disabled { cursor: default; opacity: 0.6; }
+  .ans-btn .key-hint {
+    position: absolute;
+    top: 3px;
+    right: 7px;
+    font-size: 0.6em;
+    color: #aaa;
+    font-weight: 400;
+  }
+
+  /* Feedback */
+  .feedback {
+    margin-top: 18px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-size: 0.95em;
+    line-height: 1.5;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct-fb {
+    background: #e6f9ec;
+    color: #22653a;
+    border: 1px solid #b2e5c5;
+  }
+  .feedback.wrong-fb {
+    background: #fde8e8;
+    color: #9b2c2c;
+    border: 1px solid #f5b8b8;
+  }
+  .feedback strong { display: block; margin-bottom: 4px; font-size: 1.05em; }
+  .feedback .explanation { font-size: 0.9em; opacity: 0.85; }
+
+  .continue-hint {
+    margin-top: 12px;
+    font-size: 0.8em;
+    color: #aaa;
+    display: none;
+  }
+  .continue-hint.show { display: block; }
+
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.3em; }
+    .quiz-card { padding: 24px 16px 22px; }
+    .q-sentence { font-size: 1.25em; }
+    .ans-btn { padding: 12px 16px; min-width: 80px; font-size: 1em; }
+    .topic-btn { padding: 8px 12px; font-size: 0.85em; }
+    .score-bar { gap: 10px; font-size: 0.85em; padding: 10px 14px; }
+    .container { padding: 14px 12px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="french.html" class="lang-switch">📖 Портал</a>
+  </div>
+  <h1>🇫🇷 Тренажёр французской грамматики</h1>
+  <p>Интерактивные упражнения по ключевым темам</p>
+</header>
+
+<div class="container">
+  <div class="topics" id="topics"></div>
+
+  <div class="score-bar" id="scoreBar">
+    <div class="score-item"><span class="streak-fire">🔥</span> <span class="label">Серия:</span> <span class="value" id="streak">0</span></div>
+    <div class="score-item"><span class="label">Верно:</span> <span class="value" id="correctCount">0</span> / <span class="value" id="totalCount">0</span></div>
+    <div class="score-item"><span class="label">Точность:</span> <span class="value" id="pct">0%</span></div>
+    <button class="reset-btn" onclick="resetScore()">Сбросить</button>
+  </div>
+
+  <div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+
+  <div class="quiz-card" id="quizCard">
+    <div class="q-type" id="qType"></div>
+    <div class="q-sentence" id="qSentence"></div>
+    <div class="q-hint" id="qHint"></div>
+    <div class="answers" id="answers"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="continue-hint" id="continueHint">Enter / пробел / клик — далее</div>
+  </div>
+</div>
+
+<script>
+// ===================== DATA =====================
+
+// ---- Topic 1: Articles & Gender ----
+const nouns = [
+  // [word, gender m/f, startsWithVowelOrH]
+  ["chat","m",false],["chien","m",false],["maison","f",false],["voiture","f",false],
+  ["livre","m",false],["table","f",false],["fenêtre","f",false],["école","f",true],
+  ["hôpital","m",true],["jardin","m",false],["fleur","f",false],["arbre","m",true],
+  ["soleil","m",false],["lune","f",false],["mer","f",false],["montagne","f",false],
+  ["ville","f",false],["pays","m",false],["temps","m",false],["travail","m",false],
+  ["pain","m",false],["fromage","m",false],["vin","m",false],["café","m",false],
+  ["thé","m",false],["lait","m",false],["beurre","m",false],["sucre","m",false],
+  ["sel","m",false],["viande","f",false],["poisson","m",false],["légume","m",false],
+  ["fruit","m",false],["problème","m",false],["main","f",false],["eau","f",true],
+  ["homme","m",true],["musée","m",false],["plage","f",false],["idée","f",true],
+  ["oiseau","m",true],["avion","m",true],["université","f",true],["histoire","f",true],
+  ["image","f",true],["erreur","f",true],["air","m",true],["amour","m",true],
+  ["âge","m",true],["été","m",true],["automne","m",true],["hiver","m",true],
+  ["enfant","m",true],["ami","m",true],["amie","f",true],["orange","f",true],
+  ["église","f",true],["île","f",true],["heure","f",true],["habitude","f",true],
+  ["appartement","m",true],["étage","m",true],["animal","m",true],
+  ["chose","f",false],["place","f",false],["nuit","f",false],["jour","m",false],
+  ["soir","m",false],["matin","m",false],["rue","f",false],["pont","m",false],
+  ["porte","f",false],["clé","f",false],["mot","m",false],["phrase","f",false],
+  ["langue","f",false],["musique","f",false],["chanson","f",false],["film","m",false],
+  ["théâtre","m",false],["cinéma","m",false],["restaurant","m",false],
+  ["gare","f",false],["train","m",false],["bus","m",false],["métro","m",false],
+  ["vélo","m",false],["pied","m",false],["tête","f",false],["corps","m",false],
+  ["cœur","m",false],["sang","m",false],["monde","m",false],["terre","f",false],
+  ["ciel","m",false],["pluie","f",false],["neige","f",false],["vent","m",false],
+  ["feu","m",false],["pierre","f",false],["bois","m",false],["rivière","f",false],
+  ["fleuve","m",false],["lac","m",false],["forêt","f",false],["campagne","f",false],
+  ["champ","m",false],["route","f",false],["chemin","m",false],
+  ["roi","m",false],["reine","f",false],["peuple","m",false],["guerre","f",false],
+  ["paix","f",false],["loi","f",false],["droit","m",false],
+  ["courage","m",false],["peur","f",false],["joie","f",false],["tristesse","f",false],
+  ["bonheur","m",false],["malheur","m",false],["exemple","m",true],
+  ["exercice","m",true],["espace","m",true],["étoile","f",true],
+  ["entrée","f",true],["escalier","m",true],["argent","m",true],
+];
+
+// Tricky noun explanations
+const nounExplanations = {
+  "problème": "мужской род, несмотря на окончание -e",
+  "musée": "мужской род, несмотря на окончание -ée",
+  "lycée": "мужской род, несмотря на окончание -ée",
+  "main": "женский род — одно из немногих слов на -ain женского рода",
+  "eau": "женский род, начинается на гласную → l'eau",
+  "homme": "мужской род, h muet → l'homme",
+  "image": "женский род, начинается на гласную → l'image",
+  "automne": "мужской род, несмотря на окончание -e",
+  "courage": "мужской род, несмотря на окончание -e",
+  "silence": "мужской род, несмотря на окончание -e",
+  "exemple": "мужской род, несмотря на окончание -e",
+  "exercice": "мужской род, несмотря на окончание -e",
+  "espace": "мужской род, несмотря на окончание -e",
+  "monde": "мужской род, несмотря на окончание -e",
+  "peuple": "мужской род, несмотря на окончание -e",
+  "fleuve": "мужской род, несмотря на окончание -e",
+};
+
+function makeArticleQuestions() {
+  const qs = [];
+  for (const [word, g, vowel] of nouns) {
+    const defArt = vowel ? "l'" : (g === "m" ? "le" : "la");
+    const partArt = vowel ? "de l'" : (g === "m" ? "du" : "de la");
+    const contrArt = vowel ? "à l'" : (g === "m" ? "au" : "à la");
+    const genderRu = g === "m" ? "Мужской" : "Женский";
+    const explain = nounExplanations[word] || (g === "m" ? "мужской род" : "женский род");
+
+    // Definite article question
+    qs.push({
+      type: "Какой артикль?",
+      sentence: `___ ${word}`,
+      hint: "Определённый артикль",
+      options: vowel ? ["le","la","l'"] : ["le","la","l'"],
+      correct: defArt,
+      explanation: `${defArt}${vowel ? "" : " "}${word} — ${explain}`
+    });
+
+    // Partitive article
+    qs.push({
+      type: "Партитивный артикль",
+      sentence: `Je veux ___ ${word}`,
+      hint: "Частичный артикль (du / de la / de l')",
+      options: ["du","de la","de l'"],
+      correct: partArt,
+      explanation: `${partArt}${vowel ? "" : " "}${word} — ${explain}`
+    });
+
+    // Contraction with à
+    qs.push({
+      type: "Стягивание с à",
+      sentence: `Je vais ___ ${word}`,
+      hint: "à + артикль",
+      options: ["au","à la","à l'"],
+      correct: contrArt,
+      explanation: `${contrArt}${vowel ? "" : " "}${word} — ${explain}`
+    });
+
+    // Gender question
+    qs.push({
+      type: "Какой род?",
+      sentence: word,
+      hint: "Определите род существительного",
+      options: ["Мужской","Женский"],
+      correct: genderRu,
+      explanation: `${word} — ${explain}`
+    });
+  }
+  return qs;
+}
+
+// ---- Topic 2: Pronouns ----
+const pronounQuestions = [
+  // COD replacement
+  {type:"Замените дополнение",sentence:"Je vois [Marie] tous les jours",hint:"COD — кого?",options:["le","la","les","lui"],correct:"la",explanation:"Marie → la (COD fem. sg.) → Je la vois tous les jours"},
+  {type:"Замените дополнение",sentence:"Il mange [les pommes]",hint:"COD — что?",options:["le","la","les","lui"],correct:"les",explanation:"les pommes → les (COD pl.) → Il les mange"},
+  {type:"Замените дополнение",sentence:"Tu connais [Pierre]?",hint:"COD — кого?",options:["le","la","les","lui"],correct:"le",explanation:"Pierre → le (COD masc. sg.) → Tu le connais?"},
+  {type:"Замените дополнение",sentence:"Elle regarde [le film]",hint:"COD — что?",options:["le","la","les","en"],correct:"le",explanation:"le film → le (COD masc. sg.) → Elle le regarde"},
+  {type:"Замените дополнение",sentence:"Nous écoutons [la chanson]",hint:"COD — что?",options:["le","la","les","y"],correct:"la",explanation:"la chanson → la (COD fem. sg.) → Nous l'écoutons"},
+  {type:"Замените дополнение",sentence:"Je prends [du café]",hint:"Частичное количество",options:["le","la","en","y"],correct:"en",explanation:"du café → en (partitif) → J'en prends"},
+  {type:"Замените дополнение",sentence:"Elle a [trois frères]",hint:"Количество",options:["les","en","y","leur"],correct:"en",explanation:"Числительное + сущ. → en → Elle en a trois"},
+  {type:"Замените дополнение",sentence:"Il parle [à Marie]",hint:"COI — кому?",options:["le","la","lui","leur"],correct:"lui",explanation:"à Marie → lui (COI sg.) → Il lui parle"},
+  {type:"Замените дополнение",sentence:"Tu téléphones [à tes parents]",hint:"COI — кому?",options:["les","leur","lui","y"],correct:"leur",explanation:"à tes parents → leur (COI pl.) → Tu leur téléphones"},
+  {type:"Замените дополнение",sentence:"Elle pense [à son voyage]",hint:"à + вещь (не лицо!)",options:["lui","en","y","le"],correct:"y",explanation:"à + вещь → y → Elle y pense"},
+  {type:"Замените дополнение",sentence:"Nous allons [à Paris]",hint:"à + место",options:["y","en","là","le"],correct:"y",explanation:"à Paris → y (место) → Nous y allons"},
+  {type:"Замените дополнение",sentence:"Il vient [de France]",hint:"de + место",options:["y","en","de là","la"],correct:"en",explanation:"de France → en (происхождение) → Il en vient"},
+  {type:"Замените дополнение",sentence:"Je donne le livre [à Paul]",hint:"COI — кому?",options:["le","lui","leur","y"],correct:"lui",explanation:"à Paul → lui (COI sg.) → Je lui donne le livre"},
+  {type:"Замените дополнение",sentence:"Elles lisent [les journaux]",hint:"COD — что?",options:["le","la","les","en"],correct:"les",explanation:"les journaux → les (COD pl.) → Elles les lisent"},
+  {type:"Замените дополнение",sentence:"Tu veux [de la salade]?",hint:"Частичное количество",options:["la","en","y","le"],correct:"en",explanation:"de la salade → en (partitif) → Tu en veux?"},
+  {type:"Замените дополнение",sentence:"Il obéit [à ses professeurs]",hint:"COI — кому?",options:["les","leur","lui","y"],correct:"leur",explanation:"à ses professeurs → leur (COI pl.) → Il leur obéit"},
+  {type:"Замените дополнение",sentence:"Je m'intéresse [à la musique]",hint:"à + вещь",options:["lui","y","en","la"],correct:"y",explanation:"à la musique → y (à + вещь) → Je m'y intéresse"},
+  {type:"Замените дополнение",sentence:"Elle a peur [des araignées]",hint:"de + сущ.",options:["les","en","y","leur"],correct:"en",explanation:"des araignées → en (de + сущ.) → Elle en a peur"},
+  {type:"Замените дополнение",sentence:"Nous attendons [le bus]",hint:"COD — что?",options:["le","la","les","y"],correct:"le",explanation:"le bus → le (COD masc. sg.) → Nous l'attendons"},
+  {type:"Замените дополнение",sentence:"Il achète [des fleurs]",hint:"Неопределённое количество",options:["les","la","en","y"],correct:"en",explanation:"des fleurs → en (partitif/indéfini) → Il en achète"},
+
+  // Pronoun order
+  {type:"Порядок местоимений",sentence:"Il ___ ___ donne. (мне, это)",hint:"Расположите 2 местоимения",options:["me le","le me","me la","la me"],correct:"me le",explanation:"me/te/se/nous/vous идут ПЕРЕД le/la/les → Il me le donne"},
+  {type:"Порядок местоимений",sentence:"Elle ___ ___ montre. (нам, их)",hint:"Расположите 2 местоимения",options:["nous les","les nous","nous le","le nous"],correct:"nous les",explanation:"nous идёт ПЕРЕД les → Elle nous les montre"},
+  {type:"Порядок местоимений",sentence:"Je ___ ___ ai donné. (ему, это/m)",hint:"Расположите 2 местоимения",options:["le lui","lui le","la lui","lui la"],correct:"le lui",explanation:"le/la/les идут ПЕРЕД lui/leur → Je le lui ai donné"},
+  {type:"Порядок местоимений",sentence:"Tu ___ ___ envoies. (им, их)",hint:"Расположите 2 местоимения",options:["les leur","leur les","le leur","leur le"],correct:"les leur",explanation:"le/la/les идут ПЕРЕД lui/leur → Tu les leur envoies"},
+  {type:"Порядок местоимений",sentence:"Il ___ ___ a parlé. (мне, об этом)",hint:"Расположите 2 местоимения",options:["m'en","en me","me y","y me"],correct:"m'en",explanation:"me/te/se/nous/vous ПЕРЕД en → Il m'en a parlé"},
+  {type:"Порядок местоимений",sentence:"Elle ___ ___ a offert. (ей, это/f)",hint:"Расположите 2 местоимения",options:["la lui","lui la","le lui","lui le"],correct:"la lui",explanation:"le/la/les ПЕРЕД lui/leur → Elle la lui a offert"},
+  {type:"Порядок местоимений",sentence:"Nous ___ ___ avons mis. (тебе, это/m)",hint:"Расположите 2 местоимения",options:["te le","le te","te la","la te"],correct:"te le",explanation:"me/te/se ПЕРЕД le/la/les → Nous te le avons mis"},
+  {type:"Порядок местоимений",sentence:"Je ___ ___ emmène. (вас, туда)",hint:"Расположите 2 местоимения",options:["vous y","y vous","vous en","en vous"],correct:"vous y",explanation:"me/te/se/nous/vous ПЕРЕД y → Je vous y emmène"},
+
+  // Pronoun type identification
+  {type:"Какой тип?",sentence:"Je LE vois chaque jour",hint:"Определите тип местоимения LE",options:["COD","COI","Y","EN"],correct:"COD",explanation:"le = прямое дополнение (COD), заменяет прямой объект — кого? что?"},
+  {type:"Какой тип?",sentence:"Elle LUI parle souvent",hint:"Определите тип местоимения LUI",options:["COD","COI","Y","EN"],correct:"COI",explanation:"lui = косвенное дополнение (COI), заменяет à + лицо — кому?"},
+  {type:"Какой тип?",sentence:"Nous Y allons demain",hint:"Определите тип местоимения Y",options:["COD","COI","Y","EN"],correct:"Y",explanation:"y заменяет à + место/вещь — туда, к этому"},
+  {type:"Какой тип?",sentence:"J'EN ai trois",hint:"Определите тип местоимения EN",options:["COD","COI","Y","EN"],correct:"EN",explanation:"en заменяет de + сущ., неопределённое количество — об этом, от этого"},
+  {type:"Какой тип?",sentence:"Tu LEUR téléphones",hint:"Определите тип местоимения LEUR",options:["COD","COI","Y","EN"],correct:"COI",explanation:"leur = косвенное дополнение (COI), заменяет à + лица (мн.) — им, кому?"},
+  {type:"Какой тип?",sentence:"Elle LES regarde",hint:"Определите тип местоимения LES",options:["COD","COI","Y","EN"],correct:"COD",explanation:"les = прямое дополнение (COD), заменяет прямые объекты (мн.) — кого? что?"},
+  {type:"Какой тип?",sentence:"Il EN parle beaucoup",hint:"Определите тип местоимения EN",options:["COD","COI","Y","EN"],correct:"EN",explanation:"en заменяет de + сущ. — Il parle de qqch → Il en parle"},
+  {type:"Какой тип?",sentence:"Nous Y pensons souvent",hint:"Определите тип местоимения Y",options:["COD","COI","Y","EN"],correct:"Y",explanation:"y заменяет à + вещь — Nous pensons à qqch → Nous y pensons"},
+  {type:"Какой тип?",sentence:"Je LA connais bien",hint:"Определите тип местоимения LA",options:["COD","COI","Y","EN"],correct:"COD",explanation:"la = прямое дополнение (COD, fem.) — кого? что?"},
+  {type:"Какой тип?",sentence:"Il LUI a écrit une lettre",hint:"Определите тип местоимения LUI",options:["COD","COI","Y","EN"],correct:"COI",explanation:"lui = COI — écrire à qqn → lui écrire — кому?"},
+];
+
+// ---- Topic 3: PC vs Imparfait ----
+const pcImpQuestions = [
+  // Tense choice
+  {type:"Какое время?",sentence:"Hier, il [pleuvoir] toute la journée.",hint:"Длительное состояние в прошлом",options:["Passé composé","Imparfait"],correct:"Imparfait",explanation:"Длительное/фоновое действие → Imparfait: il pleuvait toute la journée"},
+  {type:"Какое время?",sentence:"Soudain, le téléphone [sonner].",hint:"Внезапное событие",options:["Passé composé","Imparfait"],correct:"Passé composé",explanation:"Soudain = внезапно → завершённое действие → PC: le téléphone a sonné"},
+  {type:"Какое время?",sentence:"Quand j'[être] petit, j'[adorer] le chocolat.",hint:"Описание привычки",options:["Passé composé","Imparfait"],correct:"Imparfait",explanation:"Привычка/описание в прошлом → Imparfait: Quand j'étais petit, j'adorais..."},
+  {type:"Какое время?",sentence:"À ce moment-là, elle [arriver].",hint:"В тот момент...",options:["Passé composé","Imparfait"],correct:"Passé composé",explanation:"À ce moment-là + конкретное событие → PC: elle est arrivée"},
+  {type:"Какое время?",sentence:"Il [faire] beau quand nous [sortir].",hint:"Два действия: фон + событие",options:["Imparfait + PC","PC + Imparfait","PC + PC","Imparfait + Imparfait"],correct:"Imparfait + PC",explanation:"Фон (il faisait beau) = Imparfait, событие (nous sommes sortis) = PC"},
+  {type:"Какое время?",sentence:"Tous les étés, nous [aller] à la mer.",hint:"Повторяющееся действие",options:["Passé composé","Imparfait"],correct:"Imparfait",explanation:"Tous les étés = каждое лето → привычка → Imparfait: nous allions"},
+  {type:"Какое время?",sentence:"Hier soir, j'[regarder] un film et je [aller] me coucher.",hint:"Последовательность событий",options:["Passé composé","Imparfait"],correct:"Passé composé",explanation:"Последовательные завершённые действия → PC: j'ai regardé... je suis allé..."},
+  {type:"Какое время?",sentence:"Pendant que je [dormir], le voleur [entrer].",hint:"Фон + внезапное событие",options:["Imparfait + PC","PC + Imparfait","Imparfait + Imparfait","PC + PC"],correct:"Imparfait + PC",explanation:"Pendant que + фон → Imparfait; событие → PC: je dormais... le voleur est entré"},
+  {type:"Какое время?",sentence:"En 2010, il [déménager] à Paris.",hint:"Конкретная дата, однократное событие",options:["Passé composé","Imparfait"],correct:"Passé composé",explanation:"Конкретная дата + однократное событие → PC: il a déménagé"},
+  {type:"Какое время?",sentence:"Elle [avoir] les cheveux blonds quand elle [être] jeune.",hint:"Описание внешности",options:["Passé composé","Imparfait"],correct:"Imparfait",explanation:"Описание в прошлом → Imparfait: elle avait... elle était..."},
+  {type:"Какое время?",sentence:"Tout à coup, la lumière [s'éteindre].",hint:"Tout à coup = вдруг",options:["Passé composé","Imparfait"],correct:"Passé composé",explanation:"Tout à coup → внезапное событие → PC: la lumière s'est éteinte"},
+  {type:"Какое время?",sentence:"D'habitude, il [se lever] tôt.",hint:"D'habitude = обычно",options:["Passé composé","Imparfait"],correct:"Imparfait",explanation:"D'habitude → привычка → Imparfait: il se levait tôt"},
+  {type:"Какое время?",sentence:"Ce jour-là, il [pleuvoir] et nous [rester] à la maison.",hint:"Фоновая погода",options:["Imparfait + PC","PC + Imparfait","Imparfait + Imparfait","PC + PC"],correct:"Imparfait + PC",explanation:"Фон (il pleuvait) → Imp.; решение (nous sommes restés) → PC"},
+  {type:"Какое время?",sentence:"Il [neiger] trois fois cette semaine.",hint:"Конкретное количество раз",options:["Passé composé","Imparfait"],correct:"Passé composé",explanation:"Три раза = конкретный результат → PC: il a neigé trois fois"},
+  {type:"Какое время?",sentence:"Autrefois, on [voyager] en calèche.",hint:"Autrefois = в прежние времена",options:["Passé composé","Imparfait"],correct:"Imparfait",explanation:"Autrefois → описание эпохи → Imparfait: on voyageait en calèche"},
+  {type:"Какое время?",sentence:"Elle [lire] quand quelqu'un [frapper] à la porte.",hint:"Фон + прерывание",options:["Imparfait + PC","PC + Imparfait","Imparfait + Imparfait","PC + PC"],correct:"Imparfait + PC",explanation:"Фон (elle lisait) → Imp.; прерывание (qqn a frappé) → PC"},
+  {type:"Какое время?",sentence:"Avant, il [fumer], mais il [arrêter] l'année dernière.",hint:"Привычка + точечное изменение",options:["Imparfait + PC","PC + Imparfait","Imparfait + Imparfait","PC + PC"],correct:"Imparfait + PC",explanation:"Привычка (il fumait) → Imp.; завершённое действие (il a arrêté) → PC"},
+
+  // Être ou avoir?
+  {type:"Être ou avoir?",sentence:"aller",hint:"Какой вспомогательный глагол?",options:["être","avoir"],correct:"être",explanation:"aller — DR MRS VANDERTRAMP → être: je suis allé(e)"},
+  {type:"Être ou avoir?",sentence:"manger",hint:"Какой вспомогательный глагол?",options:["être","avoir"],correct:"avoir",explanation:"manger — обычный глагол → avoir: j'ai mangé"},
+  {type:"Être ou avoir?",sentence:"venir",hint:"Какой вспомогательный глагол?",options:["être","avoir"],correct:"être",explanation:"venir — DR MRS VANDERTRAMP → être: je suis venu(e)"},
+  {type:"Être ou avoir?",sentence:"partir",hint:"Какой вспомогательный глагол?",options:["être","avoir"],correct:"être",explanation:"partir — DR MRS VANDERTRAMP → être: je suis parti(e)"},
+  {type:"Être ou avoir?",sentence:"faire",hint:"Какой вспомогательный глагол?",options:["être","avoir"],correct:"avoir",explanation:"faire → avoir: j'ai fait"},
+  {type:"Être ou avoir?",sentence:"naître",hint:"Какой вспомогательный глагол?",options:["être","avoir"],correct:"être",explanation:"naître — DR MRS VANDERTRAMP → être: je suis né(e)"},
+  {type:"Être ou avoir?",sentence:"mourir",hint:"Какой вспомогательный глагол?",options:["être","avoir"],correct:"être",explanation:"mourir — DR MRS VANDERTRAMP → être: il est mort"},
+  {type:"Être ou avoir?",sentence:"descendre",hint:"Какой вспомогательный глагол?",options:["être","avoir"],correct:"être",explanation:"descendre (непереходный) — DR MRS VANDERTRAMP → être: je suis descendu(e)"},
+  {type:"Être ou avoir?",sentence:"rester",hint:"Какой вспомогательный глагол?",options:["être","avoir"],correct:"être",explanation:"rester — DR MRS VANDERTRAMP → être: je suis resté(e)"},
+  {type:"Être ou avoir?",sentence:"sortir",hint:"Какой вспомогательный глагол?",options:["être","avoir"],correct:"être",explanation:"sortir (непереходный) — DR MRS VANDERTRAMP → être: je suis sorti(e)"},
+  {type:"Être ou avoir?",sentence:"monter",hint:"Какой вспомогательный глагол?",options:["être","avoir"],correct:"être",explanation:"monter (непереходный) — DR MRS VANDERTRAMP → être: je suis monté(e)"},
+  {type:"Être ou avoir?",sentence:"retourner",hint:"Какой вспомогательный глагол?",options:["être","avoir"],correct:"être",explanation:"retourner — DR MRS VANDERTRAMP → être: je suis retourné(e)"},
+  {type:"Être ou avoir?",sentence:"entrer",hint:"Какой вспомогательный глагол?",options:["être","avoir"],correct:"être",explanation:"entrer — DR MRS VANDERTRAMP → être: je suis entré(e)"},
+  {type:"Être ou avoir?",sentence:"tomber",hint:"Какой вспомогательный глагол?",options:["être","avoir"],correct:"être",explanation:"tomber — DR MRS VANDERTRAMP → être: je suis tombé(e)"},
+  {type:"Être ou avoir?",sentence:"arriver",hint:"Какой вспомогательный глагол?",options:["être","avoir"],correct:"être",explanation:"arriver — DR MRS VANDERTRAMP → être: je suis arrivé(e)"},
+  {type:"Être ou avoir?",sentence:"devenir",hint:"Какой вспомогательный глагол?",options:["être","avoir"],correct:"être",explanation:"devenir — DR MRS VANDERTRAMP → être: je suis devenu(e)"},
+  {type:"Être ou avoir?",sentence:"passer",hint:"Какой вспомогательный глагол? (непереходный: пройти мимо)",options:["être","avoir"],correct:"être",explanation:"passer (непереходный = проходить) → être: je suis passé(e). Но: j'ai passé un examen!"},
+  {type:"Être ou avoir?",sentence:"dormir",hint:"Какой вспомогательный глагол?",options:["être","avoir"],correct:"avoir",explanation:"dormir — обычный глагол → avoir: j'ai dormi"},
+  {type:"Être ou avoir?",sentence:"lire",hint:"Какой вспомогательный глагол?",options:["être","avoir"],correct:"avoir",explanation:"lire → avoir: j'ai lu"},
+  {type:"Être ou avoir?",sentence:"se laver",hint:"Какой вспомогательный глагол? (возвратный)",options:["être","avoir"],correct:"être",explanation:"Все возвратные (pronominaux) глаголы → être: je me suis lavé(e)"},
+
+  // Agreement
+  {type:"Согласование",sentence:"Elle est [partir] hier soir.",hint:"Женский род, ед. число",options:["parti","partie","partis","parties"],correct:"partie",explanation:"Elle → женский род ед.ч. → partie (avec être, причастие согласуется с подлежащим)"},
+  {type:"Согласование",sentence:"Elles sont [arriver] en retard.",hint:"Женский род, мн. число",options:["arrivé","arrivée","arrivés","arrivées"],correct:"arrivées",explanation:"Elles → жен. мн. → arrivées (причастие согласуется в роде и числе)"},
+  {type:"Согласование",sentence:"Ils sont [venir] nous voir.",hint:"Мужской род, мн. число",options:["venu","venue","venus","venues"],correct:"venus",explanation:"Ils → муж. мн. → venus"},
+  {type:"Согласование",sentence:"Marie est [naître] en France.",hint:"Женский род, ед. число",options:["né","née","nés","nées"],correct:"née",explanation:"Marie (fem.) → née"},
+  {type:"Согласование",sentence:"Nous (f.) sommes [aller] au cinéma.",hint:"Женский род, мн. число",options:["allé","allée","allés","allées"],correct:"allées",explanation:"Nous (fem. pl.) → allées"},
+  {type:"Согласование",sentence:"Il est [descendre] par l'escalier.",hint:"Мужской род, ед. число",options:["descendu","descendue","descendus","descendues"],correct:"descendu",explanation:"Il → муж. ед. → descendu"},
+  {type:"Согласование",sentence:"Les filles sont [tomber] dans la neige.",hint:"Женский род, мн. число",options:["tombé","tombée","tombés","tombées"],correct:"tombées",explanation:"Les filles (fem. pl.) → tombées"},
+  {type:"Согласование",sentence:"Elle s'est [lever] tôt.",hint:"Возвратный глагол, жен. ед.",options:["levé","levée","levés","levées"],correct:"levée",explanation:"Elle s'est levée — возвратный глагол → être, жен. ед. → levée"},
+  {type:"Согласование",sentence:"Ils se sont [rencontrer] à Paris.",hint:"Возвратный, муж. мн.",options:["rencontré","rencontrée","rencontrés","rencontrées"],correct:"rencontrés",explanation:"Ils se sont rencontrés — возвратный + муж. мн. → rencontrés"},
+  {type:"Согласование",sentence:"Elle est [mourir] en 1900.",hint:"Женский род, ед.",options:["mort","morte","morts","mortes"],correct:"morte",explanation:"Elle est morte — жен. ед. → morte"},
+  {type:"Согласование",sentence:"Les garçons sont [rester] à la maison.",hint:"Муж. мн.",options:["resté","restée","restés","restées"],correct:"restés",explanation:"Les garçons → муж. мн. → restés"},
+  {type:"Согласование",sentence:"Elle est [devenir] médecin.",hint:"Жен. ед.",options:["devenu","devenue","devenus","devenues"],correct:"devenue",explanation:"Elle → жен. ед. → devenue"},
+  {type:"Согласование",sentence:"Elles se sont [voir] au café.",hint:"Возвратный, жен. мн.",options:["vu","vue","vus","vues"],correct:"vues",explanation:"Elles se sont vues — se = COD (видели друг друга) → жен. мн. → vues"},
+];
+
+// ---- Topic 4: Subjonctif ----
+const subjonctifQuestions = [
+  // Indicatif ou subjonctif?
+  {type:"Indicatif ou subjonctif?",sentence:"Il faut que tu [savoir] la vérité.",hint:"Il faut que...",options:["Indicatif","Subjonctif"],correct:"Subjonctif",explanation:"Il faut que → ВСЕГДА subjonctif: Il faut que tu saches"},
+  {type:"Indicatif ou subjonctif?",sentence:"Je crois qu'il [venir] demain.",hint:"Croire que (утвердительная форма)",options:["Indicatif","Subjonctif"],correct:"Indicatif",explanation:"Je crois que + indicatif (уверенность) → Je crois qu'il viendra / vient"},
+  {type:"Indicatif ou subjonctif?",sentence:"Je ne crois pas qu'il [pouvoir] le faire.",hint:"Ne pas croire que...",options:["Indicatif","Subjonctif"],correct:"Subjonctif",explanation:"Ne pas croire que → сомнение → subjonctif: Je ne crois pas qu'il puisse"},
+  {type:"Indicatif ou subjonctif?",sentence:"J'espère que tu [aller] bien.",hint:"Espérer que...",options:["Indicatif","Subjonctif"],correct:"Indicatif",explanation:"Espérer que → ИСКЛЮЧЕНИЕ: indicatif! J'espère que tu vas bien"},
+  {type:"Indicatif ou subjonctif?",sentence:"Bien que ce [être] difficile, il continue.",hint:"Bien que...",options:["Indicatif","Subjonctif"],correct:"Subjonctif",explanation:"Bien que → ВСЕГДА subjonctif: Bien que ce soit difficile"},
+  {type:"Indicatif ou subjonctif?",sentence:"Il est possible qu'elle [venir].",hint:"Il est possible que...",options:["Indicatif","Subjonctif"],correct:"Subjonctif",explanation:"Il est possible que → doute → subjonctif: Il est possible qu'elle vienne"},
+  {type:"Indicatif ou subjonctif?",sentence:"Je pense qu'il [avoir] raison.",hint:"Penser que (affirmatif)",options:["Indicatif","Subjonctif"],correct:"Indicatif",explanation:"Je pense que + indicatif (certitude) → Je pense qu'il a raison"},
+  {type:"Indicatif ou subjonctif?",sentence:"Pour que tout le monde [comprendre]...",hint:"Pour que...",options:["Indicatif","Subjonctif"],correct:"Subjonctif",explanation:"Pour que → цель → subjonctif: Pour que tout le monde comprenne"},
+  {type:"Indicatif ou subjonctif?",sentence:"Après que nous [finir], on peut sortir.",hint:"Après que...",options:["Indicatif","Subjonctif"],correct:"Indicatif",explanation:"Après que → indicatif! (Avant que → subjonctif, но après que → indicatif)"},
+  {type:"Indicatif ou subjonctif?",sentence:"Avant qu'il [partir], dis-lui au revoir.",hint:"Avant que...",options:["Indicatif","Subjonctif"],correct:"Subjonctif",explanation:"Avant que → ВСЕГДА subjonctif: Avant qu'il parte"},
+  {type:"Indicatif ou subjonctif?",sentence:"Je veux que tu [faire] tes devoirs.",hint:"Vouloir que...",options:["Indicatif","Subjonctif"],correct:"Subjonctif",explanation:"Vouloir que → volonté → subjonctif: Je veux que tu fasses"},
+  {type:"Indicatif ou subjonctif?",sentence:"Il semble que ce [être] vrai.",hint:"Il semble que...",options:["Indicatif","Subjonctif"],correct:"Subjonctif",explanation:"Il semble que → doute/apparence → subjonctif: Il semble que ce soit vrai"},
+  {type:"Indicatif ou subjonctif?",sentence:"Il me semble que c'[être] vrai.",hint:"Il me semble que...",options:["Indicatif","Subjonctif"],correct:"Indicatif",explanation:"Il me semble que → opinion personnelle → indicatif! c'est vrai"},
+  {type:"Indicatif ou subjonctif?",sentence:"Je suis content que tu [venir].",hint:"Être content que...",options:["Indicatif","Subjonctif"],correct:"Subjonctif",explanation:"Émotion (content) + que → subjonctif: Je suis content que tu viennes"},
+  {type:"Indicatif ou subjonctif?",sentence:"Il est certain qu'elle [avoir] réussi.",hint:"Il est certain que...",options:["Indicatif","Subjonctif"],correct:"Indicatif",explanation:"Il est certain que → certitude → indicatif: elle a réussi"},
+  {type:"Indicatif ou subjonctif?",sentence:"Je doute qu'il [pouvoir] venir.",hint:"Douter que...",options:["Indicatif","Subjonctif"],correct:"Subjonctif",explanation:"Douter que → doute → subjonctif: Je doute qu'il puisse venir"},
+  {type:"Indicatif ou subjonctif?",sentence:"Quoiqu'il [faire] froid, elle sort.",hint:"Quoique...",options:["Indicatif","Subjonctif"],correct:"Subjonctif",explanation:"Quoique = bien que → subjonctif: Quoiqu'il fasse froid"},
+  {type:"Indicatif ou subjonctif?",sentence:"Il est évident que tu [avoir] tort.",hint:"Il est évident que...",options:["Indicatif","Subjonctif"],correct:"Indicatif",explanation:"Il est évident que → certitude → indicatif: tu as tort"},
+  {type:"Indicatif ou subjonctif?",sentence:"Il est important que nous [être] à l'heure.",hint:"Il est important que...",options:["Indicatif","Subjonctif"],correct:"Subjonctif",explanation:"Il est important que → nécessité → subjonctif: que nous soyons"},
+  {type:"Indicatif ou subjonctif?",sentence:"Je suis sûr qu'il [venir] demain.",hint:"Être sûr que (affirmatif)",options:["Indicatif","Subjonctif"],correct:"Indicatif",explanation:"Je suis sûr que → certitude → indicatif: il viendra"},
+  {type:"Indicatif ou subjonctif?",sentence:"À moins qu'il ne [pleuvoir]...",hint:"À moins que...",options:["Indicatif","Subjonctif"],correct:"Subjonctif",explanation:"À moins que → condition → subjonctif: À moins qu'il ne pleuve"},
+  {type:"Indicatif ou subjonctif?",sentence:"Sans que personne le [savoir]...",hint:"Sans que...",options:["Indicatif","Subjonctif"],correct:"Subjonctif",explanation:"Sans que → subjonctif: Sans que personne le sache"},
+
+  // Conjugate in subjonctif
+  {type:"Спрягайте в subjonctif",sentence:"Il faut que je [faire]",hint:"que je...?",options:["fais","fasse","faise","fait"],correct:"fasse",explanation:"faire → que je fasse (неправильная форма subjonctif)"},
+  {type:"Спрягайте в subjonctif",sentence:"Il faut que tu [être] patient.",hint:"que tu...?",options:["es","sois","soies","soit"],correct:"sois",explanation:"être → que tu sois (неправильная форма)"},
+  {type:"Спрягайте в subjonctif",sentence:"Il faut qu'il [avoir] du courage.",hint:"qu'il...?",options:["a","aie","ait","aît"],correct:"ait",explanation:"avoir → qu'il ait (неправильная форма)"},
+  {type:"Спрягайте в subjonctif",sentence:"Il faut que nous [aller] vite.",hint:"que nous...?",options:["allons","allions","aillons","aillions"],correct:"allions",explanation:"aller → que nous allions"},
+  {type:"Спрягайте в subjonctif",sentence:"Il faut qu'ils [pouvoir] réussir.",hint:"qu'ils...?",options:["peuvent","puissent","pouvent","puivent"],correct:"puissent",explanation:"pouvoir → qu'ils puissent"},
+  {type:"Спрягайте в subjonctif",sentence:"Il faut que tu [savoir] la réponse.",hint:"que tu...?",options:["sais","saches","savois","sachais"],correct:"saches",explanation:"savoir → que tu saches"},
+  {type:"Спрягайте в subjonctif",sentence:"Il faut qu'elle [vouloir] participer.",hint:"qu'elle...?",options:["veut","veuille","veuillent","voule"],correct:"veuille",explanation:"vouloir → qu'elle veuille"},
+  {type:"Спрягайте в subjonctif",sentence:"Il faut que vous [prendre] le bus.",hint:"que vous...?",options:["prenez","preniez","prendez","prendiez"],correct:"preniez",explanation:"prendre → que vous preniez"},
+  {type:"Спрягайте в subjonctif",sentence:"Il faut que je [venir] demain.",hint:"que je...?",options:["viens","vienne","viennes","venais"],correct:"vienne",explanation:"venir → que je vienne"},
+  {type:"Спрягайте в subjonctif",sentence:"Il faut qu'ils [être] là.",hint:"qu'ils...?",options:["sont","soient","soyent","seront"],correct:"soient",explanation:"être → qu'ils soient"},
+  {type:"Спрягайте в subjonctif",sentence:"Il faut que tu [aller] chez le docteur.",hint:"que tu...?",options:["vas","ailles","alles","aille"],correct:"ailles",explanation:"aller → que tu ailles (неправильная форма!)"},
+  {type:"Спрягайте в subjonctif",sentence:"Il faut qu'on [finir] avant midi.",hint:"qu'on...?",options:["finit","finisse","finis","finîsse"],correct:"finisse",explanation:"finir → qu'on finisse (регулярная форма: radical fini- + -sse)"},
+  {type:"Спрягайте в subjonctif",sentence:"Il faut que je [boire] de l'eau.",hint:"que je...?",options:["bois","boive","buive","buve"],correct:"boive",explanation:"boire → que je boive"},
+  {type:"Спрягайте в subjonctif",sentence:"Il faut qu'elle [écrire] une lettre.",hint:"qu'elle...?",options:["écrit","écrive","écris","écrisse"],correct:"écrive",explanation:"écrire → qu'elle écrive"},
+  {type:"Спрягайте в subjonctif",sentence:"Il faut que nous [avoir] de la patience.",hint:"que nous...?",options:["avons","ayons","aions","avions"],correct:"ayons",explanation:"avoir → que nous ayons"},
+
+  // Find the error
+  {type:"Найди ошибку",sentence:"Je doute qu'il vient demain.",hint:"Правильно ли использовано наклонение?",options:["Правильно","Ошибка"],correct:"Ошибка",explanation:"Douter que → subjonctif! Правильно: Je doute qu'il vienne demain"},
+  {type:"Найди ошибку",sentence:"Il faut que tu fasses attention.",hint:"Правильно ли использовано наклонение?",options:["Правильно","Ошибка"],correct:"Правильно",explanation:"Il faut que + subjonctif → fasses — всё верно!"},
+  {type:"Найди ошибку",sentence:"J'espère qu'il vienne bientôt.",hint:"Правильно ли использовано наклонение?",options:["Правильно","Ошибка"],correct:"Ошибка",explanation:"Espérer que → indicatif! Правильно: J'espère qu'il viendra/vient bientôt"},
+  {type:"Найди ошибку",sentence:"Bien qu'il soit malade, il travaille.",hint:"Правильно ли использовано наклонение?",options:["Правильно","Ошибка"],correct:"Правильно",explanation:"Bien que + subjonctif → soit — верно!"},
+  {type:"Найди ошибку",sentence:"Après qu'il soit parti, j'ai pleuré.",hint:"Правильно ли использовано наклонение?",options:["Правильно","Ошибка"],correct:"Ошибка",explanation:"Après que → indicatif! Правильно: Après qu'il est parti (хотя ошибка частая даже у французов!)"},
+  {type:"Найди ошибку",sentence:"Il est certain qu'elle a raison.",hint:"Правильно ли использовано наклонение?",options:["Правильно","Ошибка"],correct:"Правильно",explanation:"Il est certain que → indicatif — верно!"},
+  {type:"Найди ошибку",sentence:"Je veux que tu viens avec moi.",hint:"Правильно ли использовано наклонение?",options:["Правильно","Ошибка"],correct:"Ошибка",explanation:"Vouloir que → subjonctif! Правильно: Je veux que tu viennes avec moi"},
+  {type:"Найди ошибку",sentence:"Pour qu'il comprenne bien.",hint:"Правильно ли использовано наклонение?",options:["Правильно","Ошибка"],correct:"Правильно",explanation:"Pour que + subjonctif → comprenne — верно!"},
+  {type:"Найди ошибку",sentence:"Il semble que tout va bien.",hint:"Правильно ли использовано наклонение?",options:["Правильно","Ошибка"],correct:"Ошибка",explanation:"Il semble que → subjonctif! Правильно: Il semble que tout aille bien"},
+  {type:"Найди ошибку",sentence:"Avant qu'il parte, je veux lui parler.",hint:"Правильно ли использовано наклонение?",options:["Правильно","Ошибка"],correct:"Правильно",explanation:"Avant que + subjonctif → parte — верно!"},
+];
+
+// ===================== APP STATE =====================
+const TOPICS = [
+  { id: "articles", label: "Артикли и род" },
+  { id: "pronouns", label: "Местоимения" },
+  { id: "pcimparfait", label: "PC vs Imparfait" },
+  { id: "subjonctif", label: "Subjonctif" },
+  { id: "all", label: "Все темы" },
+];
+
+let currentTopic = "all";
+let questions = [];
+let qIndex = 0;
+let score = { correct: 0, total: 0, streak: 0, maxStreak: 0 };
+let answered = false;
+let advanceTimer = null;
+
+// ===================== INIT =====================
+function init() {
+  renderTopics();
+  loadScore();
+  buildQuestions();
+  showQuestion();
+  document.addEventListener("keydown", handleKey);
+}
+
+function renderTopics() {
+  const el = document.getElementById("topics");
+  el.innerHTML = TOPICS.map(t =>
+    `<button class="topic-btn${t.id === currentTopic ? ' active' : ''}" data-topic="${t.id}">${t.label}</button>`
+  ).join("");
+  el.querySelectorAll(".topic-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      currentTopic = btn.dataset.topic;
+      renderTopics();
+      buildQuestions();
+      showQuestion();
+    });
+  });
+}
+
+// ===================== QUESTIONS =====================
+function buildQuestions() {
+  let pool = [];
+  if (currentTopic === "articles" || currentTopic === "all") {
+    pool = pool.concat(makeArticleQuestions());
+  }
+  if (currentTopic === "pronouns" || currentTopic === "all") {
+    pool = pool.concat(pronounQuestions);
+  }
+  if (currentTopic === "pcimparfait" || currentTopic === "all") {
+    pool = pool.concat(pcImpQuestions);
+  }
+  if (currentTopic === "subjonctif" || currentTopic === "all") {
+    pool = pool.concat(subjonctifQuestions);
+  }
+  // Shuffle
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  questions = pool;
+  qIndex = 0;
+}
+
+function showQuestion() {
+  if (questions.length === 0) return;
+  if (qIndex >= questions.length) {
+    // Reshuffle
+    for (let i = questions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [questions[i], questions[j]] = [questions[j], questions[i]];
+    }
+    qIndex = 0;
+  }
+
+  answered = false;
+  clearTimeout(advanceTimer);
+
+  const q = questions[qIndex];
+  const card = document.getElementById("quizCard");
+  card.classList.remove("flash-correct", "flash-wrong");
+
+  document.getElementById("qType").textContent = q.type;
+  document.getElementById("qSentence").innerHTML = formatSentence(q.sentence);
+  document.getElementById("qHint").textContent = q.hint || "";
+
+  const answersEl = document.getElementById("answers");
+  answersEl.innerHTML = q.options.map((opt, i) =>
+    `<button class="ans-btn" data-idx="${i}"><span class="key-hint">${i + 1}</span>${opt}</button>`
+  ).join("");
+
+  answersEl.querySelectorAll(".ans-btn").forEach(btn => {
+    btn.addEventListener("click", () => selectAnswer(btn, q));
+  });
+
+  document.getElementById("feedback").className = "feedback";
+  document.getElementById("feedback").innerHTML = "";
+  document.getElementById("continueHint").classList.remove("show");
+
+  updateProgress();
+  updateScoreDisplay();
+}
+
+function formatSentence(s) {
+  // Highlight bracketed parts as blanks
+  return s.replace(/\[([^\]]+)\]/g, '<span class="q-blank">$1</span>')
+          .replace(/___/g, '<span class="q-blank">???</span>');
+}
+
+function selectAnswer(btn, q) {
+  if (answered) return;
+  answered = true;
+
+  const selected = q.options[parseInt(btn.dataset.idx)];
+  const isCorrect = selected === q.correct;
+  const card = document.getElementById("quizCard");
+  const answersEl = document.getElementById("answers");
+
+  // Disable all buttons
+  answersEl.querySelectorAll(".ans-btn").forEach(b => {
+    b.classList.add("disabled");
+    if (q.options[parseInt(b.dataset.idx)] === q.correct) {
+      b.classList.add("correct");
+    }
+  });
+
+  if (isCorrect) {
+    btn.classList.add("correct");
+    card.classList.add("flash-correct");
+    score.correct++;
+    score.streak++;
+    if (score.streak > score.maxStreak) score.maxStreak = score.streak;
+    showFeedback(true, q.explanation);
+  } else {
+    btn.classList.add("wrong");
+    card.classList.add("flash-wrong");
+    score.streak = 0;
+    showFeedback(false, q.explanation);
+  }
+
+  score.total++;
+  saveScore();
+  updateScoreDisplay();
+
+  document.getElementById("continueHint").classList.add("show");
+  advanceTimer = setTimeout(nextQuestion, 1500);
+}
+
+function showFeedback(correct, explanation) {
+  const fb = document.getElementById("feedback");
+  fb.className = "feedback show " + (correct ? "correct-fb" : "wrong-fb");
+  fb.innerHTML = `<strong>${correct ? "Правильно! ✓" : "Неправильно ✗"}</strong><span class="explanation">${explanation}</span>`;
+}
+
+function nextQuestion() {
+  clearTimeout(advanceTimer);
+  qIndex++;
+  showQuestion();
+}
+
+// ===================== SCORE =====================
+function updateScoreDisplay() {
+  document.getElementById("streak").textContent = score.streak;
+  document.getElementById("correctCount").textContent = score.correct;
+  document.getElementById("totalCount").textContent = score.total;
+  const pct = score.total > 0 ? Math.round(score.correct / score.total * 100) : 0;
+  document.getElementById("pct").textContent = pct + "%";
+}
+
+function updateProgress() {
+  const pct = questions.length > 0 ? Math.min(100, Math.round((qIndex / questions.length) * 100)) : 0;
+  document.getElementById("progressFill").style.width = pct + "%";
+}
+
+function resetScore() {
+  score = { correct: 0, total: 0, streak: 0, maxStreak: 0 };
+  saveScore();
+  updateScoreDisplay();
+  buildQuestions();
+  showQuestion();
+}
+
+function saveScore() {
+  try { localStorage.setItem("fr-quiz-score", JSON.stringify(score)); } catch(e) {}
+}
+
+function loadScore() {
+  try {
+    const s = JSON.parse(localStorage.getItem("fr-quiz-score"));
+    if (s) score = { correct: s.correct || 0, total: s.total || 0, streak: s.streak || 0, maxStreak: s.maxStreak || 0 };
+  } catch(e) {}
+}
+
+// ===================== KEYBOARD =====================
+function handleKey(e) {
+  if (answered) {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      nextQuestion();
+    }
+    return;
+  }
+
+  const keyMap = { "1": 0, "2": 1, "3": 2, "4": 3 };
+  if (keyMap[e.key] !== undefined) {
+    const btns = document.querySelectorAll("#answers .ans-btn");
+    if (btns[keyMap[e.key]]) {
+      btns[keyMap[e.key]].click();
+    }
+  }
+
+  if (e.key === "Escape") {
+    // Go back to "all topics"
+    currentTopic = "all";
+    renderTopics();
+    buildQuestions();
+    showQuestion();
+  }
+}
+
+// ===================== START =====================
+init();
+</script>
+
+</body>
+</html>
