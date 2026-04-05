@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌍</text></svg>">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Языки">
+<title>🌍 Что общего у наших языков?</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --fr: #2a4a7f;
+    --es: #c0392b;
+    --en: #1a5c3a;
+    --no: #1a5276;
+    --ru: #7b2fa0;
+    --romance: #3a6cb4;
+    --germanic: #2a7a4a;
+    --slavic: #9b4fc0;
+    --bg: #f5f0eb;
+    --card: #ffffff;
+    --text: #2c2c2c;
+    --muted: #888;
+    --radius: 16px;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: rgba(245,240,235,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 100;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .nav a {
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 600;
+    font-size: 0.95em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: opacity 0.2s;
+  }
+  .nav a:hover { opacity: 0.7; }
+
+  /* HEADER */
+  .hero {
+    background: linear-gradient(135deg, #2a4a7f, #c0392b, #1a5c3a, #1a5276, #7b2fa0);
+    background-size: 300% 300%;
+    animation: gradientShift 12s ease infinite;
+    color: white;
+    text-align: center;
+    padding: 100px 24px 60px;
+    margin-bottom: 0;
+  }
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    25% { background-position: 50% 0%; }
+    50% { background-position: 100% 50%; }
+    75% { background-position: 50% 100%; }
+    100% { background-position: 0% 50%; }
+  }
+  .hero h1 {
+    font-size: 2.4em;
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .hero p {
+    font-size: 1.1em;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+    color: white;
+  }
+
+  /* TABLE OF CONTENTS */
+  .toc {
+    max-width: 800px;
+    margin: -30px auto 0;
+    padding: 0 20px;
+    position: relative;
+    z-index: 2;
+  }
+  .toc-inner {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    padding: 24px 32px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    justify-content: center;
+  }
+  .toc a {
+    text-decoration: none;
+    color: var(--text);
+    font-size: 0.88em;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .toc a:hover {
+    background: rgba(0,0,0,0.05);
+  }
+
+  /* MAIN CONTENT */
+  .content {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 20px 60px;
+  }
+
+  /* SECTIONS */
+  .section {
+    margin-bottom: 56px;
+  }
+  .section-title {
+    font-size: 1.6em;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-subtitle {
+    color: var(--muted);
+    font-size: 0.95em;
+    margin-bottom: 28px;
+  }
+
+  /* COLLAPSIBLE */
+  .collapsible-header {
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+  }
+  .collapsible-header .chevron {
+    display: inline-block;
+    transition: transform 0.3s;
+    font-size: 0.7em;
+    color: var(--muted);
+  }
+  .collapsible-header.active .chevron {
+    transform: rotate(90deg);
+  }
+  .collapsible-body {
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+    max-height: 0;
+    opacity: 0;
+  }
+  .collapsible-body.open {
+    max-height: 5000px;
+    opacity: 1;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    padding: 28px;
+    margin-bottom: 24px;
+  }
+  .card h3 {
+    font-size: 1.15em;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* FAMILY TREE */
+  .tree {
+    padding: 20px 0;
+  }
+  .tree-root {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .tree-root-box {
+    display: inline-block;
+    background: linear-gradient(135deg, #5a4a3a, #7a6a5a);
+    color: white;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.05em;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  }
+  .tree-root-sub {
+    font-size: 0.8em;
+    opacity: 0.8;
+    font-weight: 400;
+  }
+  .tree-connector-main {
+    width: 3px;
+    height: 30px;
+    background: #7a6a5a;
+    margin: 0 auto;
+  }
+  .tree-branches {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .tree-branches::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 15%;
+    right: 15%;
+    height: 3px;
+    background: #aaa;
+  }
+  .branch {
+    flex: 1;
+    min-width: 200px;
+    max-width: 300px;
+    position: relative;
+    padding-top: 30px;
+  }
+  .branch::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 3px;
+    height: 30px;
+    background: #aaa;
+  }
+  .branch-label {
+    text-align: center;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9em;
+    margin-bottom: 14px;
+  }
+  .branch-germanic .branch-label { background: rgba(42,122,74,0.12); color: var(--germanic); }
+  .branch-romance .branch-label { background: rgba(58,108,180,0.12); color: var(--romance); }
+  .branch-slavic .branch-label { background: rgba(155,79,192,0.12); color: var(--slavic); }
+
+  .lang-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: var(--card);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    margin: 8px auto;
+    max-width: 240px;
+    font-size: 0.92em;
+    border-left: 4px solid transparent;
+    transition: transform 0.2s;
+  }
+  .lang-box:hover { transform: translateX(4px); }
+  .lang-box-en { border-left-color: var(--en); }
+  .lang-box-no { border-left-color: var(--no); }
+  .lang-box-fr { border-left-color: var(--fr); }
+  .lang-box-es { border-left-color: var(--es); }
+  .lang-box-ru { border-left-color: var(--ru); }
+  .lang-box .flag { font-size: 1.4em; }
+  .lang-box .name { font-weight: 600; }
+  .lang-box .note { font-size: 0.8em; color: var(--muted); }
+
+  /* TABLES */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 16px 0;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88em;
+    background: white;
+  }
+  thead th {
+    background: #f8f5f1;
+    padding: 12px 14px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 0.92em;
+    border-bottom: 2px solid #e8e3dd;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+  }
+  tbody td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #f0ebe5;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: #faf8f5; }
+
+  /* CELL COLORS BY FAMILY */
+  .cell-romance { background: rgba(58,108,180,0.06); }
+  .cell-germanic { background: rgba(42,122,74,0.06); }
+  .cell-slavic { background: rgba(155,79,192,0.06); }
+  .cell-proto { background: rgba(120,100,80,0.08); font-style: italic; font-size: 0.9em; }
+
+  /* PAIR CARDS */
+  .pair-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    margin-bottom: 28px;
+    overflow: hidden;
+  }
+  .pair-header {
+    padding: 20px 28px;
+    font-weight: 700;
+    font-size: 1.1em;
+    color: white;
+  }
+  .pair-header-romance { background: linear-gradient(135deg, var(--fr), var(--es)); }
+  .pair-header-germanic { background: linear-gradient(135deg, var(--en), var(--no)); }
+  .pair-header-bridge { background: linear-gradient(135deg, var(--en), var(--fr)); }
+  .pair-header-russian { background: linear-gradient(135deg, var(--ru), #5a3a7a); }
+  .pair-body { padding: 24px 28px; }
+  .pair-body h4 {
+    font-size: 0.95em;
+    font-weight: 700;
+    margin: 18px 0 10px;
+    color: var(--text);
+  }
+  .pair-body h4:first-child { margin-top: 0; }
+
+  /* WORD PAIRS */
+  .word-pairs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0;
+  }
+  .word-pair {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #f8f5f1;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.88em;
+  }
+  .word-pair .slash { color: var(--muted); margin: 0 2px; }
+
+  /* SOUND RULES */
+  .sound-rules {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 12px 0;
+  }
+  .sound-rule {
+    background: #f0ebe5;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 0.88em;
+    font-weight: 600;
+  }
+  .sound-rule .arrow { color: var(--muted); margin: 0 4px; }
+
+  /* BRIDGE VISUAL */
+  .bridge-container {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin: 20px 0;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .bridge-side {
+    flex: 1;
+    padding: 20px;
+  }
+  .bridge-left {
+    background: rgba(42,122,74,0.08);
+    border-right: 3px dashed #ccc;
+  }
+  .bridge-right {
+    background: rgba(58,108,180,0.08);
+  }
+  .bridge-side h5 {
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    color: var(--muted);
+  }
+  .bridge-word {
+    font-size: 0.92em;
+    padding: 4px 0;
+  }
+
+  /* GRAMMAR CARDS */
+  .grammar-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .grammar-card-header {
+    background: #f8f5f1;
+    padding: 16px 24px;
+    font-weight: 700;
+    font-size: 1.0em;
+    border-bottom: 1px solid #e8e3dd;
+  }
+  .grammar-card-body {
+    padding: 20px 24px;
+  }
+  .grammar-example {
+    background: #f8f5f1;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin: 10px 0;
+    font-size: 0.9em;
+    line-height: 1.7;
+    border-left: 3px solid var(--muted);
+  }
+  .grammar-example strong { color: var(--text); }
+
+  /* TIMELINE */
+  .timeline {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 16px 0;
+    flex-wrap: wrap;
+  }
+  .timeline-item {
+    text-align: center;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 0.85em;
+    position: relative;
+  }
+  .timeline-item .count {
+    font-size: 1.8em;
+    font-weight: 700;
+    display: block;
+  }
+  .timeline-arrow {
+    font-size: 1.4em;
+    color: var(--muted);
+    padding: 0 4px;
+  }
+
+  /* FLOWCHART */
+  .flowchart {
+    text-align: center;
+    padding: 20px 0;
+  }
+  .flow-node {
+    display: inline-block;
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.95em;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    margin: 4px;
+  }
+  .flow-node-ru { background: var(--ru); }
+  .flow-node-en { background: var(--en); }
+  .flow-node-no { background: var(--no); }
+  .flow-node-fr { background: var(--fr); }
+  .flow-node-es { background: var(--es); }
+  .flow-arrow {
+    display: block;
+    font-size: 1.6em;
+    color: var(--muted);
+    margin: 4px 0;
+  }
+  .flow-row {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .flow-col {
+    text-align: center;
+  }
+  .flow-note {
+    font-size: 0.82em;
+    color: var(--muted);
+    max-width: 200px;
+    margin: 6px auto 0;
+    line-height: 1.4;
+  }
+
+  /* PREFIXES TABLE */
+  .prefix-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .prefix-item {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .prefix-item .prefix {
+    font-size: 1.1em;
+    font-weight: 700;
+    color: var(--fr);
+  }
+  .prefix-item .meaning {
+    font-size: 0.82em;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .prefix-item .examples {
+    font-size: 0.85em;
+    line-height: 1.6;
+  }
+  .prefix-item .examples span {
+    display: inline-block;
+    background: #f8f5f1;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin: 2px;
+  }
+
+  /* FALSE FRIENDS */
+  .false-friend-note {
+    background: #fff3cd;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.88em;
+    margin: 12px 0;
+    border-left: 4px solid #ffc107;
+  }
+
+  /* FOOTER INFO */
+  .footer-info {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    padding: 32px;
+    text-align: center;
+    margin-top: 20px;
+  }
+  .footer-info .quote {
+    font-size: 1.15em;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .footer-info .details {
+    font-size: 0.88em;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* HIGHLIGHT */
+  .highlight {
+    background: linear-gradient(135deg, rgba(42,74,127,0.1), rgba(192,57,43,0.1));
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+  }
+
+  /* STAT BADGE */
+  .stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f0ebe5;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.88em;
+    font-weight: 600;
+    margin: 4px;
+  }
+  .stat .num { font-size: 1.2em; }
+
+  /* ARTICLES TABLE SPECIAL */
+  .ru-note {
+    background: rgba(123,47,160,0.08);
+    border-left: 4px solid var(--ru);
+    padding: 12px 16px;
+    border-radius: 0 10px 10px 0;
+    margin: 12px 0;
+    font-size: 0.9em;
+  }
+
+  /* MOBILE */
+  @media (max-width: 500px) {
+    .hero { padding: 80px 16px 40px; }
+    .hero h1 { font-size: 1.6em; }
+    .hero p { font-size: 0.95em; }
+    .toc-inner { padding: 16px; gap: 4px 12px; }
+    .content { padding: 24px 14px 40px; }
+    .section-title { font-size: 1.25em; }
+    .card, .pair-body, .grammar-card-body { padding: 16px; }
+    .pair-header { padding: 14px 16px; font-size: 1.0em; }
+    table { font-size: 0.78em; }
+    thead th, tbody td { padding: 8px 8px; }
+    .tree-branches { flex-direction: column; align-items: center; }
+    .tree-branches::before { display: none; }
+    .branch { padding-top: 16px; }
+    .branch::before { height: 16px; }
+    .bridge-container { flex-direction: column; }
+    .bridge-left { border-right: none; border-bottom: 3px dashed #ccc; }
+    .flow-row { gap: 16px; }
+    .prefix-grid { grid-template-columns: 1fr; }
+    .flow-note { max-width: 160px; font-size: 0.78em; }
+  }
+
+  /* SMOOTH SCROLL */
+  html { scroll-behavior: smooth; }
+
+  /* FADE IN ANIMATION */
+  .section {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html">📖 Главная</a>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <h1>🌍 Что общего у наших языков?</h1>
+  <p>Межъязыковые связи, общие корни и лайфхаки для изучения</p>
+</header>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+  <div class="toc-inner">
+    <a href="#tree">🌳 Древо</a>
+    <a href="#cognates">🔤 Корни</a>
+    <a href="#synergy">🤝 Группы</a>
+    <a href="#grammar">📐 Грамматика</a>
+    <a href="#path">🗺️ Порядок</a>
+    <a href="#prefixes">🔬 Корни</a>
+    <a href="#false-friends">⚠️ Ложные друзья</a>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<main class="content">
+
+<!-- ========== SECTION 1: FAMILY TREE ========== -->
+<div class="section" id="tree">
+  <button class="collapsible-header active" onclick="toggleSection(this)">
+    <span class="section-title">🌳 Семейное древо <span class="chevron">▶</span></span>
+  </button>
+  <p class="section-subtitle">Все пять языков — родственники из одной семьи</p>
+  <div class="collapsible-body open">
+    <div class="card">
+      <div class="tree">
+        <!-- Root -->
+        <div class="tree-root">
+          <div class="tree-root-box">
+            Праиндоевропейский<br>
+            <span class="tree-root-sub">~4000 до н.э.</span>
+          </div>
+        </div>
+        <div class="tree-connector-main"></div>
+
+        <!-- Branches -->
+        <div class="tree-branches">
+          <!-- Germanic -->
+          <div class="branch branch-germanic">
+            <div class="branch-label">Германская ветвь</div>
+            <div class="lang-box lang-box-en">
+              <span class="flag">🇬🇧</span>
+              <div>
+                <span class="name">Английский</span><br>
+                <span class="note">+ 60% романской лексики!</span>
+              </div>
+            </div>
+            <div class="lang-box lang-box-no">
+              <span class="flag">🇳🇴</span>
+              <div>
+                <span class="name">Норвежский</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Romance -->
+          <div class="branch branch-romance">
+            <div class="branch-label">Романская ветвь (из латыни)</div>
+            <div class="lang-box lang-box-fr">
+              <span class="flag">🇫🇷</span>
+              <div>
+                <span class="name">Французский</span>
+              </div>
+            </div>
+            <div class="lang-box lang-box-es">
+              <span class="flag">🇪🇸</span>
+              <div>
+                <span class="name">Испанский</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slavic -->
+          <div class="branch branch-slavic">
+            <div class="branch-label">Славянская ветвь</div>
+            <div class="lang-box lang-box-ru">
+              <span class="flag">🇷🇺</span>
+              <div>
+                <span class="name">Русский</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SECTION 2: COGNATES ========== -->
+<div class="section" id="cognates">
+  <button class="collapsible-header active" onclick="toggleSection(this)">
+    <span class="section-title">🔤 Общие корни <span class="chevron">▶</span></span>
+  </button>
+  <p class="section-subtitle">Слова с общим праиндоевропейским происхождением</p>
+  <div class="collapsible-body open">
+
+    <!-- Table 1: Basic vocabulary -->
+    <div class="card">
+      <h3>Базовая лексика</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Значение</th>
+              <th>🇷🇺</th>
+              <th>🇫🇷</th>
+              <th>🇪🇸</th>
+              <th>🇬🇧</th>
+              <th>🇳🇴</th>
+              <th>Праформа</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>мать</td><td class="cell-slavic">мать</td><td class="cell-romance">mère</td><td class="cell-romance">madre</td><td class="cell-germanic">mother</td><td class="cell-germanic">mor</td><td class="cell-proto">*méh₂tēr</td></tr>
+            <tr><td>два</td><td class="cell-slavic">два</td><td class="cell-romance">deux</td><td class="cell-romance">dos</td><td class="cell-germanic">two</td><td class="cell-germanic">to</td><td class="cell-proto">*dwóh₁</td></tr>
+            <tr><td>три</td><td class="cell-slavic">три</td><td class="cell-romance">trois</td><td class="cell-romance">tres</td><td class="cell-germanic">three</td><td class="cell-germanic">tre</td><td class="cell-proto">*tréyes</td></tr>
+            <tr><td>новый</td><td class="cell-slavic">новый</td><td class="cell-romance">nouveau</td><td class="cell-romance">nuevo</td><td class="cell-germanic">new</td><td class="cell-germanic">ny</td><td class="cell-proto">*néwos</td></tr>
+            <tr><td>ночь</td><td class="cell-slavic">ночь</td><td class="cell-romance">nuit</td><td class="cell-romance">noche</td><td class="cell-germanic">night</td><td class="cell-germanic">natt</td><td class="cell-proto">*nókʷts</td></tr>
+            <tr><td>нос</td><td class="cell-slavic">нос</td><td class="cell-romance">nez</td><td class="cell-romance">nariz</td><td class="cell-germanic">nose</td><td class="cell-germanic">nese</td><td class="cell-proto">*néh₂s</td></tr>
+            <tr><td>сердце</td><td class="cell-slavic">сердце</td><td class="cell-romance">cœur</td><td class="cell-romance">corazón</td><td class="cell-germanic">heart</td><td class="cell-germanic">hjerte</td><td class="cell-proto">*ḱḗr</td></tr>
+            <tr><td>знать</td><td class="cell-slavic">знать</td><td class="cell-romance">connaître</td><td class="cell-romance">conocer</td><td class="cell-germanic">know</td><td class="cell-germanic">kjenne</td><td class="cell-proto">*ǵneh₃-</td></tr>
+            <tr><td>стоять</td><td class="cell-slavic">стоять</td><td class="cell-romance">se tenir</td><td class="cell-romance">estar</td><td class="cell-germanic">stand</td><td class="cell-germanic">stå</td><td class="cell-proto">*steh₂-</td></tr>
+            <tr><td>быть</td><td class="cell-slavic">быть</td><td class="cell-romance">être</td><td class="cell-romance">ser/estar</td><td class="cell-germanic">be</td><td class="cell-germanic">være</td><td class="cell-proto">*bʰuH-</td></tr>
+            <tr><td>видеть</td><td class="cell-slavic">видеть</td><td class="cell-romance">voir</td><td class="cell-romance">ver</td><td class="cell-germanic">see / video</td><td class="cell-germanic">se</td><td class="cell-proto">*weyd-</td></tr>
+            <tr><td>дом</td><td class="cell-slavic">дом</td><td class="cell-romance">domicile</td><td class="cell-romance">domicilio</td><td class="cell-germanic">domestic</td><td class="cell-germanic">—</td><td class="cell-proto">*dóm-</td></tr>
+            <tr><td>огонь</td><td class="cell-slavic">огонь</td><td class="cell-romance">feu</td><td class="cell-romance">fuego</td><td class="cell-germanic">fire</td><td class="cell-germanic">—</td><td class="cell-proto">*péh₂wr̥</td></tr>
+            <tr><td>вода</td><td class="cell-slavic">вода</td><td class="cell-romance">eau</td><td class="cell-romance">agua</td><td class="cell-germanic">water</td><td class="cell-germanic">vann</td><td class="cell-proto">*wódr̥</td></tr>
+            <tr><td>солнце</td><td class="cell-slavic">солнце</td><td class="cell-romance">soleil</td><td class="cell-romance">sol</td><td class="cell-germanic">sun</td><td class="cell-germanic">sol</td><td class="cell-proto">*sóh₂wl̥</td></tr>
+            <tr><td>берёза</td><td class="cell-slavic">берёза</td><td class="cell-romance">bouleau</td><td class="cell-romance">abedul</td><td class="cell-germanic">birch</td><td class="cell-germanic">bjørk</td><td class="cell-proto">*bʰerHǵ-</td></tr>
+            <tr><td>молоко</td><td class="cell-slavic">молоко</td><td class="cell-romance">lait</td><td class="cell-romance">leche</td><td class="cell-germanic">milk</td><td class="cell-germanic">melk</td><td class="cell-proto">*h₂melǵ-</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 14px; font-size: 0.82em;">
+        <span class="stat"><span style="width:12px;height:12px;border-radius:3px;background:rgba(155,79,192,0.2);"></span> Славянская</span>
+        <span class="stat"><span style="width:12px;height:12px;border-radius:3px;background:rgba(58,108,180,0.2);"></span> Романская</span>
+        <span class="stat"><span style="width:12px;height:12px;border-radius:3px;background:rgba(42,122,74,0.2);"></span> Германская</span>
+        <span class="stat"><span style="width:12px;height:12px;border-radius:3px;background:rgba(120,100,80,0.2);"></span> Праформа</span>
+      </div>
+    </div>
+
+    <!-- Table 2: Numbers 1-10 -->
+    <div class="card">
+      <h3>Числа от 1 до 10</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>#</th><th>🇷🇺</th><th>🇫🇷</th><th>🇪🇸</th><th>🇬🇧</th><th>🇳🇴</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>1</strong></td><td class="cell-slavic">один</td><td class="cell-romance">un</td><td class="cell-romance">uno</td><td class="cell-germanic">one</td><td class="cell-germanic">en</td></tr>
+            <tr><td><strong>2</strong></td><td class="cell-slavic">два</td><td class="cell-romance">deux</td><td class="cell-romance">dos</td><td class="cell-germanic">two</td><td class="cell-germanic">to</td></tr>
+            <tr><td><strong>3</strong></td><td class="cell-slavic">три</td><td class="cell-romance">trois</td><td class="cell-romance">tres</td><td class="cell-germanic">three</td><td class="cell-germanic">tre</td></tr>
+            <tr><td><strong>4</strong></td><td class="cell-slavic">четыре</td><td class="cell-romance">quatre</td><td class="cell-romance">cuatro</td><td class="cell-germanic">four</td><td class="cell-germanic">fire</td></tr>
+            <tr><td><strong>5</strong></td><td class="cell-slavic">пять</td><td class="cell-romance">cinq</td><td class="cell-romance">cinco</td><td class="cell-germanic">five</td><td class="cell-germanic">fem</td></tr>
+            <tr><td><strong>6</strong></td><td class="cell-slavic">шесть</td><td class="cell-romance">six</td><td class="cell-romance">seis</td><td class="cell-germanic">six</td><td class="cell-germanic">seks</td></tr>
+            <tr><td><strong>7</strong></td><td class="cell-slavic">семь</td><td class="cell-romance">sept</td><td class="cell-romance">siete</td><td class="cell-germanic">seven</td><td class="cell-germanic">sju</td></tr>
+            <tr><td><strong>8</strong></td><td class="cell-slavic">восемь</td><td class="cell-romance">huit</td><td class="cell-romance">ocho</td><td class="cell-germanic">eight</td><td class="cell-germanic">åtte</td></tr>
+            <tr><td><strong>9</strong></td><td class="cell-slavic">девять</td><td class="cell-romance">neuf</td><td class="cell-romance">nueve</td><td class="cell-germanic">nine</td><td class="cell-germanic">ni</td></tr>
+            <tr><td><strong>10</strong></td><td class="cell-slavic">десять</td><td class="cell-romance">dix</td><td class="cell-romance">diez</td><td class="cell-germanic">ten</td><td class="cell-germanic">ti</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size: 0.85em; color: var(--muted); margin-top: 10px;">
+        Обратите внимание: <strong>шесть/six/seis/six/seks</strong> и <strong>семь/sept/siete/seven/sju</strong> — узнаваемы во всех пяти языках!
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SECTION 3: SYNERGIES ========== -->
+<div class="section" id="synergy">
+  <button class="collapsible-header active" onclick="toggleSection(this)">
+    <span class="section-title">🤝 Халява по группам <span class="chevron">▶</span></span>
+  </button>
+  <p class="section-subtitle">Как знание одного языка помогает учить другой</p>
+  <div class="collapsible-body open">
+
+    <!-- FR ↔ ES -->
+    <div class="pair-card">
+      <div class="pair-header pair-header-romance">🇫🇷 ↔ 🇪🇸 Романская пара — 75% общей лексики</div>
+      <div class="pair-body">
+        <h4>Почти одинаковые слова</h4>
+        <div class="word-pairs">
+          <span class="word-pair">important <span class="slash">/</span> importante</span>
+          <span class="word-pair">différent <span class="slash">/</span> diferente</span>
+          <span class="word-pair">nécessaire <span class="slash">/</span> necesario</span>
+          <span class="word-pair">comprendre <span class="slash">/</span> comprender</span>
+          <span class="word-pair">répondre <span class="slash">/</span> responder</span>
+          <span class="word-pair">gouvernement <span class="slash">/</span> gobierno</span>
+          <span class="word-pair">développement <span class="slash">/</span> desarrollo</span>
+          <span class="word-pair">problème <span class="slash">/</span> problema</span>
+          <span class="word-pair">famille <span class="slash">/</span> familia</span>
+          <span class="word-pair">possible <span class="slash">/</span> posible</span>
+          <span class="word-pair">liberté <span class="slash">/</span> libertad</span>
+          <span class="word-pair">université <span class="slash">/</span> universidad</span>
+          <span class="word-pair">hôpital <span class="slash">/</span> hospital</span>
+          <span class="word-pair">exemple <span class="slash">/</span> ejemplo</span>
+          <span class="word-pair">musique <span class="slash">/</span> música</span>
+          <span class="word-pair">nature <span class="slash">/</span> naturaleza</span>
+          <span class="word-pair">président <span class="slash">/</span> presidente</span>
+          <span class="word-pair">histoire <span class="slash">/</span> historia</span>
+          <span class="word-pair">système <span class="slash">/</span> sistema</span>
+          <span class="word-pair">national <span class="slash">/</span> nacional</span>
+        </div>
+
+        <h4>Грамматические параллели</h4>
+        <p style="font-size: 0.9em; margin-bottom: 8px;">Субжонктив, система местоимений COD/COI, система прошедших времён — практически идентичны.</p>
+
+        <h4>Правила звуковых переходов</h4>
+        <div class="sound-rules">
+          <span class="sound-rule">FR <strong>-tion</strong> <span class="arrow">=</span> ES <strong>-ción</strong></span>
+          <span class="sound-rule">FR <strong>ai / ê</strong> <span class="arrow">=</span> ES <strong>ie / e</strong></span>
+          <span class="sound-rule">FR <strong>ou</strong> <span class="arrow">=</span> ES <strong>o</strong></span>
+          <span class="sound-rule">FR <strong>eau</strong> <span class="arrow">=</span> ES <strong>o / al</strong></span>
+          <span class="sound-rule">FR <strong>é-</strong> <span class="arrow">=</span> ES <strong>es-</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- EN ↔ NO -->
+    <div class="pair-card">
+      <div class="pair-header pair-header-germanic">🇬🇧 ↔ 🇳🇴 Германская пара</div>
+      <div class="pair-body">
+        <h4>Когнаты — сразу понятные слова</h4>
+        <div class="word-pairs">
+          <span class="word-pair">house <span class="slash">/</span> hus</span>
+          <span class="word-pair">book <span class="slash">/</span> bok</span>
+          <span class="word-pair">come <span class="slash">/</span> komme</span>
+          <span class="word-pair">drink <span class="slash">/</span> drikke</span>
+          <span class="word-pair">think <span class="slash">/</span> tenke</span>
+          <span class="word-pair">water <span class="slash">/</span> vann</span>
+          <span class="word-pair">bread <span class="slash">/</span> brød</span>
+          <span class="word-pair">fish <span class="slash">/</span> fisk</span>
+          <span class="word-pair">green <span class="slash">/</span> grønn</span>
+          <span class="word-pair">long <span class="slash">/</span> lang</span>
+          <span class="word-pair">hand <span class="slash">/</span> hånd</span>
+          <span class="word-pair">finger <span class="slash">/</span> finger</span>
+          <span class="word-pair">name <span class="slash">/</span> navn</span>
+          <span class="word-pair">open <span class="slash">/</span> åpen</span>
+          <span class="word-pair">summer <span class="slash">/</span> sommer</span>
+          <span class="word-pair">winter <span class="slash">/</span> vinter</span>
+          <span class="word-pair">storm <span class="slash">/</span> storm</span>
+          <span class="word-pair">grass <span class="slash">/</span> gress</span>
+          <span class="word-pair">arm <span class="slash">/</span> arm</span>
+          <span class="word-pair">land <span class="slash">/</span> land</span>
+        </div>
+
+        <h4>Наследие викингов в английском</h4>
+        <p style="font-size: 0.9em; margin-bottom: 8px;">Слова, пришедшие в английский из древнескандинавского:</p>
+        <div class="word-pairs">
+          <span class="word-pair" style="background: rgba(26,82,118,0.08);">they / them / their</span>
+          <span class="word-pair" style="background: rgba(26,82,118,0.08);">sky</span>
+          <span class="word-pair" style="background: rgba(26,82,118,0.08);">egg</span>
+          <span class="word-pair" style="background: rgba(26,82,118,0.08);">window</span>
+          <span class="word-pair" style="background: rgba(26,82,118,0.08);">take</span>
+          <span class="word-pair" style="background: rgba(26,82,118,0.08);">get</span>
+          <span class="word-pair" style="background: rgba(26,82,118,0.08);">husband</span>
+          <span class="word-pair" style="background: rgba(26,82,118,0.08);">knife</span>
+          <span class="word-pair" style="background: rgba(26,82,118,0.08);">wrong</span>
+          <span class="word-pair" style="background: rgba(26,82,118,0.08);">skill</span>
+        </div>
+
+        <h4>Грамматические параллели</h4>
+        <p style="font-size: 0.9em; margin-bottom: 8px;">Похожий порядок слов (SVO), модальные глаголы:</p>
+        <div class="sound-rules">
+          <span class="sound-rule">can <span class="arrow">=</span> kan</span>
+          <span class="sound-rule">shall <span class="arrow">=</span> skal</span>
+          <span class="sound-rule">will <span class="arrow">=</span> vil</span>
+          <span class="sound-rule">must <span class="arrow">=</span> må</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- English = Bridge -->
+    <div class="pair-card">
+      <div class="pair-header pair-header-bridge">🇬🇧 Английский = Мост между семьями</div>
+      <div class="pair-body">
+        <p style="font-size: 0.92em; margin-bottom: 16px;">Германская грамматика + романская лексика. <strong>~60% словаря английского</strong> — из французского и латыни (Нормандское завоевание 1066 г.).</p>
+
+        <div class="bridge-container">
+          <div class="bridge-side bridge-left">
+            <h5>Германское ядро (быт)</h5>
+            <div class="bridge-word"><strong>house</strong> — дом</div>
+            <div class="bridge-word"><strong>eat</strong> — есть</div>
+            <div class="bridge-word"><strong>drink</strong> — пить</div>
+            <div class="bridge-word"><strong>come</strong> — приходить</div>
+            <div class="bridge-word"><strong>go</strong> — идти</div>
+            <div class="bridge-word"><strong>help</strong> — помогать</div>
+            <div class="bridge-word"><strong>buy</strong> — покупать</div>
+          </div>
+          <div class="bridge-side bridge-right">
+            <h5>Романский слой (формальный)</h5>
+            <div class="bridge-word"><strong>residence</strong> — резиденция</div>
+            <div class="bridge-word"><strong>consume</strong> — потреблять</div>
+            <div class="bridge-word"><strong>beverage</strong> — напиток</div>
+            <div class="bridge-word"><strong>arrive</strong> — прибывать</div>
+            <div class="bridge-word"><strong>depart</strong> — отбывать</div>
+            <div class="bridge-word"><strong>assist</strong> — содействовать</div>
+            <div class="bridge-word"><strong>purchase</strong> — приобретать</div>
+          </div>
+        </div>
+
+        <div class="stat" style="margin-top: 12px;"><span class="num">1066</span> — Нормандское завоевание навсегда изменило английский язык</div>
+      </div>
+    </div>
+
+    <!-- Russian connections -->
+    <div class="pair-card">
+      <div class="pair-header pair-header-russian">🇷🇺 Русский — Неожиданные связи</div>
+      <div class="pair-body">
+        <h4>Через праиндоевропейские корни</h4>
+        <p style="font-size: 0.9em; margin-bottom: 8px;">Русские слова, которые узнаваемы во всех языках проекта (см. таблицу когнатов выше).</p>
+
+        <h4>Французские заимствования в русском</h4>
+        <p style="font-size: 0.9em; margin-bottom: 8px;">XVIII–XIX века — эпоха «галломании» в России:</p>
+        <div class="word-pairs">
+          <span class="word-pair" style="background: rgba(42,74,127,0.08);">бульвар <span class="slash">←</span> boulevard</span>
+          <span class="word-pair" style="background: rgba(42,74,127,0.08);">ресторан <span class="slash">←</span> restaurant</span>
+          <span class="word-pair" style="background: rgba(42,74,127,0.08);">шофёр <span class="slash">←</span> chauffeur</span>
+          <span class="word-pair" style="background: rgba(42,74,127,0.08);">мебель <span class="slash">←</span> meuble</span>
+          <span class="word-pair" style="background: rgba(42,74,127,0.08);">этаж <span class="slash">←</span> étage</span>
+          <span class="word-pair" style="background: rgba(42,74,127,0.08);">портфель <span class="slash">←</span> portefeuille</span>
+          <span class="word-pair" style="background: rgba(42,74,127,0.08);">шанс <span class="slash">←</span> chance</span>
+          <span class="word-pair" style="background: rgba(42,74,127,0.08);">сюрприз <span class="slash">←</span> surprise</span>
+          <span class="word-pair" style="background: rgba(42,74,127,0.08);">антураж <span class="slash">←</span> entourage</span>
+          <span class="word-pair" style="background: rgba(42,74,127,0.08);">пейзаж <span class="slash">←</span> paysage</span>
+        </div>
+
+        <h4>Русские слова в мире</h4>
+        <div class="word-pairs">
+          <span class="word-pair" style="background: rgba(123,47,160,0.08);">sputnik <span class="slash">←</span> спутник</span>
+          <span class="word-pair" style="background: rgba(123,47,160,0.08);">babushka <span class="slash">←</span> бабушка</span>
+          <span class="word-pair" style="background: rgba(123,47,160,0.08);">tsar / czar <span class="slash">←</span> царь</span>
+          <span class="word-pair" style="background: rgba(123,47,160,0.08);">vodka <span class="slash">←</span> водка</span>
+          <span class="word-pair" style="background: rgba(123,47,160,0.08);">mammoth <span class="slash">←</span> мамонт</span>
+          <span class="word-pair" style="background: rgba(123,47,160,0.08);">intelligentsia <span class="slash">←</span> интеллигенция</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SECTION 4: GRAMMAR PARALLELS ========== -->
+<div class="section" id="grammar">
+  <button class="collapsible-header active" onclick="toggleSection(this)">
+    <span class="section-title">📐 Грамматические параллели <span class="chevron">▶</span></span>
+  </button>
+  <p class="section-subtitle">Одни и те же концепции — разные реализации</p>
+  <div class="collapsible-body open">
+
+    <!-- Card 1: Subjunctive -->
+    <div class="grammar-card">
+      <div class="grammar-card-header">1. Субхунтив / Субжонктив (🇫🇷 + 🇪🇸)</div>
+      <div class="grammar-card-body">
+        <p style="font-size: 0.92em; margin-bottom: 12px;">Французский и испанский делят сослагательное наклонение — те же триггеры, та же логика, почти те же формы.</p>
+        <div class="grammar-example">
+          🇫🇷 Il faut que tu <strong>saches</strong> la vérité.<br>
+          🇪🇸 Es necesario que <strong>sepas</strong> la verdad.<br>
+          <span style="color: var(--muted);">= Надо, чтобы ты знал правду.</span>
+        </div>
+        <div class="grammar-example">
+          🇫🇷 Je veux que tu <strong>viennes</strong>.<br>
+          🇪🇸 Quiero que <strong>vengas</strong>.<br>
+          <span style="color: var(--muted);">= Я хочу, чтобы ты пришёл.</span>
+        </div>
+        <p style="font-size: 0.88em; color: var(--muted); margin-top: 12px;">
+          🇬🇧 Английский почти утратил его (остаток: «If I <strong>were</strong>...»).<br>
+          🇳🇴 Норвежский тоже утратил.<br>
+          🇷🇺 Русский использует «чтобы + прошедшее время» вместо отдельного наклонения.
+        </p>
+      </div>
+    </div>
+
+    <!-- Card 2: Articles -->
+    <div class="grammar-card">
+      <div class="grammar-card-header">2. Артикли (все, кроме русского)</div>
+      <div class="grammar-card-body">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th></th><th>🇫🇷</th><th>🇪🇸</th><th>🇬🇧</th><th>🇳🇴</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Определённый</strong></td>
+                <td>le / la / les</td>
+                <td>el / la / los / las</td>
+                <td>the</td>
+                <td>-en / -et / -ene <span style="font-size:0.8em;color:var(--muted);">(суффикс!)</span></td>
+              </tr>
+              <tr>
+                <td><strong>Неопределённый</strong></td>
+                <td>un / une</td>
+                <td>un / una</td>
+                <td>a / an</td>
+                <td>en / ei / et</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="ru-note">
+          🇷🇺 <strong>В русском нет артиклей</strong> — это самая частая ошибка русскоговорящих во всех 4 языках. Зато есть порядок слов и контекст!
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3: Pronouns COD/COI -->
+    <div class="grammar-card">
+      <div class="grammar-card-header">3. Местоимения COD/COI (🇫🇷 ≈ 🇪🇸)</div>
+      <div class="grammar-card-body">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th></th><th>🇫🇷 COD</th><th>🇫🇷 COI</th><th>🇪🇸 COD</th><th>🇪🇸 COI</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>я</td><td>me</td><td>me</td><td>me</td><td>me</td></tr>
+              <tr><td>ты</td><td>te</td><td>te</td><td>te</td><td>te</td></tr>
+              <tr><td>он/она</td><td>le / la</td><td>lui</td><td>lo / la</td><td>le</td></tr>
+              <tr><td>мы</td><td>nous</td><td>nous</td><td>nos</td><td>nos</td></tr>
+              <tr><td>вы</td><td>vous</td><td>vous</td><td>os</td><td>os</td></tr>
+              <tr><td>они</td><td>les</td><td>leur</td><td>los / las</td><td>les</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size: 0.9em; margin-top: 12px;">Те же правила позиции (перед глаголом / присоединяется к инфинитиву) и дублирование:</p>
+        <div class="grammar-example">
+          🇫🇷 Je <strong>lui</strong> donne le livre <strong>à Marie</strong>.<br>
+          🇪🇸 <strong>Le</strong> doy el libro <strong>a María</strong>.<br>
+          <span style="color: var(--muted);">= Я даю книгу Марии.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4: Tenses -->
+    <div class="grammar-card">
+      <div class="grammar-card-header">4. Времена — сколько их?</div>
+      <div class="grammar-card-body">
+        <div class="timeline">
+          <div class="timeline-item" style="background: rgba(123,47,160,0.08); color: var(--ru);">
+            <span class="count">3</span>
+            🇷🇺 Русский
+          </div>
+          <span class="timeline-arrow">→</span>
+          <div class="timeline-item" style="background: rgba(26,82,118,0.08); color: var(--no);">
+            <span class="count">~8</span>
+            🇳🇴 Норвежский
+          </div>
+          <span class="timeline-arrow">→</span>
+          <div class="timeline-item" style="background: rgba(26,92,58,0.08); color: var(--en);">
+            <span class="count">12</span>
+            🇬🇧 Английский
+          </div>
+          <span class="timeline-arrow">→</span>
+          <div class="timeline-item" style="background: rgba(58,108,180,0.08); color: var(--romance);">
+            <span class="count">15+</span>
+            🇫🇷🇪🇸 Романские
+          </div>
+        </div>
+        <p style="font-size: 0.88em; color: var(--muted); margin-top: 12px;">
+          Русский компенсирует вид (совершенный/несовершенный). Норвежский похож на английский, но без Continuous. Романские языки добавляют субжонктив.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SECTION 5: LEARNING PATH ========== -->
+<div class="section" id="path">
+  <button class="collapsible-header active" onclick="toggleSection(this)">
+    <span class="section-title">🗺️ Порядок изучения <span class="chevron">▶</span></span>
+  </button>
+  <p class="section-subtitle">Оптимальный путь, максимизирующий синергию</p>
+  <div class="collapsible-body open">
+    <div class="card">
+      <div class="flowchart">
+        <div class="flow-node flow-node-ru">🇷🇺 Русский (есть)</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-node flow-node-en">🇬🇧 Английский</div>
+        <div class="flow-note" style="margin-bottom: 8px;">Германская база + романская лексика = ключ ко всему</div>
+        <div class="flow-arrow">↙ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ↘</div>
+        <div class="flow-row">
+          <div class="flow-col">
+            <div class="flow-node flow-node-no">🇳🇴 Норвежский</div>
+            <div class="flow-note">Похожая структура, простая грамматика</div>
+          </div>
+          <div class="flow-col">
+            <div class="flow-node flow-node-fr">🇫🇷 Французский</div>
+            <div class="flow-note">Романская лексика уже знакома из EN</div>
+          </div>
+        </div>
+        <div class="flow-arrow" style="margin-left: 120px;">↓</div>
+        <div class="flow-node flow-node-es">🇪🇸 Испанский</div>
+        <div class="flow-note">Почти бесплатно после французского</div>
+      </div>
+
+      <div style="background: #f8f5f1; border-radius: 12px; padding: 20px; margin-top: 20px; font-size: 0.9em; line-height: 1.7;">
+        <strong>Почему именно так?</strong><br>
+        <strong>1.</strong> Английский — мост: его германская грамматика подготовит к норвежскому, а романский словарь — к французскому.<br>
+        <strong>2.</strong> Норвежский — самый простой германский язык (минимум склонений, предсказуемые глаголы).<br>
+        <strong>3.</strong> Французский открывает дверь ко всем романским языкам.<br>
+        <strong>4.</strong> Испанский после французского — 75% лексики уже знакомы, грамматика параллельна.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SECTION 6: LATIN/GREEK ROOTS ========== -->
+<div class="section" id="prefixes">
+  <button class="collapsible-header active" onclick="toggleSection(this)">
+    <span class="section-title">🔬 Латинские и греческие корни <span class="chevron">▶</span></span>
+  </button>
+  <p class="section-subtitle">Общие приставки и суффиксы, работающие во всех 5 языках</p>
+  <div class="collapsible-body open">
+    <div class="prefix-grid">
+      <div class="prefix-item">
+        <div class="prefix">tele-</div>
+        <div class="meaning">далеко (греч.)</div>
+        <div class="examples">
+          <span>🇷🇺 телевизор</span>
+          <span>🇫🇷 télévision</span>
+          <span>🇪🇸 televisión</span>
+          <span>🇬🇧 television</span>
+          <span>🇳🇴 TV</span>
+        </div>
+      </div>
+      <div class="prefix-item">
+        <div class="prefix">auto-</div>
+        <div class="meaning">сам (греч.)</div>
+        <div class="examples">
+          <span>🇷🇺 автомобиль</span>
+          <span>🇫🇷 automobile</span>
+          <span>🇪🇸 automóvil</span>
+          <span>🇬🇧 automobile</span>
+          <span>🇳🇴 automobil</span>
+        </div>
+      </div>
+      <div class="prefix-item">
+        <div class="prefix">trans-</div>
+        <div class="meaning">через (лат.)</div>
+        <div class="examples">
+          <span>🇷🇺 транспорт</span>
+          <span>🇫🇷 transport</span>
+          <span>🇪🇸 transporte</span>
+          <span>🇬🇧 transport</span>
+          <span>🇳🇴 transport</span>
+        </div>
+      </div>
+      <div class="prefix-item">
+        <div class="prefix">inter-</div>
+        <div class="meaning">между (лат.)</div>
+        <div class="examples">
+          <span>🇷🇺 интернет</span>
+          <span>🇫🇷 internet</span>
+          <span>🇪🇸 internet</span>
+          <span>🇬🇧 internet</span>
+          <span>🇳🇴 internett</span>
+        </div>
+      </div>
+      <div class="prefix-item">
+        <div class="prefix">micro-</div>
+        <div class="meaning">маленький (греч.)</div>
+        <div class="examples">
+          <span>🇷🇺 микроскоп</span>
+          <span>🇫🇷 microscope</span>
+          <span>🇪🇸 microscopio</span>
+          <span>🇬🇧 microscope</span>
+          <span>🇳🇴 mikroskop</span>
+        </div>
+      </div>
+      <div class="prefix-item">
+        <div class="prefix">bio-</div>
+        <div class="meaning">жизнь (греч.)</div>
+        <div class="examples">
+          <span>🇷🇺 биология</span>
+          <span>🇫🇷 biologie</span>
+          <span>🇪🇸 biología</span>
+          <span>🇬🇧 biology</span>
+          <span>🇳🇴 biologi</span>
+        </div>
+      </div>
+      <div class="prefix-item">
+        <div class="prefix">geo-</div>
+        <div class="meaning">земля (греч.)</div>
+        <div class="examples">
+          <span>🇷🇺 география</span>
+          <span>🇫🇷 géographie</span>
+          <span>🇪🇸 geografía</span>
+          <span>🇬🇧 geography</span>
+          <span>🇳🇴 geografi</span>
+        </div>
+      </div>
+      <div class="prefix-item">
+        <div class="prefix">photo-</div>
+        <div class="meaning">свет (греч.)</div>
+        <div class="examples">
+          <span>🇷🇺 фотография</span>
+          <span>🇫🇷 photographie</span>
+          <span>🇪🇸 fotografía</span>
+          <span>🇬🇧 photography</span>
+          <span>🇳🇴 fotografi</span>
+        </div>
+      </div>
+      <div class="prefix-item">
+        <div class="prefix">-tion / -ción / -ция</div>
+        <div class="meaning">суффикс действия/результата (лат.)</div>
+        <div class="examples">
+          <span>🇷🇺 информация</span>
+          <span>🇫🇷 information</span>
+          <span>🇪🇸 información</span>
+          <span>🇬🇧 information</span>
+          <span>🇳🇴 informasjon</span>
+        </div>
+      </div>
+      <div class="prefix-item">
+        <div class="prefix">macro-</div>
+        <div class="meaning">большой (греч.)</div>
+        <div class="examples">
+          <span>🇷🇺 макроэкономика</span>
+          <span>🇫🇷 macroéconomie</span>
+          <span>🇪🇸 macroeconomía</span>
+          <span>🇬🇧 macroeconomics</span>
+          <span>🇳🇴 makroøkonomi</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SECTION 7: FALSE FRIENDS ========== -->
+<div class="section" id="false-friends">
+  <button class="collapsible-header active" onclick="toggleSection(this)">
+    <span class="section-title">⚠️ Ложные друзья <span class="chevron">▶</span></span>
+  </button>
+  <p class="section-subtitle">Похожие слова с разными значениями — осторожно!</p>
+  <div class="collapsible-body open">
+    <div class="card">
+      <div class="false-friend-note">
+        ⚠️ Эти слова выглядят одинаково, но означают разное. Классические ловушки для полиглота!
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Слово</th><th>🇫🇷</th><th>🇪🇸</th><th>🇬🇧</th><th>🇳🇴</th><th>🇷🇺</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>actual</strong></td>
+              <td>actuel<br><small>нынешний</small></td>
+              <td>actual<br><small>нынешний</small></td>
+              <td>actual<br><small>реальный</small></td>
+              <td>aktuell<br><small>актуальный</small></td>
+              <td>актуальный<br><small>насущный</small></td>
+            </tr>
+            <tr>
+              <td><strong>magazine</strong></td>
+              <td>magasin<br><small>магазин</small></td>
+              <td>almacén<br><small>склад</small></td>
+              <td>magazine<br><small>журнал</small></td>
+              <td>magasin<br><small>магазин</small></td>
+              <td>магазин<br><small>магазин</small></td>
+            </tr>
+            <tr>
+              <td><strong>fabric</strong></td>
+              <td>fabrique<br><small>фабрика</small></td>
+              <td>fábrica<br><small>фабрика</small></td>
+              <td>fabric<br><small>ткань</small></td>
+              <td>fabrikk<br><small>фабрика</small></td>
+              <td>фабрика<br><small>фабрика</small></td>
+            </tr>
+            <tr>
+              <td><strong>sympathetic</strong></td>
+              <td>sympathique<br><small>милый</small></td>
+              <td>simpático<br><small>милый</small></td>
+              <td>sympathetic<br><small>сочувственный</small></td>
+              <td>sympatisk<br><small>милый</small></td>
+              <td>симпатичный<br><small>приятный</small></td>
+            </tr>
+            <tr>
+              <td><strong>embarrassed</strong></td>
+              <td>—</td>
+              <td>embarazada<br><small style="color:#c0392b;font-weight:700;">беременная!</small></td>
+              <td>embarrassed<br><small>смущённый</small></td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><strong>preservative</strong></td>
+              <td>préservatif<br><small style="color:#c0392b;font-weight:700;">презерватив</small></td>
+              <td>preservativo<br><small style="color:#c0392b;font-weight:700;">презерватив</small></td>
+              <td>preservative<br><small>консервант</small></td>
+              <td>—</td>
+              <td>презерватив<br><small>презерватив</small></td>
+            </tr>
+            <tr>
+              <td><strong>bless(er)</strong></td>
+              <td>blesser<br><small>ранить</small></td>
+              <td>—</td>
+              <td>bless<br><small>благословить</small></td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><strong>gift</strong></td>
+              <td>—</td>
+              <td>—</td>
+              <td>gift<br><small>подарок</small></td>
+              <td>gift<br><small style="color:#c0392b;font-weight:700;">яд / женат(а)</small></td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><strong>sensible</strong></td>
+              <td>sensible<br><small>чувствительный</small></td>
+              <td>sensible<br><small>чувствительный</small></td>
+              <td>sensible<br><small>разумный</small></td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><strong>library</strong></td>
+              <td>librairie<br><small>книжный магазин</small></td>
+              <td>librería<br><small>книжный магазин</small></td>
+              <td>library<br><small>библиотека</small></td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><strong>conductor</strong></td>
+              <td>conducteur<br><small>водитель</small></td>
+              <td>conductor<br><small>водитель</small></td>
+              <td>conductor<br><small>дирижёр</small></td>
+              <td>—</td>
+              <td>кондуктор<br><small>кондуктор</small></td>
+            </tr>
+            <tr>
+              <td><strong>attendre</strong></td>
+              <td>attendre<br><small>ждать</small></td>
+              <td>atender<br><small>обслуживать</small></td>
+              <td>attend<br><small>посещать</small></td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><strong>рецепт</strong></td>
+              <td>recette<br><small>рецепт (кулинарный)</small></td>
+              <td>receta<br><small>рецепт (оба)</small></td>
+              <td>recipe<br><small>рецепт (кулинарный)</small></td>
+              <td>oppskrift<br><small>рецепт</small></td>
+              <td>рецепт<br><small>оба значения</small></td>
+            </tr>
+            <tr>
+              <td><strong>billion</strong></td>
+              <td>billion<br><small>триллион!</small></td>
+              <td>billón<br><small>триллион!</small></td>
+              <td>billion<br><small>миллиард</small></td>
+              <td>billion<br><small>миллиард</small></td>
+              <td>биллион<br><small>триллион</small></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== FOOTER ========== -->
+<div class="footer-info">
+  <div class="quote">Все эти языки — одна семья.<br>Чем больше языков знаешь, тем легче учить следующий.</div>
+  <div class="details">
+    <strong>Для углубления:</strong><br>
+    «The Unfolding of Language» — Guy Deutscher<br>
+    «Our Magnificent Bastard Tongue» — John McWhorter<br>
+    «Сравнительная грамматика индоевропейских языков» — А. Мейе<br><br>
+    <em>~40% всех пар языков в этом проекте имеют узнаваемый когнат в базовой лексике</em>
+  </div>
+</div>
+
+</main>
+
+<script>
+// Collapsible sections
+function toggleSection(header) {
+  header.classList.toggle('active');
+  const body = header.parentElement.querySelector('.collapsible-body');
+  body.classList.toggle('open');
+}
+
+// Fade-in on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.section').forEach(section => {
+  observer.observe(section);
+});
+</script>
+
+</body>
+</html>

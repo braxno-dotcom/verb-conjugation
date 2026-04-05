@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📖</text></svg>">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Спряжение глаголов</title>
+<title>Грамматика языков</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -72,12 +72,15 @@
   .card-en { border-top: 4px solid #1a5c3a; }
   .card-ru { border-top: 4px solid #7b2fa0; }
   .card-no { border-top: 4px solid #1a5276; }
+  .card-conn { border-top: 4px solid transparent; background-image: linear-gradient(white, white), linear-gradient(90deg, #2a4a7f, #c0392b, #1a5c3a, #1a5276); background-origin: border-box; background-clip: padding-box, border-box; border-top: 4px solid transparent; }
+  .bonus { margin-top: 36px; padding-top: 24px; border-top: 1px solid #e0d8d0; }
+  .bonus-label { font-size: 0.85em; color: #aaa; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <h1>Спряжение глаголов</h1>
+  <h1>Грамматика языков</h1>
   <p>Выберите язык</p>
   <div class="cards">
     <a href="french.html" class="card card-fr">
@@ -100,6 +103,17 @@
       <span class="label">Норвежский</span>
       <span class="sub">Norsk grammatikk</span>
     </a>
+  </div>
+
+  <div class="bonus">
+    <div class="bonus-label">Бонус</div>
+    <div class="cards">
+      <a href="connections.html" class="card card-conn">
+        <span class="flag">🌍</span>
+        <span class="label">Что общего у языков?</span>
+        <span class="sub">Общие корни, связи между группами, лайфхаки для изучения</span>
+      </a>
+    </div>
   </div>
 </div>
 
