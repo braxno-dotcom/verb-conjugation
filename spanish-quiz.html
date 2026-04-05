@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇪🇸</text></svg>">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ES quiz">
+<title>🇪🇸 Тренажёр испанской грамматики</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5efee;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #7b1e1e, #c0392b);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px 20px 60px;
+  }
+
+  .topics {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0 0 18px;
+  }
+  .topic-btn {
+    padding: 10px 18px;
+    border: 2px solid #c0392b;
+    background: white;
+    color: #c0392b;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .topic-btn:hover { background: #fce8e6; }
+  .topic-btn.active {
+    background: #c0392b;
+    color: white;
+  }
+
+  .score-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    background: white;
+    border-radius: 12px;
+    padding: 14px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    margin-bottom: 18px;
+    font-size: 0.95em;
+  }
+  .score-item { display: flex; align-items: center; gap: 5px; }
+  .score-item .label { color: #888; }
+  .score-item .value { font-weight: 700; color: #7b1e1e; }
+  .streak-fire { font-size: 1.2em; }
+  .score-bar .reset-btn {
+    padding: 6px 14px;
+    background: #fce8e6;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85em;
+    color: #555;
+    transition: background 0.2s;
+  }
+  .score-bar .reset-btn:hover { background: #f5cdc9; }
+
+  .progress-wrap {
+    height: 6px;
+    background: #e5d5d3;
+    border-radius: 3px;
+    margin-bottom: 18px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #c0392b, #e74c3c);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  .quiz-card {
+    background: white;
+    border-radius: 16px;
+    padding: 36px 30px 30px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    text-align: center;
+    transition: background-color 0.3s;
+    min-height: 260px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .quiz-card.flash-correct { background-color: #e6f9ec; }
+  .quiz-card.flash-wrong { background-color: #fde8e8; }
+
+  .q-type {
+    font-size: 0.85em;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+  }
+  .q-sentence {
+    font-size: 1.5em;
+    font-weight: 600;
+    color: #7b1e1e;
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .q-hint {
+    font-size: 0.9em;
+    color: #888;
+    margin-bottom: 24px;
+    font-style: italic;
+  }
+  .q-blank {
+    background: #fdf0ef;
+    border: 2px dashed #d4a8a4;
+    border-radius: 8px;
+    padding: 4px 14px;
+    display: inline-block;
+    min-width: 60px;
+    color: #c0392b;
+    font-weight: 700;
+  }
+
+  .answers {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  .ans-btn {
+    padding: 14px 24px;
+    min-width: 100px;
+    min-height: 48px;
+    border: 2px solid #d4c0be;
+    background: white;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #2c2c2c;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .ans-btn:hover:not(.disabled) {
+    border-color: #c0392b;
+    background: #fdf0ef;
+    transform: translateY(-1px);
+  }
+  .ans-btn.correct {
+    border-color: #38a169;
+    background: #e6f9ec;
+    color: #22653a;
+  }
+  .ans-btn.wrong {
+    border-color: #e53e3e;
+    background: #fde8e8;
+    color: #9b2c2c;
+  }
+  .ans-btn.disabled { cursor: default; opacity: 0.6; }
+  .ans-btn .key-hint {
+    position: absolute;
+    top: 3px;
+    right: 7px;
+    font-size: 0.6em;
+    color: #aaa;
+    font-weight: 400;
+  }
+
+  .feedback {
+    margin-top: 18px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-size: 0.95em;
+    line-height: 1.5;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct-fb {
+    background: #e6f9ec;
+    color: #22653a;
+    border: 1px solid #b2e5c5;
+  }
+  .feedback.wrong-fb {
+    background: #fde8e8;
+    color: #9b2c2c;
+    border: 1px solid #f5b8b8;
+  }
+  .feedback strong { display: block; margin-bottom: 4px; font-size: 1.05em; }
+  .feedback .explanation { font-size: 0.9em; opacity: 0.85; }
+
+  .continue-btn {
+    margin-top: 16px;
+    padding: 14px 36px;
+    background: linear-gradient(135deg, #c0392b, #e74c3c);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.05em;
+    font-weight: 600;
+    cursor: pointer;
+    display: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .continue-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(192,57,43,0.3); }
+  .continue-btn.show { display: inline-block; }
+
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.3em; }
+    header p { font-size: 0.85em; }
+    .quiz-card { padding: 24px 16px 22px; }
+    .q-sentence { font-size: 1.25em; }
+    .ans-btn { padding: 12px 16px; min-width: 80px; font-size: 1em; }
+    .topic-btn { padding: 8px 12px; font-size: 0.85em; }
+    .score-bar { gap: 10px; font-size: 0.85em; padding: 10px 14px; }
+    .container { padding: 14px 12px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="spanish.html" class="lang-switch">📖 Портал</a>
+  </div>
+  <h1>🇪🇸 Тренажёр испанской грамматики</h1>
+  <p>Интерактивные упражнения по ключевым темам</p>
+</header>
+
+<div class="container">
+  <div class="topics" id="topics"></div>
+
+  <div class="score-bar">
+    <div class="score-item"><span class="streak-fire">🔥</span> <span class="label">Серия:</span> <span class="value" id="streak">0</span></div>
+    <div class="score-item"><span class="label">Верно:</span> <span class="value" id="correctCount">0</span> / <span class="value" id="totalCount">0</span></div>
+    <div class="score-item"><span class="label">Точность:</span> <span class="value" id="pct">0%</span></div>
+    <button class="reset-btn" onclick="resetScore()">Сбросить</button>
+  </div>
+
+  <div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+
+  <div class="quiz-card" id="quizCard">
+    <div class="q-type" id="qType"></div>
+    <div class="q-sentence" id="qSentence"></div>
+    <div class="q-hint" id="qHint"></div>
+    <div class="answers" id="answers"></div>
+    <div class="feedback" id="feedback"></div>
+    <button class="continue-btn" id="continueBtn" onclick="nextQuestion()">Далее →</button>
+  </div>
+</div>
+
+<script>
+// ===================== DATA =====================
+
+// ---- Topic 1: Ser vs Estar ----
+const serEstarQuestions = [
+  // Both different meaning
+  {type:"Ser o Estar?",sentence:"Él ___ aburrido.",hint:"Ему сейчас скучно (состояние)",options:["es","está"],correct:"está",explanation:"Está aburrido = ему скучно (сейчас). Es aburrido = он скучный человек (характер)"},
+  {type:"Ser o Estar?",sentence:"Ella ___ aburrida.",hint:"Она скучный человек (характер)",options:["es","está"],correct:"es",explanation:"Es aburrida = она скучная (характер). Está aburrida = ей скучно (сейчас)"},
+  {type:"Ser o Estar?",sentence:"La sopa ___ buena.",hint:"Суп вкусный (сейчас, пробую)",options:["es","está"],correct:"está",explanation:"Está buena = вкусная (на вкус сейчас). Es buena = хорошая (по качеству/типу)"},
+  {type:"Ser o Estar?",sentence:"Este restaurante ___ bueno.",hint:"Ресторан хороший (в целом)",options:["es","está"],correct:"es",explanation:"Es bueno = хороший (постоянная характеристика)"},
+  {type:"Ser o Estar?",sentence:"Mi hijo ___ listo.",hint:"Мой сын умный (характер)",options:["es","está"],correct:"es",explanation:"Es listo = умный. Está listo = готов"},
+  {type:"Ser o Estar?",sentence:"La cena ___ lista.",hint:"Ужин готов",options:["es","está"],correct:"está",explanation:"Está lista = готова. Es lista = умная (не про ужин!)"},
+  {type:"Ser o Estar?",sentence:"Carlos ___ rico.",hint:"Карлос богатый (постоянно)",options:["es","está"],correct:"es",explanation:"Es rico = богатый человек. Está rico = вкусный (о еде)"},
+  {type:"Ser o Estar?",sentence:"Este pastel ___ rico.",hint:"Этот торт вкусный!",options:["es","está"],correct:"está",explanation:"Está rico = вкусный (ощущение). Es rico = дорогой/богатый (по составу)"},
+  {type:"Ser o Estar?",sentence:"Esta zona ___ segura.",hint:"Этот район безопасный (в целом)",options:["es","está"],correct:"es",explanation:"Es segura = безопасный (характеристика). Está segura = она уверена"},
+  {type:"Ser o Estar?",sentence:"Ella ___ segura de su decisión.",hint:"Она уверена в своём решении",options:["es","está"],correct:"está",explanation:"Está segura = уверена. Es segura = безопасная"},
+  {type:"Ser o Estar?",sentence:"El perro ___ vivo.",hint:"Собака жива",options:["es","está"],correct:"está",explanation:"Está vivo = живой (не мёртвый). Es vivo = шустрый/смышлёный"},
+  {type:"Ser o Estar?",sentence:"Este niño ___ muy vivo.",hint:"Этот ребёнок очень шустрый",options:["es","está"],correct:"es",explanation:"Es vivo = шустрый, смышлёный. Está vivo = живой (не мёртвый)"},
+  {type:"Ser o Estar?",sentence:"La fruta ___ verde.",hint:"Фрукт незрелый",options:["es","está"],correct:"está",explanation:"Está verde = незрелый. Es verde = зелёного цвета"},
+  {type:"Ser o Estar?",sentence:"Mi coche ___ verde.",hint:"Моя машина зелёного цвета",options:["es","está"],correct:"es",explanation:"Es verde = зелёного цвета (постоянно). Está verde = незрелый"},
+  {type:"Ser o Estar?",sentence:"La puerta ___ abierta.",hint:"Дверь открыта (состояние)",options:["es","está"],correct:"está",explanation:"Está abierta = открыта (результат действия, состояние)"},
+  {type:"Ser o Estar?",sentence:"Él ___ cansado.",hint:"Он устал",options:["es","está"],correct:"está",explanation:"Está cansado = устал (временное состояние)"},
+  {type:"Ser o Estar?",sentence:"Él ___ muy orgulloso.",hint:"Он очень гордый (характер)",options:["es","está"],correct:"es",explanation:"Es orgulloso = гордый (характер). Está orgulloso = гордится (чем-то конкретным)"},
+  {type:"Ser o Estar?",sentence:"Ella ___ orgullosa de su hijo.",hint:"Она гордится сыном",options:["es","está"],correct:"está",explanation:"Está orgullosa de = гордится (конкретная ситуация)"},
+
+  // Only ser
+  {type:"Ser o Estar?",sentence:"Yo ___ de Ucrania.",hint:"Происхождение",options:["soy","estoy"],correct:"soy",explanation:"Soy de Ucrania — происхождение → ВСЕГДА ser"},
+  {type:"Ser o Estar?",sentence:"Ella ___ profesora.",hint:"Профессия",options:["es","está"],correct:"es",explanation:"Es profesora — профессия → ser"},
+  {type:"Ser o Estar?",sentence:"___ las tres de la tarde.",hint:"Время",options:["Son","Están"],correct:"Son",explanation:"Son las tres — время → ВСЕГДА ser"},
+  {type:"Ser o Estar?",sentence:"La mesa ___ de madera.",hint:"Материал",options:["es","está"],correct:"es",explanation:"Es de madera — материал → ser"},
+  {type:"Ser o Estar?",sentence:"Hoy ___ lunes.",hint:"День недели",options:["es","está"],correct:"es",explanation:"Es lunes — дата/день → ser"},
+  {type:"Ser o Estar?",sentence:"La fiesta ___ en mi casa.",hint:"Событие — где проходит",options:["es","está"],correct:"es",explanation:"La fiesta es en... — место события → ser (НЕ estar!)"},
+
+  // Only estar
+  {type:"Ser o Estar?",sentence:"Madrid ___ en España.",hint:"Местоположение объекта",options:["es","está"],correct:"está",explanation:"Está en España — физическое местоположение → estar"},
+  {type:"Ser o Estar?",sentence:"Yo ___ enfermo.",hint:"Я болен (временно)",options:["soy","estoy"],correct:"estoy",explanation:"Estoy enfermo — временное состояние здоровья → estar"},
+  {type:"Ser o Estar?",sentence:"Ella ___ sentada.",hint:"Она сидит (позиция тела)",options:["es","está"],correct:"está",explanation:"Está sentada — положение тела → estar"},
+  {type:"Ser o Estar?",sentence:"La comida ___ fría.",hint:"Еда холодная (остыла)",options:["es","está"],correct:"está",explanation:"Está fría — результат/состояние (остыла) → estar"},
+  {type:"Ser o Estar?",sentence:"___ lloviendo.",hint:"Идёт дождь (gerundio)",options:["Es","Está"],correct:"Está",explanation:"Está lloviendo — estar + gerundio (прогрессивное время) → ВСЕГДА estar"},
+  {type:"Ser o Estar?",sentence:"Yo ___ contento.",hint:"Я доволен",options:["soy","estoy"],correct:"estoy",explanation:"Estoy contento — эмоциональное состояние → estar"},
+  {type:"Ser o Estar?",sentence:"¿Cómo ___?",hint:"Как дела? (состояние)",options:["eres","estás"],correct:"estás",explanation:"¿Cómo estás? — текущее состояние → estar"},
+  {type:"Ser o Estar?",sentence:"Ella ___ muerta.",hint:"Она мертва",options:["es","está"],correct:"está",explanation:"Está muerta — состояние (жив/мёртв) → estar"},
+  {type:"Ser o Estar?",sentence:"Él ___ de vacaciones.",hint:"Он в отпуске",options:["es","está"],correct:"está",explanation:"Está de vacaciones — временная ситуация → estar"},
+];
+
+// ---- Topic 2: Por vs Para ----
+const porParaQuestions = [
+  // Por: причина
+  {type:"¿Por o Para?",sentence:"Gracias ___ tu ayuda.",hint:"Благодарность за что-то",options:["por","para"],correct:"por",explanation:"Gracias por = спасибо за (причина благодарности)"},
+  {type:"¿Por o Para?",sentence:"Lo hice ___ ti.",hint:"Я сделал это ради тебя / из-за тебя",options:["por","para"],correct:"por",explanation:"por ti = ради тебя, из-за тебя (мотивация). para ti = для тебя (получатель)"},
+  {type:"¿Por o Para?",sentence:"No fui ___ la lluvia.",hint:"Не пошёл из-за дождя",options:["por","para"],correct:"por",explanation:"por la lluvia = из-за дождя (причина)"},
+  {type:"¿Por o Para?",sentence:"El museo está cerrado ___ reformas.",hint:"Закрыт из-за ремонта",options:["por","para"],correct:"por",explanation:"por reformas = из-за ремонта (причина)"},
+
+  // Por: обмен/цена
+  {type:"¿Por o Para?",sentence:"Compré el libro ___ 10 euros.",hint:"Цена",options:["por","para"],correct:"por",explanation:"por 10 euros = за 10 евро (обмен/цена)"},
+  {type:"¿Por o Para?",sentence:"Cambié mi coche ___ una moto.",hint:"Обменял на",options:["por","para"],correct:"por",explanation:"cambiar por = обменять на (обмен)"},
+
+  // Por: движение через
+  {type:"¿Por o Para?",sentence:"Paseamos ___ el parque.",hint:"Гуляли по парку (внутри)",options:["por","para"],correct:"por",explanation:"por el parque = по парку (движение через/внутри)"},
+  {type:"¿Por o Para?",sentence:"El tren pasa ___ Madrid.",hint:"Поезд проезжает через Мадрид",options:["por","para"],correct:"por",explanation:"pasa por Madrid = через Мадрид (транзит)"},
+  {type:"¿Por o Para?",sentence:"Viajamos ___ toda Europa.",hint:"Путешествовали по всей Европе",options:["por","para"],correct:"por",explanation:"por toda Europa = по всей Европе (движение через)"},
+
+  // Por: время/длительность
+  {type:"¿Por o Para?",sentence:"Estudié ___ dos horas.",hint:"Учился в течение двух часов",options:["por","para"],correct:"por",explanation:"por dos horas = в течение двух часов (длительность)"},
+  {type:"¿Por o Para?",sentence:"___ la mañana siempre corro.",hint:"По утрам",options:["Por","Para"],correct:"Por",explanation:"por la mañana = по утрам (время суток)"},
+
+  // Por: средство/способ
+  {type:"¿Por o Para?",sentence:"Te llamé ___ teléfono.",hint:"Позвонил по телефону",options:["por","para"],correct:"por",explanation:"por teléfono = по телефону (средство связи)"},
+  {type:"¿Por o Para?",sentence:"Envié el paquete ___ correo.",hint:"Отправил почтой",options:["por","para"],correct:"por",explanation:"por correo = почтой (способ/средство)"},
+
+  // Por: пассив
+  {type:"¿Por o Para?",sentence:"El libro fue escrito ___ Cervantes.",hint:"Книга написана Сервантесом",options:["por","para"],correct:"por",explanation:"por Cervantes = Сервантесом (пассив: кем сделано)"},
+  {type:"¿Por o Para?",sentence:"La casa fue construida ___ mi abuelo.",hint:"Дом построен дедом",options:["por","para"],correct:"por",explanation:"construida por = построен кем-то (пассив)"},
+
+  // Para: цель
+  {type:"¿Por o Para?",sentence:"Estudio español ___ viajar.",hint:"Учу испанский, чтобы путешествовать",options:["por","para"],correct:"para",explanation:"para viajar = чтобы путешествовать (цель)"},
+  {type:"¿Por o Para?",sentence:"Necesito un cuchillo ___ cortar el pan.",hint:"Нужен нож, чтобы резать хлеб",options:["por","para"],correct:"para",explanation:"para cortar = чтобы резать (цель/назначение)"},
+  {type:"¿Por o Para?",sentence:"Este regalo es ___ María.",hint:"Этот подарок для Марии",options:["por","para"],correct:"para",explanation:"para María = для Марии (получатель)"},
+
+  // Para: направление
+  {type:"¿Por o Para?",sentence:"Salimos ___ Barcelona mañana.",hint:"Выезжаем в Барселону",options:["por","para"],correct:"para",explanation:"para Barcelona = в Барселону (направление/пункт назначения)"},
+  {type:"¿Por o Para?",sentence:"Voy ___ casa.",hint:"Иду домой (направление)",options:["por","para"],correct:"para",explanation:"para casa = домой (направление к цели)"},
+
+  // Para: срок/дедлайн
+  {type:"¿Por o Para?",sentence:"Necesito el informe ___ el lunes.",hint:"Нужен отчёт к понедельнику",options:["por","para"],correct:"para",explanation:"para el lunes = к понедельнику (дедлайн)"},
+  {type:"¿Por o Para?",sentence:"___ Navidad estaremos juntos.",hint:"К Рождеству",options:["Por","Para"],correct:"Para",explanation:"Para Navidad = к Рождеству (дедлайн/срок)"},
+
+  // Para: мнение
+  {type:"¿Por o Para?",sentence:"___ mí, esta idea es excelente.",hint:"По-моему / на мой взгляд",options:["Por","Para"],correct:"Para",explanation:"Para mí = по-моему, на мой взгляд (мнение)"},
+
+  // Para: сравнение
+  {type:"¿Por o Para?",sentence:"___ un niño, habla muy bien.",hint:"Для ребёнка говорит хорошо",options:["Por","Para"],correct:"Para",explanation:"Para un niño = для ребёнка (сравнение/стандарт)"},
+
+  // Estar para / estar por
+  {type:"¿Por o Para?",sentence:"Estoy ___ salir.",hint:"Я вот-вот выйду",options:["por","para"],correct:"para",explanation:"Estar para + infinitivo = вот-вот, собираться"},
+  {type:"¿Por o Para?",sentence:"Estoy ___ llamar a la policía.",hint:"Я близок к тому, чтобы (почти готов)",options:["por","para"],correct:"por",explanation:"Estar por + infinitivo = быть близким к, склоняться к"},
+
+  // Устойчивые выражения
+  {type:"¿Por o Para?",sentence:"___ supuesto que sí.",hint:"Конечно!",options:["Por","Para"],correct:"Por",explanation:"Por supuesto = конечно (устойчивое выражение)"},
+  {type:"¿Por o Para?",sentence:"___ ejemplo, el español.",hint:"Например",options:["Por","Para"],correct:"Por",explanation:"Por ejemplo = например (устойчивое)"},
+  {type:"¿Por o Para?",sentence:"___ siempre.",hint:"Навсегда",options:["Por","Para"],correct:"Para",explanation:"Para siempre = навсегда (устойчивое)"},
+  {type:"¿Por o Para?",sentence:"___ lo menos hay sol.",hint:"По крайней мере",options:["Por","Para"],correct:"Por",explanation:"Por lo menos = по крайней мере (устойчивое)"},
+  {type:"¿Por o Para?",sentence:"___ favor, ayúdame.",hint:"Пожалуйста",options:["Por","Para"],correct:"Por",explanation:"Por favor = пожалуйста (устойчивое)"},
+  {type:"¿Por o Para?",sentence:"¿___ qué estudias español?",hint:"Почему? (причина)",options:["Por","Para"],correct:"Por",explanation:"¿Por qué? = почему? (спрашиваем причину). ¿Para qué? = зачем? (цель)"},
+  {type:"¿Por o Para?",sentence:"¿___ qué sirve esto?",hint:"Для чего это? (назначение)",options:["Por","Para"],correct:"Para",explanation:"¿Para qué? = для чего? зачем? (цель/назначение)"},
+];
+
+// ---- Topic 3: Subjuntivo ----
+const subjuntivoQuestions = [
+  // Indicativo o subjuntivo?
+  {type:"¿Indicativo o Subjuntivo?",sentence:"Quiero que tú [venir] a mi fiesta.",hint:"Quiero que...",options:["Indicativo","Subjuntivo"],correct:"Subjuntivo",explanation:"Quiero que → волеизъявление → subjuntivo: Quiero que vengas"},
+  {type:"¿Indicativo o Subjuntivo?",sentence:"Creo que él [tener] razón.",hint:"Creo que (утверждение)",options:["Indicativo","Subjuntivo"],correct:"Indicativo",explanation:"Creo que → уверенность → indicativo: Creo que tiene razón"},
+  {type:"¿Indicativo o Subjuntivo?",sentence:"No creo que él [tener] razón.",hint:"No creo que...",options:["Indicativo","Subjuntivo"],correct:"Subjuntivo",explanation:"No creo que → сомнение → subjuntivo: No creo que tenga razón"},
+  {type:"¿Indicativo o Subjuntivo?",sentence:"Es necesario que nosotros [estudiar] más.",hint:"Es necesario que...",options:["Indicativo","Subjuntivo"],correct:"Subjuntivo",explanation:"Es necesario que → необходимость → subjuntivo: Es necesario que estudiemos"},
+  {type:"¿Indicativo o Subjuntivo?",sentence:"Me alegra que tú [estar] aquí.",hint:"Me alegra que...",options:["Indicativo","Subjuntivo"],correct:"Subjuntivo",explanation:"Me alegra que → эмоция → subjuntivo: Me alegra que estés aquí"},
+  {type:"¿Indicativo o Subjuntivo?",sentence:"Espero que todo [salir] bien.",hint:"Espero que...",options:["Indicativo","Subjuntivo"],correct:"Subjuntivo",explanation:"Espero que → надежда/желание → subjuntivo: Espero que todo salga bien"},
+  {type:"¿Indicativo o Subjuntivo?",sentence:"Sé que María [vivir] en Madrid.",hint:"Sé que... (уверенность)",options:["Indicativo","Subjuntivo"],correct:"Indicativo",explanation:"Sé que → точное знание → indicativo: Sé que vive en Madrid"},
+  {type:"¿Indicativo o Subjuntivo?",sentence:"Dudo que ellos [poder] hacerlo.",hint:"Dudo que...",options:["Indicativo","Subjuntivo"],correct:"Subjuntivo",explanation:"Dudo que → сомнение → subjuntivo: Dudo que puedan hacerlo"},
+  {type:"¿Indicativo o Subjuntivo?",sentence:"Es posible que [llover] mañana.",hint:"Es posible que...",options:["Indicativo","Subjuntivo"],correct:"Subjuntivo",explanation:"Es posible que → возможность → subjuntivo: Es posible que llueva"},
+  {type:"¿Indicativo o Subjuntivo?",sentence:"Es evidente que él [ser] inteligente.",hint:"Es evidente que...",options:["Indicativo","Subjuntivo"],correct:"Indicativo",explanation:"Es evidente que → очевидность → indicativo: es inteligente"},
+  {type:"¿Indicativo o Subjuntivo?",sentence:"Te digo que [hacer] los deberes.",hint:"Te digo que = приказ",options:["Indicativo","Subjuntivo"],correct:"Subjuntivo",explanation:"Decir que (приказ) → subjuntivo: Te digo que hagas. Но: Me dice que hace = сообщает → ind."},
+  {type:"¿Indicativo o Subjuntivo?",sentence:"Cuando [llegar] a casa, te llamo.",hint:"Cuando + будущее",options:["Indicativo","Subjuntivo"],correct:"Subjuntivo",explanation:"Cuando + будущее → subjuntivo: Cuando llegue a casa. Но: Cuando llego = когда прихожу (привычка) → ind."},
+  {type:"¿Indicativo o Subjuntivo?",sentence:"Antes de que tú [salir], cierra la puerta.",hint:"Antes de que...",options:["Indicativo","Subjuntivo"],correct:"Subjuntivo",explanation:"Antes de que → ВСЕГДА subjuntivo: antes de que salgas"},
+  {type:"¿Indicativo o Subjuntivo?",sentence:"Aunque [llover], saldré.",hint:"Aunque + неизвестно (может, будет дождь)",options:["Indicativo","Subjuntivo"],correct:"Subjuntivo",explanation:"Aunque + неизвестность → subjuntivo: Aunque llueva. Но: Aunque llueve = хотя идёт дождь (факт) → ind."},
+  {type:"¿Indicativo o Subjuntivo?",sentence:"Busco a alguien que [hablar] ruso.",hint:"Ищу кого-то (не знаю, есть ли такой)",options:["Indicativo","Subjuntivo"],correct:"Subjuntivo",explanation:"Busco a alguien que → неизвестный → subjuntivo: que hable ruso"},
+  {type:"¿Indicativo o Subjuntivo?",sentence:"Conozco a alguien que [hablar] ruso.",hint:"Знаю кого-то (конкретный человек)",options:["Indicativo","Subjuntivo"],correct:"Indicativo",explanation:"Conozco a alguien que → известный, конкретный → indicativo: que habla ruso"},
+  {type:"¿Indicativo o Subjuntivo?",sentence:"Ojalá que [hacer] buen tiempo.",hint:"Ojalá...",options:["Indicativo","Subjuntivo"],correct:"Subjuntivo",explanation:"Ojalá → ВСЕГДА subjuntivo: Ojalá que haga buen tiempo"},
+  {type:"¿Indicativo o Subjuntivo?",sentence:"Para que tú [entender] mejor.",hint:"Para que...",options:["Indicativo","Subjuntivo"],correct:"Subjuntivo",explanation:"Para que → цель → ВСЕГДА subjuntivo: para que entiendas"},
+  {type:"¿Indicativo o Subjuntivo?",sentence:"Sin que nadie lo [saber].",hint:"Sin que...",options:["Indicativo","Subjuntivo"],correct:"Subjuntivo",explanation:"Sin que → ВСЕГДА subjuntivo: sin que nadie lo sepa"},
+  {type:"¿Indicativo o Subjuntivo?",sentence:"Es una lástima que no [poder] venir.",hint:"Es una lástima que...",options:["Indicativo","Subjuntivo"],correct:"Subjuntivo",explanation:"Es una lástima que → эмоция → subjuntivo: que no pueda venir"},
+
+  // Conjugate in subjuntivo
+  {type:"Спрягайте в subjuntivo",sentence:"Es necesario que yo [hablar].",hint:"que yo...? (-ar глагол)",options:["hablo","hable","habla","hablas"],correct:"hable",explanation:"hablar → que yo hable (presente de subjuntivo: -ar → -e)"},
+  {type:"Спрягайте в subjuntivo",sentence:"Quiero que tú [comer] más.",hint:"que tú...? (-er глагол)",options:["comes","comas","coma","come"],correct:"comas",explanation:"comer → que tú comas (presente de subjuntivo: -er → -as)"},
+  {type:"Спрягайте в subjuntivo",sentence:"Es importante que él [vivir] aquí.",hint:"que él...? (-ir глагол)",options:["vive","viva","vivar","vivra"],correct:"viva",explanation:"vivir → que él viva (presente de subjuntivo: -ir → -a)"},
+  {type:"Спрягайте в subjuntivo",sentence:"Espero que tú [ser] feliz.",hint:"que tú...?",options:["eres","seas","sas","es"],correct:"seas",explanation:"ser → que tú seas (неправильная форма subjuntivo)"},
+  {type:"Спрягайте в subjuntivo",sentence:"Quiero que él [ir] al médico.",hint:"que él...?",options:["va","vaya","ir","vaa"],correct:"vaya",explanation:"ir → que él vaya (неправильная форма)"},
+  {type:"Спрягайте в subjuntivo",sentence:"Es necesario que tú [tener] paciencia.",hint:"que tú...?",options:["tienes","tengas","tenga","tenas"],correct:"tengas",explanation:"tener → que tú tengas (неправильная: teng-)"},
+  {type:"Спрягайте в subjuntivo",sentence:"Dudo que ella [saber] la respuesta.",hint:"que ella...?",options:["sabe","sepa","saba","supea"],correct:"sepa",explanation:"saber → que ella sepa (неправильная: sep-)"},
+  {type:"Спрягайте в subjuntivo",sentence:"Quiero que nosotros [hacer] algo.",hint:"que nosotros...?",options:["hacemos","hagamos","hacamos","haguemos"],correct:"hagamos",explanation:"hacer → que nosotros hagamos (неправильная: hag-)"},
+  {type:"Спрягайте в subjuntivo",sentence:"Es posible que yo [poder].",hint:"que yo...?",options:["puedo","pueda","podea","poda"],correct:"pueda",explanation:"poder → que yo pueda (неправильная: pued-)"},
+  {type:"Спрягайте в subjuntivo",sentence:"Ojalá que él [decir] la verdad.",hint:"que él...?",options:["dice","diga","dicia","decía"],correct:"diga",explanation:"decir → que él diga (неправильная: dig-)"},
+  {type:"Спрягайте в subjuntivo",sentence:"Espero que tú [venir] pronto.",hint:"que tú...?",options:["vienes","vengas","venga","venas"],correct:"vengas",explanation:"venir → que tú vengas (неправильная: veng-)"},
+  {type:"Спрягайте в subjuntivo",sentence:"Es importante que él [poner] atención.",hint:"que él...?",options:["pone","ponga","pone","ponea"],correct:"ponga",explanation:"poner → que él ponga (неправильная: pong-)"},
+  {type:"Спрягайте в subjuntivo",sentence:"Quiero que tú [dar] un paso.",hint:"que tú...?",options:["das","des","da","deas"],correct:"des",explanation:"dar → que tú des (неправильная, но простая: d- + -es)"},
+  {type:"Спрягайте в subjuntivo",sentence:"Es necesario que [haber] más tiempo.",hint:"que...? (безличное)",options:["hay","haya","haiga","habea"],correct:"haya",explanation:"haber → que haya (неправильная: hay-)"},
+  {type:"Спрягайте в subjuntivo",sentence:"Espero que ella [estar] bien.",hint:"que ella...?",options:["está","esté","estea","estás"],correct:"esté",explanation:"estar → que ella esté (субжунтив с ударением: esté)"},
+];
+
+// ---- Topic 4: Pronouns ----
+const pronounQuestions = [
+  // COD
+  {type:"Замените дополнение",sentence:"Yo veo [el libro].",hint:"COD — что? (мужской ед.)",options:["lo","la","los","le"],correct:"lo",explanation:"el libro → lo (COD masc. sg.) → Yo lo veo"},
+  {type:"Замените дополнение",sentence:"Ella compra [las flores].",hint:"COD — что? (жен. мн.)",options:["los","las","les","la"],correct:"las",explanation:"las flores → las (COD fem. pl.) → Ella las compra"},
+  {type:"Замените дополнение",sentence:"Nosotros conocemos [a María].",hint:"COD — кого? (жен. ед.)",options:["lo","la","le","las"],correct:"la",explanation:"a María → la (COD fem. sg.) → La conocemos"},
+  {type:"Замените дополнение",sentence:"Tú lees [los periódicos].",hint:"COD — что? (муж. мн.)",options:["lo","los","les","las"],correct:"los",explanation:"los periódicos → los (COD masc. pl.) → Tú los lees"},
+
+  // COI
+  {type:"Замените дополнение",sentence:"Yo digo la verdad [a Pedro].",hint:"COI — кому? (ед.)",options:["lo","la","le","les"],correct:"le",explanation:"a Pedro → le (COI sg.) → Le digo la verdad"},
+  {type:"Замените дополнение",sentence:"Ella escribe [a sus padres].",hint:"COI — кому? (мн.)",options:["lo","las","le","les"],correct:"les",explanation:"a sus padres → les (COI pl.) → Les escribe"},
+  {type:"Замените дополнение",sentence:"Yo compro un regalo [a mi madre].",hint:"COI — кому?",options:["lo","la","le","les"],correct:"le",explanation:"a mi madre → le (COI sg.) → Le compro un regalo"},
+
+  // COI + COD combo
+  {type:"Двойные местоимения",sentence:"Yo doy el libro a María. → Yo ___ ___ doy.",hint:"COI + COD (le + lo = ?)",options:["se lo","le lo","se la","le la"],correct:"se lo",explanation:"le + lo → se lo (le/les перед lo/la/los/las → se). Yo se lo doy"},
+  {type:"Двойные местоимения",sentence:"Ella dice la verdad a ellos. → Ella ___ ___ dice.",hint:"COI + COD",options:["se la","les la","se lo","les lo"],correct:"se la",explanation:"les + la → se la. Ella se la dice"},
+  {type:"Двойные местоимения",sentence:"Tú compras los zapatos a tu hermana. → Tú ___ ___ compras.",hint:"COI + COD",options:["se los","le los","se las","les los"],correct:"se los",explanation:"le + los → se los. Tú se los compras"},
+  {type:"Двойные местоимения",sentence:"Yo envío las cartas a mis amigos. → Yo ___ ___ envío.",hint:"COI + COD",options:["se las","les las","se los","les los"],correct:"se las",explanation:"les + las → se las. Yo se las envío"},
+
+  // Position
+  {type:"Позиция местоимения",sentence:"Quiero [ver + lo].",hint:"С инфинитивом",options:["quiero verlo","lo quiero ver","оба варианта"],correct:"оба варианта",explanation:"С инфинитивом: Quiero verlo = Lo quiero ver — оба правильно!"},
+  {type:"Позиция местоимения",sentence:"Estoy [hacer + lo].",hint:"С герундием",options:["estoy haciéndolo","lo estoy haciendo","оба варианта"],correct:"оба варианта",explanation:"С герундием: Estoy haciéndolo = Lo estoy haciendo — оба правильно!"},
+  {type:"Позиция местоимения",sentence:"[Dar + me + lo] (imperativo afirmativo)",hint:"Утвердительный приказ",options:["dámelo","me lo da","me lo dé"],correct:"dámelo",explanation:"Утвердительный императив: местоимения приклеиваются → ¡Dámelo!"},
+  {type:"Позиция местоимения",sentence:"No [me + lo + dar] (imperativo negativo)",hint:"Отрицательный приказ",options:["no me lo des","no desmelo","no lo me des"],correct:"no me lo des",explanation:"Отрицательный императив: местоимения ПЕРЕД глаголом → ¡No me lo des!"},
+
+  // Reflexive
+  {type:"Возвратное местоимение",sentence:"Yo ___ levanto a las 7.",hint:"Я встаю (reflexivo)",options:["me","te","se","nos"],correct:"me",explanation:"yo → me. Me levanto = Я встаю (возвратный)"},
+  {type:"Возвратное местоимение",sentence:"Ellos ___ acuestan tarde.",hint:"Они ложатся поздно",options:["me","te","se","nos"],correct:"se",explanation:"ellos → se. Se acuestan = Они ложатся"},
+  {type:"Возвратное местоимение",sentence:"Nosotros ___ duchamos por la mañana.",hint:"Мы принимаем душ",options:["me","os","se","nos"],correct:"nos",explanation:"nosotros → nos. Nos duchamos"},
+
+  // Leísmo
+  {type:"¿Lo o Le?",sentence:"Yo ___ vi ayer. (a Pedro)",hint:"Видел Педро (COD, мужской)",options:["lo","le"],correct:"lo",explanation:"lo = COD (видел кого). В Испании le тоже допустимо (leísmo), но стандарт = lo"},
+  {type:"¿Lo o Le?",sentence:"Yo ___ di el libro. (a Pedro)",hint:"Дал книгу Педро (COI)",options:["lo","le"],correct:"le",explanation:"le = COI (кому). Yo le di el libro"},
+];
+
+// ---- Topic 5: Ser/Estar + adjective meaning pairs (as fill-in) ----
+const porParaPhraseQuestions = [
+  // ¿Por qué vs Para qué?
+  {type:"¿Por qué o Para qué?",sentence:"___ estudias tanto?",hint:"Ответ: Porque quiero aprobar (причина)",options:["¿Por qué?","¿Para qué?"],correct:"¿Por qué?",explanation:"¿Por qué? = почему? (причина). Ответ: Porque... = потому что..."},
+  {type:"¿Por qué o Para qué?",sentence:"___ estudias español?",hint:"Ответ: Para viajar (цель)",options:["¿Por qué?","¿Para qué?"],correct:"¿Para qué?",explanation:"¿Para qué? = зачем? для чего? (цель). Ответ: Para + infinitivo"},
+  {type:"¿Por qué o Para qué?",sentence:"___ necesitas tanto dinero?",hint:"Ответ: Para comprar un coche (цель)",options:["¿Por qué?","¿Para qué?"],correct:"¿Para qué?",explanation:"¿Para qué? = для чего? (цель → para comprar)"},
+  {type:"¿Por qué o Para qué?",sentence:"___ estás triste?",hint:"Ответ: Porque perdí mi trabajo (причина)",options:["¿Por qué?","¿Para qué?"],correct:"¿Por qué?",explanation:"¿Por qué? = почему? (причина → porque perdí)"},
+];
+
+// ===================== APP STATE =====================
+const TOPICS = [
+  { id: "serestar", label: "Ser vs Estar" },
+  { id: "porpara", label: "Por vs Para" },
+  { id: "subjuntivo", label: "Subjuntivo" },
+  { id: "pronouns", label: "Местоимения" },
+  { id: "all", label: "Все темы" },
+];
+
+let currentTopic = "all";
+let questions = [];
+let qIndex = 0;
+let score = { correct: 0, total: 0, streak: 0, maxStreak: 0 };
+let answered = false;
+
+// ===================== INIT =====================
+function init() {
+  renderTopics();
+  loadScore();
+  buildQuestions();
+  showQuestion();
+  document.addEventListener("keydown", handleKey);
+}
+
+function renderTopics() {
+  const el = document.getElementById("topics");
+  el.innerHTML = TOPICS.map(t =>
+    `<button class="topic-btn${t.id === currentTopic ? ' active' : ''}" data-topic="${t.id}">${t.label}</button>`
+  ).join("");
+  el.querySelectorAll(".topic-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      currentTopic = btn.dataset.topic;
+      renderTopics();
+      buildQuestions();
+      showQuestion();
+    });
+  });
+}
+
+// ===================== QUESTIONS =====================
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildQuestions() {
+  let pool = [];
+  if (currentTopic === "serestar" || currentTopic === "all") {
+    pool = pool.concat(serEstarQuestions);
+  }
+  if (currentTopic === "porpara" || currentTopic === "all") {
+    pool = pool.concat(porParaQuestions);
+    pool = pool.concat(porParaPhraseQuestions);
+  }
+  if (currentTopic === "subjuntivo" || currentTopic === "all") {
+    pool = pool.concat(subjuntivoQuestions);
+  }
+  if (currentTopic === "pronouns" || currentTopic === "all") {
+    pool = pool.concat(pronounQuestions);
+  }
+  questions = shuffle(pool);
+  qIndex = 0;
+}
+
+function showQuestion() {
+  if (questions.length === 0) return;
+  if (qIndex >= questions.length) {
+    questions = shuffle(questions);
+    qIndex = 0;
+  }
+
+  answered = false;
+
+  const q = questions[qIndex];
+  const card = document.getElementById("quizCard");
+  card.classList.remove("flash-correct", "flash-wrong");
+
+  document.getElementById("qType").textContent = q.type;
+  document.getElementById("qSentence").innerHTML = formatSentence(q.sentence);
+  document.getElementById("qHint").textContent = q.hint || "";
+
+  const answersEl = document.getElementById("answers");
+  answersEl.innerHTML = q.options.map((opt, i) =>
+    `<button class="ans-btn" data-idx="${i}"><span class="key-hint">${i + 1}</span>${opt}</button>`
+  ).join("");
+
+  answersEl.querySelectorAll(".ans-btn").forEach(btn => {
+    btn.addEventListener("click", () => selectAnswer(btn, q));
+  });
+
+  document.getElementById("feedback").className = "feedback";
+  document.getElementById("feedback").innerHTML = "";
+  document.getElementById("continueBtn").classList.remove("show");
+
+  updateProgress();
+  updateScoreDisplay();
+}
+
+function formatSentence(s) {
+  return s.replace(/\[([^\]]+)\]/g, '<span class="q-blank">$1</span>')
+          .replace(/___/g, '<span class="q-blank">???</span>');
+}
+
+function selectAnswer(btn, q) {
+  if (answered) return;
+  answered = true;
+
+  const selected = q.options[parseInt(btn.dataset.idx)];
+  const isCorrect = selected === q.correct;
+  const card = document.getElementById("quizCard");
+  const answersEl = document.getElementById("answers");
+
+  answersEl.querySelectorAll(".ans-btn").forEach(b => {
+    b.classList.add("disabled");
+    if (q.options[parseInt(b.dataset.idx)] === q.correct) {
+      b.classList.add("correct");
+    }
+  });
+
+  if (isCorrect) {
+    btn.classList.add("correct");
+    card.classList.add("flash-correct");
+    score.correct++;
+    score.streak++;
+    if (score.streak > score.maxStreak) score.maxStreak = score.streak;
+    showFeedback(true, q.explanation);
+  } else {
+    btn.classList.add("wrong");
+    card.classList.add("flash-wrong");
+    score.streak = 0;
+    showFeedback(false, q.explanation);
+  }
+
+  score.total++;
+  saveScore();
+  updateScoreDisplay();
+
+  document.getElementById("continueBtn").classList.add("show");
+}
+
+function showFeedback(correct, explanation) {
+  const fb = document.getElementById("feedback");
+  fb.className = "feedback show " + (correct ? "correct-fb" : "wrong-fb");
+  fb.innerHTML = `<strong>${correct ? "¡Correcto! ✓" : "Incorrecto ✗"}</strong><span class="explanation">${explanation}</span>`;
+}
+
+function nextQuestion() {
+  qIndex++;
+  showQuestion();
+}
+
+// ===================== SCORE =====================
+function updateScoreDisplay() {
+  document.getElementById("streak").textContent = score.streak;
+  document.getElementById("correctCount").textContent = score.correct;
+  document.getElementById("totalCount").textContent = score.total;
+  const pct = score.total > 0 ? Math.round(score.correct / score.total * 100) : 0;
+  document.getElementById("pct").textContent = pct + "%";
+}
+
+function updateProgress() {
+  const pct = questions.length > 0 ? Math.min(100, Math.round((qIndex / questions.length) * 100)) : 0;
+  document.getElementById("progressFill").style.width = pct + "%";
+}
+
+function resetScore() {
+  score = { correct: 0, total: 0, streak: 0, maxStreak: 0 };
+  saveScore();
+  updateScoreDisplay();
+  buildQuestions();
+  showQuestion();
+}
+
+function saveScore() {
+  try { localStorage.setItem("es-quiz-score", JSON.stringify(score)); } catch(e) {}
+}
+
+function loadScore() {
+  try {
+    const s = JSON.parse(localStorage.getItem("es-quiz-score"));
+    if (s) score = { correct: s.correct || 0, total: s.total || 0, streak: s.streak || 0, maxStreak: s.maxStreak || 0 };
+  } catch(e) {}
+}
+
+// ===================== KEYBOARD =====================
+function handleKey(e) {
+  if (answered) {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      nextQuestion();
+    }
+    return;
+  }
+
+  const keyMap = { "1": 0, "2": 1, "3": 2, "4": 3 };
+  if (keyMap[e.key] !== undefined) {
+    const btns = document.querySelectorAll("#answers .ans-btn");
+    if (btns[keyMap[e.key]]) {
+      btns[keyMap[e.key]].click();
+    }
+  }
+
+  if (e.key === "Escape") {
+    currentTopic = "all";
+    renderTopics();
+    buildQuestions();
+    showQuestion();
+  }
+}
+
+// ===================== START =====================
+init();
+</script>
+
+</body>
+</html>
