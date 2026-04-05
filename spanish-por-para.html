@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇪🇸</text></svg>">
+<meta name="apple-mobile-web-app-title" content="ES por/para">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇪🇸 Por vs Para — справочник</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5eee8;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #8b1a1a, #c0392b);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  .content {
+    max-width: 960px;
+    margin: 0 auto 40px;
+    padding: 0 20px;
+  }
+
+  /* ---- Side-by-side comparison cards ---- */
+  .top-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 28px;
+  }
+  .big-card {
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+  }
+  .big-card-header {
+    padding: 18px 20px;
+    color: white;
+    font-size: 1.5em;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 1px;
+  }
+  .big-card-header small {
+    display: block;
+    font-size: 0.5em;
+    font-weight: 400;
+    opacity: 0.9;
+    margin-top: 4px;
+    letter-spacing: 0;
+  }
+  .big-card.por .big-card-header { background: #e67e22; }
+  .big-card.para .big-card-header { background: #27ae60; }
+  .big-card-body { background: white; }
+
+  .cat-section {
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .cat-section:last-child { border-bottom: none; }
+  .cat-title {
+    padding: 14px 18px 6px;
+    font-weight: 700;
+    font-size: 0.95em;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.15s;
+  }
+  .cat-title:hover { background: #fafafa; }
+  .por .cat-title { color: #c0660e; }
+  .para .cat-title { color: #1e8449; }
+  .cat-title .chevron {
+    font-size: 0.7em;
+    transition: transform 0.3s;
+  }
+  .cat-title.collapsed .chevron { transform: rotate(-90deg); }
+  .cat-examples {
+    padding: 0 18px 14px;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+  }
+  .cat-examples.collapsed {
+    max-height: 0 !important;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .example-line {
+    font-size: 0.9em;
+    line-height: 1.7;
+    padding: 2px 0;
+  }
+  .es { font-weight: 500; }
+  .por .es { color: #b35c00; }
+  .para .es { color: #1a7a3c; }
+  .ru { color: #888; font-style: italic; }
+
+  /* ---- Section headers ---- */
+  .section-header {
+    margin-top: 40px;
+    margin-bottom: 16px;
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #5d3a1a;
+    background: linear-gradient(135deg, #f0dcc8, #e8d0b8);
+  }
+
+  /* ---- Minimal pairs ---- */
+  .pairs-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    background: white;
+  }
+  .pairs-table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 0.9em;
+    font-weight: 600;
+    background: #f5eee8;
+    border-bottom: 2px solid #ddd;
+    color: #5d3a1a;
+  }
+  .pairs-table td {
+    padding: 11px 16px;
+    font-size: 0.92em;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: top;
+  }
+  .pairs-table tr:last-child td { border-bottom: none; }
+  .pairs-table tr:hover td { background: #fdf8f3; }
+  .pairs-table .kw-por { color: #e67e22; font-weight: 700; }
+  .pairs-table .kw-para { color: #27ae60; font-weight: 700; }
+  .pairs-table .ru-cell { color: #777; font-style: italic; font-size: 0.88em; }
+  .pair-divider td {
+    padding: 0;
+    height: 4px;
+    background: #f5eee8;
+  }
+
+  /* ---- Fixed expressions ---- */
+  .expr-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .expr-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .expr-card-header {
+    padding: 14px 18px;
+    font-weight: 700;
+    font-size: 1.1em;
+    color: white;
+  }
+  .expr-card.por .expr-card-header { background: #e67e22; }
+  .expr-card.para .expr-card-header { background: #27ae60; }
+  .expr-card-body {
+    background: white;
+    padding: 14px 18px;
+  }
+  .expr-tag {
+    display: inline-block;
+    padding: 5px 12px;
+    margin: 4px 4px 4px 0;
+    border-radius: 20px;
+    font-size: 0.88em;
+    font-weight: 500;
+  }
+  .por .expr-tag {
+    background: #fdebd0;
+    color: #b35c00;
+  }
+  .para .expr-tag {
+    background: #d5f5e3;
+    color: #1a7a3c;
+  }
+
+  /* ---- Info section ---- */
+  .info-section {
+    margin-top: 40px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    padding: 24px;
+  }
+  .info-section h3 {
+    font-size: 1.1em;
+    color: #5d3a1a;
+    margin: 20px 0 10px;
+  }
+  .info-section h3:first-child { margin-top: 0; }
+  .info-section p, .info-section li {
+    font-size: 0.93em;
+    line-height: 1.7;
+    color: #444;
+  }
+  .info-section ul {
+    padding-left: 22px;
+    margin: 6px 0;
+  }
+  .info-section li { margin-bottom: 4px; }
+  .core-rule {
+    display: flex;
+    gap: 16px;
+    margin: 10px 0;
+  }
+  .core-box {
+    flex: 1;
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-size: 0.93em;
+    line-height: 1.6;
+  }
+  .core-box.por-box {
+    background: #fdebd0;
+    border-left: 4px solid #e67e22;
+  }
+  .core-box.para-box {
+    background: #d5f5e3;
+    border-left: 4px solid #27ae60;
+  }
+  .core-box strong.por-kw { color: #e67e22; }
+  .core-box strong.para-kw { color: #27ae60; }
+  .mnemonic {
+    background: #fdf2e9;
+    border: 1px dashed #e67e22;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 12px 0;
+    font-size: 0.95em;
+    line-height: 1.7;
+  }
+  .mistake-item {
+    background: #fef9e7;
+    border-left: 3px solid #f39c12;
+    padding: 10px 14px;
+    margin: 8px 0;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.92em;
+    line-height: 1.6;
+  }
+  .mistake-item .wrong { color: #c0392b; text-decoration: line-through; }
+  .mistake-item .right { color: #27ae60; font-weight: 600; }
+
+  /* ---- Filter tabs ---- */
+  .filter-bar {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 8px 18px;
+    border: 2px solid #ccc;
+    border-radius: 25px;
+    background: white;
+    font-size: 0.9em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #555;
+  }
+  .filter-btn:hover { border-color: #999; }
+  .filter-btn.active-all { border-color: #8b1a1a; color: #8b1a1a; background: #f9e8e8; }
+  .filter-btn.active-por { border-color: #e67e22; color: #e67e22; background: #fdebd0; }
+  .filter-btn.active-para { border-color: #27ae60; color: #27ae60; background: #d5f5e3; }
+
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switch { padding: 6px 12px; font-size: 0.85em; }
+    .content { padding: 0 10px; }
+    .top-cards { grid-template-columns: 1fr; gap: 16px; }
+    .big-card-header { font-size: 1.3em; }
+    .cat-title { padding: 12px 14px 4px; font-size: 0.9em; }
+    .cat-examples { padding: 0 14px 12px; }
+    .section-header { font-size: 1.05em; padding: 12px 16px; }
+    .pairs-table th, .pairs-table td { padding: 9px 10px; font-size: 0.85em; }
+    .expr-grid { grid-template-columns: 1fr; gap: 14px; }
+    .core-rule { flex-direction: column; gap: 10px; }
+    .info-section { padding: 18px 16px; }
+    .filter-btn { padding: 6px 14px; font-size: 0.82em; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="spanish.html" class="lang-switch">📖 Портал</a>
+    <a href="spanish-verbs.html" class="lang-switch">📝 Глаголы</a>
+  </div>
+  <h1>🇪🇸 Por vs Para</h1>
+  <p>Полный справочник с примерами и минимальными парами</p>
+</header>
+
+<!-- Filter -->
+<div class="filter-bar">
+  <button class="filter-btn active-all" data-filter="all">Все</button>
+  <button class="filter-btn" data-filter="por">Только POR</button>
+  <button class="filter-btn" data-filter="para">Только PARA</button>
+</div>
+
+<div class="content">
+
+  <!-- ============ TOP CARDS ============ -->
+  <div class="top-cards">
+
+    <!-- POR card -->
+    <div class="big-card por" data-side="por">
+      <div class="big-card-header">POR<small>причина &bull; обмен &bull; через &bull; время</small></div>
+      <div class="big-card-body">
+
+        <div class="cat-section">
+          <div class="cat-title" onclick="toggleCat(this)">1. Причина / мотив <span class="chevron">&#9660;</span></div>
+          <div class="cat-examples">
+            <div class="example-line"><span class="es">Trabajo por necesidad</span> <span class="ru">— Работаю из необходимости</span></div>
+            <div class="example-line"><span class="es">Lo hice por ti</span> <span class="ru">— Я сделал это ради тебя</span></div>
+            <div class="example-line"><span class="es">Gracias por todo</span> <span class="ru">— Спасибо за всё</span></div>
+            <div class="example-line"><span class="es">Perdona por llegar tarde</span> <span class="ru">— Прости за опоздание</span></div>
+            <div class="example-line"><span class="es">Estoy aquí por el trabajo</span> <span class="ru">— Я здесь из-за работы</span></div>
+          </div>
+        </div>
+
+        <div class="cat-section">
+          <div class="cat-title" onclick="toggleCat(this)">2. Обмен / цена <span class="chevron">&#9660;</span></div>
+          <div class="cat-examples">
+            <div class="example-line"><span class="es">Compré el libro por 10 euros</span> <span class="ru">— Купил книгу за 10 евро</span></div>
+            <div class="example-line"><span class="es">Cambié mi coche por uno nuevo</span> <span class="ru">— Обменял машину на новую</span></div>
+            <div class="example-line"><span class="es">Te doy mi sandwich por tu postre</span> <span class="ru">— Меняю свой бутерброд на твой десерт</span></div>
+          </div>
+        </div>
+
+        <div class="cat-section">
+          <div class="cat-title" onclick="toggleCat(this)">3. Движение через / вдоль <span class="chevron">&#9660;</span></div>
+          <div class="cat-examples">
+            <div class="example-line"><span class="es">Pasamos por Madrid</span> <span class="ru">— Мы проехали через Мадрид</span></div>
+            <div class="example-line"><span class="es">Caminar por la playa</span> <span class="ru">— Гулять по пляжу</span></div>
+            <div class="example-line"><span class="es">Viajar por Europa</span> <span class="ru">— Путешествовать по Европе</span></div>
+            <div class="example-line"><span class="es">Entró por la ventana</span> <span class="ru">— Вошёл через окно</span></div>
+          </div>
+        </div>
+
+        <div class="cat-section">
+          <div class="cat-title" onclick="toggleCat(this)">4. Время / длительность <span class="chevron">&#9660;</span></div>
+          <div class="cat-examples">
+            <div class="example-line"><span class="es">Viví allí por dos años</span> <span class="ru">— Жил там два года</span></div>
+            <div class="example-line"><span class="es">por la mañana / tarde / noche</span> <span class="ru">— утром / днём / ночью</span></div>
+            <div class="example-line"><span class="es">Estaré por aquí por una semana</span> <span class="ru">— Буду здесь неделю</span></div>
+          </div>
+        </div>
+
+        <div class="cat-section">
+          <div class="cat-title" onclick="toggleCat(this)">5. Средство / способ <span class="chevron">&#9660;</span></div>
+          <div class="cat-examples">
+            <div class="example-line"><span class="es">por teléfono, por email, por internet</span></div>
+            <div class="example-line"><span class="es">por avión, por tren, por barco</span></div>
+            <div class="example-line"><span class="es">Mandé el paquete por correo</span> <span class="ru">— Отправил посылку почтой</span></div>
+          </div>
+        </div>
+
+        <div class="cat-section">
+          <div class="cat-title" onclick="toggleCat(this)">6. Пассив и «за кого» <span class="chevron">&#9660;</span></div>
+          <div class="cat-examples">
+            <div class="example-line"><span class="es">El libro fue escrito por Cervantes</span> <span class="ru">— Книга написана Сервантесом</span></div>
+            <div class="example-line"><span class="es">Hablo por todos nosotros</span> <span class="ru">— Говорю за всех нас</span></div>
+            <div class="example-line"><span class="es">Voy por mi hermano</span> <span class="ru">— Иду вместо моего брата</span></div>
+            <div class="example-line"><span class="es">por lo general, por ejemplo, por supuesto, por fin</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PARA card -->
+    <div class="big-card para" data-side="para">
+      <div class="big-card-header">PARA<small>цель &bull; для кого &bull; направление &bull; срок</small></div>
+      <div class="big-card-body">
+
+        <div class="cat-section">
+          <div class="cat-title" onclick="toggleCat(this)">1. Цель / назначение <span class="chevron">&#9660;</span></div>
+          <div class="cat-examples">
+            <div class="example-line"><span class="es">Estudio para aprender</span> <span class="ru">— Учусь, чтобы научиться</span></div>
+            <div class="example-line"><span class="es">Un vaso para agua</span> <span class="ru">— Стакан для воды</span></div>
+            <div class="example-line"><span class="es">¿Para qué sirve?</span> <span class="ru">— Для чего это?</span></div>
+            <div class="example-line"><span class="es">Necesito dinero para el viaje</span> <span class="ru">— Нужны деньги для поездки</span></div>
+          </div>
+        </div>
+
+        <div class="cat-section">
+          <div class="cat-title" onclick="toggleCat(this)">2. Получатель <span class="chevron">&#9660;</span></div>
+          <div class="cat-examples">
+            <div class="example-line"><span class="es">Este regalo es para ti</span> <span class="ru">— Этот подарок для тебя</span></div>
+            <div class="example-line"><span class="es">Cocino para mi familia</span> <span class="ru">— Готовлю для семьи</span></div>
+            <div class="example-line"><span class="es">Trabajo para una empresa grande</span> <span class="ru">— Работаю на большую компанию</span></div>
+          </div>
+        </div>
+
+        <div class="cat-section">
+          <div class="cat-title" onclick="toggleCat(this)">3. Направление / пункт назначения <span class="chevron">&#9660;</span></div>
+          <div class="cat-examples">
+            <div class="example-line"><span class="es">Salgo para Madrid</span> <span class="ru">— Выезжаю в Мадрид</span></div>
+            <div class="example-line"><span class="es">El tren para Barcelona</span> <span class="ru">— Поезд на Барселону</span></div>
+            <div class="example-line"><span class="es">Vamos para casa</span> <span class="ru">— Идём домой</span></div>
+          </div>
+        </div>
+
+        <div class="cat-section">
+          <div class="cat-title" onclick="toggleCat(this)">4. Срок / дедлайн <span class="chevron">&#9660;</span></div>
+          <div class="cat-examples">
+            <div class="example-line"><span class="es">Para el lunes</span> <span class="ru">— К понедельнику</span></div>
+            <div class="example-line"><span class="es">Necesito esto para mañana</span> <span class="ru">— Нужно к завтрашнему дню</span></div>
+            <div class="example-line"><span class="es">Para las cinco de la tarde</span> <span class="ru">— К пяти вечера</span></div>
+          </div>
+        </div>
+
+        <div class="cat-section">
+          <div class="cat-title" onclick="toggleCat(this)">5. Сравнение / мнение <span class="chevron">&#9660;</span></div>
+          <div class="cat-examples">
+            <div class="example-line"><span class="es">Para mí, es fácil</span> <span class="ru">— По-моему, это легко</span></div>
+            <div class="example-line"><span class="es">Para ser principiante, hablas bien</span> <span class="ru">— Для новичка говоришь хорошо</span></div>
+            <div class="example-line"><span class="es">Es alto para su edad</span> <span class="ru">— Он высокий для своего возраста</span></div>
+          </div>
+        </div>
+
+        <div class="cat-section">
+          <div class="cat-title" onclick="toggleCat(this)">6. Estar para (быть на грани) <span class="chevron">&#9660;</span></div>
+          <div class="cat-examples">
+            <div class="example-line"><span class="es">Estoy para salir</span> <span class="ru">— Я вот-вот выйду</span></div>
+            <div class="example-line"><span class="es">No estoy para bromas</span> <span class="ru">— Мне не до шуток</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /top-cards -->
+
+  <!-- ============ MINIMAL PAIRS ============ -->
+  <div class="section-header">Минимальные пары</div>
+
+  <table class="pairs-table">
+    <thead>
+      <tr><th>Фраза</th><th>Перевод / смысл</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Trabajo <span class="kw-por">por</span> mi padre</td>
+        <td class="ru-cell">Работаю вместо отца (он болен, я его заменяю)</td>
+      </tr>
+      <tr>
+        <td>Trabajo <span class="kw-para">para</span> mi padre</td>
+        <td class="ru-cell">Работаю на отца (он мой начальник)</td>
+      </tr>
+      <tr class="pair-divider"><td colspan="2"></td></tr>
+
+      <tr>
+        <td>Caminé <span class="kw-por">por</span> el parque</td>
+        <td class="ru-cell">Шёл через / по парку (движение внутри)</td>
+      </tr>
+      <tr>
+        <td>Caminé <span class="kw-para">para</span> el parque</td>
+        <td class="ru-cell">Шёл в сторону парка (направление)</td>
+      </tr>
+      <tr class="pair-divider"><td colspan="2"></td></tr>
+
+      <tr>
+        <td>Lo hice <span class="kw-por">por</span> ti</td>
+        <td class="ru-cell">Сделал это из-за тебя / ради тебя (причина)</td>
+      </tr>
+      <tr>
+        <td>Lo hice <span class="kw-para">para</span> ti</td>
+        <td class="ru-cell">Сделал это для тебя (получатель)</td>
+      </tr>
+      <tr class="pair-divider"><td colspan="2"></td></tr>
+
+      <tr>
+        <td>Pagué 100&euro; <span class="kw-por">por</span> el cuadro</td>
+        <td class="ru-cell">Заплатил 100&euro; за картину (цена)</td>
+      </tr>
+      <tr>
+        <td>Necesito 100&euro; <span class="kw-para">para</span> el cuadro</td>
+        <td class="ru-cell">Нужно 100&euro; на картину (назначение)</td>
+      </tr>
+      <tr class="pair-divider"><td colspan="2"></td></tr>
+
+      <tr>
+        <td>Estudio <span class="kw-por">por</span> la mañana</td>
+        <td class="ru-cell">Учусь по утрам (время суток)</td>
+      </tr>
+      <tr>
+        <td>Estudia <span class="kw-para">para</span> mañana</td>
+        <td class="ru-cell">Учи к завтрашнему дню (дедлайн)</td>
+      </tr>
+      <tr class="pair-divider"><td colspan="2"></td></tr>
+
+      <tr>
+        <td>Vengo <span class="kw-por">por</span> ti</td>
+        <td class="ru-cell">Прихожу за тобой / из-за тебя</td>
+      </tr>
+      <tr>
+        <td>Vengo <span class="kw-para">para</span> verte</td>
+        <td class="ru-cell">Прихожу, чтобы тебя увидеть (цель)</td>
+      </tr>
+      <tr class="pair-divider"><td colspan="2"></td></tr>
+
+      <tr>
+        <td>Salió <span class="kw-por">por</span> la puerta</td>
+        <td class="ru-cell">Вышел через дверь (путь)</td>
+      </tr>
+      <tr>
+        <td>Salió <span class="kw-para">para</span> Madrid</td>
+        <td class="ru-cell">Выехал в Мадрид (пункт назначения)</td>
+      </tr>
+      <tr class="pair-divider"><td colspan="2"></td></tr>
+
+      <tr>
+        <td>Está <span class="kw-por">por</span> hacer</td>
+        <td class="ru-cell">Ещё не сделано (предстоит сделать)</td>
+      </tr>
+      <tr>
+        <td>Está <span class="kw-para">para</span> hacer</td>
+        <td class="ru-cell">Вот-вот будет сделано (готовность)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ============ FIXED EXPRESSIONS ============ -->
+  <div class="section-header">Устойчивые выражения</div>
+
+  <div class="expr-grid">
+    <div class="expr-card por">
+      <div class="expr-card-header">POR</div>
+      <div class="expr-card-body">
+        <span class="expr-tag">por favor</span>
+        <span class="expr-tag">por supuesto</span>
+        <span class="expr-tag">por ejemplo</span>
+        <span class="expr-tag">por fin</span>
+        <span class="expr-tag">por lo menos</span>
+        <span class="expr-tag">por lo general</span>
+        <span class="expr-tag">por lo tanto</span>
+        <span class="expr-tag">por cierto</span>
+        <span class="expr-tag">por eso</span>
+        <span class="expr-tag">por si acaso</span>
+        <span class="expr-tag">por lo visto</span>
+        <span class="expr-tag">por otra parte</span>
+        <span class="expr-tag">por casualidad</span>
+      </div>
+    </div>
+    <div class="expr-card para">
+      <div class="expr-card-header">PARA</div>
+      <div class="expr-card-body">
+        <span class="expr-tag">para siempre</span>
+        <span class="expr-tag">para nada</span>
+        <span class="expr-tag">para colmo</span>
+        <span class="expr-tag">para entonces</span>
+        <span class="expr-tag">no es para tanto</span>
+        <span class="expr-tag">para variar</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ INFO SECTION ============ -->
+  <div class="info-section">
+
+    <h3>Главное правило</h3>
+    <div class="core-rule">
+      <div class="core-box por-box">
+        <strong class="por-kw">POR</strong> = причина (почему?) &bull; обмен/цена &bull; движение через &bull; длительность &bull; средство &bull; пассивный агент
+      </div>
+      <div class="core-box para-box">
+        <strong class="para-kw">PARA</strong> = цель (зачем?) &bull; для кого &bull; направление куда &bull; к сроку &bull; мнение &bull; сравнение
+      </div>
+    </div>
+
+    <div class="mnemonic">
+      <strong>Мнемоника:</strong> <strong style="color:#e67e22">POR</strong> отвечает на <em>«почему?»</em> и <em>«каким путём?»</em> (причина, прошлое). <strong style="color:#27ae60">PARA</strong> отвечает на <em>«зачем?»</em> и <em>«для кого/куда?»</em> (цель, будущее).<br>
+      <strong style="color:#e67e22">POR</strong> смотрит назад (причина). <strong style="color:#27ae60">PARA</strong> смотрит вперёд (цель).
+    </div>
+
+    <h3>Estar por vs Estar para + инфинитив</h3>
+    <ul>
+      <li><strong style="color:#e67e22">estar por</strong> + inf. = ещё не сделано / быть за (поддерживать): <em>Estoy por salir</em> (Я за то, чтобы выйти); <em>La casa está por limpiar</em> (Дом ещё не убран)</li>
+      <li><strong style="color:#27ae60">estar para</strong> + inf. = вот-вот (готовность): <em>Estoy para salir</em> (Я вот-вот выйду); <em>No estoy para bromas</em> (Мне не до шуток)</li>
+    </ul>
+
+    <h3>Типичные ошибки русскоговорящих</h3>
+
+    <div class="mistake-item">
+      Русское <strong>«для»</strong> не всегда = <strong style="color:#27ae60">para</strong>. Если <em>«для»</em> означает причину/мотив, то нужен <strong style="color:#e67e22">por</strong>:<br>
+      <span class="wrong">Gracias para tu ayuda</span> &rarr; <span class="right">Gracias por tu ayuda</span> (Спасибо за помощь)
+    </div>
+
+    <div class="mistake-item">
+      Русское <strong>«за»</strong> может быть и <em>por</em>, и <em>para</em>:<br>
+      «Заплатил <strong>за</strong> книгу» = Pagué <span class="right">por</span> el libro (обмен/цена)<br>
+      «Деньги <strong>за</strong> (для) поездку» = dinero <span class="right">para</span> el viaje (цель/назначение)
+    </div>
+
+    <div class="mistake-item">
+      Длительность: в разговорном испанском <strong style="color:#e67e22">por</strong> часто опускается:<br>
+      <em>Viví allí (por) dos años</em> &mdash; оба варианта допустимы.
+    </div>
+
+    <div class="mistake-item">
+      «Работаю <strong>на</strong> компанию» = Trabajo <span class="right">para</span> una empresa (получатель/цель),<br>
+      но «Борюсь <strong>за</strong> свободу» = Lucho <span class="right">por</span> la libertad (причина/мотив).
+    </div>
+
+  </div>
+
+</div><!-- /content -->
+
+<script>
+function toggleCat(el) {
+  el.classList.toggle('collapsed');
+  const body = el.nextElementSibling;
+  if (body.classList.contains('collapsed')) {
+    body.style.maxHeight = body.scrollHeight + 'px';
+    body.offsetHeight; // force reflow
+    body.classList.remove('collapsed');
+  } else {
+    body.style.maxHeight = body.scrollHeight + 'px';
+    body.offsetHeight;
+    body.classList.add('collapsed');
+  }
+}
+
+// Initialize all cat-examples with natural height
+document.querySelectorAll('.cat-examples').forEach(el => {
+  el.style.maxHeight = el.scrollHeight + 'px';
+});
+
+// Filter buttons
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const filter = btn.dataset.filter;
+
+    // Update active state
+    document.querySelectorAll('.filter-btn').forEach(b => {
+      b.classList.remove('active-all', 'active-por', 'active-para');
+    });
+    if (filter === 'all') btn.classList.add('active-all');
+    else if (filter === 'por') btn.classList.add('active-por');
+    else btn.classList.add('active-para');
+
+    // Show/hide cards
+    const porCard = document.querySelector('.big-card.por');
+    const paraCard = document.querySelector('.big-card.para');
+    const topCards = document.querySelector('.top-cards');
+
+    if (filter === 'all') {
+      porCard.style.display = '';
+      paraCard.style.display = '';
+      topCards.style.gridTemplateColumns = '1fr 1fr';
+      if (window.innerWidth <= 500) topCards.style.gridTemplateColumns = '1fr';
+    } else if (filter === 'por') {
+      porCard.style.display = '';
+      paraCard.style.display = 'none';
+      topCards.style.gridTemplateColumns = '1fr';
+    } else {
+      porCard.style.display = 'none';
+      paraCard.style.display = '';
+      topCards.style.gridTemplateColumns = '1fr';
+    }
+
+    // Recalculate max-heights for visible examples
+    setTimeout(() => {
+      document.querySelectorAll('.cat-examples:not(.collapsed)').forEach(el => {
+        el.style.maxHeight = el.scrollHeight + 'px';
+      });
+    }, 50);
+  });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇫🇷</text></svg>">
+<meta name="apple-mobile-web-app-title" content="FR pron">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇫🇷 Французские местоимения</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #eef0f5;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #1a365d, #2a4a7f);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  .container {
+    max-width: 940px;
+    margin: 0 auto;
+    padding: 20px 20px 60px;
+  }
+
+  /* Filter buttons */
+  .filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px 0 10px;
+  }
+  .filter-btn {
+    background: white;
+    color: #2a4a7f;
+    border: 2px solid transparent;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.88em;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .filter-btn:hover { background: #2a4a7f; color: white; }
+  .filter-btn.active { background: #2a4a7f; color: white; border-color: #1a365d; }
+
+  /* Cards */
+  .card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    margin-top: 20px;
+    overflow: hidden;
+    transition: opacity 0.3s, max-height 0.4s;
+  }
+  .card.hidden {
+    display: none;
+  }
+  .card-header {
+    background: #2a4a7f;
+    color: white;
+    padding: 14px 20px;
+    font-size: 1.1em;
+    font-weight: 600;
+  }
+  .card-header small {
+    opacity: 0.8;
+    font-weight: 400;
+    font-size: 0.82em;
+    margin-left: 6px;
+  }
+  .card-body {
+    padding: 20px;
+  }
+
+  /* Tables */
+  .pronoun-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+  }
+  .pronoun-table th {
+    background: #f0f2f7;
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 0.88em;
+    color: #555;
+    font-weight: 600;
+    border-bottom: 2px solid #dde0e8;
+  }
+  .pronoun-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #eef0f4;
+    font-size: 0.95em;
+    vertical-align: top;
+  }
+  .pronoun-table tr:last-child td { border-bottom: none; }
+  .pronoun-table .fr {
+    font-weight: 700;
+    color: #2a4a7f;
+    font-size: 1.05em;
+  }
+  .pronoun-table .ru {
+    color: #888;
+  }
+  .pronoun-table .note {
+    color: #999;
+    font-size: 0.85em;
+    font-style: italic;
+  }
+
+  /* Example sentences */
+  .examples {
+    margin-top: 14px;
+  }
+  .examples h4 {
+    font-size: 0.88em;
+    color: #888;
+    margin-bottom: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .example {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f2f7;
+    line-height: 1.6;
+  }
+  .example:last-child { border-bottom: none; }
+  .example .fr-ex {
+    font-weight: 600;
+    color: #333;
+  }
+  .example .ru-ex {
+    color: #999;
+    font-size: 0.9em;
+  }
+
+  /* Color coding for pronoun types */
+  .clr-cod { color: #2563eb; font-weight: 700; }
+  .clr-coi { color: #16a34a; font-weight: 700; }
+  .clr-y { color: #d97706; font-weight: 700; }
+  .clr-en { color: #9333ea; font-weight: 700; }
+  .clr-refl { color: #dc2626; font-weight: 700; }
+  .clr-sujet { color: #0891b2; font-weight: 700; }
+
+  /* Order table (special) */
+  .order-chart {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 0.92em;
+  }
+  .order-chart th {
+    padding: 10px 8px;
+    text-align: center;
+    font-size: 0.78em;
+    font-weight: 700;
+    color: white;
+    border: 2px solid white;
+  }
+  .order-chart td {
+    padding: 10px 8px;
+    text-align: center;
+    border: 1px solid #e2e5eb;
+    font-weight: 600;
+    font-size: 0.9em;
+    background: #f8f9fc;
+  }
+  .slot-ne { background: #fee2e2; }
+  .slot-1 { background: #dbeafe; }
+  .slot-2 { background: #d1fae5; }
+  .slot-3 { background: #fef3c7; }
+  .slot-4 { background: #ede9fe; }
+  .slot-5 { background: #ffedd5; }
+  .th-ne { background: #dc2626; }
+  .th-1 { background: #2563eb; }
+  .th-2 { background: #16a34a; }
+  .th-3 { background: #d97706; }
+  .th-4 { background: #9333ea; }
+  .th-5 { background: #ea580c; }
+
+  .imp-note {
+    background: #fef3c7;
+    border-left: 4px solid #d97706;
+    padding: 14px 18px;
+    border-radius: 0 8px 8px 0;
+    margin-top: 16px;
+    font-size: 0.92em;
+    line-height: 1.6;
+  }
+  .imp-note strong { color: #92400e; }
+
+  /* Info section */
+  .info-section {
+    margin-top: 30px;
+  }
+  .info-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    margin-top: 16px;
+    overflow: hidden;
+  }
+  .info-card .card-header {
+    background: #475569;
+  }
+  .info-card .card-body {
+    padding: 18px 20px;
+    font-size: 0.93em;
+    line-height: 1.7;
+    color: #555;
+  }
+  .info-card ul {
+    padding-left: 20px;
+    margin: 6px 0;
+  }
+  .info-card li {
+    margin-bottom: 6px;
+  }
+  .info-card .fr-ex { font-weight: 600; color: #333; }
+  .info-card .ru-ex { color: #999; }
+
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.35em; }
+    header p { font-size: 0.85em; }
+    .filters { gap: 6px; }
+    .filter-btn { padding: 6px 11px; font-size: 0.8em; }
+    .card-header { font-size: 0.98em; padding: 12px 16px; }
+    .card-body { padding: 14px; }
+    .pronoun-table th, .pronoun-table td { padding: 8px 8px; font-size: 0.85em; }
+    .order-chart th, .order-chart td { padding: 6px 4px; font-size: 0.72em; }
+    .order-chart { display: block; overflow-x: auto; }
+    .example { font-size: 0.9em; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a class="lang-switch" href="french.html">📖 Портал</a>
+    <a class="lang-switch" href="french-verbs.html">📝 Глаголы</a>
+  </div>
+  <h1>🇫🇷 Французские местоимения</h1>
+  <p>Les pronoms personnels — все типы, порядок, примеры</p>
+</header>
+
+<div class="container">
+
+  <!-- Filter buttons -->
+  <div class="filters">
+    <button class="filter-btn active" data-filter="all">Все</button>
+    <button class="filter-btn" data-filter="sujet">Подлежащие</button>
+    <button class="filter-btn" data-filter="tonique">Ударные</button>
+    <button class="filter-btn" data-filter="cod">COD</button>
+    <button class="filter-btn" data-filter="coi">COI</button>
+    <button class="filter-btn" data-filter="y">Y</button>
+    <button class="filter-btn" data-filter="en">En</button>
+    <button class="filter-btn" data-filter="reflechi">Возвратные</button>
+    <button class="filter-btn" data-filter="ordre">Порядок</button>
+  </div>
+
+  <!-- 1. Pronoms sujets -->
+  <div class="card" data-cat="sujet">
+    <div class="card-header">Pronoms sujets <small>— Подлежащие местоимения</small></div>
+    <div class="card-body">
+      <table class="pronoun-table">
+        <tr><th>Французский</th><th>Русский</th><th>Примечание</th></tr>
+        <tr><td class="fr">je (j')</td><td class="ru">я</td><td class="note">j' перед гласной: j'aime</td></tr>
+        <tr><td class="fr">tu</td><td class="ru">ты</td><td class="note">неформальное обращение</td></tr>
+        <tr><td class="fr">il / elle / on</td><td class="ru">он / она / мы (разг.)</td><td class="note">on = неопред. «мы» в разговорной речи</td></tr>
+        <tr><td class="fr">nous</td><td class="ru">мы</td><td class="note">формальное, в письменной речи</td></tr>
+        <tr><td class="fr">vous</td><td class="ru">вы / Вы</td><td class="note">мн. число или вежливая форма</td></tr>
+        <tr><td class="fr">ils / elles</td><td class="ru">они (м.) / они (ж.)</td><td class="note">elles — только для группы женщин</td></tr>
+      </table>
+      <div class="examples">
+        <h4>Примеры</h4>
+        <div class="example"><span class="fr-ex"><span class="clr-sujet">Je</span> parle français.</span> <span class="ru-ex">— Я говорю по-французски.</span></div>
+        <div class="example"><span class="fr-ex"><span class="clr-sujet">On</span> va au cinéma ?</span> <span class="ru-ex">— Пойдём в кино?</span></div>
+        <div class="example"><span class="fr-ex"><span class="clr-sujet">Elles</span> sont parties hier.</span> <span class="ru-ex">— Они (ж.) уехали вчера.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Pronoms toniques -->
+  <div class="card" data-cat="tonique">
+    <div class="card-header">Pronoms toniques <small>— Ударные местоимения</small></div>
+    <div class="card-body">
+      <table class="pronoun-table">
+        <tr><th>Французский</th><th>Русский</th><th>Когда используются</th></tr>
+        <tr><td class="fr">moi</td><td class="ru">я / мне / меня</td><td class="note">после предлога, для усиления</td></tr>
+        <tr><td class="fr">toi</td><td class="ru">ты / тебе / тебя</td><td class="note">Toi, tu comprends. — Ты-то понимаешь.</td></tr>
+        <tr><td class="fr">lui / elle</td><td class="ru">он / она</td><td class="note">après une préposition: avec lui</td></tr>
+        <tr><td class="fr">nous</td><td class="ru">мы</td><td class="note">chez nous — у нас дома</td></tr>
+        <tr><td class="fr">vous</td><td class="ru">вы</td><td class="note">pour vous — для вас</td></tr>
+        <tr><td class="fr">eux / elles</td><td class="ru">они (м.) / они (ж.)</td><td class="note">sans eux — без них</td></tr>
+      </table>
+      <div class="examples">
+        <h4>Когда использовать</h4>
+        <div class="example"><span class="fr-ex">C'est <strong>moi</strong>.</span> <span class="ru-ex">— Это я. (с c'est)</span></div>
+        <div class="example"><span class="fr-ex">Je pars avec <strong>elle</strong>.</span> <span class="ru-ex">— Я уезжаю с ней. (после предлога)</span></div>
+        <div class="example"><span class="fr-ex"><strong>Lui</strong>, il ne sait rien.</span> <span class="ru-ex">— Он-то ничего не знает. (усиление)</span></div>
+        <div class="example"><span class="fr-ex">C'est pour <strong>toi</strong>.</span> <span class="ru-ex">— Это для тебя. (после предлога)</span></div>
+        <div class="example"><span class="fr-ex"><strong>Moi</strong> aussi.</span> <span class="ru-ex">— Я тоже.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. COD -->
+  <div class="card" data-cat="cod">
+    <div class="card-header">COD — Complément d'objet direct <small>— Прямое дополнение</small></div>
+    <div class="card-body">
+      <p style="color:#888; font-size:0.88em; margin-bottom:12px;">Отвечает на вопрос <strong>что? кого?</strong> — заменяет прямое дополнение без предлога</p>
+      <table class="pronoun-table">
+        <tr><th>Французский</th><th>Русский</th><th>Заменяет</th></tr>
+        <tr><td class="fr"><span class="clr-cod">me</span> (m')</td><td class="ru">меня</td><td class="note">Il me voit — Он меня видит</td></tr>
+        <tr><td class="fr"><span class="clr-cod">te</span> (t')</td><td class="ru">тебя</td><td class="note">Je te comprends — Я тебя понимаю</td></tr>
+        <tr><td class="fr"><span class="clr-cod">le</span> (l') / <span class="clr-cod">la</span> (l')</td><td class="ru">его / её / это</td><td class="note">Je le sais — Я это знаю</td></tr>
+        <tr><td class="fr"><span class="clr-cod">nous</span></td><td class="ru">нас</td><td class="note">Il nous invite — Он нас приглашает</td></tr>
+        <tr><td class="fr"><span class="clr-cod">vous</span></td><td class="ru">вас</td><td class="note">Je vous attends — Я вас жду</td></tr>
+        <tr><td class="fr"><span class="clr-cod">les</span></td><td class="ru">их</td><td class="note">Tu les connais — Ты их знаешь</td></tr>
+      </table>
+      <div class="examples">
+        <h4>Примеры</h4>
+        <div class="example"><span class="fr-ex">Ce livre ? Je <span class="clr-cod">le</span> lis.</span> <span class="ru-ex">— Эта книга? Я её читаю.</span></div>
+        <div class="example"><span class="fr-ex">Ta sœur ? Je <span class="clr-cod">la</span> connais bien.</span> <span class="ru-ex">— Твоя сестра? Я её хорошо знаю.</span></div>
+        <div class="example"><span class="fr-ex">Ces films ? Je <span class="clr-cod">les</span> ai vus.</span> <span class="ru-ex">— Эти фильмы? Я их смотрел.</span></div>
+        <div class="example"><span class="fr-ex">Il <span class="clr-cod">m'</span>a appelé hier.</span> <span class="ru-ex">— Он мне звонил вчера.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. COI -->
+  <div class="card" data-cat="coi">
+    <div class="card-header">COI — Complément d'objet indirect <small>— Косвенное дополнение</small></div>
+    <div class="card-body">
+      <p style="color:#888; font-size:0.88em; margin-bottom:12px;">Отвечает на вопрос <strong>кому? чему?</strong> — заменяет <em>à + personne</em></p>
+      <table class="pronoun-table">
+        <tr><th>Французский</th><th>Русский</th><th>Заменяет</th></tr>
+        <tr><td class="fr"><span class="clr-coi">me</span> (m')</td><td class="ru">мне</td><td class="note">Il me parle — Он мне говорит</td></tr>
+        <tr><td class="fr"><span class="clr-coi">te</span> (t')</td><td class="ru">тебе</td><td class="note">Je te téléphone — Я тебе звоню</td></tr>
+        <tr><td class="fr"><span class="clr-coi">lui</span></td><td class="ru">ему / ей</td><td class="note">Je lui écris — Я ему/ей пишу</td></tr>
+        <tr><td class="fr"><span class="clr-coi">nous</span></td><td class="ru">нам</td><td class="note">Il nous répond — Он нам отвечает</td></tr>
+        <tr><td class="fr"><span class="clr-coi">vous</span></td><td class="ru">вам</td><td class="note">Je vous explique — Я вам объясняю</td></tr>
+        <tr><td class="fr"><span class="clr-coi">leur</span></td><td class="ru">им</td><td class="note">Je leur dis — Я им говорю</td></tr>
+      </table>
+      <div class="examples">
+        <h4>Примеры</h4>
+        <div class="example"><span class="fr-ex">Je parle à Marie → Je <span class="clr-coi">lui</span> parle.</span> <span class="ru-ex">— Я с ней говорю.</span></div>
+        <div class="example"><span class="fr-ex">Il téléphone à ses parents → Il <span class="clr-coi">leur</span> téléphone.</span> <span class="ru-ex">— Он им звонит.</span></div>
+        <div class="example"><span class="fr-ex">Elle <span class="clr-coi">m'</span>a envoyé un message.</span> <span class="ru-ex">— Она мне отправила сообщение.</span></div>
+        <div class="example"><span class="fr-ex">Tu <span class="clr-coi">lui</span> as dit la vérité ?</span> <span class="ru-ex">— Ты ему сказал правду?</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Y -->
+  <div class="card" data-cat="y">
+    <div class="card-header">Y <small>— Местоименное наречие места (à + lieu/chose)</small></div>
+    <div class="card-body">
+      <p style="color:#888; font-size:0.88em; margin-bottom:12px;">Заменяет <strong>à + место</strong> или <strong>à + вещь</strong> (но не à + человек!)</p>
+      <table class="pronoun-table">
+        <tr><th>Заменяет</th><th>Пример</th></tr>
+        <tr><td class="note">à + место</td><td><span class="fr-ex">Tu vas à Paris ? — Oui, j'<span class="clr-y">y</span> vais.</span> <span class="ru-ex">— Да, я туда еду.</span></td></tr>
+        <tr><td class="note">à + вещь</td><td><span class="fr-ex">Tu penses à l'examen ? — Oui, j'<span class="clr-y">y</span> pense.</span> <span class="ru-ex">— Да, я об этом думаю.</span></td></tr>
+        <tr><td class="note">dans / sur / en + lieu</td><td><span class="fr-ex">Tu habites en France ? — Oui, j'<span class="clr-y">y</span> habite.</span> <span class="ru-ex">— Да, я там живу.</span></td></tr>
+      </table>
+      <div class="examples">
+        <h4>Примеры</h4>
+        <div class="example"><span class="fr-ex">Je vais au bureau → J'<span class="clr-y">y</span> vais.</span> <span class="ru-ex">— Я туда иду.</span></div>
+        <div class="example"><span class="fr-ex">Il s'intéresse à la musique → Il s'<span class="clr-y">y</span> intéresse.</span> <span class="ru-ex">— Он этим интересуется.</span></div>
+        <div class="example"><span class="fr-ex">Allons-<span class="clr-y">y</span> !</span> <span class="ru-ex">— Пойдёмте! / Поехали!</span></div>
+        <div class="example"><span class="fr-ex">Il <span class="clr-y">y</span> a un problème.</span> <span class="ru-ex">— Есть проблема. (il y a = имеется)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. En -->
+  <div class="card" data-cat="en">
+    <div class="card-header">En <small>— Местоименное наречие количества (de + chose/quantité)</small></div>
+    <div class="card-body">
+      <p style="color:#888; font-size:0.88em; margin-bottom:12px;">Заменяет <strong>de + вещь</strong>, <strong>партитив (du/de la/des)</strong> или <strong>количество</strong></p>
+      <table class="pronoun-table">
+        <tr><th>Заменяет</th><th>Пример</th></tr>
+        <tr><td class="note">de + вещь</td><td><span class="fr-ex">Tu parles de ton voyage ? — Oui, j'<span class="clr-en">en</span> parle.</span> <span class="ru-ex">— Да, я об этом говорю.</span></td></tr>
+        <tr><td class="note">партитив</td><td><span class="fr-ex">Tu veux du café ? — Oui, j'<span class="clr-en">en</span> veux.</span> <span class="ru-ex">— Да, я хочу (кофе).</span></td></tr>
+        <tr><td class="note">количество</td><td><span class="fr-ex">Tu as des frères ? — Oui, j'<span class="clr-en">en</span> ai deux.</span> <span class="ru-ex">— Да, у меня их два.</span></td></tr>
+      </table>
+      <div class="examples">
+        <h4>Примеры</h4>
+        <div class="example"><span class="fr-ex">J'<span class="clr-en">en</span> veux trois.</span> <span class="ru-ex">— Я хочу три (штуки).</span></div>
+        <div class="example"><span class="fr-ex">Il <span class="clr-en">en</span> a besoin.</span> <span class="ru-ex">— Ему это нужно. (avoir besoin de)</span></div>
+        <div class="example"><span class="fr-ex">Elle <span class="clr-en">en</span> est contente.</span> <span class="ru-ex">— Она этим довольна. (être content de)</span></div>
+        <div class="example"><span class="fr-ex">Tu <span class="clr-en">en</span> reviens ?</span> <span class="ru-ex">— Ты оттуда возвращаешься? (revenir de)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. Pronoms réfléchis -->
+  <div class="card" data-cat="reflechi">
+    <div class="card-header">Pronoms réfléchis <small>— Возвратные местоимения</small></div>
+    <div class="card-body">
+      <table class="pronoun-table">
+        <tr><th>Французский</th><th>Русский</th><th>Пример</th></tr>
+        <tr><td class="fr"><span class="clr-refl">me</span> (m')</td><td class="ru">себя / -сь</td><td class="note">Je me lève — Я встаю</td></tr>
+        <tr><td class="fr"><span class="clr-refl">te</span> (t')</td><td class="ru">себя / -сь</td><td class="note">Tu te laves — Ты моешься</td></tr>
+        <tr><td class="fr"><span class="clr-refl">se</span> (s')</td><td class="ru">себя / -сь</td><td class="note">Il se réveille — Он просыпается</td></tr>
+        <tr><td class="fr"><span class="clr-refl">nous</span></td><td class="ru">себя / друг друга</td><td class="note">Nous nous promenons — Мы гуляем</td></tr>
+        <tr><td class="fr"><span class="clr-refl">vous</span></td><td class="ru">себя / друг друга</td><td class="note">Vous vous amusez — Вы веселитесь</td></tr>
+        <tr><td class="fr"><span class="clr-refl">se</span> (s')</td><td class="ru">себя / друг друга</td><td class="note">Ils se parlent — Они разговаривают</td></tr>
+      </table>
+      <div class="examples">
+        <h4>Примеры</h4>
+        <div class="example"><span class="fr-ex">Je <span class="clr-refl">me</span> couche à 23h.</span> <span class="ru-ex">— Я ложусь в 23:00.</span></div>
+        <div class="example"><span class="fr-ex">Elle <span class="clr-refl">s'</span>appelle Marie.</span> <span class="ru-ex">— Её зовут Мари.</span></div>
+        <div class="example"><span class="fr-ex">Ils <span class="clr-refl">se</span> sont rencontrés à Paris.</span> <span class="ru-ex">— Они познакомились в Париже.</span></div>
+        <div class="example"><span class="fr-ex">Tu <span class="clr-refl">t'</span>en vas ?</span> <span class="ru-ex">— Ты уходишь? (s'en aller)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. L'ordre des pronoms -->
+  <div class="card" data-cat="ordre">
+    <div class="card-header">L'ordre des pronoms <small>— Порядок местоимений перед глаголом</small></div>
+    <div class="card-body">
+      <p style="color:#555; font-size:0.92em; margin-bottom:14px;">Когда перед глаголом несколько местоимений, они стоят в строгом порядке:</p>
+
+      <div style="overflow-x:auto;">
+      <table class="order-chart">
+        <tr>
+          <th class="th-ne">ne</th>
+          <th class="th-1">1 слот</th>
+          <th class="th-2">2 слот</th>
+          <th class="th-3">3 слот</th>
+          <th class="th-4">4 слот</th>
+          <th class="th-5">глагол</th>
+          <th class="th-ne">pas</th>
+        </tr>
+        <tr>
+          <td class="slot-ne">ne</td>
+          <td class="slot-1">me (m')<br>te (t')<br>se (s')<br>nous<br>vous</td>
+          <td class="slot-2">le (l')<br>la (l')<br>les</td>
+          <td class="slot-3">lui<br>leur</td>
+          <td class="slot-4">y &nbsp; en</td>
+          <td class="slot-5">VERBE</td>
+          <td class="slot-ne">pas</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td style="font-size:0.75em; color:#2563eb;">COI 1-2 л. /<br>возвратные</td>
+          <td style="font-size:0.75em; color:#16a34a;">COD 3 л.</td>
+          <td style="font-size:0.75em; color:#d97706;">COI 3 л.</td>
+          <td style="font-size:0.75em; color:#9333ea;">нареч.</td>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+      </div>
+
+      <div class="examples">
+        <h4>Примеры с двойными/тройными местоимениями</h4>
+        <div class="example"><span class="fr-ex">Il <span class="clr-coi">me</span> <span class="clr-cod">le</span> donne.</span> <span class="ru-ex">— Он мне это даёт.</span></div>
+        <div class="example"><span class="fr-ex">Je <span class="clr-cod">le</span> <span class="clr-coi">lui</span> ai dit.</span> <span class="ru-ex">— Я ему это сказал.</span></div>
+        <div class="example"><span class="fr-ex">Elle <span class="clr-coi">m'</span><span class="clr-en">en</span> a parlé.</span> <span class="ru-ex">— Она мне об этом рассказала.</span></div>
+        <div class="example"><span class="fr-ex">Il <span class="clr-y">y</span> <span class="clr-en">en</span> a.</span> <span class="ru-ex">— Этого там есть. / Имеется.</span></div>
+        <div class="example"><span class="fr-ex">Ne <span class="clr-coi">me</span> <span class="clr-cod">le</span> dis pas.</span> <span class="ru-ex">— Не говори мне это.</span></div>
+        <div class="example"><span class="fr-ex">Je <span class="clr-cod">les</span> <span class="clr-coi">leur</span> ai envoyés.</span> <span class="ru-ex">— Я им их отправил.</span></div>
+        <div class="example"><span class="fr-ex">Tu <span class="clr-coi">nous</span> <span class="clr-cod">l'</span>as expliqué.</span> <span class="ru-ex">— Ты нам это объяснил.</span></div>
+        <div class="example"><span class="fr-ex">Il <span class="clr-coi">m'</span><span class="clr-y">y</span> a emmené.</span> <span class="ru-ex">— Он меня туда отвёз.</span></div>
+        <div class="example"><span class="fr-ex">Elle <span class="clr-cod">le</span> <span class="clr-coi">leur</span> a promis.</span> <span class="ru-ex">— Она им это пообещала.</span></div>
+        <div class="example"><span class="fr-ex">Ne <span class="clr-cod">le</span> <span class="clr-coi">lui</span> dites pas.</span> <span class="ru-ex">— Не говорите ему это.</span></div>
+      </div>
+
+      <div class="imp-note">
+        <strong>Impératif affirmatif — порядок МЕНЯЕТСЯ!</strong><br>
+        В утвердительном повелительном наклонении местоимения стоят <em>после</em> глагола через дефис, и порядок другой:<br><br>
+        <strong>Verbe + le/la/les + moi(m')/toi(t')/lui/nous/vous/leur + y + en</strong><br><br>
+        <div class="example" style="border:none;"><span class="fr-ex">Donne-<span class="clr-cod">le</span>-<span class="clr-coi">moi</span> !</span> <span class="ru-ex">— Дай мне это!</span></div>
+        <div class="example" style="border:none;"><span class="fr-ex">Dis-<span class="clr-cod">le</span>-<span class="clr-coi">lui</span> !</span> <span class="ru-ex">— Скажи ему это!</span></div>
+        <div class="example" style="border:none;"><span class="fr-ex">Donnez-<span class="clr-coi">leur</span>-<span class="clr-en">en</span> !</span> <span class="ru-ex">— Дайте им этого!</span></div>
+        <br>
+        <strong>Но!</strong> В отрицательном повелительном — обычный порядок:<br>
+        <div class="example" style="border:none;"><span class="fr-ex">Ne <span class="clr-coi">me</span> <span class="clr-cod">le</span> donne pas !</span> <span class="ru-ex">— Не давай мне это!</span></div>
+        <div class="example" style="border:none;"><span class="fr-ex">Ne <span class="clr-cod">le</span> <span class="clr-coi">lui</span> dis pas !</span> <span class="ru-ex">— Не говори ему это!</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info section -->
+  <div class="info-section">
+
+    <div class="info-card">
+      <div class="card-header">💡 Быстрые подсказки</div>
+      <div class="card-body">
+        <ul>
+          <li><strong>COD</strong> отвечает на <strong>что? кого?</strong> (без предлога) — <span class="fr-ex">Je vois <u>Marie</u></span> → <span class="fr-ex">Je <span class="clr-cod">la</span> vois</span></li>
+          <li><strong>COI</strong> отвечает на <strong>кому? чему?</strong> (= <em>à</em> + personne) — <span class="fr-ex">Je parle <u>à Marie</u></span> → <span class="fr-ex">Je <span class="clr-coi">lui</span> parle</span></li>
+          <li><strong>Y</strong> заменяет <strong>à</strong> + место/вещь (не человек!) — <span class="fr-ex">Je vais <u>à Paris</u></span> → <span class="fr-ex">J'<span class="clr-y">y</span> vais</span></li>
+          <li><strong>En</strong> заменяет <strong>de</strong> + вещь или количество — <span class="fr-ex">J'ai <u>trois livres</u></span> → <span class="fr-ex">J'<span class="clr-en">en</span> ai trois</span></li>
+          <li><strong>Отрицание:</strong> ne + местоимения + глагол + pas — <span class="fr-ex">Je ne <span class="clr-cod">le</span> vois <strong>pas</strong></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <div class="card-header">⚠️ Типичные ошибки русскоговорящих</div>
+      <div class="card-body">
+        <ul>
+          <li><strong>lui = ему И ей.</strong> Не путайте с «lui» (ударное) = только «он». COI <em>lui</em> не различает род:<br>
+            <span class="fr-ex">Je <span class="clr-coi">lui</span> parle</span> — <span class="ru-ex">Я ему/ей говорю</span></li>
+          <li><strong>leur (без -s!)</strong> — местоимение COI «им» не склоняется. <em>Leurs</em> с -s — это притяжательное прилагательное:<br>
+            <span class="fr-ex">Je <span class="clr-coi">leur</span> parle</span> (им) vs <span class="fr-ex"><strong>leurs</strong> livres</span> (их книги)</li>
+          <li><strong>Y ≠ для людей.</strong> Нельзя: <s>J'y pense</s> (о человеке). Нужно: <span class="fr-ex">Je pense <strong>à lui/elle</strong></span></li>
+          <li><strong>Порядок в passé composé:</strong> местоимения стоят перед вспомогательным глаголом, не перед причастием:<br>
+            ✓ <span class="fr-ex">Je <span class="clr-cod">l'</span>ai vu</span> &nbsp; ✗ <s>J'ai le vu</s></li>
+          <li><strong>Согласование COD с passé composé:</strong> если COD стоит перед avoir, причастие согласуется:<br>
+            <span class="fr-ex">La lettre ? Je <span class="clr-cod">l'</span>ai écrit<strong>e</strong>.</span> <span class="ru-ex">— Письмо? Я его написал(а). (-e потому что la lettre — ж.р.)</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <div class="card-header">📐 Отрицание с местоимениями</div>
+      <div class="card-body">
+        <p style="margin-bottom:10px;">Местоимения всегда внутри отрицания <strong>ne...pas</strong>:</p>
+        <ul>
+          <li><span class="fr-ex">Je <strong>ne</strong> <span class="clr-cod">le</span> vois <strong>pas</strong>.</span> <span class="ru-ex">— Я его не вижу.</span></li>
+          <li><span class="fr-ex">Il <strong>ne</strong> <span class="clr-coi">lui</span> a <strong>rien</strong> dit.</span> <span class="ru-ex">— Он ему ничего не сказал.</span></li>
+          <li><span class="fr-ex">Je <strong>n'</strong><span class="clr-y">y</span> suis <strong>jamais</strong> allé.</span> <span class="ru-ex">— Я туда никогда не ездил.</span></li>
+          <li><span class="fr-ex">Elle <strong>ne</strong> <span class="clr-coi">m'</span><span class="clr-en">en</span> a <strong>plus</strong> parlé.</span> <span class="ru-ex">— Она мне больше об этом не говорила.</span></li>
+        </ul>
+        <p style="margin-top:10px; color:#888; font-size:0.88em;">Схема: <strong>Sujet + ne + местоимения + глагол + pas/rien/jamais/plus</strong></p>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const buttons = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('.card[data-cat]');
+
+  buttons.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      const filter = this.getAttribute('data-filter');
+
+      // Update active button
+      buttons.forEach(function(b) { b.classList.remove('active'); });
+      this.classList.add('active');
+
+      // Show/hide cards
+      cards.forEach(function(card) {
+        if (filter === 'all' || card.getAttribute('data-cat') === filter) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    });
+  });
+});
+</script>
+
+</body>
+</html>

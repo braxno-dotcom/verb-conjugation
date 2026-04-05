@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇫🇷</text></svg>">
+<meta name="apple-mobile-web-app-title" content="FR passé">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇫🇷 Французские прошедшие времена</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #eef0f5;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #1a365d, #2a4a7f);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  .search-area {
+    max-width: 600px;
+    margin: 30px auto 10px;
+    padding: 0 20px;
+    display: flex;
+    gap: 10px;
+  }
+  .search-area input {
+    flex: 1;
+    padding: 14px 18px;
+    font-size: 1.15em;
+    border: 2px solid #b8c4d9;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-area input:focus { border-color: #2a4a7f; }
+  .search-area button {
+    padding: 14px 28px;
+    font-size: 1.05em;
+    background: #2a4a7f;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .search-area button:hover { background: #1a365d; }
+
+  .hint {
+    max-width: 600px;
+    margin: 8px auto 0;
+    padding: 0 20px;
+    font-size: 0.85em;
+    color: #888;
+  }
+  .hint span { cursor: pointer; color: #2a4a7f; text-decoration: underline; }
+  .hint span:hover { color: #1a365d; }
+
+  .verb-info {
+    max-width: 900px;
+    margin: 18px auto 8px;
+    padding: 0 20px;
+    display: none;
+  }
+  .verb-info .badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 600;
+    margin-right: 8px;
+    margin-bottom: 6px;
+  }
+  .badge-group { background: #e0ecff; color: #1a365d; }
+  .badge-aux-avoir { background: #e3f2fd; color: #1565c0; border: 1px solid #90caf9; }
+  .badge-aux-etre { background: #fce4ec; color: #c62828; border: 1px solid #ef9a9a; }
+  .badge-pp { background: #e8f5e9; color: #1b5e20; }
+  .badge-ru { background: #f3e5f5; color: #6a1b9a; }
+
+  #results {
+    max-width: 900px;
+    margin: 10px auto 40px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 16px;
+  }
+
+  .tense-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .tense-header {
+    padding: 12px 16px;
+    color: white;
+    font-weight: 600;
+  }
+  .tense-header.pc { background: #2a4a7f; }
+  .tense-header.imp { background: #5c6bc0; }
+  .tense-header.pqp { background: #7b1fa2; }
+  .tense-header.compare { background: #00695c; }
+  .tense-header .fr-name { font-size: 1.05em; }
+  .tense-header .ru-name { font-size: 0.85em; opacity: 0.9; margin-top: 2px; }
+  .tense-explain {
+    padding: 8px 16px;
+    font-size: 0.88em;
+    color: #666;
+    background: #fafafa;
+    border-bottom: 1px solid #eee;
+    font-style: italic;
+  }
+  .tense-body { padding: 12px 16px; }
+  .tense-body table { width: 100%; }
+  .tense-body td { padding: 3px 0; font-size: 0.95em; }
+  .tense-body .pronoun { color: #999; width: 90px; font-size: 0.9em; }
+  .tense-body .verb-form { font-weight: 600; color: #2c2c2c; }
+  .tense-body .agree-note { color: #c62828; font-size: 0.82em; font-weight: normal; }
+
+  .compare-body { padding: 14px 16px; font-size: 0.92em; line-height: 1.7; }
+  .compare-body .label-pc { color: #2a4a7f; font-weight: 700; }
+  .compare-body .label-imp { color: #5c6bc0; font-weight: 700; }
+  .compare-body .example { background: #f5f5f5; padding: 10px 14px; border-radius: 8px; margin-top: 8px; font-size: 0.95em; line-height: 1.6; }
+  .compare-body .example b { color: #2a4a7f; }
+  .compare-body .example i { color: #5c6bc0; }
+
+  .no-result {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: #999;
+    font-size: 1.1em;
+  }
+
+  .info-section {
+    max-width: 900px;
+    margin: 10px auto 40px;
+    padding: 0 20px;
+  }
+  .info-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    margin-bottom: 16px;
+  }
+  .info-card h3 {
+    color: #2a4a7f;
+    margin-bottom: 10px;
+    font-size: 1.05em;
+  }
+  .info-card p, .info-card ul {
+    font-size: 0.92em;
+    line-height: 1.7;
+    color: #555;
+  }
+  .info-card ul { padding-left: 20px; margin-top: 6px; }
+  .info-card li { margin-bottom: 4px; }
+  .info-card code {
+    background: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.92em;
+  }
+  .info-card .mnemonic {
+    background: #fce4ec;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-weight: 600;
+    color: #c62828;
+    font-size: 0.95em;
+  }
+  .info-card table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  .info-card table td, .info-card table th {
+    padding: 6px 10px;
+    font-size: 0.9em;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+  }
+  .info-card table th { color: #2a4a7f; font-weight: 600; }
+  .signal-pc { color: #2a4a7f; font-weight: 600; }
+  .signal-imp { color: #5c6bc0; font-weight: 600; }
+  .signal-pqp { color: #7b1fa2; font-weight: 600; }
+
+  @media (max-width: 500px) {
+    #results { grid-template-columns: 1fr; padding: 0 10px; }
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switch { padding: 6px 12px; font-size: 0.85em; }
+    .search-area { padding: 0 10px; flex-direction: column; }
+    .search-area input { font-size: 1em; padding: 12px 14px; width: 100%; }
+    .search-area button { padding: 12px 18px; font-size: 0.95em; width: 100%; }
+    .hint { padding: 0 10px; }
+    .verb-info { padding: 0 10px; }
+    .verb-info .badge { font-size: 0.8em; padding: 4px 10px; }
+    .tense-header { padding: 10px 12px; }
+    .tense-header .fr-name { font-size: 0.95em; }
+    .tense-body { padding: 10px 12px; }
+    .tense-body .pronoun { width: 70px; font-size: 0.82em; }
+    .tense-body .verb-form { font-size: 0.9em; }
+    .info-section { padding: 0 10px; }
+    .info-card { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="french.html" class="lang-switch">📖 Портал</a>
+    <a href="french-verbs.html" class="lang-switch">📝 Глаголы</a>
+  </div>
+  <h1>🇫🇷 Французские прошедшие времена</h1>
+  <p>Passé composé, imparfait, plus-que-parfait — с объяснениями на русском</p>
+</header>
+
+<div class="search-area">
+  <input type="text" id="verbInput" placeholder="aller, faire... или по-русски: идти, делать..." autofocus
+    onkeydown="if(event.key==='Enter')search()">
+  <button onclick="search()">Найти</button>
+</div>
+<div class="hint">
+  Попробуйте:
+  <span onclick="tryVerb('aller')">aller</span>,
+  <span onclick="tryVerb('faire')">faire</span>,
+  <span onclick="tryVerb('être')">être</span>,
+  <span onclick="tryVerb('parler')">parler</span>,
+  <span onclick="tryVerb('venir')">venir</span>,
+  <span onclick="tryVerb('se lever')">se lever</span>,
+  <span onclick="tryVerb('prendre')">prendre</span>,
+  <span onclick="tryVerb('finir')">finir</span>
+  | по-русски:
+  <span onclick="tryVerb('идти')">идти</span>,
+  <span onclick="tryVerb('делать')">делать</span>,
+  <span onclick="tryVerb('говорить')">говорить</span>
+</div>
+
+<div class="verb-info" id="verbInfo"></div>
+<div id="results"></div>
+
+<div class="info-section" id="infoSection">
+
+  <div class="info-card">
+    <h3>📘 Passé composé — завершённое действие</h3>
+    <p>
+      Аналог русского совершенного вида: «я сделал», «я пришёл», «я уже поел».<br>
+      Образуется: <code>вспомогательный глагол (avoir/être) в настоящем + participe passé</code>
+    </p>
+    <p style="margin-top:8px"><b>Примеры:</b> J'<b>ai parlé</b> (я поговорил), Elle <b>est partie</b> (она ушла), Nous <b>avons fini</b> (мы закончили).</p>
+  </div>
+
+  <div class="info-card">
+    <h3>📗 Imparfait — незавершённое прошедшее</h3>
+    <p>
+      «Я делал», «бывало, я делал», «я как раз делал, когда...» — описание, привычка, фон, контекст.<br>
+      Образуется: <code>основа (nous-форма présent без -ons) + -ais, -ais, -ait, -ions, -iez, -aient</code>
+    </p>
+    <p style="margin-top:8px"><b>Исключение:</b> глагол <b>être</b> имеет особую основу <b>ét-</b> (j'étais, tu étais...).</p>
+  </div>
+
+  <div class="info-card">
+    <h3>📕 Être vs Avoir — выбор вспомогательного глагола</h3>
+    <p>Большинство глаголов используют <b>avoir</b>. С <b>être</b> спрягаются:</p>
+    <div class="mnemonic">
+      DR MRS VANDERTRAMP:<br>
+      <b>D</b>evenir, <b>R</b>evenir, <b>M</b>onter, <b>R</b>ester, <b>S</b>ortir,
+      <b>V</b>enir, <b>A</b>ller, <b>N</b>aître, <b>D</b>escendre, <b>E</b>ntrer,
+      <b>R</b>etourner, <b>T</b>omber, <b>R</b>entrer, <b>A</b>rriver, <b>M</b>ourir, <b>P</b>artir
+    </div>
+    <p>+ все <b>возвратные</b> (se lever, se coucher, s'habiller...): они тоже используют <b>être</b>.</p>
+  </div>
+
+  <div class="info-card">
+    <h3>📐 Согласование participe passé</h3>
+    <p><b>С être</b> — participe passé согласуется с подлежащим в роде и числе:</p>
+    <table>
+      <tr><th></th><th>Мужской</th><th>Женский</th></tr>
+      <tr><td>Ед.ч.</td><td>il est all<b>é</b></td><td>elle est all<b>ée</b></td></tr>
+      <tr><td>Мн.ч.</td><td>ils sont all<b>és</b></td><td>elles sont all<b>ées</b></td></tr>
+    </table>
+    <p style="margin-top:10px"><b>С avoir</b> — participe passé согласуется с <b>предшествующим прямым дополнением</b> (COD):</p>
+    <ul>
+      <li><code>Les pommes que j'ai achet<b>ées</b></code> — COD (les pommes) стоит перед глаголом</li>
+      <li><code>J'ai acheté des pommes</code> — COD после глагола, согласования нет</li>
+    </ul>
+    <p style="margin-top:10px"><b>Возвратные глаголы</b> — всегда с être, согласование с подлежащим:</p>
+    <ul>
+      <li><code>Elle s'est lavée</code> (она помылась) — согласование с «elle»</li>
+      <li><code>Elles se sont habillées</code> (они оделись)</li>
+    </ul>
+  </div>
+
+  <div class="info-card">
+    <h3>📙 Plus-que-parfait — давнопрошедшее</h3>
+    <p>
+      «Я уже сделал (до того, как произошло другое)» — прошлое до прошлого.<br>
+      Образуется: <code>вспомогательный глагол (avoir/être) в imparfait + participe passé</code>
+    </p>
+    <p style="margin-top:8px"><b>Пример:</b> Quand je suis arrivé, il <b>avait déjà mangé</b> (когда я пришёл, он уже поел).</p>
+  </div>
+
+  <div class="info-card">
+    <h3>🔑 Слова-маркеры для каждого времени</h3>
+    <table>
+      <tr>
+        <th>Время</th>
+        <th>Слова-маркеры</th>
+      </tr>
+      <tr>
+        <td class="signal-pc">Passé composé</td>
+        <td>hier, la semaine dernière, l'année dernière, soudain, tout à coup, une fois, ce jour-là, en 2020</td>
+      </tr>
+      <tr>
+        <td class="signal-imp">Imparfait</td>
+        <td>d'habitude, chaque jour/semaine, souvent, toujours, autrefois, quand j'étais petit, pendant que</td>
+      </tr>
+      <tr>
+        <td class="signal-pqp">Plus-que-parfait</td>
+        <td>déjà, avant (de/que), après que, quand... avait/était déjà</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="info-card">
+    <h3>⚔️ Passé composé vs Imparfait — как выбрать?</h3>
+    <table>
+      <tr><th>Passé composé</th><th>Imparfait</th></tr>
+      <tr><td>Одноразовое завершённое действие</td><td>Повторяющееся/привычное действие</td></tr>
+      <tr><td>Событие, факт</td><td>Описание, фон, контекст</td></tr>
+      <tr><td>Действие с результатом</td><td>Процесс без чёткого конца</td></tr>
+      <tr><td>«Что случилось?»</td><td>«Что происходило?»</td></tr>
+    </table>
+    <p style="margin-top:10px"><b>Классический пример:</b><br>
+      <i style="color:#5c6bc0">Il pleuvait</i> (imparfait — шёл дождь, фон)
+      <i style="color:#2a4a7f">quand je suis sorti</i> (passé composé — я вышел, событие).
+    </p>
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// VERB DATABASE (~60 verbs)
+// ============================================================
+const VERBS = [
+  // === ÊTRE verbs (DR MRS VANDERTRAMP) ===
+  { infinitif: 'aller', ru: 'идти, ходить', groupe: 'irreg', auxiliaire: 'être',
+    participe_passe: 'allé', participe_passe_f: 'allée',
+    imparfait_stem: 'all', pqp: true,
+    present_aux_override: null },
+  { infinitif: 'venir', ru: 'приходить', groupe: 'irreg', auxiliaire: 'être',
+    participe_passe: 'venu', participe_passe_f: 'venue',
+    imparfait_stem: 'ven', pqp: true },
+  { infinitif: 'arriver', ru: 'прибывать, приезжать', groupe: 1, auxiliaire: 'être',
+    participe_passe: 'arrivé', participe_passe_f: 'arrivée',
+    imparfait_stem: 'arriv', pqp: true },
+  { infinitif: 'partir', ru: 'уходить, уезжать', groupe: 'irreg', auxiliaire: 'être',
+    participe_passe: 'parti', participe_passe_f: 'partie',
+    imparfait_stem: 'part', pqp: true },
+  { infinitif: 'entrer', ru: 'входить', groupe: 1, auxiliaire: 'être',
+    participe_passe: 'entré', participe_passe_f: 'entrée',
+    imparfait_stem: 'entr', pqp: false },
+  { infinitif: 'sortir', ru: 'выходить', groupe: 'irreg', auxiliaire: 'être',
+    participe_passe: 'sorti', participe_passe_f: 'sortie',
+    imparfait_stem: 'sort', pqp: false },
+  { infinitif: 'monter', ru: 'подниматься', groupe: 1, auxiliaire: 'être',
+    participe_passe: 'monté', participe_passe_f: 'montée',
+    imparfait_stem: 'mont', pqp: false },
+  { infinitif: 'descendre', ru: 'спускаться', groupe: 3, auxiliaire: 'être',
+    participe_passe: 'descendu', participe_passe_f: 'descendue',
+    imparfait_stem: 'descend', pqp: false },
+  { infinitif: 'naître', ru: 'рождаться', groupe: 'irreg', auxiliaire: 'être',
+    participe_passe: 'né', participe_passe_f: 'née',
+    imparfait_stem: 'naiss', pqp: false },
+  { infinitif: 'mourir', ru: 'умирать', groupe: 'irreg', auxiliaire: 'être',
+    participe_passe: 'mort', participe_passe_f: 'morte',
+    imparfait_stem: 'mour', pqp: false },
+  { infinitif: 'rester', ru: 'оставаться', groupe: 1, auxiliaire: 'être',
+    participe_passe: 'resté', participe_passe_f: 'restée',
+    imparfait_stem: 'rest', pqp: false },
+  { infinitif: 'tomber', ru: 'падать', groupe: 1, auxiliaire: 'être',
+    participe_passe: 'tombé', participe_passe_f: 'tombée',
+    imparfait_stem: 'tomb', pqp: false },
+  { infinitif: 'retourner', ru: 'возвращаться', groupe: 1, auxiliaire: 'être',
+    participe_passe: 'retourné', participe_passe_f: 'retournée',
+    imparfait_stem: 'retourn', pqp: false },
+  { infinitif: 'devenir', ru: 'становиться', groupe: 'irreg', auxiliaire: 'être',
+    participe_passe: 'devenu', participe_passe_f: 'devenue',
+    imparfait_stem: 'deven', pqp: true },
+  { infinitif: 'revenir', ru: 'возвращаться', groupe: 'irreg', auxiliaire: 'être',
+    participe_passe: 'revenu', participe_passe_f: 'revenue',
+    imparfait_stem: 'reven', pqp: false },
+  { infinitif: 'passer', ru: 'проходить, заходить', groupe: 1, auxiliaire: 'être',
+    participe_passe: 'passé', participe_passe_f: 'passée',
+    imparfait_stem: 'pass', pqp: false },
+  { infinitif: 'rentrer', ru: 'возвращаться домой', groupe: 1, auxiliaire: 'être',
+    participe_passe: 'rentré', participe_passe_f: 'rentrée',
+    imparfait_stem: 'rentr', pqp: false },
+
+  // === Reflexive verbs (always être) ===
+  { infinitif: 'se lever', ru: 'вставать', groupe: 1, auxiliaire: 'être', reflexive: true,
+    participe_passe: 'levé', participe_passe_f: 'levée',
+    imparfait_stem: 'lev', pqp: false },
+  { infinitif: 'se coucher', ru: 'ложиться спать', groupe: 1, auxiliaire: 'être', reflexive: true,
+    participe_passe: 'couché', participe_passe_f: 'couchée',
+    imparfait_stem: 'couch', pqp: false },
+  { infinitif: "s'habiller", ru: 'одеваться', groupe: 1, auxiliaire: 'être', reflexive: true,
+    participe_passe: 'habillé', participe_passe_f: 'habillée',
+    imparfait_stem: 'habill', pqp: false },
+  { infinitif: 'se laver', ru: 'мыться', groupe: 1, auxiliaire: 'être', reflexive: true,
+    participe_passe: 'lavé', participe_passe_f: 'lavée',
+    imparfait_stem: 'lav', pqp: false },
+
+  // === Common AVOIR verbs ===
+  { infinitif: 'parler', ru: 'говорить, разговаривать', groupe: 1, auxiliaire: 'avoir',
+    participe_passe: 'parlé', participe_passe_f: null,
+    imparfait_stem: 'parl', pqp: false },
+  { infinitif: 'finir', ru: 'заканчивать', groupe: 2, auxiliaire: 'avoir',
+    participe_passe: 'fini', participe_passe_f: null,
+    imparfait_stem: 'finiss', pqp: false },
+  { infinitif: 'vendre', ru: 'продавать', groupe: 3, auxiliaire: 'avoir',
+    participe_passe: 'vendu', participe_passe_f: null,
+    imparfait_stem: 'vend', pqp: false },
+  { infinitif: 'manger', ru: 'есть, кушать', groupe: 1, auxiliaire: 'avoir',
+    participe_passe: 'mangé', participe_passe_f: null,
+    imparfait_stem: 'mange', pqp: true },
+  { infinitif: 'boire', ru: 'пить', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'bu', participe_passe_f: null,
+    imparfait_stem: 'buv', pqp: false },
+  { infinitif: 'lire', ru: 'читать', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'lu', participe_passe_f: null,
+    imparfait_stem: 'lis', pqp: false },
+  { infinitif: 'écrire', ru: 'писать', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'écrit', participe_passe_f: null,
+    imparfait_stem: 'écriv', pqp: false },
+  { infinitif: 'voir', ru: 'видеть', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'vu', participe_passe_f: null,
+    imparfait_stem: 'voy', pqp: true },
+  { infinitif: 'prendre', ru: 'брать, принимать', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'pris', participe_passe_f: null,
+    imparfait_stem: 'pren', pqp: false },
+  { infinitif: 'mettre', ru: 'ставить, класть', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'mis', participe_passe_f: null,
+    imparfait_stem: 'mett', pqp: false },
+  { infinitif: 'faire', ru: 'делать', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'fait', participe_passe_f: null,
+    imparfait_stem: 'fais', pqp: true },
+  { infinitif: 'dire', ru: 'говорить, сказать', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'dit', participe_passe_f: null,
+    imparfait_stem: 'dis', pqp: false },
+  { infinitif: 'savoir', ru: 'знать', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'su', participe_passe_f: null,
+    imparfait_stem: 'sav', pqp: false },
+  { infinitif: 'pouvoir', ru: 'мочь', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'pu', participe_passe_f: null,
+    imparfait_stem: 'pouv', pqp: false },
+  { infinitif: 'vouloir', ru: 'хотеть', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'voulu', participe_passe_f: null,
+    imparfait_stem: 'voul', pqp: false },
+  { infinitif: 'devoir', ru: 'быть должным', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'dû', participe_passe_f: null,
+    imparfait_stem: 'dev', pqp: true },
+  { infinitif: 'avoir', ru: 'иметь', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'eu', participe_passe_f: null,
+    imparfait_stem: 'av', pqp: true },
+  { infinitif: 'être', ru: 'быть', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'été', participe_passe_f: null,
+    imparfait_stem: 'ét', pqp: true },
+  { infinitif: 'donner', ru: 'давать', groupe: 1, auxiliaire: 'avoir',
+    participe_passe: 'donné', participe_passe_f: null,
+    imparfait_stem: 'donn', pqp: false },
+  { infinitif: 'trouver', ru: 'находить', groupe: 1, auxiliaire: 'avoir',
+    participe_passe: 'trouvé', participe_passe_f: null,
+    imparfait_stem: 'trouv', pqp: false },
+  { infinitif: 'penser', ru: 'думать', groupe: 1, auxiliaire: 'avoir',
+    participe_passe: 'pensé', participe_passe_f: null,
+    imparfait_stem: 'pens', pqp: false },
+  { infinitif: 'aimer', ru: 'любить', groupe: 1, auxiliaire: 'avoir',
+    participe_passe: 'aimé', participe_passe_f: null,
+    imparfait_stem: 'aim', pqp: false },
+  { infinitif: 'acheter', ru: 'покупать', groupe: 1, auxiliaire: 'avoir',
+    participe_passe: 'acheté', participe_passe_f: null,
+    imparfait_stem: 'achet', pqp: false },
+  { infinitif: 'attendre', ru: 'ждать', groupe: 3, auxiliaire: 'avoir',
+    participe_passe: 'attendu', participe_passe_f: null,
+    imparfait_stem: 'attend', pqp: false },
+  { infinitif: 'répondre', ru: 'отвечать', groupe: 3, auxiliaire: 'avoir',
+    participe_passe: 'répondu', participe_passe_f: null,
+    imparfait_stem: 'répond', pqp: false },
+  { infinitif: 'comprendre', ru: 'понимать', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'compris', participe_passe_f: null,
+    imparfait_stem: 'compren', pqp: false },
+  { infinitif: 'apprendre', ru: 'учить, узнавать', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'appris', participe_passe_f: null,
+    imparfait_stem: 'appren', pqp: false },
+  { infinitif: 'connaître', ru: 'знать (быть знакомым)', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'connu', participe_passe_f: null,
+    imparfait_stem: 'connaiss', pqp: false },
+  { infinitif: 'croire', ru: 'верить, полагать', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'cru', participe_passe_f: null,
+    imparfait_stem: 'croy', pqp: false },
+  { infinitif: 'vivre', ru: 'жить', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'vécu', participe_passe_f: null,
+    imparfait_stem: 'viv', pqp: false },
+  { infinitif: 'dormir', ru: 'спать', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'dormi', participe_passe_f: null,
+    imparfait_stem: 'dorm', pqp: false },
+  { infinitif: 'ouvrir', ru: 'открывать', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'ouvert', participe_passe_f: null,
+    imparfait_stem: 'ouvr', pqp: false },
+  { infinitif: 'offrir', ru: 'дарить, предлагать', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'offert', participe_passe_f: null,
+    imparfait_stem: 'offr', pqp: false },
+  { infinitif: 'recevoir', ru: 'получать', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'reçu', participe_passe_f: null,
+    imparfait_stem: 'recev', pqp: false },
+  { infinitif: 'tenir', ru: 'держать', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'tenu', participe_passe_f: null,
+    imparfait_stem: 'ten', pqp: false },
+  { infinitif: 'courir', ru: 'бегать', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'couru', participe_passe_f: null,
+    imparfait_stem: 'cour', pqp: false },
+  { infinitif: 'choisir', ru: 'выбирать', groupe: 2, auxiliaire: 'avoir',
+    participe_passe: 'choisi', participe_passe_f: null,
+    imparfait_stem: 'choisiss', pqp: false },
+  { infinitif: 'réussir', ru: 'удаваться, сдать', groupe: 2, auxiliaire: 'avoir',
+    participe_passe: 'réussi', participe_passe_f: null,
+    imparfait_stem: 'réussiss', pqp: false },
+  { infinitif: 'remplir', ru: 'наполнять', groupe: 2, auxiliaire: 'avoir',
+    participe_passe: 'rempli', participe_passe_f: null,
+    imparfait_stem: 'rempliss', pqp: false },
+  { infinitif: 'conduire', ru: 'вести, водить (машину)', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'conduit', participe_passe_f: null,
+    imparfait_stem: 'conduis', pqp: false },
+  { infinitif: 'perdre', ru: 'терять', groupe: 3, auxiliaire: 'avoir',
+    participe_passe: 'perdu', participe_passe_f: null,
+    imparfait_stem: 'perd', pqp: false },
+  { infinitif: 'suivre', ru: 'следовать', groupe: 'irreg', auxiliaire: 'avoir',
+    participe_passe: 'suivi', participe_passe_f: null,
+    imparfait_stem: 'suiv', pqp: false },
+  { infinitif: 'envoyer', ru: 'отправлять', groupe: 1, auxiliaire: 'avoir',
+    participe_passe: 'envoyé', participe_passe_f: null,
+    imparfait_stem: 'envoy', pqp: false },
+  { infinitif: 'appeler', ru: 'звать, звонить', groupe: 1, auxiliaire: 'avoir',
+    participe_passe: 'appelé', participe_passe_f: null,
+    imparfait_stem: 'appel', pqp: false },
+  { infinitif: 'commencer', ru: 'начинать', groupe: 1, auxiliaire: 'avoir',
+    participe_passe: 'commencé', participe_passe_f: null,
+    imparfait_stem: 'commenç', pqp: false },
+];
+
+// ============================================================
+// CONJUGATION: avoir & être in present + imparfait
+// ============================================================
+const AVOIR_PRESENT = ['ai', 'as', 'a', 'avons', 'avez', 'ont'];
+const ETRE_PRESENT  = ['suis', 'es', 'est', 'sommes', 'êtes', 'sont'];
+const AVOIR_IMPARFAIT = ['avais', 'avais', 'avait', 'avions', 'aviez', 'avaient'];
+const ETRE_IMPARFAIT  = ['étais', 'étais', 'était', 'étions', 'étiez', 'étaient'];
+const IMP_ENDINGS = ['ais', 'ais', 'ait', 'ions', 'iez', 'aient'];
+const PRONOUNS     = ['je', 'tu', 'il / elle', 'nous', 'vous', 'ils / elles'];
+const PRONOUNS_REF = ['je me', 'tu te', 'il / elle se', 'nous nous', 'vous vous', 'ils / elles se'];
+
+// ============================================================
+// HELPER: build conjugations for a verb
+// ============================================================
+function getImparfait(v) {
+  const stem = v.imparfait_stem;
+  return IMP_ENDINGS.map(e => stem + e);
+}
+
+function getPasseCompose(v) {
+  const isEtre = v.auxiliaire === 'être';
+  const aux = isEtre ? ETRE_PRESENT : AVOIR_PRESENT;
+  const pp = v.participe_passe;
+  const ppF = v.participe_passe_f || pp;
+  const ppMs = pp + 's';
+  const ppFs = ppF ? ppF + 's' : pp + 'es';
+
+  if (isEtre) {
+    // agreement with subject
+    return [
+      aux[0] + ' ' + pp,              // je suis allé
+      aux[1] + ' ' + pp,              // tu es allé
+      aux[2] + ' ' + pp + ' <span class="agree-note">/ ' + ppF + '</span>',  // il est allé / elle est allée
+      aux[3] + ' ' + pp + 's',        // nous sommes allés
+      aux[4] + ' ' + pp + 's',        // vous êtes allés
+      aux[5] + ' ' + pp + 's' + ' <span class="agree-note">/ ' + ppFs + '</span>'  // ils sont allés / elles sont allées
+    ];
+  } else {
+    return aux.map(a => a + ' ' + pp);
+  }
+}
+
+function getPlusQueParfait(v) {
+  const isEtre = v.auxiliaire === 'être';
+  const aux = isEtre ? ETRE_IMPARFAIT : AVOIR_IMPARFAIT;
+  const pp = v.participe_passe;
+  const ppF = v.participe_passe_f || pp;
+  const ppMs = pp + 's';
+  const ppFs = ppF ? ppF + 's' : pp + 'es';
+
+  if (isEtre) {
+    return [
+      aux[0] + ' ' + pp,
+      aux[1] + ' ' + pp,
+      aux[2] + ' ' + pp + ' <span class="agree-note">/ ' + ppF + '</span>',
+      aux[3] + ' ' + pp + 's',
+      aux[4] + ' ' + pp + 's',
+      aux[5] + ' ' + pp + 's' + ' <span class="agree-note">/ ' + ppFs + '</span>'
+    ];
+  } else {
+    return aux.map(a => a + ' ' + pp);
+  }
+}
+
+function getPronouns(v) {
+  if (v.reflexive) return PRONOUNS_REF;
+  return PRONOUNS;
+}
+
+function getRefPrefix(v, idx) {
+  if (!v.reflexive) return '';
+  const prefixes = ['me ', 'te ', 'se ', 'nous ', 'vous ', 'se '];
+  return prefixes[idx];
+}
+
+function getPasseComposeReflexive(v) {
+  const aux = ETRE_PRESENT;
+  const pp = v.participe_passe;
+  const ppF = v.participe_passe_f || pp;
+  const ppFs = ppF ? ppF + 's' : pp + 'es';
+  const refPre = ['me ', 'te ', 'se ', 'nous ', 'vous ', 'se '];
+
+  return [
+    refPre[0] + aux[0] + ' ' + pp,
+    refPre[1] + aux[1] + ' ' + pp,
+    refPre[2] + aux[2] + ' ' + pp + ' <span class="agree-note">/ ' + ppF + '</span>',
+    refPre[3] + aux[3] + ' ' + pp + 's',
+    refPre[4] + aux[4] + ' ' + pp + 's',
+    refPre[5] + aux[5] + ' ' + pp + 's' + ' <span class="agree-note">/ ' + ppFs + '</span>'
+  ];
+}
+
+function getPqpReflexive(v) {
+  const aux = ETRE_IMPARFAIT;
+  const pp = v.participe_passe;
+  const ppF = v.participe_passe_f || pp;
+  const ppFs = ppF ? ppF + 's' : pp + 'es';
+  const refPre = ['me ', 'te ', 'se ', 'nous ', 'vous ', 'se '];
+
+  return [
+    refPre[0] + aux[0] + ' ' + pp,
+    refPre[1] + aux[1] + ' ' + pp,
+    refPre[2] + aux[2] + ' ' + pp + ' <span class="agree-note">/ ' + ppF + '</span>',
+    refPre[3] + aux[3] + ' ' + pp + 's',
+    refPre[4] + aux[4] + ' ' + pp + 's',
+    refPre[5] + aux[5] + ' ' + pp + 's' + ' <span class="agree-note">/ ' + ppFs + '</span>'
+  ];
+}
+
+function getImparfaitReflexive(v) {
+  const stem = v.imparfait_stem;
+  const refPre = ['me ', 'te ', 'se ', 'nous ', 'vous ', 'se '];
+  return IMP_ENDINGS.map((e, i) => refPre[i] + stem + e);
+}
+
+// ============================================================
+// BUILD CONJUGATION TABLE HTML
+// ============================================================
+function conjugationTable(forms, pronouns) {
+  let html = '<table>';
+  for (let i = 0; i < 6; i++) {
+    // Handle elision for je + vowel
+    let p = pronouns[i];
+    let f = forms[i];
+    if (i === 0 && /^[aeéèêiîoôuûyhâ]/i.test(f)) {
+      p = p.replace(/^je$/, "j'").replace(/^je me$/, "je m'");
+    }
+    html += `<tr><td class="pronoun">${p}</td><td class="verb-form">${f}</td></tr>`;
+  }
+  html += '</table>';
+  return html;
+}
+
+// ============================================================
+// RENDER RESULTS
+// ============================================================
+function renderVerb(v) {
+  const container = document.getElementById('results');
+  const info = document.getElementById('verbInfo');
+  container.innerHTML = '';
+
+  // Group label
+  let groupLabel = v.groupe === 'irreg' ? 'неправильный' :
+                   v.groupe === 1 ? '1-я группа (-er)' :
+                   v.groupe === 2 ? '2-я группа (-ir)' : '3-я группа (-re)';
+  let auxClass = v.auxiliaire === 'être' ? 'badge-aux-etre' : 'badge-aux-avoir';
+  let auxLabel = v.auxiliaire === 'être' ? 'être' : 'avoir';
+  if (v.reflexive) auxLabel = 'être (возвратный)';
+
+  info.style.display = 'block';
+  info.innerHTML = `
+    <span class="badge badge-group">${groupLabel}</span>
+    <span class="badge ${auxClass}">aux: ${auxLabel}</span>
+    <span class="badge badge-pp">p.p.: ${v.participe_passe}${v.participe_passe_f ? ' / ' + v.participe_passe_f : ''}</span>
+    <span class="badge badge-ru">${v.ru}</span>
+  `;
+
+  const pronouns = v.reflexive ? PRONOUNS_REF : PRONOUNS;
+
+  // 1. Passé composé
+  const pcForms = v.reflexive ? getPasseComposeReflexive(v) : getPasseCompose(v);
+  container.innerHTML += `
+    <div class="tense-card">
+      <div class="tense-header pc">
+        <div class="fr-name">Passé composé</div>
+        <div class="ru-name">Прошедшее составное — «я сделал»</div>
+      </div>
+      <div class="tense-explain">Завершённое действие в прошлом: «J'ai mangé», «Elle est partie»</div>
+      <div class="tense-body">${conjugationTable(pcForms, pronouns)}</div>
+    </div>
+  `;
+
+  // 2. Imparfait
+  const impForms = v.reflexive ? getImparfaitReflexive(v) : getImparfait(v);
+  container.innerHTML += `
+    <div class="tense-card">
+      <div class="tense-header imp">
+        <div class="fr-name">Imparfait</div>
+        <div class="ru-name">Незавершённое прошедшее — «я делал»</div>
+      </div>
+      <div class="tense-explain">Фон, описание, привычка: «Je parlais», «Il faisait beau»</div>
+      <div class="tense-body">${conjugationTable(impForms, pronouns)}</div>
+    </div>
+  `;
+
+  // 3. Plus-que-parfait
+  const pqpForms = v.reflexive ? getPqpReflexive(v) : getPlusQueParfait(v);
+  container.innerHTML += `
+    <div class="tense-card">
+      <div class="tense-header pqp">
+        <div class="fr-name">Plus-que-parfait</div>
+        <div class="ru-name">Давнопрошедшее — «я уже (с)делал»</div>
+      </div>
+      <div class="tense-explain">Прошлое до прошлого: «J'avais déjà mangé quand il est arrivé»</div>
+      <div class="tense-body">${conjugationTable(pqpForms, pronouns)}</div>
+    </div>
+  `;
+
+  // 4. Comparison card
+  const pcJe = v.reflexive
+    ? ((/^[aeéèêiîoôuûyhâ]/i.test(pcForms[0])) ? "je m'" : "je me ") + pcForms[0]
+    : (/^[aeéèêiîoôuûyhâ]/i.test(pcForms[0]) ? "j'" : "je ") + pcForms[0];
+  const impJe = v.reflexive
+    ? ((/^[aeéèêiîoôuûyhâ]/i.test(impForms[0])) ? "je m'" : "je me ") + impForms[0]
+    : (/^[aeéèêiîoôuûyhâ]/i.test(impForms[0]) ? "j'" : "je ") + impForms[0];
+
+  container.innerHTML += `
+    <div class="tense-card">
+      <div class="tense-header compare">
+        <div class="fr-name">Passé composé vs Imparfait</div>
+        <div class="ru-name">Когда какое время?</div>
+      </div>
+      <div class="compare-body">
+        <span class="label-pc">Passé composé</span> — действие завершено, одноразовое событие, результат.<br>
+        <span class="label-imp">Imparfait</span> — описание, фон, привычка, процесс без чёткого конца.<br>
+        <div class="example">
+          <i>Il pleuvait</i> (imparfait — шёл дождь, фон)<br>
+          <b>quand je suis sorti</b> (passé composé — я вышел, событие)
+        </div>
+        <div class="example" style="margin-top:6px">
+          <i>Quand j'étais petit</i> (imparfait — когда я был маленьким, контекст),<br>
+          <i>je jouais</i> (imparfait — я играл, привычка) au football <b>tous les jours</b>.
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Hide info section when showing results
+  document.getElementById('infoSection').style.display = 'none';
+}
+
+// ============================================================
+// SEARCH
+// ============================================================
+function normalize(s) {
+  return s.toLowerCase().trim()
+    .replace(/[éèêë]/g, 'e')
+    .replace(/[àâä]/g, 'a')
+    .replace(/[ùûü]/g, 'u')
+    .replace(/[ïî]/g, 'i')
+    .replace(/[ôö]/g, 'o')
+    .replace(/[ç]/g, 'c')
+    .replace(/[œ]/g, 'oe');
+}
+
+function search() {
+  const raw = document.getElementById('verbInput').value.trim();
+  if (!raw) return;
+
+  const q = normalize(raw);
+  const qOrig = raw.toLowerCase().trim();
+
+  // Try exact match first
+  let found = VERBS.find(v => v.infinitif === qOrig);
+
+  // Try normalized match
+  if (!found) found = VERBS.find(v => normalize(v.infinitif) === q);
+
+  // Try Russian translation match
+  if (!found) found = VERBS.find(v => v.ru.toLowerCase().includes(qOrig));
+
+  // Try partial French match
+  if (!found) found = VERBS.find(v => normalize(v.infinitif).includes(q));
+
+  if (found) {
+    renderVerb(found);
+  } else {
+    document.getElementById('verbInfo').style.display = 'none';
+    document.getElementById('results').innerHTML = `
+      <div class="no-result">
+        Глагол «${raw}» не найден.<br>
+        <span style="font-size:0.85em">Попробуйте ввести инфинитив (parler, aller) или перевод на русском.</span>
+      </div>
+    `;
+    document.getElementById('infoSection').style.display = 'none';
+  }
+}
+
+function tryVerb(v) {
+  document.getElementById('verbInput').value = v;
+  search();
+}
+</script>
+
+</body>
+</html>

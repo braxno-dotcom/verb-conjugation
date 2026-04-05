@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇬🇧</text></svg>">
+<meta name="apple-mobile-web-app-title" content="EN articles">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇬🇧 Английские артикли — A, THE, ∅</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #edf5f0;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #0d4025, #1a5c3a);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  .container {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 20px 20px 60px;
+  }
+
+  /* Section nav */
+  .section-nav {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px 0 10px;
+  }
+  .section-nav a {
+    background: white;
+    color: #1a5c3a;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    transition: background 0.2s, color 0.2s;
+  }
+  .section-nav a:hover { background: #1a5c3a; color: white; }
+
+  /* Cards */
+  .card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    margin-top: 20px;
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 14px 20px;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1em;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+  }
+  .card-header:hover { filter: brightness(0.92); }
+  .card-header .toggle { font-size: 1.2em; transition: transform 0.3s; }
+  .card-header.collapsed .toggle { transform: rotate(-90deg); }
+  .card-body {
+    padding: 20px;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    overflow: hidden;
+  }
+  .card-body.collapsed {
+    max-height: 0 !important;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  /* Color themes for sections */
+  .hdr-blue { background: #2a4a7f; }
+  .hdr-green { background: #1a5c3a; }
+  .hdr-gray { background: #666; }
+  .hdr-teal { background: #1a6b5c; }
+  .hdr-purple { background: #5c3a7f; }
+  .hdr-info { background: #3a6b8c; }
+
+  /* Sub-headers */
+  .sub-header {
+    font-size: 1em;
+    font-weight: 600;
+    margin: 20px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #d6e8dc;
+  }
+  .sub-header:first-child { margin-top: 0; }
+  .sub-blue { color: #2a4a7f; border-color: #c5d4ef; }
+  .sub-green { color: #1a5c3a; border-color: #c5e0cf; }
+  .sub-gray { color: #666; border-color: #ddd; }
+  .sub-teal { color: #1a6b5c; border-color: #c0ddd7; }
+  .sub-purple { color: #5c3a7f; border-color: #d9cce8; }
+
+  .explanation {
+    font-size: 0.92em;
+    color: #555;
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  /* Rule list */
+  .rule-list {
+    list-style: none;
+    margin: 0 0 16px 0;
+    padding: 0;
+  }
+  .rule-list li {
+    position: relative;
+    padding: 10px 14px 10px 42px;
+    margin-bottom: 6px;
+    background: #f8faf9;
+    border-radius: 8px;
+    font-size: 0.93em;
+    line-height: 1.6;
+    border-left: 3px solid #ccc;
+  }
+  .rule-list li .num {
+    position: absolute;
+    left: 12px;
+    top: 10px;
+    font-weight: 700;
+    color: #999;
+    font-size: 0.9em;
+  }
+  .rule-list.blue li { border-left-color: #2a4a7f; }
+  .rule-list.blue li .num { color: #2a4a7f; }
+  .rule-list.green li { border-left-color: #1a5c3a; }
+  .rule-list.green li .num { color: #1a5c3a; }
+  .rule-list.red li { border-left-color: #c0392b; }
+  .rule-list.red li .num { color: #c0392b; }
+  .rule-list.gray li { border-left-color: #888; }
+  .rule-list.gray li .num { color: #888; }
+
+  .en { font-weight: 600; color: #2c2c2c; }
+  .art { color: #c0392b; font-weight: 700; }
+  .strike { text-decoration: line-through; color: #c0392b; opacity: 0.7; }
+  .ru-hint { color: #888; font-size: 0.88em; font-style: italic; }
+
+  /* A vs AN tricky examples table */
+  .tricky-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+    margin: 12px 0 16px;
+  }
+  .tricky-table th {
+    background: #2a4a7f;
+    color: white;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .tricky-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid #eee;
+    line-height: 1.5;
+  }
+  .tricky-table tr:nth-child(even) td { background: #f5f8fc; }
+  .tricky-table .sound { color: #2a4a7f; font-weight: 600; font-style: italic; font-size: 0.88em; }
+
+  /* Comparison table */
+  .cmp-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88em;
+    margin: 12px 0 16px;
+  }
+  .cmp-table th {
+    background: #1a6b5c;
+    color: white;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+  }
+  .cmp-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid #eee;
+    line-height: 1.5;
+    vertical-align: top;
+  }
+  .cmp-table tr:nth-child(even) td { background: #f3f9f7; }
+  .cmp-table .art-cell { font-weight: 700; text-align: center; white-space: nowrap; }
+  .cmp-table .art-a { color: #2a4a7f; }
+  .cmp-table .art-the { color: #1a5c3a; }
+  .cmp-table .art-zero { color: #888; }
+
+  /* Minimal pairs */
+  .pair-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .pair-card {
+    background: #f8faf9;
+    border-radius: 10px;
+    padding: 14px 16px;
+    border-top: 3px solid #ccc;
+  }
+  .pair-card.left { border-top-color: #888; }
+  .pair-card.right { border-top-color: #1a5c3a; }
+  .pair-en { font-size: 1.05em; font-weight: 600; margin-bottom: 4px; }
+  .pair-ru { font-size: 0.88em; color: #888; }
+
+  /* Decision tree */
+  .tree {
+    background: #f0f7f3;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 12px 0 16px;
+    border: 2px solid #c5e0cf;
+  }
+  .tree-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .tree-step:last-child { margin-bottom: 0; }
+  .tree-q {
+    background: #1a5c3a;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.88em;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .tree-arrow {
+    color: #1a5c3a;
+    font-weight: 700;
+    font-size: 1.2em;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .tree-answer {
+    font-size: 0.92em;
+    line-height: 1.6;
+    color: #555;
+  }
+  .tree-result {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.92em;
+  }
+  .tree-result.a { background: #dde4f0; color: #2a4a7f; }
+  .tree-result.the { background: #d6e8dc; color: #1a5c3a; }
+  .tree-result.zero { background: #eee; color: #666; }
+
+  /* Info boxes */
+  .info-box {
+    background: #fff8e1;
+    border-left: 4px solid #f9a825;
+    border-radius: 0 8px 8px 0;
+    padding: 14px 16px;
+    margin: 14px 0;
+    font-size: 0.9em;
+    line-height: 1.6;
+  }
+  .info-box b { color: #e65100; }
+  .tip-box {
+    background: #e8f5e9;
+    border-left: 4px solid #43a047;
+    border-radius: 0 8px 8px 0;
+    padding: 14px 16px;
+    margin: 14px 0;
+    font-size: 0.9em;
+    line-height: 1.6;
+  }
+  .tip-box b { color: #2e7d32; }
+
+  /* Table scroll wrapper */
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switch { padding: 6px 12px; font-size: 0.85em; }
+    .container { padding: 12px 10px 40px; }
+    .section-nav a { padding: 6px 12px; font-size: 0.82em; }
+    .card-header { padding: 12px 14px; font-size: 1em; }
+    .card-body { padding: 14px; }
+    .pair-row { grid-template-columns: 1fr; }
+    .tricky-table, .cmp-table { font-size: 0.82em; }
+    .tricky-table td, .cmp-table td { padding: 7px 8px; }
+    .tricky-table th, .cmp-table th { padding: 8px; }
+    .rule-list li { padding: 8px 10px 8px 36px; font-size: 0.88em; }
+    .rule-list li .num { left: 10px; }
+    .tree { padding: 14px; }
+    .tree-step { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="english.html" class="lang-switch">📖 Портал</a>
+    <a href="english-verbs.html" class="lang-switch">📝 Глаголы</a>
+  </div>
+  <h1>🇬🇧 Английские артикли</h1>
+  <p>A / AN, THE и нулевой артикль — полный справочник</p>
+</header>
+
+<div class="container">
+
+  <div class="section-nav">
+    <a href="#sec-a-an">A / AN</a>
+    <a href="#sec-the">THE</a>
+    <a href="#sec-zero">∅ Нулевой</a>
+    <a href="#sec-compare">Сравнение</a>
+    <a href="#sec-pairs">Мин. пары</a>
+    <a href="#sec-info">Как выбрать</a>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 1: A / AN -->
+  <!-- ============================================================ -->
+  <div class="card" id="sec-a-an">
+    <div class="card-header hdr-blue" onclick="toggleCard(this)">
+      <span>A / AN — Неопределённый артикль</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+
+      <div class="sub-header sub-blue">Когда ставим A / AN</div>
+
+      <ul class="rule-list blue">
+        <li>
+          <span class="num">1.</span>
+          <b>Первое упоминание</b> — предмет упоминается впервые:<br>
+          <span class="en">I saw <span class="art">a</span> dog in the park.</span>
+          <span class="ru-hint">— Я увидел (какую-то) собаку в парке.</span>
+        </li>
+        <li>
+          <span class="num">2.</span>
+          <b>Один из многих (любой)</b> — неважно какой именно:<br>
+          <span class="en">I need <span class="art">a</span> pen.</span>
+          <span class="ru-hint">— Мне нужна (любая) ручка.</span>
+        </li>
+        <li>
+          <span class="num">3.</span>
+          <b>Профессия</b> — после глагола <i>be</i>:<br>
+          <span class="en">She is <span class="art">a</span> doctor. He's <span class="art">an</span> engineer.</span>
+          <span class="ru-hint">— Она врач. Он инженер.</span>
+        </li>
+        <li>
+          <span class="num">4.</span>
+          <b>Восклицания с what</b>:<br>
+          <span class="en">What <span class="art">a</span> beautiful day!</span>
+          <span class="ru-hint">— Какой прекрасный день!</span>
+        </li>
+        <li>
+          <span class="num">5.</span>
+          <b>Частота / измерение</b>:<br>
+          <span class="en">once <span class="art">a</span> week, twice <span class="art">a</span> day, 50 km <span class="art">an</span> hour</span>
+          <span class="ru-hint">— раз в неделю, дважды в день, 50 км в час</span>
+        </li>
+        <li>
+          <span class="num">6.</span>
+          <b>После there is / there are</b>:<br>
+          <span class="en">There is <span class="art">a</span> problem.</span>
+          <span class="ru-hint">— Есть (одна) проблема.</span>
+        </li>
+      </ul>
+
+      <div class="sub-header sub-blue">A или AN? — Правило звука</div>
+
+      <div class="info-box">
+        <b>A</b> перед согласным ЗВУКОМ: a cat, a university (<i>юни...</i>), a European (<i>юро...</i>)<br>
+        <b>AN</b> перед гласным ЗВУКОМ: an apple, an hour (<i>ау...</i>), an honest man (<i>онест...</i>)<br><br>
+        Важно: определяет <b>звук</b>, а не буква! Буква <i>u</i> может читаться как «ю» (= согласный звук)
+        или как «а» (= гласный), буква <i>h</i> может быть немой.
+      </div>
+
+      <div class="sub-header sub-blue">Хитрые примеры (A vs AN)</div>
+
+      <div class="table-wrap">
+      <table class="tricky-table">
+        <thead>
+          <tr><th>Выражение</th><th>Артикль</th><th>Почему</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="en"><span class="art">a</span> uniform</span></td>
+            <td>A</td>
+            <td><span class="sound">/juːnɪfɔːm/</span> — начинается со звука «ю» (согласный)</td>
+          </tr>
+          <tr>
+            <td><span class="en"><span class="art">a</span> useful tool</span></td>
+            <td>A</td>
+            <td><span class="sound">/juːsfl/</span> — «ю»</td>
+          </tr>
+          <tr>
+            <td><span class="en"><span class="art">a</span> university</span></td>
+            <td>A</td>
+            <td><span class="sound">/juːnɪ.../</span> — «ю»</td>
+          </tr>
+          <tr>
+            <td><span class="en"><span class="art">a</span> European country</span></td>
+            <td>A</td>
+            <td><span class="sound">/jʊərə.../</span> — «ю»</td>
+          </tr>
+          <tr>
+            <td><span class="en"><span class="art">an</span> umbrella</span></td>
+            <td>AN</td>
+            <td><span class="sound">/ʌmˈbrelə/</span> — звук «а» (гласный)</td>
+          </tr>
+          <tr>
+            <td><span class="en"><span class="art">an</span> uncle</span></td>
+            <td>AN</td>
+            <td><span class="sound">/ʌŋkl/</span> — звук «а»</td>
+          </tr>
+          <tr>
+            <td><span class="en"><span class="art">an</span> unusual case</span></td>
+            <td>AN</td>
+            <td><span class="sound">/ʌnˈjuːʒuəl/</span> — звук «а»</td>
+          </tr>
+          <tr>
+            <td><span class="en"><span class="art">a</span> one-way street</span></td>
+            <td>A</td>
+            <td><span class="sound">/wʌn.../</span> — начинается со звука «в» (согласный)</td>
+          </tr>
+          <tr>
+            <td><span class="en"><span class="art">a</span> once-in-a-lifetime chance</span></td>
+            <td>A</td>
+            <td><span class="sound">/wʌns.../</span> — «в»</td>
+          </tr>
+          <tr>
+            <td><span class="en"><span class="art">an</span> heir</span></td>
+            <td>AN</td>
+            <td><span class="sound">/eə/</span> — h немая, звук «э»</td>
+          </tr>
+          <tr>
+            <td><span class="en"><span class="art">an</span> hour</span></td>
+            <td>AN</td>
+            <td><span class="sound">/aʊə/</span> — h немая, звук «ау»</td>
+          </tr>
+          <tr>
+            <td><span class="en"><span class="art">an</span> honest man</span></td>
+            <td>AN</td>
+            <td><span class="sound">/ɒnɪst/</span> — h немая, звук «о»</td>
+          </tr>
+          <tr>
+            <td><span class="en"><span class="art">an</span> honour</span></td>
+            <td>AN</td>
+            <td><span class="sound">/ɒnə/</span> — h немая</td>
+          </tr>
+          <tr>
+            <td><span class="en"><span class="art">a</span> hotel</span></td>
+            <td>A</td>
+            <td><span class="sound">/həʊˈtel/</span> — h произносится</td>
+          </tr>
+          <tr>
+            <td><span class="en"><span class="art">a</span> historical event</span></td>
+            <td>A</td>
+            <td><span class="sound">/hɪˈstɒr.../</span> — h произносится</td>
+          </tr>
+          <tr>
+            <td><span class="en"><span class="art">an</span> FBI agent</span></td>
+            <td>AN</td>
+            <td><span class="sound">/ef.biː.aɪ/</span> — буква F читается «эф» (гласный)</td>
+          </tr>
+          <tr>
+            <td><span class="en"><span class="art">an</span> MP</span></td>
+            <td>AN</td>
+            <td><span class="sound">/em.piː/</span> — буква M читается «эм»</td>
+          </tr>
+          <tr>
+            <td><span class="en"><span class="art">an</span> X-ray</span></td>
+            <td>AN</td>
+            <td><span class="sound">/eks.../</span> — буква X читается «экс»</td>
+          </tr>
+          <tr>
+            <td><span class="en"><span class="art">a</span> NASA project</span></td>
+            <td>A</td>
+            <td><span class="sound">/næsə/</span> — аббревиатура читается как слово</td>
+          </tr>
+          <tr>
+            <td><span class="en"><span class="art">a</span> UNESCO site</span></td>
+            <td>A</td>
+            <td><span class="sound">/juːˈneskəʊ/</span> — читается как «юнеско»</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 2: THE -->
+  <!-- ============================================================ -->
+  <div class="card" id="sec-the">
+    <div class="card-header hdr-green" onclick="toggleCard(this)">
+      <span>THE — Определённый артикль</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+
+      <div class="sub-header sub-green">Когда ставим THE</div>
+
+      <ul class="rule-list green">
+        <li>
+          <span class="num">1.</span>
+          <b>Уже упоминалось ранее:</b><br>
+          <span class="en">I saw a dog. <span class="art">The</span> dog was big.</span>
+          <span class="ru-hint">— Я увидел собаку. (Эта) собака была большой.</span>
+        </li>
+        <li>
+          <span class="num">2.</span>
+          <b>Оба знают, о чём речь:</b><br>
+          <span class="en">Can you close <span class="art">the</span> door?</span>
+          <span class="ru-hint">— Закрой дверь. (оба видят какую)</span>
+        </li>
+        <li>
+          <span class="num">3.</span>
+          <b>Единственный в своём роде:</b><br>
+          <span class="en"><span class="art">the</span> sun, <span class="art">the</span> moon, <span class="art">the</span> president</span>
+          <span class="ru-hint">— солнце, луна, президент (нашей страны)</span>
+        </li>
+        <li>
+          <span class="num">4.</span>
+          <b>Превосходная степень:</b><br>
+          <span class="en"><span class="art">the</span> best, <span class="art">the</span> tallest, <span class="art">the</span> most beautiful</span>
+        </li>
+        <li>
+          <span class="num">5.</span>
+          <b>Порядковые числительные:</b><br>
+          <span class="en"><span class="art">the</span> first, <span class="art">the</span> second, <span class="art">the</span> last</span>
+        </li>
+        <li>
+          <span class="num">6.</span>
+          <b>Музыкальные инструменты:</b><br>
+          <span class="en">play <span class="art">the</span> piano, <span class="art">the</span> guitar, <span class="art">the</span> violin</span>
+        </li>
+        <li>
+          <span class="num">7.</span>
+          <b>Страны с plural / Republic / Kingdom:</b><br>
+          <span class="en"><span class="art">the</span> USA, <span class="art">the</span> UK, <span class="art">the</span> Netherlands, <span class="art">the</span> Czech Republic, <span class="art">the</span> Philippines</span>
+        </li>
+        <li>
+          <span class="num">8.</span>
+          <b>Реки, океаны, моря, пустыни, горные цепи:</b><br>
+          <span class="en"><span class="art">the</span> Thames, <span class="art">the</span> Pacific, <span class="art">the</span> Sahara, <span class="art">the</span> Alps, <span class="art">the</span> Mediterranean</span>
+        </li>
+        <li>
+          <span class="num">9.</span>
+          <b>Группы людей (прилагательное как существительное):</b><br>
+          <span class="en"><span class="art">the</span> rich, <span class="art">the</span> elderly, <span class="art">the</span> French, <span class="art">the</span> homeless</span>
+          <span class="ru-hint">— богатые, пожилые, французы, бездомные</span>
+        </li>
+        <li>
+          <span class="num">10.</span>
+          <b>Изобретения / вид в целом:</b><br>
+          <span class="en"><span class="art">The</span> telephone was invented in 1876. <span class="art">The</span> tiger is endangered.</span>
+        </li>
+        <li>
+          <span class="num">11.</span>
+          <b>С "same":</b><br>
+          <span class="en">We go to <span class="art">the</span> same school.</span>
+        </li>
+      </ul>
+
+      <div class="sub-header sub-green" style="color: #c0392b; border-color: #f5c6c0;">Когда НЕ ставим THE (типичные ошибки русскоговорящих)</div>
+
+      <ul class="rule-list red">
+        <li>
+          <span class="num">1.</span>
+          <b>Общие утверждения (мн.ч. / неисч.):</b><br>
+          <span class="en"><span class="strike">the</span> Dogs are loyal. <span class="strike">the</span> Water is important.</span>
+          <span class="ru-hint">— Собаки верные. Вода важна. (в общем смысле)</span>
+        </li>
+        <li>
+          <span class="num">2.</span>
+          <b>Имена людей:</b><br>
+          <span class="en"><span class="strike">the</span> John, <span class="strike">the</span> Dr. Smith</span>
+        </li>
+        <li>
+          <span class="num">3.</span>
+          <b>Большинство стран:</b><br>
+          <span class="en"><span class="strike">the</span> Russia, <span class="strike">the</span> France, <span class="strike">the</span> Germany</span>
+          <span class="ru-hint">— но: the UK, the USA, the Netherlands</span>
+        </li>
+        <li>
+          <span class="num">4.</span>
+          <b>Города:</b><br>
+          <span class="en"><span class="strike">the</span> Moscow, <span class="strike">the</span> London, <span class="strike">the</span> New York</span>
+        </li>
+        <li>
+          <span class="num">5.</span>
+          <b>Языки:</b><br>
+          <span class="en"><span class="strike">the</span> English is spoken worldwide.</span>
+        </li>
+        <li>
+          <span class="num">6.</span>
+          <b>Приёмы пищи:</b><br>
+          <span class="en">I had <span class="strike">the</span> breakfast.</span>
+          <span class="ru-hint">— Я позавтракал.</span>
+        </li>
+        <li>
+          <span class="num">7.</span>
+          <b>Спорт / игры:</b><br>
+          <span class="en">play <span class="strike">the</span> football, play <span class="strike">the</span> chess</span>
+        </li>
+        <li>
+          <span class="num">8.</span>
+          <b>Учебные предметы:</b><br>
+          <span class="en">study <span class="strike">the</span> mathematics</span>
+        </li>
+        <li>
+          <span class="num">9.</span>
+          <b>Дни недели / месяцы:</b><br>
+          <span class="en">on <span class="strike">the</span> Monday, in <span class="strike">the</span> January</span>
+        </li>
+        <li>
+          <span class="num">10.</span>
+          <b>next / last + время:</b><br>
+          <span class="en"><span class="strike">the</span> next week, <span class="strike">the</span> last year</span>
+          <span class="ru-hint">— но: in the last year = за последний год (период)</span>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 3: ZERO ARTICLE -->
+  <!-- ============================================================ -->
+  <div class="card" id="sec-zero">
+    <div class="card-header hdr-gray" onclick="toggleCard(this)">
+      <span>∅ — Нулевой артикль (без артикля)</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+
+      <div class="sub-header sub-gray">Когда артикль не нужен</div>
+
+      <ul class="rule-list gray">
+        <li>
+          <span class="num">1.</span>
+          <b>Общие утверждения (мн.ч. / неисчисл.):</b><br>
+          <span class="en">∅ Life is short. ∅ Money can't buy ∅ happiness.</span>
+          <span class="ru-hint">— Жизнь коротка. Деньги не купят счастье.</span>
+        </li>
+        <li>
+          <span class="num">2.</span>
+          <b>Большинство имён собственных:</b><br>
+          <span class="en">∅ London, ∅ Russia, ∅ Mary, ∅ Mount Everest, ∅ Lake Baikal</span>
+        </li>
+        <li>
+          <span class="num">3.</span>
+          <b>Приёмы пищи:</b><br>
+          <span class="en">have ∅ breakfast, ∅ lunch, ∅ dinner</span>
+          <span class="ru-hint">— но: The breakfast was delicious. (конкретный завтрак)</span>
+        </li>
+        <li>
+          <span class="num">4.</span>
+          <b>Транспорт с by:</b><br>
+          <span class="en">by ∅ bus, by ∅ car, by ∅ plane, by ∅ train</span>
+          <span class="ru-hint">— но: on the bus, in the car (конкретный транспорт)</span>
+        </li>
+        <li>
+          <span class="num">5.</span>
+          <b>Место по функции (абстрактно):</b><br>
+          <span class="en">at ∅ home, at ∅ work, at ∅ school, in ∅ bed, in ∅ prison, go to ∅ church</span>
+
+          <div class="info-box" style="margin-top: 10px;">
+            Сравните: <span class="en">He's in <b>∅</b> prison</span> (он заключённый) vs
+            <span class="en">He's in <b>the</b> prison</span> (он находится в здании тюрьмы, например навещает)
+          </div>
+        </li>
+        <li>
+          <span class="num">6.</span>
+          <b>Спорт:</b><br>
+          <span class="en">play ∅ football, ∅ tennis, ∅ chess</span>
+        </li>
+        <li>
+          <span class="num">7.</span>
+          <b>Языки:</b><br>
+          <span class="en">speak ∅ English, ∅ Russian, ∅ French</span>
+        </li>
+        <li>
+          <span class="num">8.</span>
+          <b>Дни, месяцы, времена года (обычно):</b><br>
+          <span class="en">on ∅ Monday, in ∅ June, in ∅ winter</span>
+          <span class="ru-hint">— но: in the winter of 2020 (конкретная зима)</span>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 4: COMPARISON TABLE -->
+  <!-- ============================================================ -->
+  <div class="card" id="sec-compare">
+    <div class="card-header hdr-teal" onclick="toggleCard(this)">
+      <span>Сравнительная таблица — A / THE / ∅</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+
+      <p class="explanation">Одно и то же существительное — разный артикль в зависимости от контекста.</p>
+
+      <div class="table-wrap">
+      <table class="cmp-table">
+        <thead>
+          <tr><th>Контекст</th><th>Арт.</th><th>Пример</th><th>Почему</th></tr>
+        </thead>
+        <tbody>
+          <!-- dog -->
+          <tr>
+            <td>Любая собака</td>
+            <td class="art-cell art-a">a</td>
+            <td><span class="en">I want <span class="art">a</span> dog.</span></td>
+            <td>одна из многих, неважно какая</td>
+          </tr>
+          <tr>
+            <td>Собака соседа</td>
+            <td class="art-cell art-the">the</td>
+            <td><span class="en"><span class="art">The</span> dog barked all night.</span></td>
+            <td>оба знают какая</td>
+          </tr>
+          <tr>
+            <td>Собаки в целом</td>
+            <td class="art-cell art-zero">∅</td>
+            <td><span class="en">∅ Dogs are loyal.</span></td>
+            <td>общее утверждение, мн.ч.</td>
+          </tr>
+
+          <!-- school -->
+          <tr>
+            <td>Ходить в школу (учиться)</td>
+            <td class="art-cell art-zero">∅</td>
+            <td><span class="en">She goes to ∅ school.</span></td>
+            <td>функция, а не здание</td>
+          </tr>
+          <tr>
+            <td>Конкретная школа</td>
+            <td class="art-cell art-the">the</td>
+            <td><span class="en">I went to <span class="art">the</span> school to pick up my son.</span></td>
+            <td>конкретное здание</td>
+          </tr>
+          <tr>
+            <td>Школа как одна из</td>
+            <td class="art-cell art-a">a</td>
+            <td><span class="en">There's <span class="art">a</span> school near my house.</span></td>
+            <td>первое упоминание</td>
+          </tr>
+
+          <!-- hospital -->
+          <tr>
+            <td>Как пациент (BrE)</td>
+            <td class="art-cell art-zero">∅</td>
+            <td><span class="en">She's in ∅ hospital.</span></td>
+            <td>функция (лечение)</td>
+          </tr>
+          <tr>
+            <td>Как пациент (AmE)</td>
+            <td class="art-cell art-the">the</td>
+            <td><span class="en">She's in <span class="art">the</span> hospital.</span></td>
+            <td>AmE всегда ставит the</td>
+          </tr>
+          <tr>
+            <td>Конкретная больница</td>
+            <td class="art-cell art-the">the</td>
+            <td><span class="en"><span class="art">The</span> hospital on Main St is new.</span></td>
+            <td>конкретная, определённая</td>
+          </tr>
+
+          <!-- work -->
+          <tr>
+            <td>На работе</td>
+            <td class="art-cell art-zero">∅</td>
+            <td><span class="en">He's at ∅ work.</span></td>
+            <td>абстрактная функция</td>
+          </tr>
+
+          <!-- bed -->
+          <tr>
+            <td>Лечь спать</td>
+            <td class="art-cell art-zero">∅</td>
+            <td><span class="en">I go to ∅ bed at 11.</span></td>
+            <td>функция (сон)</td>
+          </tr>
+          <tr>
+            <td>Физическая кровать</td>
+            <td class="art-cell art-the">the</td>
+            <td><span class="en">The cat is on <span class="art">the</span> bed.</span></td>
+            <td>конкретный предмет мебели</td>
+          </tr>
+
+          <!-- church -->
+          <tr>
+            <td>На службу (молиться)</td>
+            <td class="art-cell art-zero">∅</td>
+            <td><span class="en">They go to ∅ church on Sundays.</span></td>
+            <td>функция (религия)</td>
+          </tr>
+          <tr>
+            <td>Здание церкви</td>
+            <td class="art-cell art-the">the</td>
+            <td><span class="en"><span class="art">The</span> church was built in 1850.</span></td>
+            <td>конкретное здание</td>
+          </tr>
+
+          <!-- prison -->
+          <tr>
+            <td>Заключённый</td>
+            <td class="art-cell art-zero">∅</td>
+            <td><span class="en">He's in ∅ prison.</span></td>
+            <td>функция (наказание)</td>
+          </tr>
+          <tr>
+            <td>Навещать в тюрьме</td>
+            <td class="art-cell art-the">the</td>
+            <td><span class="en">I visited him in <span class="art">the</span> prison.</span></td>
+            <td>здание, посещение</td>
+          </tr>
+
+          <!-- breakfast/lunch -->
+          <tr>
+            <td>Завтракать (в целом)</td>
+            <td class="art-cell art-zero">∅</td>
+            <td><span class="en">I had ∅ breakfast at 8.</span></td>
+            <td>приём пищи</td>
+          </tr>
+          <tr>
+            <td>Конкретный завтрак</td>
+            <td class="art-cell art-the">the</td>
+            <td><span class="en"><span class="art">The</span> breakfast was delicious.</span></td>
+            <td>конкретный, о котором оба знают</td>
+          </tr>
+
+          <!-- piano/guitar -->
+          <tr>
+            <td>Играть на инструменте</td>
+            <td class="art-cell art-the">the</td>
+            <td><span class="en">She plays <span class="art">the</span> piano.</span></td>
+            <td>инструмент как навык</td>
+          </tr>
+          <tr>
+            <td>Купить инструмент</td>
+            <td class="art-cell art-a">a</td>
+            <td><span class="en">I bought <span class="art">a</span> guitar.</span></td>
+            <td>один конкретный экземпляр</td>
+          </tr>
+
+          <!-- TV/radio -->
+          <tr>
+            <td>Смотреть ТВ</td>
+            <td class="art-cell art-zero">∅</td>
+            <td><span class="en">I watch ∅ TV every evening.</span></td>
+            <td>абстрактно (вещание)</td>
+          </tr>
+          <tr>
+            <td>Слушать радио</td>
+            <td class="art-cell art-the">the</td>
+            <td><span class="en">I listen to <span class="art">the</span> radio.</span></td>
+            <td>исторически: the radio (единственный приёмник)</td>
+          </tr>
+          <tr>
+            <td>Телевизор как предмет</td>
+            <td class="art-cell art-the">the</td>
+            <td><span class="en">Turn off <span class="art">the</span> TV.</span></td>
+            <td>конкретный предмет в комнате</td>
+          </tr>
+
+          <!-- home -->
+          <tr>
+            <td>Дома / домой</td>
+            <td class="art-cell art-zero">∅</td>
+            <td><span class="en">I'm going ∅ home. I'm at ∅ home.</span></td>
+            <td>всегда без артикля (наречие)</td>
+          </tr>
+
+          <!-- sea -->
+          <tr>
+            <td>В плавании (моряк)</td>
+            <td class="art-cell art-zero">∅</td>
+            <td><span class="en">He's at ∅ sea.</span></td>
+            <td>абстрактно (в море)</td>
+          </tr>
+          <tr>
+            <td>У моря (отдых)</td>
+            <td class="art-cell art-the">the</td>
+            <td><span class="en">We're at <span class="art">the</span> sea.</span></td>
+            <td>конкретное место</td>
+          </tr>
+
+          <!-- mountains -->
+          <tr>
+            <td>Горная цепь</td>
+            <td class="art-cell art-the">the</td>
+            <td><span class="en"><span class="art">The</span> Alps, <span class="art">the</span> Andes</span></td>
+            <td>цепи — всегда the</td>
+          </tr>
+          <tr>
+            <td>Одна гора</td>
+            <td class="art-cell art-zero">∅</td>
+            <td><span class="en">∅ Mount Everest, ∅ Mount Fuji</span></td>
+            <td>имя собственное с Mount</td>
+          </tr>
+
+          <!-- football -->
+          <tr>
+            <td>Играть в спорт</td>
+            <td class="art-cell art-zero">∅</td>
+            <td><span class="en">play ∅ football, ∅ tennis</span></td>
+            <td>спорт — без артикля</td>
+          </tr>
+
+          <!-- languages -->
+          <tr>
+            <td>Говорить на языке</td>
+            <td class="art-cell art-zero">∅</td>
+            <td><span class="en">He speaks ∅ English.</span></td>
+            <td>язык — без артикля</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 5: MINIMAL PAIRS -->
+  <!-- ============================================================ -->
+  <div class="card" id="sec-pairs">
+    <div class="card-header hdr-purple" onclick="toggleCard(this)">
+      <span>Минимальные пары — артикль меняет смысл</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+
+      <p class="explanation">Одна и та же фраза с разным артиклем означает разные вещи:</p>
+
+      <div class="pair-row">
+        <div class="pair-card left">
+          <div class="pair-en">go to ∅ school</div>
+          <div class="pair-ru">ходить в школу (учиться)</div>
+        </div>
+        <div class="pair-card right">
+          <div class="pair-en">go to <b>the</b> school</div>
+          <div class="pair-ru">зайти в здание школы</div>
+        </div>
+      </div>
+
+      <div class="pair-row">
+        <div class="pair-card left">
+          <div class="pair-en">in ∅ hospital</div>
+          <div class="pair-ru">лежать в больнице (пациент)</div>
+        </div>
+        <div class="pair-card right">
+          <div class="pair-en">in <b>the</b> hospital</div>
+          <div class="pair-ru">находиться в здании больницы</div>
+        </div>
+      </div>
+
+      <div class="pair-row">
+        <div class="pair-card left">
+          <div class="pair-en">at ∅ sea</div>
+          <div class="pair-ru">в плавании, в морском рейсе</div>
+        </div>
+        <div class="pair-card right">
+          <div class="pair-en">at <b>the</b> sea</div>
+          <div class="pair-ru">на берегу моря, у моря</div>
+        </div>
+      </div>
+
+      <div class="pair-row">
+        <div class="pair-card left">
+          <div class="pair-en">go to ∅ bed</div>
+          <div class="pair-ru">лечь спать</div>
+        </div>
+        <div class="pair-card right">
+          <div class="pair-en">go to <b>the</b> bed</div>
+          <div class="pair-ru">подойти к кровати (физически)</div>
+        </div>
+      </div>
+
+      <div class="pair-row">
+        <div class="pair-card left">
+          <div class="pair-en">at ∅ table</div>
+          <div class="pair-ru">за обедом, за едой</div>
+        </div>
+        <div class="pair-card right">
+          <div class="pair-en">at <b>the</b> table</div>
+          <div class="pair-ru">за столом (физически сидеть)</div>
+        </div>
+      </div>
+
+      <div class="pair-row">
+        <div class="pair-card left">
+          <div class="pair-en">go to ∅ church</div>
+          <div class="pair-ru">ходить на службу (верующий)</div>
+        </div>
+        <div class="pair-card right">
+          <div class="pair-en">go to <b>the</b> church</div>
+          <div class="pair-ru">пойти в здание церкви (турист)</div>
+        </div>
+      </div>
+
+      <div class="pair-row">
+        <div class="pair-card left">
+          <div class="pair-en">in ∅ prison</div>
+          <div class="pair-ru">сидеть в тюрьме (заключённый)</div>
+        </div>
+        <div class="pair-card right">
+          <div class="pair-en">in <b>the</b> prison</div>
+          <div class="pair-ru">быть в здании тюрьмы (навещать)</div>
+        </div>
+      </div>
+
+      <div class="pair-row">
+        <div class="pair-card left">
+          <div class="pair-en">go to ∅ university</div>
+          <div class="pair-ru">учиться в университете (BrE)</div>
+        </div>
+        <div class="pair-card right">
+          <div class="pair-en">go to <b>the</b> university</div>
+          <div class="pair-ru">пойти в здание университета</div>
+        </div>
+      </div>
+
+      <div class="pair-row">
+        <div class="pair-card left">
+          <div class="pair-en">in ∅ office</div>
+          <div class="pair-ru">занимать должность</div>
+        </div>
+        <div class="pair-card right">
+          <div class="pair-en">in <b>the</b> office</div>
+          <div class="pair-ru">находиться в кабинете</div>
+        </div>
+      </div>
+
+      <div class="pair-row">
+        <div class="pair-card left">
+          <div class="pair-en">∅ next week</div>
+          <div class="pair-ru">на следующей неделе (от сейчас)</div>
+        </div>
+        <div class="pair-card right">
+          <div class="pair-en"><b>the</b> next week</div>
+          <div class="pair-ru">следующая неделя (в повествовании)</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 6: DECISION TREE & INFO -->
+  <!-- ============================================================ -->
+  <div class="card" id="sec-info">
+    <div class="card-header hdr-info" onclick="toggleCard(this)">
+      <span>Как выбрать артикль — алгоритм и советы</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+
+      <div class="sub-header sub-green">Алгоритм выбора артикля</div>
+
+      <div class="tree">
+        <div class="tree-step">
+          <span class="tree-q">Шаг 1</span>
+          <span class="tree-arrow">&rarr;</span>
+          <span class="tree-answer">
+            Это <b>имя собственное</b> (London, Mary, Russia)?
+            Да &rarr; <span class="tree-result zero">∅ без артикля</span>
+            <span class="ru-hint">(кроме the USA, the UK, the Alps...)</span>
+          </span>
+        </div>
+        <div class="tree-step">
+          <span class="tree-q">Шаг 2</span>
+          <span class="tree-arrow">&rarr;</span>
+          <span class="tree-answer">
+            Это <b>общее утверждение</b> (все собаки, вода вообще)?
+            Да &rarr; <span class="tree-result zero">∅ без артикля</span>
+          </span>
+        </div>
+        <div class="tree-step">
+          <span class="tree-q">Шаг 3</span>
+          <span class="tree-arrow">&rarr;</span>
+          <span class="tree-answer">
+            Можно <b>посчитать</b>? Это единичный предмет?
+            Нет (неисчисляемое: water, music, information) &rarr; переходим к шагу 4
+          </span>
+        </div>
+        <div class="tree-step">
+          <span class="tree-q">Шаг 4</span>
+          <span class="tree-arrow">&rarr;</span>
+          <span class="tree-answer">
+            <b>Оба знают</b>, о каком предмете речь? Уже упоминался? Единственный?
+            Да &rarr; <span class="tree-result the">THE</span>
+          </span>
+        </div>
+        <div class="tree-step">
+          <span class="tree-q">Шаг 5</span>
+          <span class="tree-arrow">&rarr;</span>
+          <span class="tree-answer">
+            <b>Первый раз</b> упоминается? Один из многих (неважно какой)?
+            Да &rarr; <span class="tree-result a">A / AN</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="sub-header sub-green">Почему русскоговорящим сложно</div>
+
+      <div class="tip-box">
+        В русском языке <b>артиклей нет</b>. Контекст, который англичане передают через a/the/∅,
+        русские передают порядком слов и интонацией:<br><br>
+        <span class="en">"<span class="art">A</span> man came in."</span> = <i>Вошёл какой-то мужчина.</i> (новая информация в конце)<br>
+        <span class="en">"<span class="art">The</span> man came in."</span> = <i>Мужчина вошёл.</i> (известная информация в начале)<br><br>
+        Когда не знаете, какой артикль — спросите себя: <b>«Мой собеседник знает, о каком именно предмете я говорю?»</b>
+        Если да — <b>the</b>. Если нет — <b>a/an</b>. Если говорите обо всех вообще — <b>ничего</b>.
+      </div>
+
+      <div class="sub-header sub-green" style="color: #c0392b; border-color: #f5c6c0;">Ошибка #1: THE + общее утверждение</div>
+
+      <div class="info-box">
+        Самая частая ошибка русскоговорящих — ставить <b>the</b> перед общими утверждениями:<br><br>
+        <span class="strike">The</span> <span class="en">money is important.</span> &rarr; <span class="en">∅ Money is important.</span><br>
+        <span class="strike">The</span> <span class="en">love is all you need.</span> &rarr; <span class="en">∅ Love is all you need.</span><br>
+        <span class="strike">The</span> <span class="en">children need attention.</span> &rarr; <span class="en">∅ Children need attention.</span> <span class="ru-hint">(все дети)</span><br><br>
+        Запомните: если вы говорите о <b>всех</b> представителях категории или о понятии в целом — артикль <b>не нужен</b>.
+      </div>
+
+      <div class="sub-header sub-green">British vs American English</div>
+
+      <p class="explanation">Некоторые различия в употреблении артиклей:</p>
+
+      <div class="table-wrap">
+      <table class="tricky-table" style="margin-top: 8px;">
+        <thead>
+          <tr>
+            <th>Контекст</th>
+            <th>British English</th>
+            <th>American English</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Пациент в больнице</td>
+            <td><span class="en">in ∅ hospital</span></td>
+            <td><span class="en">in <span class="art">the</span> hospital</span></td>
+          </tr>
+          <tr>
+            <td>Учиться в университете</td>
+            <td><span class="en">at ∅ university</span></td>
+            <td><span class="en">at <span class="art">the</span> university / at ∅ college</span></td>
+          </tr>
+          <tr>
+            <td>Выходные</td>
+            <td><span class="en">at <span class="art">the</span> weekend</span></td>
+            <td><span class="en">on <span class="art">the</span> weekend / on ∅ weekends</span></td>
+          </tr>
+          <tr>
+            <td>Играть на инструменте</td>
+            <td><span class="en">play <span class="art">the</span> piano</span></td>
+            <td><span class="en">play <span class="art">the</span> piano / play ∅ piano</span> <span class="ru-hint">(разг.)</span></td>
+          </tr>
+          <tr>
+            <td>В будущем</td>
+            <td><span class="en">in <span class="art">the</span> future / in ∅ future</span></td>
+            <td><span class="en">in <span class="art">the</span> future</span></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- .container -->
+
+<script>
+function toggleCard(header) {
+  header.classList.toggle('collapsed');
+  const body = header.nextElementSibling;
+  if (body.classList.contains('collapsed')) {
+    body.classList.remove('collapsed');
+    body.style.maxHeight = body.scrollHeight + 'px';
+    setTimeout(() => body.style.maxHeight = 'none', 400);
+  } else {
+    body.style.maxHeight = body.scrollHeight + 'px';
+    requestAnimationFrame(() => {
+      body.style.maxHeight = body.scrollHeight + 'px';
+      requestAnimationFrame(() => {
+        body.classList.add('collapsed');
+        body.style.maxHeight = '0';
+      });
+    });
+  }
+}
+
+// Smooth scroll for section nav
+document.querySelectorAll('.section-nav a').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Ensure the card is expanded
+      const header = target.querySelector('.card-header');
+      if (header && header.classList.contains('collapsed')) {
+        toggleCard(header);
+      }
+    }
+  });
+});
+</script>
+
+</body>
+</html>

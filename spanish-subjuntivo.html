@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇪🇸</text></svg>">
+<meta name="apple-mobile-web-app-title" content="ES subj">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇪🇸 Испанский Subjuntivo</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5eee8;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #8b1a1a, #c0392b);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    max-width: 500px;
+    margin: 24px auto 0;
+    padding: 0 20px;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 13px 20px;
+    font-size: 1.05em;
+    font-weight: 600;
+    border: 2px solid #c0392b;
+    background: white;
+    color: #c0392b;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab-btn:first-child { border-radius: 10px 0 0 10px; }
+  .tab-btn:last-child { border-radius: 0 10px 10px 0; }
+  .tab-btn.active {
+    background: #c0392b;
+    color: white;
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── Triggers tab ── */
+  .triggers-container {
+    max-width: 900px;
+    margin: 20px auto 40px;
+    padding: 0 20px;
+  }
+  .category-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    margin-bottom: 18px;
+  }
+  .category-header {
+    padding: 14px 18px;
+    background: #c0392b;
+    color: white;
+    font-weight: 600;
+    font-size: 1.05em;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+  }
+  .category-header .es-label {
+    font-size: 0.85em;
+    opacity: 0.85;
+    font-weight: 400;
+    margin-left: 8px;
+  }
+  .category-header .toggle-icon {
+    font-size: 0.8em;
+    transition: transform 0.2s;
+  }
+  .category-header.collapsed .toggle-icon {
+    transform: rotate(-90deg);
+  }
+  .category-body { padding: 0; }
+  .category-body.collapsed { display: none; }
+  .trigger-row {
+    padding: 12px 18px;
+    border-bottom: 1px solid #f0f0f0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    align-items: start;
+  }
+  .trigger-row:last-child { border-bottom: none; }
+  .trigger-es {
+    font-weight: 600;
+    color: #8b1a1a;
+    font-size: 0.98em;
+  }
+  .trigger-ru {
+    color: #666;
+    font-size: 0.9em;
+  }
+  .trigger-example {
+    grid-column: 1 / -1;
+    font-style: italic;
+    color: #555;
+    font-size: 0.88em;
+    margin-top: 4px;
+    padding-left: 12px;
+    border-left: 3px solid #e0c8c8;
+  }
+  .trigger-example .subj-form {
+    color: #c0392b;
+    font-weight: 700;
+    font-style: normal;
+  }
+  .note-box {
+    padding: 12px 18px;
+    background: #fff8e1;
+    border-left: 4px solid #ffc107;
+    font-size: 0.88em;
+    color: #7a6100;
+    margin: 0;
+  }
+  .note-box strong { color: #5d4900; }
+
+  /* ── Conjugation tab ── */
+  .search-area {
+    max-width: 600px;
+    margin: 24px auto 10px;
+    padding: 0 20px;
+    display: flex;
+    gap: 10px;
+  }
+  .search-area input {
+    flex: 1;
+    padding: 14px 18px;
+    font-size: 1.15em;
+    border: 2px solid #c8bfb6;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-area input:focus { border-color: #c0392b; }
+  .search-area button {
+    padding: 14px 28px;
+    font-size: 1.05em;
+    background: #c0392b;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .search-area button:hover { background: #8b1a1a; }
+  .hint {
+    max-width: 600px;
+    margin: 8px auto 0;
+    padding: 0 20px;
+    font-size: 0.85em;
+    color: #888;
+  }
+  .hint span { cursor: pointer; color: #c0392b; text-decoration: underline; }
+  .hint span:hover { color: #8b1a1a; }
+
+  .verb-info {
+    max-width: 900px;
+    margin: 18px auto 8px;
+    padding: 0 20px;
+    display: none;
+  }
+  .verb-info .badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 600;
+    margin-right: 8px;
+  }
+  .badge-reg { background: #e8f5e9; color: #2e7d32; }
+  .badge-irreg { background: #fce4ec; color: #880e4f; }
+
+  .conj-tables {
+    max-width: 900px;
+    margin: 16px auto 10px;
+    padding: 0 20px;
+    display: none;
+  }
+  .conj-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .conj-card-inner {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .conj-header {
+    padding: 14px 18px;
+    background: #c0392b;
+    color: white;
+    font-weight: 600;
+    font-size: 1.05em;
+  }
+  .conj-header-alt {
+    padding: 14px 18px;
+    background: #8b1a1a;
+    color: white;
+    font-weight: 600;
+    font-size: 1.05em;
+  }
+  .conj-body { padding: 14px 18px; }
+  .conj-body table { width: 100%; }
+  .conj-body td { padding: 5px 0; font-size: 0.98em; }
+  .conj-body .pronoun {
+    color: #888;
+    width: 80px;
+    font-size: 0.92em;
+  }
+  .conj-body .verb-form {
+    font-weight: 600;
+    color: #8b1a1a;
+  }
+  .conj-body .alt-form {
+    color: #999;
+    font-size: 0.85em;
+    font-style: italic;
+    padding-left: 6px;
+  }
+  .conj-example {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: #fdf5f0;
+    border-radius: 8px;
+    font-size: 0.92em;
+    color: #555;
+    font-style: italic;
+    border-left: 3px solid #c0392b;
+  }
+  .conj-example .subj-form {
+    color: #c0392b;
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  /* ── Info section ── */
+  .info-section {
+    max-width: 900px;
+    margin: 30px auto 40px;
+    padding: 0 20px;
+  }
+  .info-card {
+    background: white;
+    border-radius: 12px;
+    padding: 22px 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    margin-bottom: 16px;
+  }
+  .info-card h3 {
+    font-size: 1.05em;
+    color: #8b1a1a;
+    margin-bottom: 10px;
+  }
+  .info-card p, .info-card li {
+    font-size: 0.92em;
+    color: #555;
+    line-height: 1.65;
+  }
+  .info-card ul { padding-left: 20px; }
+  .info-card li { margin-bottom: 4px; }
+  .info-card code {
+    background: #f5eee8;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-weight: 600;
+    color: #8b1a1a;
+    font-size: 0.95em;
+  }
+  .info-card .warning {
+    color: #c62828;
+    font-weight: 600;
+  }
+  .info-card .ok {
+    color: #2e7d32;
+    font-weight: 600;
+  }
+
+  /* ── Mobile ── */
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switches { gap: 6px; }
+    .lang-switch { padding: 6px 12px; font-size: 0.85em; }
+    .tabs { padding: 0 10px; margin-top: 18px; }
+    .tab-btn { padding: 11px 10px; font-size: 0.92em; }
+    .triggers-container { padding: 0 10px; }
+    .trigger-row { grid-template-columns: 1fr; padding: 10px 14px; }
+    .trigger-ru { margin-top: 2px; }
+    .category-header { padding: 12px 14px; font-size: 0.95em; }
+    .search-area { padding: 0 10px; flex-direction: column; }
+    .search-area input { font-size: 1em; padding: 12px 14px; width: 100%; }
+    .search-area button { padding: 12px 18px; font-size: 0.95em; width: 100%; }
+    .hint { padding: 0 10px; }
+    .verb-info { padding: 0 10px; }
+    .conj-tables { padding: 0 10px; }
+    .conj-grid { grid-template-columns: 1fr; }
+    .conj-body .pronoun { width: 70px; font-size: 0.85em; }
+    .info-section { padding: 0 10px; }
+    .info-card { padding: 16px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="spanish.html" class="lang-switch">📖 Портал</a>
+    <a href="spanish-verbs.html" class="lang-switch">📝 Глаголы</a>
+  </div>
+  <h1>🇪🇸 Subjuntivo (сослагательное)</h1>
+  <p>Триггеры и спряжение испанского субхунтиво</p>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('triggers')">Триггеры</button>
+  <button class="tab-btn" onclick="switchTab('conjugation')">Спряжение</button>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- TAB 1: TRIGGERS                            -->
+<!-- ═══════════════════════════════════════════ -->
+<div id="tab-triggers" class="tab-content active">
+  <div class="triggers-container" id="triggers-list"></div>
+
+  <div class="info-section">
+    <div class="info-card">
+      <h3>Когда subjuntivo НЕ нужен: один субъект — инфинитив</h3>
+      <p>Если подлежащее главного и придаточного предложения совпадает, используется <strong>инфинитив</strong>, а не subjuntivo:</p>
+      <ul>
+        <li><code>Quiero ir.</code> — Я хочу пойти. <span class="ok">✓ правильно</span></li>
+        <li><del><code>Quiero que yo vaya.</code></del> — <span class="warning">✗ неправильно</span></li>
+        <li><code>Me alegro de estar aquí.</code> — Я рад быть здесь. <span class="ok">✓ правильно</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- TAB 2: CONJUGATION                         -->
+<!-- ═══════════════════════════════════════════ -->
+<div id="tab-conjugation" class="tab-content">
+  <div class="search-area">
+    <input type="text" id="verb-input" placeholder="Введите глагол..." autocomplete="off">
+    <button onclick="lookupVerb()">Найти</button>
+  </div>
+  <div class="hint">
+    Например: <span onclick="fillVerb('ser')">ser</span>,
+    <span onclick="fillVerb('estar')">estar</span>,
+    <span onclick="fillVerb('ir')">ir</span>,
+    <span onclick="fillVerb('haber')">haber</span>,
+    <span onclick="fillVerb('tener')">tener</span>,
+    <span onclick="fillVerb('hacer')">hacer</span>,
+    <span onclick="fillVerb('poder')">poder</span>,
+    <span onclick="fillVerb('querer')">querer</span>,
+    <span onclick="fillVerb('decir')">decir</span>,
+    <span onclick="fillVerb('dormir')">dormir</span>
+  </div>
+
+  <div class="verb-info" id="verb-info"></div>
+  <div class="conj-tables" id="conj-tables">
+    <div class="conj-grid">
+      <div class="conj-card-inner">
+        <div class="conj-header">Presente de subjuntivo</div>
+        <div class="conj-body" id="conj-presente"></div>
+      </div>
+      <div class="conj-card-inner">
+        <div class="conj-header-alt">Imperfecto de subjuntivo</div>
+        <div class="conj-body" id="conj-imperfecto"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-section">
+    <div class="info-card">
+      <h3>Образование presente de subjuntivo</h3>
+      <p>Берём форму <strong>yo</strong> presente de indicativo, убираем <code>-o</code> и добавляем «противоположные» окончания:</p>
+      <ul>
+        <li>Глаголы на <code>-ar</code>: <code>-e, -es, -e, -emos, -éis, -en</code></li>
+        <li>Глаголы на <code>-er / -ir</code>: <code>-a, -as, -a, -amos, -áis, -an</code></li>
+      </ul>
+      <p style="margin-top:8px;">Пример: <code>hablar</code> → yo habl<strong>o</strong> → основа <code>habl-</code> → que yo habl<strong>e</strong>, que nosotros habl<strong>emos</strong></p>
+    </div>
+    <div class="info-card">
+      <h3>Образование imperfecto de subjuntivo</h3>
+      <p>Берём форму <strong>3-го лица мн. ч. pretérito indefinido</strong> (ellos/ellas), убираем <code>-ron</code> и добавляем окончания:</p>
+      <ul>
+        <li>Форма на <code>-ra</code>: <code>-ra, -ras, -ra, -ramos, -rais, -ran</code> (более распространённая)</li>
+        <li>Форма на <code>-se</code>: <code>-se, -ses, -se, -semos, -seis, -sen</code> (альтернативная)</li>
+      </ul>
+      <p style="margin-top:8px;">Пример: <code>hablar</code> → ellos habla<strong>ron</strong> → основа <code>habla-</code> → que yo habla<strong>ra</strong> / habla<strong>se</strong></p>
+    </div>
+    <div class="info-card">
+      <h3>Когда используется imperfecto de subjuntivo?</h3>
+      <ul>
+        <li>После триггера в <strong>прошедшем времени</strong>: <code>Quería que <strong>vinieras</strong>.</code> — Я хотел, чтобы ты пришёл.</li>
+        <li>Условные предложения: <code>Si <strong>tuviera</strong> dinero, viajaría.</code> — Если бы у меня были деньги, я бы путешествовал.</li>
+        <li><code>Como si</code> (как будто): <code>Habla como si <strong>supiera</strong> todo.</code> — Говорит, как будто всё знает.</li>
+        <li>Вежливые просьбы: <code><strong>Quisiera</strong> un café.</code> — Я бы хотел кофе.</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3>Subjuntivo vs Indicativo — ключевое отличие</h3>
+      <p><strong>Indicativo</strong> описывает факты и реальность. <strong>Subjuntivo</strong> выражает субъективность: желания, сомнения, эмоции, необходимость.</p>
+      <ul>
+        <li><code>Creo que <strong>tiene</strong> razón.</code> — Indicativo (я так считаю = факт для меня)</li>
+        <li><code>No creo que <strong>tenga</strong> razón.</code> — Subjuntivo (сомнение)</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3>Правило «cuando» — будущее время</h3>
+      <p>Союзы времени (<code>cuando</code>, <code>en cuanto</code>, <code>tan pronto como</code>, <code>hasta que</code>) требуют subjuntivo, когда речь идёт о <strong>будущем</strong>, и indicativo — о <strong>прошлом/привычном</strong>:</p>
+      <ul>
+        <li><code>Cuando <strong>llegue</strong>, te llamo.</code> — Когда приду (будущее) → subjuntivo</li>
+        <li><code>Cuando <strong>llegaba</strong>, siempre me llamaba.</code> — Когда приходил (привычное) → indicativo</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3>Ojalá — два значения</h3>
+      <ul>
+        <li><code>Ojalá</code> + <strong>presente de subjuntivo</strong> = пожелание (реальное): <code>Ojalá <strong>venga</strong>.</code> — Хоть бы он пришёл.</li>
+        <li><code>Ojalá</code> + <strong>imperfecto de subjuntivo</strong> = нереальное желание: <code>Ojalá <strong>pudiera</strong> volar.</code> — Если бы я мог летать...</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3>Частые ошибки</h3>
+      <ul>
+        <li><span class="warning">✗</span> <code>Espero que viene.</code> → <span class="ok">✓</span> <code>Espero que <strong>venga</strong>.</code> (esperar = надеяться → subjuntivo! В отличие от фр. espérer)</li>
+        <li><span class="warning">✗</span> <code>Quiero que yo vaya.</code> → <span class="ok">✓</span> <code>Quiero ir.</code> (один субъект → инфинитив)</li>
+        <li><span class="warning">✗</span> <code>Cuando vendrá...</code> → <span class="ok">✓</span> <code>Cuando <strong>venga</strong>...</code> (будущее после cuando → subjuntivo, не будущее indicativo!)</li>
+        <li><span class="warning">✗</span> <code>No creo que tiene razón.</code> → <span class="ok">✓</span> <code>No creo que <strong>tenga</strong> razón.</code> (отрицание → subjuntivo)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// TRIGGERS DATA
+// ═══════════════════════════════════════════
+const triggerCategories = [
+  {
+    ru: "Воля / просьба",
+    es: "Voluntad",
+    triggers: [
+      { expr: "quiero que", ru: "я хочу, чтобы", ex: "Quiero que <s>vengas</s> conmigo." },
+      { expr: "deseo que", ru: "я желаю, чтобы", ex: "Deseo que <s>seas</s> feliz." },
+      { expr: "prefiero que", ru: "я предпочитаю, чтобы", ex: "Prefiero que <s>hables</s> en español." },
+      { expr: "te pido que", ru: "я прошу тебя, чтобы", ex: "Te pido que me <s>ayudes</s>." },
+      { expr: "te ruego que", ru: "я умоляю тебя, чтобы", ex: "Te ruego que me <s>escuches</s>." },
+      { expr: "exijo que", ru: "я требую, чтобы", ex: "Exijo que <s>digas</s> la verdad." },
+      { expr: "necesito que", ru: "мне нужно, чтобы", ex: "Necesito que me <s>hagas</s> un favor." },
+      { expr: "espero que", ru: "я надеюсь, что", ex: "Espero que <s>tengas</s> un buen día." },
+      { expr: "me gustaría que", ru: "я хотел(а) бы, чтобы", ex: "Me gustaría que <s>vinieras</s> a la fiesta." },
+      { expr: "ojalá (que)", ru: "хоть бы, дай бог", ex: "Ojalá que <s>llueva</s> mañana." },
+      { expr: "sugiero que", ru: "я предлагаю, чтобы", ex: "Sugiero que <s>hablemos</s> con él." },
+      { expr: "propongo que", ru: "я предлагаю, чтобы", ex: "Propongo que <s>hagamos</s> una pausa." },
+      { expr: "recomiendo que", ru: "я рекомендую, чтобы", ex: "Recomiendo que <s>leas</s> este libro." },
+      { expr: "prohibo que", ru: "я запрещаю, чтобы", ex: "Prohibo que <s>salgan</s> de aquí." },
+      { expr: "permito que", ru: "я разрешаю, чтобы", ex: "No permito que <s>fumes</s> aquí." }
+    ],
+    note: "esperar (надеяться) → subjuntivo! В отличие от французского espérer, которое требует indicatif."
+  },
+  {
+    ru: "Эмоции",
+    es: "Emociones",
+    triggers: [
+      { expr: "me alegra que", ru: "мне радостно, что", ex: "Me alegra que <s>estés</s> aquí." },
+      { expr: "me encanta que", ru: "мне очень нравится, что", ex: "Me encanta que <s>cocines</s> tan bien." },
+      { expr: "me molesta que", ru: "мне мешает / раздражает, что", ex: "Me molesta que <s>llegues</s> tarde." },
+      { expr: "me sorprende que", ru: "мне удивительно, что", ex: "Me sorprende que no <s>sepa</s> nada." },
+      { expr: "tengo miedo de que", ru: "я боюсь, что", ex: "Tengo miedo de que <s>pierda</s> el trabajo." },
+      { expr: "temo que", ru: "я опасаюсь, что", ex: "Temo que <s>sea</s> demasiado tarde." },
+      { expr: "es una lástima que", ru: "жаль, что", ex: "Es una lástima que no <s>puedas</s> venir." },
+      { expr: "es una pena que", ru: "жаль, что", ex: "Es una pena que <s>haga</s> mal tiempo." },
+      { expr: "siento que", ru: "мне жаль, что (= I'm sorry)", ex: "Siento que <s>tengas</s> que irte." },
+      { expr: "me preocupa que", ru: "мне беспокоит, что", ex: "Me preocupa que no <s>estudie</s>." },
+      { expr: "me da igual que", ru: "мне всё равно, что", ex: "Me da igual que <s>venga</s> o no." }
+    ]
+  },
+  {
+    ru: "Сомнение / отрицание",
+    es: "Duda / Negación",
+    triggers: [
+      { expr: "dudo que", ru: "я сомневаюсь, что", ex: "Dudo que <s>sepa</s> la respuesta." },
+      { expr: "no creo que", ru: "я не думаю, что", ex: "No creo que <s>tenga</s> razón." },
+      { expr: "no pienso que", ru: "я не считаю, что", ex: "No pienso que <s>sea</s> verdad." },
+      { expr: "no es seguro que", ru: "не факт, что", ex: "No es seguro que <s>venga</s> mañana." },
+      { expr: "no es cierto que", ru: "неправда, что", ex: "No es cierto que <s>haya</s> dicho eso." },
+      { expr: "es posible que", ru: "возможно, что", ex: "Es posible que <s>llueva</s> esta tarde." },
+      { expr: "es probable que", ru: "вероятно, что", ex: "Es probable que <s>lleguen</s> tarde." },
+      { expr: "puede que", ru: "может быть, что", ex: "Puede que <s>tenga</s> razón." },
+      { expr: "no es verdad que", ru: "неправда, что", ex: "No es verdad que yo <s>haya</s> mentido." }
+    ],
+    note: "creo que / pienso que (в утвердительной форме) → INDICATIVO! Creo que tiene razón."
+  },
+  {
+    ru: "Союзы",
+    es: "Conjunciones",
+    triggers: [
+      { expr: "para que", ru: "чтобы (цель)", ex: "Hablo despacio para que me <s>entiendas</s>." },
+      { expr: "antes de que", ru: "до того как", ex: "Antes de que <s>salgas</s>, cierra la ventana." },
+      { expr: "sin que", ru: "без того чтобы", ex: "Se fue sin que yo lo <s>supiera</s>." },
+      { expr: "a menos que", ru: "если только не", ex: "Iré, a menos que <s>llueva</s>." },
+      { expr: "salvo que", ru: "если только не", ex: "Te espero, salvo que <s>tengas</s> otros planes." },
+      { expr: "con tal de que", ru: "при условии, что", ex: "Te ayudo con tal de que me <s>pagues</s>." },
+      { expr: "siempre que", ru: "при условии, что; всегда когда", ex: "Puedes ir, siempre que <s>vuelvas</s> temprano." },
+      { expr: "aunque", ru: "хотя (гипотетическое!)", ex: "Aunque <s>llueva</s>, saldré. (даже если пойдёт дождь)" },
+      { expr: "hasta que", ru: "до тех пор пока (о будущем)", ex: "Espera hasta que <s>llegue</s> el tren." },
+      { expr: "cuando", ru: "когда (о будущем!)", ex: "Cuando <s>llegues</s>, llámame." },
+      { expr: "en cuanto", ru: "как только (о будущем)", ex: "En cuanto <s>pueda</s>, te escribo." },
+      { expr: "tan pronto como", ru: "как только (о будущем)", ex: "Tan pronto como <s>termine</s>, te aviso." }
+    ],
+    note: "aunque + indicativo = «хотя» (факт): Aunque llueve, salgo. aunque + subjuntivo = «даже если» (гипотеза): Aunque llueva, saldré."
+  },
+  {
+    ru: "Безличные конструкции",
+    es: "Construcciones impersonales",
+    triggers: [
+      { expr: "es necesario que", ru: "необходимо, чтобы", ex: "Es necesario que <s>estudies</s> más." },
+      { expr: "es importante que", ru: "важно, чтобы", ex: "Es importante que <s>sepas</s> la verdad." },
+      { expr: "es mejor que", ru: "лучше, чтобы", ex: "Es mejor que te <s>vayas</s> ahora." },
+      { expr: "es posible que", ru: "возможно, что", ex: "Es posible que no <s>venga</s>." },
+      { expr: "es raro que", ru: "странно, что", ex: "Es raro que no <s>haya</s> llamado." },
+      { expr: "es normal que", ru: "нормально, что", ex: "Es normal que <s>tengas</s> miedo." },
+      { expr: "es increíble que", ru: "невероятно, что", ex: "Es increíble que <s>hayan</s> ganado." },
+      { expr: "es bueno que", ru: "хорошо, что", ex: "Es bueno que <s>hagas</s> ejercicio." },
+      { expr: "es malo que", ru: "плохо, что", ex: "Es malo que no <s>duermas</s> bien." },
+      { expr: "hace falta que", ru: "нужно, чтобы", ex: "Hace falta que <s>hablemos</s>." },
+      { expr: "el hecho de que", ru: "тот факт, что", ex: "El hecho de que <s>esté</s> aquí me alegra." }
+    ]
+  },
+  {
+    ru: "Относительные придаточные",
+    es: "Oraciones de relativo",
+    triggers: [
+      { expr: "busco a alguien que...", ru: "ищу кого-то, кто... (не знаю, существует ли)", ex: "Busco a alguien que <s>hable</s> ruso." },
+      { expr: "quiero un(a) ... que...", ru: "хочу ..., который... (неизвестный)", ex: "Quiero un libro que <s>tenga</s> fotos." },
+      { expr: "no hay nadie que...", ru: "нет никого, кто...", ex: "No hay nadie que <s>sepa</s> la respuesta." },
+      { expr: "no conozco a nadie que...", ru: "я не знаю никого, кто...", ex: "No conozco a nadie que <s>pueda</s> ayudarte." },
+      { expr: "¿hay alguien que...?", ru: "есть кто-нибудь, кто...? (не знаю)", ex: "¿Hay alguien que <s>tenga</s> un bolígrafo?" },
+      { expr: "necesito algo que...", ru: "мне нужно что-то, что...", ex: "Necesito algo que <s>funcione</s> bien." }
+    ],
+    note: "Если объект известен / существует → indicativo: Conozco a alguien que habla ruso. (я знаю конкретного человека)"
+  }
+];
+
+// ═══════════════════════════════════════════
+// VERB DATABASE
+// ═══════════════════════════════════════════
+const verbs = {
+  "hablar": {
+    ru: "говорить", type: "regular",
+    pres: ["hable","hables","hable","hablemos","habléis","hablen"],
+    imp_ra: ["hablara","hablaras","hablara","habláramos","hablarais","hablaran"],
+    imp_se: ["hablase","hablases","hablase","hablásemos","hablaseis","hablasen"],
+    ex_pres: "Quiero que <s>hables</s> más despacio.",
+    ex_imp: "Quería que <s>hablaras</s> con él."
+  },
+  "comer": {
+    ru: "есть", type: "regular",
+    pres: ["coma","comas","coma","comamos","comáis","coman"],
+    imp_ra: ["comiera","comieras","comiera","comiéramos","comierais","comieran"],
+    imp_se: ["comiese","comieses","comiese","comiésemos","comieseis","comiesen"],
+    ex_pres: "Es importante que <s>comas</s> bien.",
+    ex_imp: "Quería que <s>comieras</s> más verduras."
+  },
+  "vivir": {
+    ru: "жить", type: "regular",
+    pres: ["viva","vivas","viva","vivamos","viváis","vivan"],
+    imp_ra: ["viviera","vivieras","viviera","viviéramos","vivierais","vivieran"],
+    imp_se: ["viviese","vivieses","viviese","viviésemos","vivieseis","viviesen"],
+    ex_pres: "Espero que <s>vivas</s> muchos años.",
+    ex_imp: "Ojalá <s>viviera</s> en España."
+  },
+  "ser": {
+    ru: "быть (характеристика)", type: "irregular",
+    pres: ["sea","seas","sea","seamos","seáis","sean"],
+    imp_ra: ["fuera","fueras","fuera","fuéramos","fuerais","fueran"],
+    imp_se: ["fuese","fueses","fuese","fuésemos","fueseis","fuesen"],
+    ex_pres: "Espero que <s>sea</s> verdad.",
+    ex_imp: "Si <s>fuera</s> rico, viajaría por el mundo."
+  },
+  "estar": {
+    ru: "быть (состояние, место)", type: "irregular",
+    pres: ["esté","estés","esté","estemos","estéis","estén"],
+    imp_ra: ["estuviera","estuvieras","estuviera","estuviéramos","estuvierais","estuvieran"],
+    imp_se: ["estuviese","estuvieses","estuviese","estuviésemos","estuvieseis","estuviesen"],
+    ex_pres: "Me alegra que <s>estés</s> aquí.",
+    ex_imp: "Ojalá <s>estuviera</s> contigo ahora."
+  },
+  "ir": {
+    ru: "идти, ехать", type: "irregular",
+    pres: ["vaya","vayas","vaya","vayamos","vayáis","vayan"],
+    imp_ra: ["fuera","fueras","fuera","fuéramos","fuerais","fueran"],
+    imp_se: ["fuese","fueses","fuese","fuésemos","fueseis","fuesen"],
+    ex_pres: "Quiero que <s>vayas</s> al médico.",
+    ex_imp: "Me pidió que <s>fuera</s> con él."
+  },
+  "haber": {
+    ru: "иметь (вспомогательный)", type: "irregular",
+    pres: ["haya","hayas","haya","hayamos","hayáis","hayan"],
+    imp_ra: ["hubiera","hubieras","hubiera","hubiéramos","hubierais","hubieran"],
+    imp_se: ["hubiese","hubieses","hubiese","hubiésemos","hubieseis","hubiesen"],
+    ex_pres: "Es posible que <s>haya</s> un problema.",
+    ex_imp: "Si lo <s>hubiera</s> sabido, habría venido."
+  },
+  "saber": {
+    ru: "знать", type: "irregular",
+    pres: ["sepa","sepas","sepa","sepamos","sepáis","sepan"],
+    imp_ra: ["supiera","supieras","supiera","supiéramos","supierais","supieran"],
+    imp_se: ["supiese","supieses","supiese","supiésemos","supieseis","supiesen"],
+    ex_pres: "Dudo que <s>sepa</s> la respuesta.",
+    ex_imp: "Si <s>supiera</s> la verdad, te la diría."
+  },
+  "dar": {
+    ru: "давать", type: "irregular",
+    pres: ["dé","des","dé","demos","deis","den"],
+    imp_ra: ["diera","dieras","diera","diéramos","dierais","dieran"],
+    imp_se: ["diese","dieses","diese","diésemos","dieseis","diesen"],
+    ex_pres: "Espero que me <s>des</s> una oportunidad.",
+    ex_imp: "Le pedí que me <s>diera</s> más tiempo."
+  },
+  "hacer": {
+    ru: "делать", type: "irregular",
+    pres: ["haga","hagas","haga","hagamos","hagáis","hagan"],
+    imp_ra: ["hiciera","hicieras","hiciera","hiciéramos","hicierais","hicieran"],
+    imp_se: ["hiciese","hicieses","hiciese","hiciésemos","hicieseis","hiciesen"],
+    ex_pres: "Necesito que <s>hagas</s> tu tarea.",
+    ex_imp: "Quería que <s>hicieras</s> un esfuerzo."
+  },
+  "tener": {
+    ru: "иметь", type: "irregular",
+    pres: ["tenga","tengas","tenga","tengamos","tengáis","tengan"],
+    imp_ra: ["tuviera","tuvieras","tuviera","tuviéramos","tuvierais","tuvieran"],
+    imp_se: ["tuviese","tuvieses","tuviese","tuviésemos","tuvieseis","tuviesen"],
+    ex_pres: "Espero que <s>tengas</s> un buen viaje.",
+    ex_imp: "Si <s>tuviera</s> tiempo, iría contigo."
+  },
+  "venir": {
+    ru: "приходить", type: "irregular",
+    pres: ["venga","vengas","venga","vengamos","vengáis","vengan"],
+    imp_ra: ["viniera","vinieras","viniera","viniéramos","vinierais","vinieran"],
+    imp_se: ["viniese","vinieses","viniese","viniésemos","vinieseis","viniesen"],
+    ex_pres: "Quiero que <s>vengas</s> a mi fiesta.",
+    ex_imp: "Le dije que <s>viniera</s> temprano."
+  },
+  "decir": {
+    ru: "говорить, сказать", type: "irregular",
+    pres: ["diga","digas","diga","digamos","digáis","digan"],
+    imp_ra: ["dijera","dijeras","dijera","dijéramos","dijerais","dijeran"],
+    imp_se: ["dijese","dijeses","dijese","dijésemos","dijeseis","dijesen"],
+    ex_pres: "No creo que <s>diga</s> la verdad.",
+    ex_imp: "Le pedí que me <s>dijera</s> todo."
+  },
+  "poner": {
+    ru: "ставить, класть", type: "irregular",
+    pres: ["ponga","pongas","ponga","pongamos","pongáis","pongan"],
+    imp_ra: ["pusiera","pusieras","pusiera","pusiéramos","pusierais","pusieran"],
+    imp_se: ["pusiese","pusieses","pusiese","pusiésemos","pusieseis","pusiesen"],
+    ex_pres: "Es mejor que <s>pongas</s> la mesa.",
+    ex_imp: "Le dije que <s>pusiera</s> la maleta aquí."
+  },
+  "salir": {
+    ru: "выходить", type: "irregular",
+    pres: ["salga","salgas","salga","salgamos","salgáis","salgan"],
+    imp_ra: ["saliera","salieras","saliera","saliéramos","salierais","salieran"],
+    imp_se: ["saliese","salieses","saliese","saliésemos","salieseis","saliesen"],
+    ex_pres: "No quiero que <s>salgas</s> sola de noche.",
+    ex_imp: "Me pidió que <s>saliera</s> del coche."
+  },
+  "poder": {
+    ru: "мочь", type: "irregular",
+    pres: ["pueda","puedas","pueda","podamos","podáis","puedan"],
+    imp_ra: ["pudiera","pudieras","pudiera","pudiéramos","pudierais","pudieran"],
+    imp_se: ["pudiese","pudieses","pudiese","pudiésemos","pudieseis","pudiesen"],
+    ex_pres: "Espero que <s>puedas</s> venir.",
+    ex_imp: "Ojalá <s>pudiera</s> ayudarte."
+  },
+  "querer": {
+    ru: "хотеть, любить", type: "irregular",
+    pres: ["quiera","quieras","quiera","queramos","queráis","quieran"],
+    imp_ra: ["quisiera","quisieras","quisiera","quisiéramos","quisierais","quisieran"],
+    imp_se: ["quisiese","quisieses","quisiese","quisiésemos","quisieseis","quisiesen"],
+    ex_pres: "No creo que <s>quiera</s> hablar.",
+    ex_imp: "<s>Quisiera</s> un vaso de agua, por favor."
+  },
+  "dormir": {
+    ru: "спать", type: "irregular",
+    pres: ["duerma","duermas","duerma","durmamos","durmáis","duerman"],
+    imp_ra: ["durmiera","durmieras","durmiera","durmiéramos","durmierais","durmieran"],
+    imp_se: ["durmiese","durmieses","durmiese","durmiésemos","durmieseis","durmiesen"],
+    ex_pres: "Es importante que <s>duermas</s> ocho horas.",
+    ex_imp: "El médico recomendó que <s>durmiera</s> más."
+  },
+  "sentir": {
+    ru: "чувствовать", type: "irregular",
+    pres: ["sienta","sientas","sienta","sintamos","sintáis","sientan"],
+    imp_ra: ["sintiera","sintieras","sintiera","sintiéramos","sintierais","sintieran"],
+    imp_se: ["sintiese","sintieses","sintiese","sintiésemos","sintieseis","sintiesen"],
+    ex_pres: "Siento que te <s>sientas</s> mal.",
+    ex_imp: "No quería que <s>sintiera</s> dolor."
+  },
+  "pedir": {
+    ru: "просить", type: "irregular",
+    pres: ["pida","pidas","pida","pidamos","pidáis","pidan"],
+    imp_ra: ["pidiera","pidieras","pidiera","pidiéramos","pidierais","pidieran"],
+    imp_se: ["pidiese","pidieses","pidiese","pidiésemos","pidieseis","pidiesen"],
+    ex_pres: "Quiero que <s>pidas</s> perdón.",
+    ex_imp: "Me pidió que le <s>pidiera</s> un favor."
+  },
+  "conocer": {
+    ru: "знать (быть знакомым)", type: "irregular",
+    pres: ["conozca","conozcas","conozca","conozcamos","conozcáis","conozcan"],
+    imp_ra: ["conociera","conocieras","conociera","conociéramos","conocierais","conocieran"],
+    imp_se: ["conociese","conocieses","conociese","conociésemos","conocieseis","conociesen"],
+    ex_pres: "Busco a alguien que <s>conozca</s> Madrid.",
+    ex_imp: "Ojalá <s>conociera</s> a más gente aquí."
+  },
+  "traducir": {
+    ru: "переводить", type: "irregular",
+    pres: ["traduzca","traduzcas","traduzca","traduzcamos","traduzcáis","traduzcan"],
+    imp_ra: ["tradujera","tradujeras","tradujera","tradujéramos","tradujerais","tradujeran"],
+    imp_se: ["tradujese","tradujeses","tradujese","tradujésemos","tradujeseis","tradujesen"],
+    ex_pres: "Necesito que <s>traduzcas</s> este texto.",
+    ex_imp: "Le pedí que <s>tradujera</s> el documento."
+  },
+  "traer": {
+    ru: "приносить", type: "irregular",
+    pres: ["traiga","traigas","traiga","traigamos","traigáis","traigan"],
+    imp_ra: ["trajera","trajeras","trajera","trajéramos","trajerais","trajeran"],
+    imp_se: ["trajese","trajeses","trajese","trajésemos","trajeseis","trajesen"],
+    ex_pres: "Quiero que <s>traigas</s> la comida.",
+    ex_imp: "Me pidió que <s>trajera</s> vino."
+  },
+  "escribir": {
+    ru: "писать", type: "regular",
+    pres: ["escriba","escribas","escriba","escribamos","escribáis","escriban"],
+    imp_ra: ["escribiera","escribieras","escribiera","escribiéramos","escribierais","escribieran"],
+    imp_se: ["escribiese","escribieses","escribiese","escribiésemos","escribieseis","escribiesen"],
+    ex_pres: "Es necesario que <s>escribas</s> una carta.",
+    ex_imp: "Quería que me <s>escribieras</s> un email."
+  },
+  "leer": {
+    ru: "читать", type: "regular",
+    pres: ["lea","leas","lea","leamos","leáis","lean"],
+    imp_ra: ["leyera","leyeras","leyera","leyéramos","leyerais","leyeran"],
+    imp_se: ["leyese","leyeses","leyese","leyésemos","leyeseis","leyesen"],
+    ex_pres: "Recomiendo que <s>leas</s> este artículo.",
+    ex_imp: "Le pedí que <s>leyera</s> mi carta."
+  },
+  "pensar": {
+    ru: "думать", type: "irregular",
+    pres: ["piense","pienses","piense","pensemos","penséis","piensen"],
+    imp_ra: ["pensara","pensaras","pensara","pensáramos","pensarais","pensaran"],
+    imp_se: ["pensase","pensases","pensase","pensásemos","pensaseis","pensasen"],
+    ex_pres: "No creo que <s>piense</s> en eso.",
+    ex_imp: "Quería que <s>pensara</s> antes de actuar."
+  },
+  "entender": {
+    ru: "понимать", type: "irregular",
+    pres: ["entienda","entiendas","entienda","entendamos","entendáis","entiendan"],
+    imp_ra: ["entendiera","entendieras","entendiera","entendiéramos","entendierais","entendieran"],
+    imp_se: ["entendiese","entendieses","entendiese","entendiésemos","entendieseis","entendiesen"],
+    ex_pres: "Hablo despacio para que me <s>entiendas</s>.",
+    ex_imp: "Quería que <s>entendiera</s> la situación."
+  },
+  "volver": {
+    ru: "возвращаться", type: "irregular",
+    pres: ["vuelva","vuelvas","vuelva","volvamos","volváis","vuelvan"],
+    imp_ra: ["volviera","volvieras","volviera","volviéramos","volvierais","volvieran"],
+    imp_se: ["volviese","volvieses","volviese","volviésemos","volvieseis","volviesen"],
+    ex_pres: "Espero que <s>vuelvas</s> pronto.",
+    ex_imp: "Le pedí que <s>volviera</s> antes de las diez."
+  },
+  "encontrar": {
+    ru: "находить", type: "irregular",
+    pres: ["encuentre","encuentres","encuentre","encontremos","encontréis","encuentren"],
+    imp_ra: ["encontrara","encontraras","encontrara","encontráramos","encontrarais","encontraran"],
+    imp_se: ["encontrase","encontrases","encontrase","encontrásemos","encontraseis","encontrasen"],
+    ex_pres: "Espero que <s>encuentres</s> trabajo.",
+    ex_imp: "Ojalá <s>encontrara</s> las llaves."
+  },
+  "empezar": {
+    ru: "начинать", type: "irregular",
+    pres: ["empiece","empieces","empiece","empecemos","empecéis","empiecen"],
+    imp_ra: ["empezara","empezaras","empezara","empezáramos","empezarais","empezaran"],
+    imp_se: ["empezase","empezases","empezase","empezásemos","empezaseis","empezasen"],
+    ex_pres: "Es hora de que <s>empieces</s> a estudiar.",
+    ex_imp: "Quería que <s>empezara</s> el proyecto."
+  },
+  "seguir": {
+    ru: "следовать, продолжать", type: "irregular",
+    pres: ["siga","sigas","siga","sigamos","sigáis","sigan"],
+    imp_ra: ["siguiera","siguieras","siguiera","siguiéramos","siguierais","siguieran"],
+    imp_se: ["siguiese","siguieses","siguiese","siguiésemos","siguieseis","siguiesen"],
+    ex_pres: "Es importante que <s>sigas</s> las instrucciones.",
+    ex_imp: "Le dije que <s>siguiera</s> adelante."
+  },
+  "creer": {
+    ru: "верить, думать", type: "regular",
+    pres: ["crea","creas","crea","creamos","creáis","crean"],
+    imp_ra: ["creyera","creyeras","creyera","creyéramos","creyerais","creyeran"],
+    imp_se: ["creyese","creyeses","creyese","creyésemos","creyeseis","creyesen"],
+    ex_pres: "No creo que me <s>crea</s>.",
+    ex_imp: "Dudaba que <s>creyera</s> mi historia."
+  },
+  "llegar": {
+    ru: "приходить, прибывать", type: "regular",
+    pres: ["llegue","llegues","llegue","lleguemos","lleguéis","lleguen"],
+    imp_ra: ["llegara","llegaras","llegara","llegáramos","llegarais","llegaran"],
+    imp_se: ["llegase","llegases","llegase","llegásemos","llegaseis","llegasen"],
+    ex_pres: "Cuando <s>llegues</s>, llámame.",
+    ex_imp: "Esperé hasta que <s>llegara</s>."
+  },
+  "morir": {
+    ru: "умирать", type: "irregular",
+    pres: ["muera","mueras","muera","muramos","muráis","mueran"],
+    imp_ra: ["muriera","murieras","muriera","muriéramos","murierais","murieran"],
+    imp_se: ["muriese","murieses","muriese","muriésemos","murieseis","muriesen"],
+    ex_pres: "Tengo miedo de que <s>muera</s> la planta.",
+    ex_imp: "Temía que <s>muriera</s> de frío."
+  },
+  "caer": {
+    ru: "падать", type: "irregular",
+    pres: ["caiga","caigas","caiga","caigamos","caigáis","caigan"],
+    imp_ra: ["cayera","cayeras","cayera","cayéramos","cayerais","cayeran"],
+    imp_se: ["cayese","cayeses","cayese","cayésemos","cayeseis","cayesen"],
+    ex_pres: "Ten cuidado, no quiero que te <s>caigas</s>.",
+    ex_imp: "Temía que se <s>cayera</s>."
+  },
+  "oír": {
+    ru: "слышать", type: "irregular",
+    pres: ["oiga","oigas","oiga","oigamos","oigáis","oigan"],
+    imp_ra: ["oyera","oyeras","oyera","oyéramos","oyerais","oyeran"],
+    imp_se: ["oyese","oyeses","oyese","oyésemos","oyeseis","oyesen"],
+    ex_pres: "Habla más alto para que te <s>oigan</s>.",
+    ex_imp: "Dudaba que me <s>oyera</s>."
+  },
+  "jugar": {
+    ru: "играть", type: "irregular",
+    pres: ["juegue","juegues","juegue","juguemos","juguéis","jueguen"],
+    imp_ra: ["jugara","jugaras","jugara","jugáramos","jugarais","jugaran"],
+    imp_se: ["jugase","jugases","jugase","jugásemos","jugaseis","jugasen"],
+    ex_pres: "Quiero que <s>juegues</s> conmigo.",
+    ex_imp: "Me pidió que <s>jugara</s> con los niños."
+  },
+  "elegir": {
+    ru: "выбирать", type: "irregular",
+    pres: ["elija","elijas","elija","elijamos","elijáis","elijan"],
+    imp_ra: ["eligiera","eligieras","eligiera","eligiéramos","eligierais","eligieran"],
+    imp_se: ["eligiese","eligieses","eligiese","eligiésemos","eligieseis","eligiesen"],
+    ex_pres: "Quiero que tú <s>elijas</s> el restaurante.",
+    ex_imp: "Me pidió que <s>eligiera</s> un color."
+  },
+  "conducir": {
+    ru: "водить", type: "irregular",
+    pres: ["conduzca","conduzcas","conduzca","conduzcamos","conduzcáis","conduzcan"],
+    imp_ra: ["condujera","condujeras","condujera","condujéramos","condujerais","condujeran"],
+    imp_se: ["condujese","condujeses","condujese","condujésemos","condujeseis","condujesen"],
+    ex_pres: "No quiero que <s>conduzcas</s> de noche.",
+    ex_imp: "Le pedí que <s>condujera</s> despacio."
+  },
+  "construir": {
+    ru: "строить", type: "irregular",
+    pres: ["construya","construyas","construya","construyamos","construyáis","construyan"],
+    imp_ra: ["construyera","construyeras","construyera","construyéramos","construyerais","construyeran"],
+    imp_se: ["construyese","construyeses","construyese","construyésemos","construyeseis","construyesen"],
+    ex_pres: "Es necesario que <s>construyan</s> más escuelas.",
+    ex_imp: "Quería que <s>construyeran</s> un parque."
+  },
+  "parecer": {
+    ru: "казаться", type: "irregular",
+    pres: ["parezca","parezcas","parezca","parezcamos","parezcáis","parezcan"],
+    imp_ra: ["pareciera","parecieras","pareciera","pareciéramos","parecierais","parecieran"],
+    imp_se: ["pareciese","parecieses","pareciese","pareciésemos","parecieseis","pareciesen"],
+    ex_pres: "No creo que <s>parezca</s> difícil.",
+    ex_imp: "Dudaba que le <s>pareciera</s> bien."
+  }
+};
+
+// ═══════════════════════════════════════════
+// TAB SWITCHING
+// ═══════════════════════════════════════════
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', (tab === 'triggers' ? i === 0 : i === 1));
+  });
+  document.getElementById('tab-triggers').classList.toggle('active', tab === 'triggers');
+  document.getElementById('tab-conjugation').classList.toggle('active', tab === 'conjugation');
+  if (tab === 'conjugation') {
+    document.getElementById('verb-input').focus();
+  }
+}
+
+// ═══════════════════════════════════════════
+// RENDER TRIGGERS
+// ═══════════════════════════════════════════
+function renderTriggers() {
+  const container = document.getElementById('triggers-list');
+  let html = '';
+  triggerCategories.forEach((cat, ci) => {
+    html += `<div class="category-card">`;
+    html += `<div class="category-header" onclick="toggleCategory(this)">
+      <span>${cat.ru} <span class="es-label">${cat.es}</span></span>
+      <span class="toggle-icon">▼</span>
+    </div>`;
+    html += `<div class="category-body">`;
+    cat.triggers.forEach(t => {
+      const exHtml = t.ex.replace(/<s>(.*?)<\/s>/g, '<span class="subj-form">$1</span>');
+      html += `<div class="trigger-row">
+        <div class="trigger-es">${t.expr}</div>
+        <div class="trigger-ru">${t.ru}</div>
+        <div class="trigger-example">${exHtml}</div>
+      </div>`;
+    });
+    if (cat.note) {
+      html += `<div class="note-box"><strong>⚠ Внимание:</strong> ${cat.note}</div>`;
+    }
+    html += `</div></div>`;
+  });
+  container.innerHTML = html;
+}
+
+function toggleCategory(el) {
+  el.classList.toggle('collapsed');
+  el.nextElementSibling.classList.toggle('collapsed');
+}
+
+// ═══════════════════════════════════════════
+// CONJUGATION LOOKUP
+// ═══════════════════════════════════════════
+const pronouns = ["yo", "tú", "él / ella / Ud.", "nosotros", "vosotros", "ellos / Uds."];
+
+function lookupVerb() {
+  const raw = document.getElementById('verb-input').value.trim().toLowerCase();
+  if (!raw) return;
+
+  const v = verbs[raw];
+  const infoEl = document.getElementById('verb-info');
+  const tablesEl = document.getElementById('conj-tables');
+
+  if (!v) {
+    infoEl.style.display = 'block';
+    infoEl.innerHTML = `<p style="color:#c62828;">Глагол «<strong>${raw}</strong>» не найден в базе. Попробуйте ввести инфинитив.</p>`;
+    tablesEl.style.display = 'none';
+    return;
+  }
+
+  const badgeClass = v.type === 'regular' ? 'badge-reg' : 'badge-irreg';
+  const badgeLabel = v.type === 'regular' ? 'regular' : 'irregular';
+  infoEl.style.display = 'block';
+  infoEl.innerHTML = `<span class="badge ${badgeClass}">${badgeLabel}</span>
+    <strong style="font-size:1.15em;">${raw}</strong> — <span style="color:#666;">${v.ru}</span>`;
+
+  // Presente de subjuntivo
+  let presHtml = '<table>';
+  for (let i = 0; i < 6; i++) {
+    presHtml += `<tr>
+      <td class="pronoun">${pronouns[i]}</td>
+      <td class="verb-form">${v.pres[i]}</td>
+    </tr>`;
+  }
+  presHtml += '</table>';
+  const presExHtml = v.ex_pres.replace(/<s>(.*?)<\/s>/g, '<span class="subj-form">$1</span>');
+  presHtml += `<div class="conj-example">${presExHtml}</div>`;
+  document.getElementById('conj-presente').innerHTML = presHtml;
+
+  // Imperfecto de subjuntivo
+  let impHtml = '<table>';
+  for (let i = 0; i < 6; i++) {
+    impHtml += `<tr>
+      <td class="pronoun">${pronouns[i]}</td>
+      <td class="verb-form">${v.imp_ra[i]}<span class="alt-form"> / ${v.imp_se[i]}</span></td>
+    </tr>`;
+  }
+  impHtml += '</table>';
+  const impExHtml = v.ex_imp.replace(/<s>(.*?)<\/s>/g, '<span class="subj-form">$1</span>');
+  impHtml += `<div class="conj-example">${impExHtml}</div>`;
+  document.getElementById('conj-imperfecto').innerHTML = impHtml;
+
+  tablesEl.style.display = 'block';
+}
+
+function fillVerb(v) {
+  document.getElementById('verb-input').value = v;
+  lookupVerb();
+}
+
+// Enter key support
+document.addEventListener('DOMContentLoaded', () => {
+  renderTriggers();
+  document.getElementById('verb-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') lookupVerb();
+  });
+});
+</script>
+
+</body>
+</html>

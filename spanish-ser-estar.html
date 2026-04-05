@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇪🇸</text></svg>">
+<meta name="apple-mobile-web-app-title" content="ES ser/estar">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇪🇸 Ser vs Estar — справочник</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5eee8;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #8b1a1a, #c0392b);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  .search-area {
+    max-width: 600px;
+    margin: 30px auto 10px;
+    padding: 0 20px;
+    display: flex;
+    gap: 10px;
+  }
+  .search-area input {
+    flex: 1;
+    padding: 14px 18px;
+    font-size: 1.15em;
+    border: 2px solid #d4b8a0;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s;
+    background: white;
+  }
+  .search-area input:focus { border-color: #8b1a1a; }
+  .search-area button {
+    padding: 14px 28px;
+    font-size: 1.05em;
+    background: #8b1a1a;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .search-area button:hover { background: #c0392b; }
+
+  .hint {
+    max-width: 600px;
+    margin: 8px auto 0;
+    padding: 0 20px;
+    font-size: 0.85em;
+    color: #888;
+  }
+  .hint span { cursor: pointer; color: #8b1a1a; text-decoration: underline; }
+  .hint span:hover { color: #c0392b; }
+
+  #result {
+    max-width: 900px;
+    margin: 20px auto 30px;
+    padding: 0 20px;
+    display: none;
+  }
+
+  .word-header {
+    background: white;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .word-main {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #8b1a1a;
+  }
+  .word-ru {
+    font-size: 1.1em;
+    color: #555;
+    font-style: italic;
+  }
+  .badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.82em;
+    font-weight: 600;
+  }
+  .badge-change {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffc107;
+  }
+  .badge-ser {
+    background: #dbe6f2;
+    color: #2a4a7f;
+    border: 1px solid #6a9bd1;
+  }
+  .badge-estar {
+    background: #d4edda;
+    color: #1e7e34;
+    border: 1px solid #6dca81;
+  }
+  .badge-both {
+    background: #e8daef;
+    color: #6c3483;
+    border: 1px solid #af7ac5;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .verb-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .verb-card-header {
+    padding: 12px 16px;
+    color: white;
+    font-weight: 700;
+    font-size: 1.05em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .verb-card-header .verb-label { font-size: 0.8em; opacity: 0.85; font-weight: 400; }
+  .ser-header { background: #2a4a7f; }
+  .estar-header { background: #27ae60; }
+  .verb-card-body {
+    padding: 16px;
+  }
+  .meaning-text {
+    font-size: 1.15em;
+    font-weight: 600;
+    color: #2c2c2c;
+    margin-bottom: 10px;
+  }
+  .example-sentence {
+    font-size: 0.95em;
+    color: #444;
+    line-height: 1.6;
+    background: #f8f6f3;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border-left: 3px solid #ddd;
+  }
+  .example-sentence b { color: #8b1a1a; }
+  .example-sentence .ex-ru { color: #888; font-style: italic; display: block; margin-top: 4px; font-size: 0.9em; }
+
+  .single-card {
+    max-width: 500px;
+  }
+
+  .no-result {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+    font-size: 1.1em;
+  }
+
+  /* Conjugation tables */
+  .conj-section {
+    max-width: 900px;
+    margin: 10px auto 30px;
+    padding: 0 20px;
+  }
+  .conj-section h2 {
+    font-size: 1.15em;
+    color: #8b1a1a;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  .conj-tables {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+  }
+  .conj-table {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .conj-table-title {
+    padding: 10px 14px;
+    font-weight: 700;
+    font-size: 0.92em;
+    color: white;
+  }
+  .conj-table-title.ser-bg { background: #2a4a7f; }
+  .conj-table-title.estar-bg { background: #27ae60; }
+  .conj-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .conj-table th {
+    text-align: left;
+    padding: 6px 12px;
+    font-size: 0.8em;
+    color: #888;
+    border-bottom: 1px solid #eee;
+    background: #fafafa;
+  }
+  .conj-table td {
+    padding: 5px 12px;
+    font-size: 0.88em;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .conj-table td:first-child { color: #888; font-size: 0.82em; }
+  .conj-table td:nth-child(2) { font-weight: 600; }
+  .conj-table td:nth-child(3) { font-weight: 600; }
+  .conj-table td:nth-child(4) { font-weight: 600; }
+
+  /* Info section */
+  .info-section {
+    max-width: 900px;
+    margin: 0 auto 40px;
+    padding: 0 20px;
+  }
+  .info-section h2 {
+    font-size: 1.15em;
+    color: #8b1a1a;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  .info-block {
+    background: white;
+    border-radius: 12px;
+    padding: 20px 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    margin-bottom: 14px;
+  }
+  .info-block h3 {
+    font-size: 1em;
+    color: #8b1a1a;
+    margin-bottom: 10px;
+  }
+  .info-block p, .info-block ul {
+    font-size: 0.92em;
+    line-height: 1.7;
+    color: #444;
+  }
+  .info-block ul {
+    padding-left: 20px;
+  }
+  .info-block li { margin-bottom: 4px; }
+  .info-block .mnemonic {
+    background: #f5eee8;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-size: 0.92em;
+  }
+  .info-block .mnemonic b { color: #8b1a1a; }
+  .info-block .special {
+    background: #fff8e1;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin: 8px 0;
+    border-left: 3px solid #ffc107;
+    font-size: 0.9em;
+  }
+
+  /* All results listing */
+  .all-results {
+    max-width: 900px;
+    margin: 0 auto 30px;
+    padding: 0 20px;
+  }
+  .all-results h2 {
+    font-size: 1.1em;
+    color: #8b1a1a;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  .all-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 8px;
+  }
+  .all-item {
+    background: white;
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    transition: box-shadow 0.2s, transform 0.15s;
+    font-size: 0.9em;
+  }
+  .all-item:hover { box-shadow: 0 3px 10px rgba(0,0,0,0.12); transform: translateY(-1px); }
+  .all-item .ai-word { font-weight: 700; color: #8b1a1a; }
+  .all-item .ai-ru { color: #888; font-size: 0.88em; }
+
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switch { padding: 6px 12px; font-size: 0.85em; }
+    .search-area { padding: 0 10px; flex-direction: column; }
+    .search-area input { font-size: 1em; padding: 12px 14px; width: 100%; }
+    .search-area button { padding: 12px 18px; font-size: 0.95em; width: 100%; }
+    .hint { padding: 0 10px; }
+    #result { padding: 0 10px; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .word-header { padding: 16px; }
+    .word-main { font-size: 1.4em; }
+    .conj-section { padding: 0 10px; }
+    .conj-tables { grid-template-columns: 1fr; }
+    .info-section { padding: 0 10px; }
+    .info-block { padding: 16px; }
+    .all-results { padding: 0 10px; }
+    .all-list { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="spanish.html" class="lang-switch">📖 Портал</a>
+    <a href="spanish-verbs.html" class="lang-switch">📝 Глаголы</a>
+  </div>
+  <h1>🇪🇸 Ser vs Estar — справочник</h1>
+  <p>Введите прилагательное или контекст — узнайте, когда ser, а когда estar</p>
+</header>
+
+<div class="search-area">
+  <input type="text" id="searchInput" placeholder="listo, aburrido... или по-русски: умный, скучный..." autofocus
+    onkeydown="if(event.key==='Enter')lookup()">
+  <button onclick="lookup()">Найти</button>
+</div>
+<div class="hint">
+  Попробуйте:
+  <span onclick="tryWord('listo')">listo</span>,
+  <span onclick="tryWord('aburrido')">aburrido</span>,
+  <span onclick="tryWord('rico')">rico</span>,
+  <span onclick="tryWord('vivo')">vivo</span>,
+  <span onclick="tryWord('bueno')">bueno</span>,
+  <span onclick="tryWord('seguro')">seguro</span>
+  | по-русски:
+  <span onclick="tryWord('умный')">умный</span>,
+  <span onclick="tryWord('скучный')">скучный</span>,
+  <span onclick="tryWord('готовый')">готовый</span>
+</div>
+
+<div id="result"></div>
+
+<!-- Conjugation tables always visible -->
+<div class="conj-section">
+  <h2>Спряжение SER и ESTAR</h2>
+  <div class="conj-tables">
+    <div class="conj-table">
+      <div class="conj-table-title ser-bg">SER — Presente</div>
+      <table>
+        <tr><td>yo</td><td>soy</td></tr>
+        <tr><td>tú</td><td>eres</td></tr>
+        <tr><td>él/ella</td><td>es</td></tr>
+        <tr><td>nosotros</td><td>somos</td></tr>
+        <tr><td>vosotros</td><td>sois</td></tr>
+        <tr><td>ellos</td><td>son</td></tr>
+      </table>
+    </div>
+    <div class="conj-table">
+      <div class="conj-table-title estar-bg">ESTAR — Presente</div>
+      <table>
+        <tr><td>yo</td><td>estoy</td></tr>
+        <tr><td>tú</td><td>estás</td></tr>
+        <tr><td>él/ella</td><td>está</td></tr>
+        <tr><td>nosotros</td><td>estamos</td></tr>
+        <tr><td>vosotros</td><td>estáis</td></tr>
+        <tr><td>ellos</td><td>están</td></tr>
+      </table>
+    </div>
+    <div class="conj-table">
+      <div class="conj-table-title ser-bg">SER — Pretérito indefinido</div>
+      <table>
+        <tr><td>yo</td><td>fui</td></tr>
+        <tr><td>tú</td><td>fuiste</td></tr>
+        <tr><td>él/ella</td><td>fue</td></tr>
+        <tr><td>nosotros</td><td>fuimos</td></tr>
+        <tr><td>vosotros</td><td>fuisteis</td></tr>
+        <tr><td>ellos</td><td>fueron</td></tr>
+      </table>
+    </div>
+    <div class="conj-table">
+      <div class="conj-table-title estar-bg">ESTAR — Pretérito indefinido</div>
+      <table>
+        <tr><td>yo</td><td>estuve</td></tr>
+        <tr><td>tú</td><td>estuviste</td></tr>
+        <tr><td>él/ella</td><td>estuvo</td></tr>
+        <tr><td>nosotros</td><td>estuvimos</td></tr>
+        <tr><td>vosotros</td><td>estuvisteis</td></tr>
+        <tr><td>ellos</td><td>estuvieron</td></tr>
+      </table>
+    </div>
+    <div class="conj-table">
+      <div class="conj-table-title ser-bg">SER — Imperfecto</div>
+      <table>
+        <tr><td>yo</td><td>era</td></tr>
+        <tr><td>tú</td><td>eras</td></tr>
+        <tr><td>él/ella</td><td>era</td></tr>
+        <tr><td>nosotros</td><td>éramos</td></tr>
+        <tr><td>vosotros</td><td>erais</td></tr>
+        <tr><td>ellos</td><td>eran</td></tr>
+      </table>
+    </div>
+    <div class="conj-table">
+      <div class="conj-table-title estar-bg">ESTAR — Imperfecto</div>
+      <table>
+        <tr><td>yo</td><td>estaba</td></tr>
+        <tr><td>tú</td><td>estabas</td></tr>
+        <tr><td>él/ella</td><td>estaba</td></tr>
+        <tr><td>nosotros</td><td>estábamos</td></tr>
+        <tr><td>vosotros</td><td>estabais</td></tr>
+        <tr><td>ellos</td><td>estaban</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Info section -->
+<div class="info-section">
+  <h2>Правила: когда SER, когда ESTAR?</h2>
+
+  <div class="info-block">
+    <h3>Главное правило</h3>
+    <p><strong>SER</strong> = сущность, идентичность, постоянные характеристики. <em>Кто ты есть по натуре.</em></p>
+    <p><strong>ESTAR</strong> = состояние, условие, местоположение. <em>Как ты себя чувствуешь / где ты находишься.</em></p>
+  </div>
+
+  <div class="info-block">
+    <h3>Мнемоника для SER: DOCTOR</h3>
+    <div class="mnemonic">
+      <b>D</b>escription (описание) — Es alto, es guapo<br>
+      <b>O</b>ccupation (профессия) — Es profesor, es médico<br>
+      <b>C</b>haracter (характер) — Es amable, es inteligente<br>
+      <b>T</b>ime (время) — Son las tres, es lunes<br>
+      <b>O</b>rigin (происхождение) — Es de Rusia, es español<br>
+      <b>R</b>elationship (отношения) — Es mi hermano, es mi amiga
+    </div>
+  </div>
+
+  <div class="info-block">
+    <h3>Мнемоника для ESTAR: PLACE</h3>
+    <div class="mnemonic">
+      <b>P</b>osition (местоположение) — Estoy en casa, Madrid está en España<br>
+      <b>L</b>ooks/Condition (внешний вид/состояние) — Estás muy guapa hoy<br>
+      <b>A</b>ction (действие, герундий) — Estoy comiendo, estoy trabajando<br>
+      <b>C</b>ondition (состояние) — Estoy cansado, estoy enfermo<br>
+      <b>E</b>motion (эмоции) — Estoy triste, estoy contento
+    </div>
+  </div>
+
+  <div class="info-block">
+    <h3>С причастиями (participio pasado)</h3>
+    <p><strong>SER + причастие</strong> = пассивный залог (действие):</p>
+    <div class="special">La casa <b>fue construida</b> en 1990. — Дом <em>был построен</em> в 1990 году.</div>
+    <p><strong>ESTAR + причастие</strong> = результат действия (состояние):</p>
+    <div class="special">La casa <b>está construida</b>. — Дом <em>построен</em> (стоит готовый).</div>
+  </div>
+
+  <div class="info-block">
+    <h3>Особые случаи</h3>
+    <ul>
+      <li><strong>estar muerto</strong> (мёртв) — смерть это состояние, не свойство! «Он мёртв» = está muerto.</li>
+      <li><strong>ser joven</strong> vs <strong>estar joven</strong> — «Он молод» (возраст) vs «Он молодо выглядит».</li>
+      <li><strong>ser listo</strong> vs <strong>estar listo</strong> — «Он умный» vs «Он готов». Классический пример!</li>
+      <li><strong>ser aburrido</strong> vs <strong>estar aburrido</strong> — «Он скучный» vs «Ему скучно».</li>
+      <li><strong>ser bueno</strong> vs <strong>estar bueno</strong> — «Он хороший человек» vs «Он вкусный / привлекательный».</li>
+      <li><strong>La fiesta es en mi casa</strong> — для событий (мероприятий) используется SER, не ESTAR!</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+const DB = [
+  // === BOTH DIFFERENT (meaning changes) ===
+  { word: "aburrido", ru: "скучный / скучающий", ser_meaning: "скучный (человек по натуре)", estar_meaning: "скучающий (ему сейчас скучно)", ser_example: ["Es una persona aburrida, siempre habla de lo mismo.", "Он скучный человек, всегда говорит об одном и том же."], estar_example: ["Estoy aburrido, no hay nada que hacer.", "Мне скучно, нечего делать."], category: "both_different" },
+  { word: "bueno", ru: "хороший / вкусный", ser_meaning: "хороший (по характеру)", estar_meaning: "вкусный / привлекательный", ser_example: ["Mi abuelo es muy bueno con los niños.", "Мой дедушка очень добр к детям."], estar_example: ["Esta paella está muy buena.", "Эта паэлья очень вкусная."], category: "both_different" },
+  { word: "malo", ru: "плохой / больной", ser_meaning: "плохой (по натуре)", estar_meaning: "больной, нездоровый", ser_example: ["No es mala persona, solo es tímido.", "Он не плохой человек, просто стеснительный."], estar_example: ["Estoy malo, creo que tengo fiebre.", "Я болею, кажется у меня температура."], category: "both_different" },
+  { word: "listo", ru: "умный / готовый", ser_meaning: "умный, смышлёный", estar_meaning: "готовый", ser_example: ["Tu hijo es muy listo, aprende rápido.", "Твой сын очень умный, быстро учится."], estar_example: ["¿Estás listo? Nos vamos en cinco minutos.", "Ты готов? Уходим через пять минут."], category: "both_different" },
+  { word: "rico", ru: "богатый / вкусный", ser_meaning: "богатый (состоятельный)", estar_meaning: "вкусный (о еде)", ser_example: ["Es rico, tiene tres casas.", "Он богатый, у него три дома."], estar_example: ["¡Este chocolate está muy rico!", "Этот шоколад очень вкусный!"], category: "both_different" },
+  { word: "seguro", ru: "безопасный / уверенный", ser_meaning: "безопасный (о месте/вещи)", estar_meaning: "уверенный (в чём-то)", ser_example: ["Este barrio es muy seguro.", "Этот район очень безопасный."], estar_example: ["Estoy seguro de que vendrá.", "Я уверен, что он придёт."], category: "both_different" },
+  { word: "vivo", ru: "живой (хитрый) / живой (жив)", ser_meaning: "хитрый, смекалистый", estar_meaning: "живой (в живых)", ser_example: ["Es muy vivo, siempre encuentra soluciones.", "Он очень смекалистый, всегда находит решения."], estar_example: ["¡Está vivo! ¡Es un milagro!", "Он жив! Это чудо!"], category: "both_different" },
+  { word: "guapo", ru: "красивый (черта) / красивый (сейчас)", ser_meaning: "красивый, привлекательный (всегда)", estar_meaning: "хорошо выглядит (сейчас)", ser_example: ["Tu hermano es muy guapo.", "Твой брат очень красивый."], estar_example: ["¡Estás muy guapa con ese vestido!", "Ты очень хорошо выглядишь в этом платье!"], category: "both_different" },
+  { word: "verde", ru: "зелёный / незрелый", ser_meaning: "зелёного цвета", estar_meaning: "незрелый, неспелый", ser_example: ["La hierba es verde.", "Трава зелёная."], estar_example: ["Estos plátanos están verdes.", "Эти бананы незрелые."], category: "both_different" },
+  { word: "nuevo", ru: "новый (с фабрики) / как новый", ser_meaning: "совершенно новый (фабричный)", estar_meaning: "как новый (отремонтированный)", ser_example: ["Este coche es nuevo, lo compré ayer.", "Эта машина новая, я купил её вчера."], estar_example: ["He pintado la casa y está nueva.", "Я покрасил дом, и он как новый."], category: "both_different" },
+  { word: "atento", ru: "внимательный (характер) / внимательный (сейчас)", ser_meaning: "внимательный, учтивый (по натуре)", estar_meaning: "сосредоточенный, внимательный (сейчас)", ser_example: ["Es muy atento, siempre abre la puerta.", "Он очень учтивый, всегда открывает дверь."], estar_example: ["Está atento a la explicación del profesor.", "Он внимательно слушает объяснение учителя."], category: "both_different" },
+  { word: "orgulloso", ru: "гордый (надменный) / гордый (чем-то)", ser_meaning: "гордый, надменный (характер)", estar_meaning: "гордиться (чем-то конкретным)", ser_example: ["Es muy orgulloso, nunca pide ayuda.", "Он очень гордый, никогда не просит помощи."], estar_example: ["Estoy orgulloso de mi hija.", "Я горжусь своей дочерью."], category: "both_different" },
+  { word: "despierto", ru: "сообразительный / бодрствующий", ser_meaning: "сообразительный, смышлёный", estar_meaning: "бодрствующий, не спит", ser_example: ["Es un niño muy despierto.", "Он очень сообразительный ребёнок."], estar_example: ["¿Todavía estás despierto? Son las tres.", "Ты ещё не спишь? Уже три часа."], category: "both_different" },
+  { word: "interesado", ru: "корыстный / заинтересованный", ser_meaning: "корыстный, расчётливый", estar_meaning: "заинтересованный (в чём-то)", ser_example: ["Es un hombre interesado, solo piensa en dinero.", "Он корыстный человек, думает только о деньгах."], estar_example: ["Estoy interesado en ese curso de español.", "Я заинтересован в этом курсе испанского."], category: "both_different" },
+  { word: "moreno", ru: "тёмноволосый / загорелый", ser_meaning: "темноволосый / смуглый (от природы)", estar_meaning: "загорелый (сейчас)", ser_example: ["Mi madre es morena.", "Моя мама тёмноволосая."], estar_example: ["Estás muy moreno, ¿has ido a la playa?", "Ты очень загорелый, ты был на пляже?"], category: "both_different" },
+  { word: "cansado", ru: "утомительный / уставший", ser_meaning: "утомительный, надоедливый", estar_meaning: "уставший", ser_example: ["Eres muy cansado, siempre repites lo mismo.", "Ты утомительный, вечно повторяешь одно и то же."], estar_example: ["Estoy cansado, he trabajado todo el día.", "Я устал, работал весь день."], category: "both_different" },
+  { word: "abierto", ru: "открытый (характер) / открытый (физически)", ser_meaning: "открытый, общительный (характер)", estar_meaning: "открытый (дверь, магазин)", ser_example: ["Es una persona muy abierta.", "Она очень открытый человек."], estar_example: ["La tienda está abierta hasta las nueve.", "Магазин открыт до девяти."], category: "both_different" },
+  { word: "cerrado", ru: "закрытый (характер) / закрытый (физически)", ser_meaning: "замкнутый, упёртый", estar_meaning: "закрытый (дверь, магазин)", ser_example: ["Es muy cerrado, no acepta ideas nuevas.", "Он очень упёртый, не принимает новых идей."], estar_example: ["El museo está cerrado los lunes.", "Музей закрыт по понедельникам."], category: "both_different" },
+  { word: "claro", ru: "светлый (цвет) / ясный, понятный", ser_meaning: "светлый (цвет, тон)", estar_meaning: "ясный, понятный (ситуация)", ser_example: ["Su pelo es muy claro.", "Её волосы очень светлые."], estar_example: ["¿Está claro? ¿Tenéis preguntas?", "Понятно? Есть вопросы?"], category: "both_different" },
+
+  // === SER ONLY — nationality ===
+  { word: "ruso", ru: "русский (национальность)", ser_meaning: "русский по национальности", estar_meaning: null, ser_example: ["Soy ruso, nací en Moscú.", "Я русский, родился в Москве."], estar_example: null, category: "ser_only" },
+  { word: "español", ru: "испанский (национальность)", ser_meaning: "испанец по национальности", estar_meaning: null, ser_example: ["Mi amigo es español, de Barcelona.", "Мой друг испанец, из Барселоны."], estar_example: null, category: "ser_only" },
+  { word: "francés", ru: "французский (национальность)", ser_meaning: "француз по национальности", estar_meaning: null, ser_example: ["Ella es francesa, vive en París.", "Она француженка, живёт в Париже."], estar_example: null, category: "ser_only" },
+
+  // === SER ONLY — profession ===
+  { word: "profesor", ru: "преподаватель (профессия)", ser_meaning: "преподаватель (профессия)", estar_meaning: null, ser_example: ["Mi padre es profesor de matemáticas.", "Мой отец преподаватель математики."], estar_example: null, category: "ser_only" },
+  { word: "médico", ru: "врач (профессия)", ser_meaning: "врач (профессия)", estar_meaning: null, ser_example: ["Soy médico, trabajo en un hospital.", "Я врач, работаю в больнице."], estar_example: null, category: "ser_only" },
+  { word: "abogado", ru: "адвокат (профессия)", ser_meaning: "адвокат (профессия)", estar_meaning: null, ser_example: ["Es abogado, tiene su propio despacho.", "Он адвокат, у него свой офис."], estar_example: null, category: "ser_only" },
+
+  // === SER ONLY — origin & material ===
+  { word: "de Moscú", ru: "из Москвы (происхождение)", ser_meaning: "родом из Москвы", estar_meaning: null, ser_example: ["Soy de Moscú, pero vivo en Madrid.", "Я из Москвы, но живу в Мадриде."], estar_example: null, category: "ser_only" },
+  { word: "de madera", ru: "из дерева (материал)", ser_meaning: "сделан из дерева", estar_meaning: null, ser_example: ["Esta mesa es de madera.", "Этот стол из дерева."], estar_example: null, category: "ser_only" },
+  { word: "de oro", ru: "из золота (материал)", ser_meaning: "сделан из золота", estar_meaning: null, ser_example: ["Este anillo es de oro.", "Это кольцо из золота."], estar_example: null, category: "ser_only" },
+
+  // === SER ONLY — time ===
+  { word: "las tres", ru: "три часа (время)", ser_meaning: "обозначение времени", estar_meaning: null, ser_example: ["Son las tres de la tarde.", "Сейчас три часа дня."], estar_example: null, category: "ser_only" },
+  { word: "lunes", ru: "понедельник (день)", ser_meaning: "обозначение дня недели", estar_meaning: null, ser_example: ["Hoy es lunes.", "Сегодня понедельник."], estar_example: null, category: "ser_only" },
+
+  // === SER ONLY — character/appearance permanent ===
+  { word: "inteligente", ru: "умный (характер)", ser_meaning: "умный (врождённое свойство)", estar_meaning: null, ser_example: ["Es muy inteligente, tiene dos carreras.", "Он очень умный, у него два диплома."], estar_example: null, category: "ser_only" },
+  { word: "amable", ru: "любезный (характер)", ser_meaning: "любезный, доброжелательный (по натуре)", estar_meaning: null, ser_example: ["La recepcionista es muy amable.", "Администратор очень любезная."], estar_example: null, category: "ser_only" },
+  { word: "tímido", ru: "робкий, застенчивый", ser_meaning: "застенчивый (по натуре)", estar_meaning: null, ser_example: ["Es tímido, le cuesta hablar en público.", "Он застенчивый, ему трудно говорить публично."], estar_example: null, category: "ser_only" },
+  { word: "alto", ru: "высокий (рост)", ser_meaning: "высокий (постоянный рост)", estar_meaning: null, ser_example: ["Mi hermano es muy alto, mide dos metros.", "Мой брат очень высокий, два метра ростом."], estar_example: null, category: "ser_only" },
+  { word: "rubio", ru: "блондин (внешность)", ser_meaning: "блондин (натуральный цвет)", estar_meaning: null, ser_example: ["Es rubio de ojos azules.", "Он блондин с голубыми глазами."], estar_example: null, category: "ser_only" },
+  { word: "delgado", ru: "худой (телосложение)", ser_meaning: "худой (постоянное телосложение)", estar_meaning: null, ser_example: ["Es delgado, siempre ha sido así.", "Он худой, всегда таким был."], estar_example: null, category: "ser_only" },
+  { word: "joven", ru: "молодой (возраст)", ser_meaning: "молодой (по возрасту)", estar_meaning: null, ser_example: ["Es joven, solo tiene veinte años.", "Он молодой, ему всего двадцать."], estar_example: null, category: "ser_only" },
+
+  // === SER ONLY — relationships & events ===
+  { word: "mi hermano", ru: "мой брат (отношения)", ser_meaning: "отношения (родство)", estar_meaning: null, ser_example: ["Es mi hermano mayor.", "Это мой старший брат."], estar_example: null, category: "ser_only" },
+  { word: "mi amigo", ru: "мой друг (отношения)", ser_meaning: "отношения (дружба)", estar_meaning: null, ser_example: ["Carlos es mi mejor amigo.", "Карлос — мой лучший друг."], estar_example: null, category: "ser_only" },
+  { word: "la fiesta", ru: "вечеринка (событие)", ser_meaning: "событие/мероприятие (место проведения)", estar_meaning: null, ser_example: ["La fiesta es en mi casa.", "Вечеринка у меня дома."], estar_example: null, category: "ser_only" },
+  { word: "un libro", ru: "книга (определение)", ser_meaning: "определение предмета", estar_meaning: null, ser_example: ["¿Qué es esto? — Es un libro.", "Что это? — Это книга."], estar_example: null, category: "ser_only" },
+
+  // === ESTAR ONLY — location ===
+  { word: "en casa", ru: "дома (местоположение)", ser_meaning: null, estar_meaning: "находиться дома", ser_example: null, estar_example: ["Estoy en casa, ven cuando quieras.", "Я дома, приходи когда хочешь."], category: "estar_only" },
+  { word: "en España", ru: "в Испании (местоположение)", ser_meaning: null, estar_meaning: "находиться в Испании", ser_example: null, estar_example: ["Madrid está en España.", "Мадрид находится в Испании."], category: "estar_only" },
+  { word: "en el centro", ru: "в центре (местоположение)", ser_meaning: null, estar_meaning: "находиться в центре", ser_example: null, estar_example: ["El restaurante está en el centro.", "Ресторан находится в центре."], category: "estar_only" },
+
+  // === ESTAR ONLY — temporary states ===
+  { word: "enfermo", ru: "больной (состояние)", ser_meaning: null, estar_meaning: "больной (сейчас, временно)", ser_example: null, estar_example: ["Estoy enfermo, no puedo ir al trabajo.", "Я болен, не могу идти на работу."], category: "estar_only" },
+  { word: "contento", ru: "довольный (состояние)", ser_meaning: null, estar_meaning: "довольный (сейчас)", ser_example: null, estar_example: ["Estoy contento con los resultados.", "Я доволен результатами."], category: "estar_only" },
+  { word: "triste", ru: "грустный (состояние)", ser_meaning: null, estar_meaning: "грустный (сейчас, настроение)", ser_example: null, estar_example: ["Estoy triste porque se fue mi amigo.", "Мне грустно, потому что уехал мой друг."], category: "estar_only" },
+  { word: "nervioso", ru: "нервный (состояние)", ser_meaning: null, estar_meaning: "нервничать (сейчас)", ser_example: null, estar_example: ["Estoy nervioso por el examen de mañana.", "Я нервничаю из-за завтрашнего экзамена."], category: "estar_only" },
+  { word: "enamorado", ru: "влюблённый", ser_meaning: null, estar_meaning: "влюблённый (в кого-то)", ser_example: null, estar_example: ["Estoy enamorado de María.", "Я влюблён в Марию."], category: "estar_only" },
+  { word: "preocupado", ru: "обеспокоенный", ser_meaning: null, estar_meaning: "обеспокоенный (сейчас)", ser_example: null, estar_example: ["Estoy preocupado por mi madre.", "Я беспокоюсь о маме."], category: "estar_only" },
+  { word: "sorprendido", ru: "удивлённый", ser_meaning: null, estar_meaning: "удивлённый (реакция)", ser_example: null, estar_example: ["Estoy sorprendido por la noticia.", "Я удивлён этой новостью."], category: "estar_only" },
+  { word: "ocupado", ru: "занятой", ser_meaning: null, estar_meaning: "занят (сейчас)", ser_example: null, estar_example: ["Estoy ocupado, te llamo luego.", "Я занят, перезвоню позже."], category: "estar_only" },
+
+  // === ESTAR ONLY — progressive ===
+  { word: "comiendo", ru: "кушая (герундий)", ser_meaning: null, estar_meaning: "процесс: есть (сейчас)", ser_example: null, estar_example: ["Estoy comiendo, espera un momento.", "Я ем, подожди минутку."], category: "estar_only" },
+  { word: "trabajando", ru: "работая (герундий)", ser_meaning: null, estar_meaning: "процесс: работать (сейчас)", ser_example: null, estar_example: ["Estoy trabajando desde casa hoy.", "Сегодня я работаю из дома."], category: "estar_only" },
+  { word: "estudiando", ru: "учась (герундий)", ser_meaning: null, estar_meaning: "процесс: учиться (сейчас)", ser_example: null, estar_example: ["Estoy estudiando español.", "Я учу испанский."], category: "estar_only" },
+
+  // === ESTAR ONLY — result of action ===
+  { word: "roto", ru: "сломанный (результат)", ser_meaning: null, estar_meaning: "сломан (результат действия)", ser_example: null, estar_example: ["Mi teléfono está roto.", "Мой телефон сломан."], category: "estar_only" },
+  { word: "encendido", ru: "включённый", ser_meaning: null, estar_meaning: "включён (результат действия)", ser_example: null, estar_example: ["La luz está encendida.", "Свет включён."], category: "estar_only" },
+  { word: "apagado", ru: "выключенный", ser_meaning: null, estar_meaning: "выключен (результат действия)", ser_example: null, estar_example: ["El ordenador está apagado.", "Компьютер выключен."], category: "estar_only" },
+  { word: "lleno", ru: "полный (наполненный)", ser_meaning: null, estar_meaning: "полный, наполненный", ser_example: null, estar_example: ["El vaso está lleno de agua.", "Стакан полон воды."], category: "estar_only" },
+  { word: "vacío", ru: "пустой", ser_meaning: null, estar_meaning: "пустой (сейчас)", ser_example: null, estar_example: ["La nevera está vacía, hay que ir al supermercado.", "Холодильник пустой, надо сходить в магазин."], category: "estar_only" },
+
+  // === ESTAR ONLY — bien/mal ===
+  { word: "bien", ru: "хорошо", ser_meaning: null, estar_meaning: "быть в порядке, хорошо", ser_example: null, estar_example: ["¿Estás bien? — Sí, estoy bien.", "Ты в порядке? — Да, я в порядке."], category: "estar_only" },
+  { word: "mal", ru: "плохо", ser_meaning: null, estar_meaning: "быть плохо, нехорошо", ser_example: null, estar_example: ["Estoy mal, necesito descansar.", "Мне плохо, мне нужно отдохнуть."], category: "estar_only" },
+
+  // === ESTAR ONLY — expressions ===
+  { word: "muerto", ru: "мёртвый", ser_meaning: null, estar_meaning: "мёртвый (состояние!)", ser_example: null, estar_example: ["El pájaro está muerto.", "Птица мертва."], category: "estar_only" },
+  { word: "de acuerdo", ru: "согласен", ser_meaning: null, estar_meaning: "быть согласным", ser_example: null, estar_example: ["Estoy de acuerdo contigo.", "Я согласен с тобой."], category: "estar_only" },
+  { word: "de vacaciones", ru: "в отпуске", ser_meaning: null, estar_meaning: "быть в отпуске", ser_example: null, estar_example: ["Estoy de vacaciones hasta el lunes.", "Я в отпуске до понедельника."], category: "estar_only" },
+  { word: "de buen humor", ru: "в хорошем настроении", ser_meaning: null, estar_meaning: "быть в хорошем настроении", ser_example: null, estar_example: ["Hoy estoy de buen humor.", "Сегодня у меня хорошее настроение."], category: "estar_only" },
+  { word: "harto", ru: "сытый по горло", ser_meaning: null, estar_meaning: "быть сытым по горло", ser_example: null, estar_example: ["Estoy harto de esperar.", "Мне надоело ждать."], category: "estar_only" },
+  { word: "embarazada", ru: "беременная", ser_meaning: null, estar_meaning: "беременная", ser_example: null, estar_example: ["Mi hermana está embarazada.", "Моя сестра беременна."], category: "estar_only" },
+
+  // === BOTH SAME (same or similar meaning) ===
+  { word: "feliz", ru: "счастливый", ser_meaning: "счастливый (по натуре)", estar_meaning: "счастливый (сейчас)", ser_example: ["Es una persona feliz.", "Он счастливый человек."], estar_example: ["Estoy feliz con mi nueva casa.", "Я счастлив из-за нового дома."], category: "both_same" },
+  { word: "gordo", ru: "толстый", ser_meaning: "толстый (телосложение)", estar_meaning: "потолстевший (набрал вес)", ser_example: ["Es gordo desde niño.", "Он толстый с детства."], estar_example: ["Estoy gordo, he comido mucho en Navidad.", "Я потолстел, много ел на Рождество."], category: "both_same" },
+  { word: "tranquilo", ru: "спокойный", ser_meaning: "спокойный (по характеру)", estar_meaning: "спокойный (сейчас, состояние)", ser_example: ["Es tranquilo, nunca se enfada.", "Он спокойный, никогда не злится."], estar_example: ["Estoy tranquilo, todo saldrá bien.", "Я спокоен, всё будет хорошо."], category: "both_same" },
+  { word: "alegre", ru: "весёлый", ser_meaning: "весёлый (по характеру)", estar_meaning: "весёлый (сейчас, настроение)", ser_example: ["Es una chica muy alegre.", "Она очень весёлая девушка."], estar_example: ["Estoy alegre porque aprobé el examen.", "Я весёлый, потому что сдал экзамен."], category: "both_same" },
+  { word: "nervioso (trait)", ru: "нервный (характер)", ser_meaning: "нервный (по натуре, характер)", estar_meaning: null, ser_example: ["Es muy nervioso, siempre está agitado.", "Он очень нервный, вечно взвинченный."], estar_example: null, category: "ser_only" },
+  { word: "callado", ru: "тихий / молчаливый", ser_meaning: "молчаливый (по характеру)", estar_meaning: "молчит (сейчас)", ser_example: ["Es muy callado, casi no habla.", "Он очень молчаливый, почти не говорит."], estar_example: ["Hoy estás muy callado, ¿pasa algo?", "Ты сегодня очень тихий, что-то случилось?"], category: "both_same" },
+  { word: "guapa", ru: "красивая", ser_meaning: "красивая (всегда)", estar_meaning: "хорошо выглядит (сейчас)", ser_example: ["Es muy guapa, parece modelo.", "Она очень красивая, как модель."], estar_example: ["Estás muy guapa esta noche.", "Ты очень хорошо выглядишь сегодня вечером."], category: "both_different" },
+  { word: "sucio", ru: "грязный", ser_meaning: "грязнуля (по натуре)", estar_meaning: "грязный (сейчас)", ser_example: ["Es muy sucio, nunca limpia su habitación.", "Он грязнуля, никогда не убирает комнату."], estar_example: ["El suelo está sucio, hay que fregarlo.", "Пол грязный, надо его помыть."], category: "both_different" },
+  { word: "limpio", ru: "чистый", ser_meaning: "чистоплотный (по натуре)", estar_meaning: "чистый (сейчас)", ser_example: ["Es muy limpio, siempre ordena todo.", "Он очень чистоплотный, всегда всё убирает."], estar_example: ["La casa está limpia.", "Дом чистый."], category: "both_different" },
+  { word: "frío", ru: "холодный", ser_meaning: "холодный (по натуре, о человеке)", estar_meaning: "холодный (сейчас, температура)", ser_example: ["Es muy frío, nunca muestra emociones.", "Он очень холодный, никогда не показывает эмоций."], estar_example: ["La sopa está fría.", "Суп холодный."], category: "both_different" },
+  { word: "caliente", ru: "горячий", ser_meaning: "горячий (по темпераменту)", estar_meaning: "горячий (температура сейчас)", ser_example: ["Es muy caliente, se enfada fácilmente.", "Он вспыльчивый, легко злится."], estar_example: ["Ten cuidado, el café está caliente.", "Осторожно, кофе горячий."], category: "both_different" },
+
+  // === More SER ONLY ===
+  { word: "importante", ru: "важный", ser_meaning: "важный (свойство)", estar_meaning: null, ser_example: ["Es importante estudiar cada día.", "Важно учиться каждый день."], estar_example: null, category: "ser_only" },
+  { word: "necesario", ru: "необходимый", ser_meaning: "необходимый (свойство)", estar_meaning: null, ser_example: ["Es necesario tener pasaporte.", "Необходимо иметь паспорт."], estar_example: null, category: "ser_only" },
+  { word: "posible", ru: "возможный", ser_meaning: "возможный (свойство)", estar_meaning: null, ser_example: ["Es posible llegar a tiempo.", "Можно успеть вовремя."], estar_example: null, category: "ser_only" },
+  { word: "difícil", ru: "трудный", ser_meaning: "трудный (свойство)", estar_meaning: null, ser_example: ["El español es difícil pero bonito.", "Испанский трудный, но красивый."], estar_example: null, category: "ser_only" },
+  { word: "fácil", ru: "лёгкий", ser_meaning: "лёгкий (свойство)", estar_meaning: null, ser_example: ["Este ejercicio es fácil.", "Это упражнение лёгкое."], estar_example: null, category: "ser_only" },
+  { word: "barato", ru: "дешёвый", ser_meaning: "дешёвый (характеристика)", estar_meaning: null, ser_example: ["Este restaurante es barato.", "Этот ресторан дешёвый."], estar_example: null, category: "ser_only" },
+  { word: "caro", ru: "дорогой", ser_meaning: "дорогой (характеристика)", estar_meaning: null, ser_example: ["Este hotel es muy caro.", "Этот отель очень дорогой."], estar_example: null, category: "ser_only" },
+
+  // === More ESTAR ONLY ===
+  { word: "perdido", ru: "потерянный", ser_meaning: null, estar_meaning: "потерян, заблудился", ser_example: null, estar_example: ["Estoy perdido, ¿dónde está la estación?", "Я заблудился, где станция?"], category: "estar_only" },
+  { word: "equivocado", ru: "ошибающийся", ser_meaning: null, estar_meaning: "ошибаться", ser_example: null, estar_example: ["Estás equivocado, eso no es verdad.", "Ты ошибаешься, это неправда."], category: "estar_only" },
+  { word: "prohibido", ru: "запрещено", ser_meaning: null, estar_meaning: "запрещено (результат)", ser_example: null, estar_example: ["Está prohibido fumar aquí.", "Здесь запрещено курить."], category: "estar_only" },
+  { word: "permitido", ru: "разрешено", ser_meaning: null, estar_meaning: "разрешено (результат)", ser_example: null, estar_example: ["¿Está permitido sacar fotos?", "Можно фотографировать?"], category: "estar_only" },
+  { word: "mojado", ru: "мокрый", ser_meaning: null, estar_meaning: "мокрый (сейчас)", ser_example: null, estar_example: ["El suelo está mojado, ten cuidado.", "Пол мокрый, осторожно."], category: "estar_only" },
+  { word: "seco", ru: "сухой (состояние)", ser_meaning: null, estar_meaning: "сухой (сейчас)", ser_example: null, estar_example: ["La ropa ya está seca.", "Одежда уже сухая."], category: "estar_only" },
+  { word: "loco", ru: "сумасшедший", ser_meaning: null, estar_meaning: "быть сумасшедшим / обезуметь", ser_example: null, estar_example: ["¡Estás loco! Eso es peligroso.", "Ты с ума сошёл! Это опасно."], category: "estar_only" },
+];
+
+function normalize(s) {
+  return s.toLowerCase().replace(/á/g,'a').replace(/é/g,'e').replace(/í/g,'i').replace(/ó/g,'o').replace(/ú/g,'u').replace(/ñ/g,'n').replace(/ü/g,'u').trim();
+}
+
+function lookup() {
+  const raw = document.getElementById('searchInput').value.trim();
+  if (!raw) return;
+  const q = normalize(raw);
+  const qLower = raw.toLowerCase().trim();
+
+  // Search: exact match, then partial
+  let results = DB.filter(e => normalize(e.word) === q || e.ru.toLowerCase().includes(qLower));
+  if (results.length === 0) {
+    results = DB.filter(e => normalize(e.word).includes(q) || e.ru.toLowerCase().includes(q));
+  }
+
+  const box = document.getElementById('result');
+  box.style.display = 'block';
+
+  if (results.length === 0) {
+    box.innerHTML = '<div class="no-result">Не найдено. Попробуйте другое слово.</div>';
+    return;
+  }
+
+  let html = '';
+  results.forEach(entry => {
+    html += renderEntry(entry);
+  });
+  box.innerHTML = html;
+}
+
+function renderEntry(e) {
+  let badgeHtml = '';
+  if (e.category === 'both_different') {
+    badgeHtml = '<span class="badge badge-change">⚡ Значение меняется!</span>';
+  } else if (e.category === 'ser_only') {
+    badgeHtml = '<span class="badge badge-ser">SER</span>';
+  } else if (e.category === 'estar_only') {
+    badgeHtml = '<span class="badge badge-estar">ESTAR</span>';
+  } else if (e.category === 'both_same') {
+    badgeHtml = '<span class="badge badge-both">SER / ESTAR</span>';
+  }
+
+  let html = `<div class="word-header">
+    <span class="word-main">${e.word}</span>
+    <span class="word-ru">${e.ru}</span>
+    ${badgeHtml}
+  </div>`;
+
+  if (e.ser_meaning && e.estar_meaning) {
+    // Side-by-side
+    html += '<div class="cards-grid">';
+    html += renderSerCard(e);
+    html += renderEstarCard(e);
+    html += '</div>';
+  } else if (e.ser_meaning) {
+    html += '<div class="cards-grid"><div class="single-card">' + renderSerCard(e) + '</div></div>';
+  } else if (e.estar_meaning) {
+    html += '<div class="cards-grid"><div class="single-card">' + renderEstarCard(e) + '</div></div>';
+  }
+
+  return html;
+}
+
+function renderSerCard(e) {
+  let exHtml = '';
+  if (e.ser_example) {
+    exHtml = `<div class="example-sentence"><b>${e.ser_example[0]}</b><span class="ex-ru">${e.ser_example[1]}</span></div>`;
+  }
+  return `<div class="verb-card">
+    <div class="verb-card-header ser-header">SER <span class="verb-label">— сущность</span></div>
+    <div class="verb-card-body">
+      <div class="meaning-text">${e.ser_meaning}</div>
+      ${exHtml}
+    </div>
+  </div>`;
+}
+
+function renderEstarCard(e) {
+  let exHtml = '';
+  if (e.estar_example) {
+    exHtml = `<div class="example-sentence"><b>${e.estar_example[0]}</b><span class="ex-ru">${e.estar_example[1]}</span></div>`;
+  }
+  return `<div class="verb-card">
+    <div class="verb-card-header estar-header">ESTAR <span class="verb-label">— состояние</span></div>
+    <div class="verb-card-body">
+      <div class="meaning-text">${e.estar_meaning}</div>
+      ${exHtml}
+    </div>
+  </div>`;
+}
+
+function tryWord(w) {
+  document.getElementById('searchInput').value = w;
+  lookup();
+  document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script>
+</body>
+</html>

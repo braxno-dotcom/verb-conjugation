@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇬🇧</text></svg>">
+<meta name="apple-mobile-web-app-title" content="EN tenses">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇬🇧 Английские времена</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #edf5f0;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #0d4025, #1a5c3a);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  /* Filter buttons */
+  .filters {
+    max-width: 1100px;
+    margin: 24px auto 8px;
+    padding: 0 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+  .filter-group {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .filter-sep {
+    width: 2px;
+    background: #ccc;
+    margin: 4px 8px;
+    border-radius: 2px;
+  }
+  .filter-btn {
+    padding: 9px 18px;
+    border: 2px solid #1a5c3a;
+    border-radius: 10px;
+    background: white;
+    color: #1a5c3a;
+    font-size: 0.92em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover { background: #d6ebe0; }
+  .filter-btn.active { background: #1a5c3a; color: white; }
+
+  /* Grid */
+  .grid {
+    max-width: 1200px;
+    margin: 20px auto 30px;
+    padding: 0 16px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  /* Tense cards */
+  .tense-card {
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s;
+  }
+  .tense-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  }
+  .tense-card.hidden {
+    display: none;
+  }
+  .card-head {
+    padding: 14px 16px;
+    color: white;
+    font-weight: 700;
+    font-size: 1em;
+  }
+  .card-head .ru-name {
+    display: block;
+    font-weight: 400;
+    font-size: 0.82em;
+    opacity: 0.9;
+    margin-top: 3px;
+  }
+  /* Aspect colors */
+  .aspect-simple .card-head { background: #2962a8; }
+  .aspect-continuous .card-head { background: #1a7a42; }
+  .aspect-perfect .card-head { background: #6b3fa0; }
+  .aspect-perfect-continuous .card-head { background: #c2680c; }
+
+  .card-body { padding: 16px; }
+
+  .formula {
+    font-family: 'Consolas', 'Courier New', monospace;
+    background: #f4f6f5;
+    border-left: 3px solid #999;
+    padding: 8px 12px;
+    font-size: 0.88em;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 12px;
+    line-height: 1.6;
+    color: #333;
+  }
+  .aspect-simple .formula { border-left-color: #2962a8; }
+  .aspect-continuous .formula { border-left-color: #1a7a42; }
+  .aspect-perfect .formula { border-left-color: #6b3fa0; }
+  .aspect-perfect-continuous .formula { border-left-color: #c2680c; }
+
+  .examples {
+    margin-bottom: 12px;
+    font-size: 0.88em;
+    line-height: 1.7;
+  }
+  .examples .label {
+    font-weight: 600;
+    color: #555;
+    font-size: 0.82em;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .examples .en {
+    color: #1a3a2a;
+    font-style: italic;
+  }
+
+  .ru-meaning {
+    background: #f8f4ff;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 0.85em;
+    color: #444;
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  .ru-meaning strong { color: #333; }
+
+  .usage {
+    font-size: 0.82em;
+    color: #666;
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+
+  .signal-words {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 8px;
+  }
+  .signal-word {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 12px;
+    font-size: 0.76em;
+    font-weight: 600;
+    color: white;
+  }
+  .aspect-simple .signal-word { background: #4a84c4; }
+  .aspect-continuous .signal-word { background: #2a9856; }
+  .aspect-perfect .signal-word { background: #8b6bbf; }
+  .aspect-perfect-continuous .signal-word { background: #d4882e; }
+
+  /* Info section */
+  .info-section {
+    max-width: 1200px;
+    margin: 10px auto 40px;
+    padding: 0 16px;
+  }
+  .info-block {
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .info-block h2 {
+    font-size: 1.2em;
+    color: #0d4025;
+    margin-bottom: 16px;
+    font-weight: 700;
+  }
+  .info-block h3 {
+    font-size: 1em;
+    color: #333;
+    margin: 14px 0 8px;
+    font-weight: 600;
+  }
+  .info-block p, .info-block li {
+    font-size: 0.9em;
+    color: #444;
+    line-height: 1.6;
+  }
+  .info-block ul { margin-left: 20px; margin-bottom: 10px; }
+
+  /* Overview table */
+  .overview-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82em;
+    margin-top: 10px;
+  }
+  .overview-table th, .overview-table td {
+    border: 1px solid #ddd;
+    padding: 10px 8px;
+    text-align: center;
+    vertical-align: top;
+  }
+  .overview-table th {
+    font-weight: 700;
+    color: white;
+    font-size: 0.95em;
+  }
+  .overview-table th.col-simple { background: #2962a8; }
+  .overview-table th.col-cont { background: #1a7a42; }
+  .overview-table th.col-perf { background: #6b3fa0; }
+  .overview-table th.col-pc { background: #c2680c; }
+  .overview-table th.col-time { background: #555; }
+  .overview-table td {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.85em;
+    color: #333;
+    line-height: 1.4;
+  }
+
+  .key-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 12px 0 6px;
+  }
+  .key-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.88em;
+  }
+  .key-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+  .key-dot.simple { background: #2962a8; }
+  .key-dot.continuous { background: #1a7a42; }
+  .key-dot.perfect { background: #6b3fa0; }
+  .key-dot.pc { background: #c2680c; }
+
+  .stative-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .stative-word {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 8px;
+    background: #ffe8e8;
+    color: #a04040;
+    font-size: 0.85em;
+    font-weight: 600;
+  }
+
+  /* Responsive */
+  @media (max-width: 960px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.35em; }
+    .grid {
+      grid-template-columns: 1fr;
+      padding: 0 10px;
+    }
+    .filters { padding: 0 10px; }
+    .filter-btn { padding: 7px 13px; font-size: 0.85em; }
+    .filter-sep { margin: 4px 4px; }
+    .info-section { padding: 0 10px; }
+    .info-block { padding: 16px; }
+    .overview-table { font-size: 0.72em; }
+    .overview-table th, .overview-table td { padding: 6px 4px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="english.html" class="lang-switch">📖 Портал</a>
+    <a href="english-verbs.html" class="lang-switch">📝 Глаголы</a>
+  </div>
+  <h1>🇬🇧 Английские времена</h1>
+  <p>12 времён английского языка — формулы, примеры, сигнальные слова</p>
+</header>
+
+<div class="filters">
+  <div class="filter-group">
+    <button class="filter-btn active" data-filter="all" onclick="applyFilter('all', this)">Все</button>
+  </div>
+  <div class="filter-sep"></div>
+  <div class="filter-group">
+    <button class="filter-btn" data-filter="time-present" onclick="applyFilter('time-present', this)">Present</button>
+    <button class="filter-btn" data-filter="time-past" onclick="applyFilter('time-past', this)">Past</button>
+    <button class="filter-btn" data-filter="time-future" onclick="applyFilter('time-future', this)">Future</button>
+  </div>
+  <div class="filter-sep"></div>
+  <div class="filter-group">
+    <button class="filter-btn" data-filter="aspect-simple" onclick="applyFilter('aspect-simple', this)">Simple</button>
+    <button class="filter-btn" data-filter="aspect-continuous" onclick="applyFilter('aspect-continuous', this)">Continuous</button>
+    <button class="filter-btn" data-filter="aspect-perfect" onclick="applyFilter('aspect-perfect', this)">Perfect</button>
+    <button class="filter-btn" data-filter="aspect-perfect-continuous" onclick="applyFilter('aspect-perfect-continuous', this)">Perf. Cont.</button>
+  </div>
+</div>
+
+<div class="grid" id="tenseGrid">
+
+  <!-- Row: Present -->
+
+  <div class="tense-card aspect-simple" data-time="present" data-aspect="simple">
+    <div class="card-head">
+      Present Simple
+      <span class="ru-name">Настоящее простое</span>
+    </div>
+    <div class="card-body">
+      <div class="formula">
+        <strong>+</strong> S + V(s/es)<br>
+        <strong>−</strong> S + do/does + not + V<br>
+        <strong>?</strong> Do/Does + S + V?
+      </div>
+      <div class="examples">
+        <div class="label">Примеры</div>
+        <div class="en">I work. She works.</div>
+        <div class="en">I don't work. Does she work?</div>
+      </div>
+      <div class="ru-meaning">
+        <strong>🇷🇺</strong> Я работаю (регулярно)
+      </div>
+      <div class="usage">
+        <strong>Когда:</strong> привычки, факты, расписание
+      </div>
+      <div class="signal-words">
+        <span class="signal-word">always</span>
+        <span class="signal-word">usually</span>
+        <span class="signal-word">often</span>
+        <span class="signal-word">sometimes</span>
+        <span class="signal-word">never</span>
+        <span class="signal-word">every day</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tense-card aspect-continuous" data-time="present" data-aspect="continuous">
+    <div class="card-head">
+      Present Continuous
+      <span class="ru-name">Настоящее длительное</span>
+    </div>
+    <div class="card-body">
+      <div class="formula">
+        <strong>+</strong> S + am/is/are + V-ing<br>
+        <strong>−</strong> S + am/is/are + not + V-ing<br>
+        <strong>?</strong> Am/Is/Are + S + V-ing?
+      </div>
+      <div class="examples">
+        <div class="label">Примеры</div>
+        <div class="en">I am working. She is reading.</div>
+        <div class="en">I'm not working. Are you listening?</div>
+      </div>
+      <div class="ru-meaning">
+        <strong>🇷🇺</strong> Я работаю (прямо сейчас)
+      </div>
+      <div class="usage">
+        <strong>Когда:</strong> действие прямо сейчас, временная ситуация, планы
+      </div>
+      <div class="signal-words">
+        <span class="signal-word">now</span>
+        <span class="signal-word">right now</span>
+        <span class="signal-word">at the moment</span>
+        <span class="signal-word">currently</span>
+        <span class="signal-word">today</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tense-card aspect-perfect" data-time="present" data-aspect="perfect">
+    <div class="card-head">
+      Present Perfect
+      <span class="ru-name">Настоящее совершённое</span>
+    </div>
+    <div class="card-body">
+      <div class="formula">
+        <strong>+</strong> S + have/has + V3<br>
+        <strong>−</strong> S + have/has + not + V3<br>
+        <strong>?</strong> Have/Has + S + V3?
+      </div>
+      <div class="examples">
+        <div class="label">Примеры</div>
+        <div class="en">I have worked. She has finished.</div>
+        <div class="en">Have you ever been to Paris?</div>
+      </div>
+      <div class="ru-meaning">
+        <strong>🇷🇺</strong> Я уже сделал (результат виден сейчас)
+      </div>
+      <div class="usage">
+        <strong>Когда:</strong> результат в настоящем, опыт, незаконченный период
+      </div>
+      <div class="signal-words">
+        <span class="signal-word">already</span>
+        <span class="signal-word">yet</span>
+        <span class="signal-word">just</span>
+        <span class="signal-word">ever</span>
+        <span class="signal-word">never</span>
+        <span class="signal-word">recently</span>
+        <span class="signal-word">since</span>
+        <span class="signal-word">for</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tense-card aspect-perfect-continuous" data-time="present" data-aspect="perfect-continuous">
+    <div class="card-head">
+      Present Perfect Continuous
+      <span class="ru-name">Наст. соверш. длительное</span>
+    </div>
+    <div class="card-body">
+      <div class="formula">
+        <strong>+</strong> S + have/has + been + V-ing<br>
+        <strong>−</strong> S + have/has + not + been + V-ing<br>
+        <strong>?</strong> Have/Has + S + been + V-ing?
+      </div>
+      <div class="examples">
+        <div class="label">Примеры</div>
+        <div class="en">I have been working for 3 hours.</div>
+        <div class="en">She has been waiting since 2 o'clock.</div>
+      </div>
+      <div class="ru-meaning">
+        <strong>🇷🇺</strong> Я работаю уже 3 часа (и продолжаю)
+      </div>
+      <div class="usage">
+        <strong>Когда:</strong> действие началось в прошлом и продолжается, видимый результат процесса
+      </div>
+      <div class="signal-words">
+        <span class="signal-word">for</span>
+        <span class="signal-word">since</span>
+        <span class="signal-word">all day</span>
+        <span class="signal-word">lately</span>
+        <span class="signal-word">how long</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row: Past -->
+
+  <div class="tense-card aspect-simple" data-time="past" data-aspect="simple">
+    <div class="card-head">
+      Past Simple
+      <span class="ru-name">Прошедшее простое</span>
+    </div>
+    <div class="card-body">
+      <div class="formula">
+        <strong>+</strong> S + V2/Ved<br>
+        <strong>−</strong> S + did + not + V<br>
+        <strong>?</strong> Did + S + V?
+      </div>
+      <div class="examples">
+        <div class="label">Примеры</div>
+        <div class="en">I worked. She went.</div>
+        <div class="en">I didn't go. Did you see?</div>
+      </div>
+      <div class="ru-meaning">
+        <strong>🇷🇺</strong> Я работал (вчера, закончил)
+      </div>
+      <div class="usage">
+        <strong>Когда:</strong> завершённое действие в прошлом
+      </div>
+      <div class="signal-words">
+        <span class="signal-word">yesterday</span>
+        <span class="signal-word">last week</span>
+        <span class="signal-word">ago</span>
+        <span class="signal-word">in 2020</span>
+        <span class="signal-word">when</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tense-card aspect-continuous" data-time="past" data-aspect="continuous">
+    <div class="card-head">
+      Past Continuous
+      <span class="ru-name">Прошедшее длительное</span>
+    </div>
+    <div class="card-body">
+      <div class="formula">
+        <strong>+</strong> S + was/were + V-ing<br>
+        <strong>−</strong> S + was/were + not + V-ing<br>
+        <strong>?</strong> Was/Were + S + V-ing?
+      </div>
+      <div class="examples">
+        <div class="label">Примеры</div>
+        <div class="en">I was working. They were sleeping.</div>
+        <div class="en">I wasn't working. Was she reading?</div>
+      </div>
+      <div class="ru-meaning">
+        <strong>🇷🇺</strong> Я работал (в тот момент, процесс)
+      </div>
+      <div class="usage">
+        <strong>Когда:</strong> процесс в конкретный момент в прошлом, фон для другого события
+      </div>
+      <div class="signal-words">
+        <span class="signal-word">at 5 o'clock</span>
+        <span class="signal-word">when</span>
+        <span class="signal-word">while</span>
+        <span class="signal-word">all day yesterday</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tense-card aspect-perfect" data-time="past" data-aspect="perfect">
+    <div class="card-head">
+      Past Perfect
+      <span class="ru-name">Прошедшее совершённое</span>
+    </div>
+    <div class="card-body">
+      <div class="formula">
+        <strong>+</strong> S + had + V3<br>
+        <strong>−</strong> S + had + not + V3<br>
+        <strong>?</strong> Had + S + V3?
+      </div>
+      <div class="examples">
+        <div class="label">Примеры</div>
+        <div class="en">I had finished before she arrived.</div>
+        <div class="en">I hadn't eaten. Had you eaten?</div>
+      </div>
+      <div class="ru-meaning">
+        <strong>🇷🇺</strong> Я уже сделал (к тому моменту в прошлом)
+      </div>
+      <div class="usage">
+        <strong>Когда:</strong> действие, завершённое ДО другого прошлого действия
+      </div>
+      <div class="signal-words">
+        <span class="signal-word">before</span>
+        <span class="signal-word">after</span>
+        <span class="signal-word">by the time</span>
+        <span class="signal-word">already</span>
+        <span class="signal-word">just</span>
+        <span class="signal-word">never</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tense-card aspect-perfect-continuous" data-time="past" data-aspect="perfect-continuous">
+    <div class="card-head">
+      Past Perfect Continuous
+      <span class="ru-name">Прош. соверш. длительное</span>
+    </div>
+    <div class="card-body">
+      <div class="formula">
+        <strong>+</strong> S + had + been + V-ing<br>
+        <strong>−</strong> S + had + not + been + V-ing<br>
+        <strong>?</strong> Had + S + been + V-ing?
+      </div>
+      <div class="examples">
+        <div class="label">Примеры</div>
+        <div class="en">I had been working for 2 hours when he called.</div>
+        <div class="en">Had she been waiting long?</div>
+      </div>
+      <div class="ru-meaning">
+        <strong>🇷🇺</strong> Я работал уже 2 часа (когда он позвонил)
+      </div>
+      <div class="usage">
+        <strong>Когда:</strong> длительное действие до момента в прошлом
+      </div>
+      <div class="signal-words">
+        <span class="signal-word">for</span>
+        <span class="signal-word">since</span>
+        <span class="signal-word">before</span>
+        <span class="signal-word">when</span>
+        <span class="signal-word">by the time</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row: Future -->
+
+  <div class="tense-card aspect-simple" data-time="future" data-aspect="simple">
+    <div class="card-head">
+      Future Simple
+      <span class="ru-name">Будущее простое</span>
+    </div>
+    <div class="card-body">
+      <div class="formula">
+        <strong>+</strong> S + will + V<br>
+        <strong>−</strong> S + will + not + V<br>
+        <strong>?</strong> Will + S + V?
+      </div>
+      <div class="examples">
+        <div class="label">Примеры</div>
+        <div class="en">I will work. She won't come.</div>
+        <div class="en">Will you help?</div>
+      </div>
+      <div class="ru-meaning">
+        <strong>🇷🇺</strong> Я буду работать / Я сделаю
+      </div>
+      <div class="usage">
+        <strong>Когда:</strong> спонтанное решение, предсказание, обещание
+      </div>
+      <div class="signal-words">
+        <span class="signal-word">tomorrow</span>
+        <span class="signal-word">next week</span>
+        <span class="signal-word">I think</span>
+        <span class="signal-word">probably</span>
+        <span class="signal-word">in the future</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tense-card aspect-continuous" data-time="future" data-aspect="continuous">
+    <div class="card-head">
+      Future Continuous
+      <span class="ru-name">Будущее длительное</span>
+    </div>
+    <div class="card-body">
+      <div class="formula">
+        <strong>+</strong> S + will + be + V-ing<br>
+        <strong>−</strong> S + will + not + be + V-ing<br>
+        <strong>?</strong> Will + S + be + V-ing?
+      </div>
+      <div class="examples">
+        <div class="label">Примеры</div>
+        <div class="en">I will be working at 5 tomorrow.</div>
+        <div class="en">Will you be using the car?</div>
+      </div>
+      <div class="ru-meaning">
+        <strong>🇷🇺</strong> Я буду работать (в тот момент завтра)
+      </div>
+      <div class="usage">
+        <strong>Когда:</strong> процесс в конкретный момент в будущем, вежливый вопрос
+      </div>
+      <div class="signal-words">
+        <span class="signal-word">at this time tomorrow</span>
+        <span class="signal-word">all day</span>
+        <span class="signal-word">when</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tense-card aspect-perfect" data-time="future" data-aspect="perfect">
+    <div class="card-head">
+      Future Perfect
+      <span class="ru-name">Будущее совершённое</span>
+    </div>
+    <div class="card-body">
+      <div class="formula">
+        <strong>+</strong> S + will + have + V3<br>
+        <strong>−</strong> S + will + not + have + V3<br>
+        <strong>?</strong> Will + S + have + V3?
+      </div>
+      <div class="examples">
+        <div class="label">Примеры</div>
+        <div class="en">I will have finished by 6 o'clock.</div>
+        <div class="en">She will have left by then.</div>
+      </div>
+      <div class="ru-meaning">
+        <strong>🇷🇺</strong> Я уже закончу (к тому моменту)
+      </div>
+      <div class="usage">
+        <strong>Когда:</strong> действие, которое завершится к определённому моменту в будущем
+      </div>
+      <div class="signal-words">
+        <span class="signal-word">by</span>
+        <span class="signal-word">by the time</span>
+        <span class="signal-word">before</span>
+        <span class="signal-word">by next week</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tense-card aspect-perfect-continuous" data-time="future" data-aspect="perfect-continuous">
+    <div class="card-head">
+      Future Perfect Continuous
+      <span class="ru-name">Буд. соверш. длительное</span>
+    </div>
+    <div class="card-body">
+      <div class="formula">
+        <strong>+</strong> S + will + have + been + V-ing<br>
+        <strong>−</strong> S + will + not + have + been + V-ing<br>
+        <strong>?</strong> Will + S + have + been + V-ing?
+      </div>
+      <div class="examples">
+        <div class="label">Примеры</div>
+        <div class="en">By December, I will have been working here for 5 years.</div>
+        <div class="en">Will she have been studying long enough?</div>
+      </div>
+      <div class="ru-meaning">
+        <strong>🇷🇺</strong> К декабрю я буду работать здесь уже 5 лет
+      </div>
+      <div class="usage">
+        <strong>Когда:</strong> длительность действия к моменту в будущем
+      </div>
+      <div class="signal-words">
+        <span class="signal-word">for</span>
+        <span class="signal-word">by</span>
+        <span class="signal-word">by the time</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Info section -->
+<div class="info-section">
+
+  <div class="info-block">
+    <h2>Все 12 времён одним взглядом</h2>
+    <table class="overview-table">
+      <tr>
+        <th class="col-time"></th>
+        <th class="col-simple">Simple</th>
+        <th class="col-cont">Continuous</th>
+        <th class="col-perf">Perfect</th>
+        <th class="col-pc">Perfect Continuous</th>
+      </tr>
+      <tr>
+        <th class="col-time">Present</th>
+        <td>V / V(s)<br><em style="font-family:inherit;font-size:0.9em;color:#666">I work</em></td>
+        <td>am/is/are + V-ing<br><em style="font-family:inherit;font-size:0.9em;color:#666">I am working</em></td>
+        <td>have/has + V3<br><em style="font-family:inherit;font-size:0.9em;color:#666">I have worked</em></td>
+        <td>have/has + been + V-ing<br><em style="font-family:inherit;font-size:0.9em;color:#666">I have been working</em></td>
+      </tr>
+      <tr>
+        <th class="col-time">Past</th>
+        <td>V2 / Ved<br><em style="font-family:inherit;font-size:0.9em;color:#666">I worked</em></td>
+        <td>was/were + V-ing<br><em style="font-family:inherit;font-size:0.9em;color:#666">I was working</em></td>
+        <td>had + V3<br><em style="font-family:inherit;font-size:0.9em;color:#666">I had worked</em></td>
+        <td>had + been + V-ing<br><em style="font-family:inherit;font-size:0.9em;color:#666">I had been working</em></td>
+      </tr>
+      <tr>
+        <th class="col-time">Future</th>
+        <td>will + V<br><em style="font-family:inherit;font-size:0.9em;color:#666">I will work</em></td>
+        <td>will + be + V-ing<br><em style="font-family:inherit;font-size:0.9em;color:#666">I will be working</em></td>
+        <td>will + have + V3<br><em style="font-family:inherit;font-size:0.9em;color:#666">I will have worked</em></td>
+        <td>will + have + been + V-ing<br><em style="font-family:inherit;font-size:0.9em;color:#666">I will have been working</em></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="info-block">
+    <h2>Ключевая идея каждого аспекта</h2>
+    <div class="key-row">
+      <div class="key-item"><span class="key-dot simple"></span> <strong>Simple</strong> = факт, результат</div>
+      <div class="key-item"><span class="key-dot continuous"></span> <strong>Continuous</strong> = процесс</div>
+      <div class="key-item"><span class="key-dot perfect"></span> <strong>Perfect</strong> = результат к моменту</div>
+      <div class="key-item"><span class="key-dot pc"></span> <strong>Perfect Continuous</strong> = длительность к моменту</div>
+    </div>
+  </div>
+
+  <div class="info-block">
+    <h2>Will vs Going to</h2>
+    <h3>Will</h3>
+    <ul>
+      <li>Спонтанное решение: <em>It's cold. I<strong>'ll close</strong> the window.</em></li>
+      <li>Предсказание (мнение): <em>I think it <strong>will rain</strong> tomorrow.</em></li>
+      <li>Обещание: <em>I <strong>will help</strong> you.</em></li>
+    </ul>
+    <h3>Going to</h3>
+    <ul>
+      <li>Запланированное действие: <em>I<strong>'m going to visit</strong> my parents this weekend.</em></li>
+      <li>Предсказание (очевидные признаки): <em>Look at the clouds! It<strong>'s going to rain</strong>.</em></li>
+    </ul>
+  </div>
+
+  <div class="info-block">
+    <h2>Настоящее время для будущего</h2>
+    <ul>
+      <li><strong>Present Continuous</strong> — личные планы и договорённости: <em>I<strong>'m leaving</strong> tomorrow.</em></li>
+      <li><strong>Present Simple</strong> — расписание, графики: <em>The train <strong>leaves</strong> at 6.</em> / <em>The meeting <strong>starts</strong> at 9.</em></li>
+    </ul>
+  </div>
+
+  <div class="info-block">
+    <h2>Stative verbs (глаголы состояния)</h2>
+    <p>Эти глаголы обычно <strong>НЕ</strong> используются в Continuous:</p>
+    <div class="stative-list">
+      <span class="stative-word">know</span>
+      <span class="stative-word">want</span>
+      <span class="stative-word">like</span>
+      <span class="stative-word">love</span>
+      <span class="stative-word">hate</span>
+      <span class="stative-word">believe</span>
+      <span class="stative-word">understand</span>
+      <span class="stative-word">remember</span>
+      <span class="stative-word">belong</span>
+      <span class="stative-word">own</span>
+      <span class="stative-word">need</span>
+      <span class="stative-word">prefer</span>
+      <span class="stative-word">seem</span>
+      <span class="stative-word">mean</span>
+    </div>
+    <p style="margin-top: 10px; font-size: 0.85em; color: #888;">
+      Исключение: некоторые из них могут использоваться в Continuous с изменённым значением.<br>
+      <em>I <strong>think</strong> it's great</em> (мнение) vs <em>I<strong>'m thinking</strong> about it</em> (процесс размышления).
+    </p>
+  </div>
+
+</div>
+
+<script>
+function applyFilter(filter, btn) {
+  // Update active state
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const cards = document.querySelectorAll('.tense-card');
+
+  if (filter === 'all') {
+    cards.forEach(c => c.classList.remove('hidden'));
+    return;
+  }
+
+  const isTime = filter.startsWith('time-');
+  const isAspect = filter.startsWith('aspect-');
+
+  cards.forEach(card => {
+    if (isTime) {
+      const time = filter.substring(5); // after "time-"
+      card.classList.toggle('hidden', card.dataset.time !== time);
+    } else if (isAspect) {
+      const aspect = filter.substring(7); // after "aspect-"
+      card.classList.toggle('hidden', card.dataset.aspect !== aspect);
+    }
+  });
+}
+</script>
+
+</body>
+</html>

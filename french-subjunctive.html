@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇫🇷</text></svg>">
+<meta name="apple-mobile-web-app-title" content="FR subj">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇫🇷 Французский Subjonctif</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #eef0f5;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #1a365d, #2a4a7f);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .nav-links {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    max-width: 500px;
+    margin: 24px auto 0;
+    padding: 0 20px;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 13px 20px;
+    font-size: 1.05em;
+    font-weight: 600;
+    border: 2px solid #2a4a7f;
+    background: white;
+    color: #2a4a7f;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab-btn:first-child { border-radius: 10px 0 0 10px; }
+  .tab-btn:last-child { border-radius: 0 10px 10px 0; }
+  .tab-btn.active {
+    background: #2a4a7f;
+    color: white;
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── Triggers tab ── */
+  .triggers-container {
+    max-width: 900px;
+    margin: 20px auto 40px;
+    padding: 0 20px;
+  }
+  .category-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    margin-bottom: 18px;
+  }
+  .category-header {
+    padding: 14px 18px;
+    background: #2a4a7f;
+    color: white;
+    font-weight: 600;
+    font-size: 1.05em;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+  }
+  .category-header .fr-label {
+    font-size: 0.85em;
+    opacity: 0.85;
+    font-weight: 400;
+    margin-left: 8px;
+  }
+  .category-header .toggle-icon {
+    font-size: 0.8em;
+    transition: transform 0.2s;
+  }
+  .category-header.collapsed .toggle-icon {
+    transform: rotate(-90deg);
+  }
+  .category-body { padding: 0; }
+  .category-body.collapsed { display: none; }
+  .trigger-row {
+    padding: 12px 18px;
+    border-bottom: 1px solid #f0f0f0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    align-items: start;
+  }
+  .trigger-row:last-child { border-bottom: none; }
+  .trigger-fr {
+    font-weight: 600;
+    color: #1a365d;
+    font-size: 0.98em;
+  }
+  .trigger-ru {
+    color: #666;
+    font-size: 0.9em;
+  }
+  .trigger-example {
+    grid-column: 1 / -1;
+    font-style: italic;
+    color: #555;
+    font-size: 0.88em;
+    margin-top: 4px;
+    padding-left: 12px;
+    border-left: 3px solid #d0d8e8;
+  }
+  .trigger-example .subj-form {
+    color: #2a4a7f;
+    font-weight: 700;
+    font-style: normal;
+  }
+  .note-box {
+    padding: 12px 18px;
+    background: #fff8e1;
+    border-left: 4px solid #ffc107;
+    font-size: 0.88em;
+    color: #7a6100;
+    margin: 0;
+  }
+  .note-box strong { color: #5d4900; }
+
+  /* ── Conjugation tab ── */
+  .search-area {
+    max-width: 600px;
+    margin: 24px auto 10px;
+    padding: 0 20px;
+    display: flex;
+    gap: 10px;
+  }
+  .search-area input {
+    flex: 1;
+    padding: 14px 18px;
+    font-size: 1.15em;
+    border: 2px solid #b8c2d4;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-area input:focus { border-color: #2a4a7f; }
+  .search-area button {
+    padding: 14px 28px;
+    font-size: 1.05em;
+    background: #2a4a7f;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .search-area button:hover { background: #1a365d; }
+  .hint {
+    max-width: 600px;
+    margin: 8px auto 0;
+    padding: 0 20px;
+    font-size: 0.85em;
+    color: #888;
+  }
+  .hint span { cursor: pointer; color: #2a4a7f; text-decoration: underline; }
+  .hint span:hover { color: #1a365d; }
+
+  .verb-info {
+    max-width: 700px;
+    margin: 18px auto 8px;
+    padding: 0 20px;
+    display: none;
+  }
+  .verb-info .badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 600;
+    margin-right: 8px;
+  }
+  .badge-reg { background: #e0ecff; color: #1a365d; }
+  .badge-irreg { background: #fce4ec; color: #880e4f; }
+
+  .conj-card {
+    max-width: 700px;
+    margin: 16px auto 10px;
+    padding: 0 20px;
+    display: none;
+  }
+  .conj-card-inner {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .conj-header {
+    padding: 14px 18px;
+    background: #2a4a7f;
+    color: white;
+    font-weight: 600;
+    font-size: 1.05em;
+  }
+  .conj-body { padding: 14px 18px; }
+  .conj-body table { width: 100%; }
+  .conj-body td { padding: 5px 0; font-size: 0.98em; }
+  .conj-body .pronoun {
+    color: #888;
+    width: 120px;
+    font-size: 0.92em;
+  }
+  .conj-body .verb-form {
+    font-weight: 600;
+    color: #1a365d;
+  }
+  .conj-example {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: #f4f6fb;
+    border-radius: 8px;
+    font-size: 0.92em;
+    color: #555;
+    font-style: italic;
+    border-left: 3px solid #2a4a7f;
+  }
+  .conj-example .subj-form {
+    color: #2a4a7f;
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  /* ── Info section ── */
+  .info-section {
+    max-width: 900px;
+    margin: 30px auto 40px;
+    padding: 0 20px;
+  }
+  .info-card {
+    background: white;
+    border-radius: 12px;
+    padding: 22px 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    margin-bottom: 16px;
+  }
+  .info-card h3 {
+    font-size: 1.05em;
+    color: #1a365d;
+    margin-bottom: 10px;
+  }
+  .info-card p, .info-card li {
+    font-size: 0.92em;
+    color: #555;
+    line-height: 1.65;
+  }
+  .info-card ul { padding-left: 20px; }
+  .info-card li { margin-bottom: 4px; }
+  .info-card code {
+    background: #eef0f5;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-weight: 600;
+    color: #1a365d;
+    font-size: 0.95em;
+  }
+  .info-card .warning {
+    color: #c62828;
+    font-weight: 600;
+  }
+  .info-card .ok {
+    color: #2e7d32;
+    font-weight: 600;
+  }
+
+  /* ── Mobile ── */
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .nav-links { gap: 6px; }
+    .lang-switch { padding: 6px 12px; font-size: 0.85em; }
+    .tabs { padding: 0 10px; margin-top: 18px; }
+    .tab-btn { padding: 11px 10px; font-size: 0.92em; }
+    .triggers-container { padding: 0 10px; }
+    .trigger-row { grid-template-columns: 1fr; padding: 10px 14px; }
+    .trigger-ru { margin-top: 2px; }
+    .category-header { padding: 12px 14px; font-size: 0.95em; }
+    .search-area { padding: 0 10px; flex-direction: column; }
+    .search-area input { font-size: 1em; padding: 12px 14px; width: 100%; }
+    .search-area button { padding: 12px 18px; font-size: 0.95em; width: 100%; }
+    .hint { padding: 0 10px; }
+    .verb-info { padding: 0 10px; }
+    .conj-card { padding: 0 10px; }
+    .conj-body .pronoun { width: 90px; font-size: 0.85em; }
+    .info-section { padding: 0 10px; }
+    .info-card { padding: 16px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-links">
+    <a href="french.html" class="lang-switch">📖 Портал</a>
+    <a href="french-verbs.html" class="lang-switch">📝 Глаголы</a>
+  </div>
+  <h1>🇫🇷 Subjonctif (сослагательное)</h1>
+  <p>Триггеры и спряжение французского сюбжонктива</p>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('triggers')">Триггеры</button>
+  <button class="tab-btn" onclick="switchTab('conjugation')">Спряжение</button>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- TAB 1: TRIGGERS                            -->
+<!-- ═══════════════════════════════════════════ -->
+<div id="tab-triggers" class="tab-content active">
+  <div class="triggers-container" id="triggers-list"></div>
+
+  <div class="info-section">
+    <div class="info-card">
+      <h3>Когда subjonctif НЕ нужен: один субъект → инфинитив</h3>
+      <p>Если подлежащее главного и придаточного предложения совпадает, используется <strong>инфинитив</strong>, а не subjonctif:</p>
+      <ul>
+        <li><code>Je veux partir.</code> — Я хочу уехать. <span class="ok">✓ правильно</span></li>
+        <li><del><code>Je veux que je parte.</code></del> — <span class="warning">✗ неправильно</span></li>
+        <li><code>Je suis content d'être ici.</code> — Я рад быть здесь. <span class="ok">✓ правильно</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- TAB 2: CONJUGATION                         -->
+<!-- ═══════════════════════════════════════════ -->
+<div id="tab-conjugation" class="tab-content">
+  <div class="search-area">
+    <input type="text" id="verb-input" placeholder="Введите глагол..." autocomplete="off" autofocus>
+    <button onclick="lookupVerb()">Найти</button>
+  </div>
+  <div class="hint">
+    Например: <span onclick="fillVerb('être')">être</span>,
+    <span onclick="fillVerb('avoir')">avoir</span>,
+    <span onclick="fillVerb('aller')">aller</span>,
+    <span onclick="fillVerb('faire')">faire</span>,
+    <span onclick="fillVerb('pouvoir')">pouvoir</span>,
+    <span onclick="fillVerb('venir')">venir</span>,
+    <span onclick="fillVerb('prendre')">prendre</span>,
+    <span onclick="fillVerb('boire')">boire</span>
+  </div>
+
+  <div class="verb-info" id="verb-info"></div>
+  <div class="conj-card" id="conj-card">
+    <div class="conj-card-inner">
+      <div class="conj-header">Subjonctif présent</div>
+      <div class="conj-body" id="conj-body"></div>
+    </div>
+  </div>
+
+  <div class="info-section">
+    <div class="info-card">
+      <h3>Образование subjonctif présent</h3>
+      <p>Для большинства глаголов: берём основу от <strong>ils/elles</strong> формы présent de l'indicatif и добавляем окончания:</p>
+      <ul>
+        <li><code>-e, -es, -e, -ions, -iez, -ent</code></li>
+      </ul>
+      <p style="margin-top:8px;">Пример: <code>parler</code> → ils parl<strong>ent</strong> → основа <code>parl-</code> → que je parl<strong>e</strong>, que nous parl<strong>ions</strong></p>
+    </div>
+    <div class="info-card">
+      <h3>Почему nous/vous похожи на imparfait?</h3>
+      <p>У ряда неправильных глаголов (boire, venir, prendre и др.) основа для <code>nous</code> и <code>vous</code> в subjonctif берётся от формы <strong>nous</strong> présent (а не от ils), что совпадает с основой imparfait:</p>
+      <ul>
+        <li><code>boire</code>: que je <strong>boive</strong>, но que nous <strong>buvions</strong> (ср. imparfait: nous buvions)</li>
+        <li><code>venir</code>: que je <strong>vienne</strong>, но que nous <strong>venions</strong></li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3>Subjonctif vs Indicatif — ключевое отличие</h3>
+      <p><strong>Indicatif</strong> описывает факты и реальность. <strong>Subjonctif</strong> выражает субъективность: желания, сомнения, эмоции, необходимость — то, что воспринимается говорящим, а не констатируется.</p>
+      <ul>
+        <li><code>Je sais qu'il <strong>est</strong> malade.</code> — Indicatif (факт)</li>
+        <li><code>Je doute qu'il <strong>soit</strong> malade.</code> — Subjonctif (сомнение)</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3>Частые ошибки</h3>
+      <ul>
+        <li><span class="warning">✗</span> <code>après que</code> + subjonctif → <span class="ok">✓</span> <code>après que</code> + <strong>indicatif</strong> (Après qu'il <strong>est</strong> parti, pas «soit parti»)</li>
+        <li><span class="warning">✗</span> <code>espérer que</code> + subjonctif → <span class="ok">✓</span> <code>espérer que</code> + <strong>indicatif</strong> (J'espère qu'il <strong>viendra</strong>, pas «vienne»)</li>
+        <li><span class="warning">✗</span> <code>Je veux que je parte.</code> → <span class="ok">✓</span> <code>Je veux partir.</code> (один субъект → инфинитив)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// TRIGGERS DATA
+// ═══════════════════════════════════════════
+const triggerCategories = [
+  {
+    ru: "Необходимость / воля",
+    fr: "Nécessité / Volonté",
+    triggers: [
+      { expr: "il faut que", ru: "нужно, чтобы", ex: "Il faut que tu <s>fasses</s> tes devoirs." },
+      { expr: "il est nécessaire que", ru: "необходимо, чтобы", ex: "Il est nécessaire que nous <s>soyons</s> prêts." },
+      { expr: "je veux que", ru: "я хочу, чтобы", ex: "Je veux que tu <s>viennes</s> avec moi." },
+      { expr: "je souhaite que", ru: "я желаю, чтобы", ex: "Je souhaite qu'elle <s>réussisse</s>." },
+      { expr: "j'aimerais que", ru: "я хотел(а) бы, чтобы", ex: "J'aimerais que vous <s>puissiez</s> m'aider." },
+      { expr: "je demande que", ru: "я прошу, чтобы", ex: "Je demande qu'on <s>fasse</s> silence." },
+      { expr: "j'exige que", ru: "я требую, чтобы", ex: "J'exige que tu <s>dises</s> la vérité." },
+      { expr: "je propose que", ru: "я предлагаю, чтобы", ex: "Je propose que nous <s>allions</s> au cinéma." },
+      { expr: "il vaut mieux que", ru: "лучше, чтобы", ex: "Il vaut mieux que tu <s>partes</s> maintenant." },
+      { expr: "j'ordonne que", ru: "я приказываю, чтобы", ex: "J'ordonne qu'il <s>soit</s> puni." }
+    ]
+  },
+  {
+    ru: "Чувства / эмоции",
+    fr: "Sentiments",
+    triggers: [
+      { expr: "je suis content(e) que", ru: "я доволен/довольна, что", ex: "Je suis content que tu <s>sois</s> là." },
+      { expr: "je suis triste que", ru: "мне грустно, что", ex: "Je suis triste qu'il <s>parte</s>." },
+      { expr: "j'ai peur que", ru: "я боюсь, что", ex: "J'ai peur qu'il ne <s>pleuve</s>." },
+      { expr: "je crains que", ru: "я опасаюсь, что", ex: "Je crains qu'elle ne <s>soit</s> malade." },
+      { expr: "je regrette que", ru: "я сожалею, что", ex: "Je regrette que vous ne <s>puissiez</s> pas venir." },
+      { expr: "c'est dommage que", ru: "жаль, что", ex: "C'est dommage qu'il <s>fasse</s> froid." },
+      { expr: "je suis surpris(e) que", ru: "я удивлён(а), что", ex: "Je suis surpris qu'elle <s>ait</s> accepté." },
+      { expr: "ça m'étonne que", ru: "меня удивляет, что", ex: "Ça m'étonne qu'il <s>sache</s> la réponse." },
+      { expr: "je suis heureux/heureuse que", ru: "я счастлив(а), что", ex: "Je suis heureux que vous <s>soyez</s> venus." },
+      { expr: "je suis furieux/furieuse que", ru: "я в ярости, что", ex: "Je suis furieuse qu'il <s>ait</s> menti." },
+      { expr: "ça me plaît que", ru: "мне нравится, что", ex: "Ça me plaît que tu <s>fasses</s> du sport." }
+    ]
+  },
+  {
+    ru: "Сомнение / отрицание",
+    fr: "Doute / Négation",
+    triggers: [
+      { expr: "je doute que", ru: "я сомневаюсь, что", ex: "Je doute qu'il <s>puisse</s> venir." },
+      { expr: "je ne crois pas que", ru: "я не верю, что", ex: "Je ne crois pas qu'il <s>ait</s> raison." },
+      { expr: "je ne pense pas que", ru: "я не думаю, что", ex: "Je ne pense pas que ce <s>soit</s> vrai." },
+      { expr: "il n'est pas certain que", ru: "не факт, что", ex: "Il n'est pas certain qu'elle <s>vienne</s>." },
+      { expr: "il est possible que", ru: "возможно, что", ex: "Il est possible qu'il <s>pleuve</s> demain." },
+      { expr: "il se peut que", ru: "может быть, что", ex: "Il se peut qu'ils <s>aient</s> oublié." },
+      { expr: "ça ne veut pas dire que", ru: "это не значит, что", ex: "Ça ne veut pas dire qu'il <s>soit</s> d'accord." },
+      { expr: "il est peu probable que", ru: "маловероятно, что", ex: "Il est peu probable qu'il <s>fasse</s> beau." }
+    ],
+    note: "je crois que / je pense que (в утвердит. форме) → INDICATIF! Je crois qu'il a raison."
+  },
+  {
+    ru: "Союзы",
+    fr: "Conjonctions",
+    triggers: [
+      { expr: "bien que", ru: "хотя", ex: "Bien qu'il <s>soit</s> fatigué, il continue." },
+      { expr: "quoique", ru: "хотя", ex: "Quoiqu'elle <s>ait</s> tort, je la comprends." },
+      { expr: "pour que", ru: "чтобы (цель)", ex: "Je parle lentement pour qu'il <s>comprenne</s>." },
+      { expr: "afin que", ru: "для того чтобы", ex: "Afin que tout le monde <s>puisse</s> participer." },
+      { expr: "avant que", ru: "до того как", ex: "Avant qu'il ne <s>parte</s>, dis-lui au revoir." },
+      { expr: "sans que", ru: "без того чтобы", ex: "Il est parti sans que je le <s>sache</s>." },
+      { expr: "à moins que", ru: "если только не", ex: "À moins qu'il ne <s>pleuve</s>, on sort." },
+      { expr: "jusqu'à ce que", ru: "до тех пор пока", ex: "Attends jusqu'à ce qu'il <s>revienne</s>." },
+      { expr: "à condition que", ru: "при условии, что", ex: "À condition que tu <s>fasses</s> attention." },
+      { expr: "pourvu que", ru: "лишь бы; при условии, что", ex: "Pourvu qu'il <s>fasse</s> beau demain !" },
+      { expr: "de peur que", ru: "из страха, что", ex: "De peur qu'il ne <s>soit</s> en retard." },
+      { expr: "en attendant que", ru: "в ожидании того, что", ex: "En attendant qu'elle <s>arrive</s>, lisons." }
+    ],
+    note: "après que → INDICATIF (частая ошибка!). Après qu'il est parti — правильно."
+  },
+  {
+    ru: "Безличные конструкции",
+    fr: "Constructions impersonnelles",
+    triggers: [
+      { expr: "il est important que", ru: "важно, чтобы", ex: "Il est important que tu <s>saches</s> la vérité." },
+      { expr: "il est essentiel que", ru: "необходимо, чтобы", ex: "Il est essentiel qu'on <s>soit</s> à l'heure." },
+      { expr: "il est rare que", ru: "редко бывает, что", ex: "Il est rare qu'il <s>fasse</s> si chaud." },
+      { expr: "il est normal que", ru: "нормально, что", ex: "Il est normal qu'il <s>ait</s> peur." },
+      { expr: "il est temps que", ru: "пора, чтобы", ex: "Il est temps que tu <s>prennes</s> une décision." },
+      { expr: "il est étrange que", ru: "странно, что", ex: "Il est étrange qu'il ne <s>dise</s> rien." },
+      { expr: "il est urgent que", ru: "срочно нужно, чтобы", ex: "Il est urgent que nous <s>agissions</s>." },
+      { expr: "il suffit que", ru: "достаточно, чтобы", ex: "Il suffit que tu <s>fasses</s> un effort." },
+      { expr: "c'est le seul qui...", ru: "это единственный, кто... (после превосходных)", ex: "C'est le seul qui <s>puisse</s> le faire." },
+      { expr: "c'est le premier / dernier qui...", ru: "это первый / последний, кто...", ex: "C'est le dernier film qui m'<s>ait</s> plu." }
+    ]
+  }
+];
+
+// ═══════════════════════════════════════════
+// VERB DATABASE
+// ═══════════════════════════════════════════
+const verbs = {
+  "être": { ru: "быть", type: "irrégulier", forms: ["sois","sois","soit","soyons","soyez","soient"], ex: "Il faut que je <s>sois</s> patient." },
+  "avoir": { ru: "иметь", type: "irrégulier", forms: ["aie","aies","ait","ayons","ayez","aient"], ex: "Je doute qu'il <s>ait</s> raison." },
+  "aller": { ru: "идти, ехать", type: "irrégulier", forms: ["aille","ailles","aille","allions","alliez","aillent"], ex: "Il faut que nous <s>allions</s> au marché." },
+  "faire": { ru: "делать", type: "irrégulier", forms: ["fasse","fasses","fasse","fassions","fassiez","fassent"], ex: "Je veux que tu <s>fasses</s> tes devoirs." },
+  "pouvoir": { ru: "мочь", type: "irrégulier", forms: ["puisse","puisses","puisse","puissions","puissiez","puissent"], ex: "Il est possible que nous <s>puissions</s> partir." },
+  "savoir": { ru: "знать", type: "irrégulier", forms: ["sache","saches","sache","sachions","sachiez","sachent"], ex: "Il faut que tu <s>saches</s> la vérité." },
+  "vouloir": { ru: "хотеть", type: "irrégulier", forms: ["veuille","veuilles","veuille","voulions","vouliez","veuillent"], ex: "Bien qu'il <s>veuille</s> rester, il doit partir." },
+  "prendre": { ru: "брать", type: "irrégulier", forms: ["prenne","prennes","prenne","prenions","preniez","prennent"], ex: "Il faut que tu <s>prennes</s> le bus." },
+  "venir": { ru: "приходить", type: "irrégulier", forms: ["vienne","viennes","vienne","venions","veniez","viennent"], ex: "Je veux qu'ils <s>viennent</s> à la fête." },
+  "devoir": { ru: "быть должным", type: "irrégulier", forms: ["doive","doives","doive","devions","deviez","doivent"], ex: "Il est normal qu'il <s>doive</s> travailler." },
+  "boire": { ru: "пить", type: "irrégulier", forms: ["boive","boives","boive","buvions","buviez","boivent"], ex: "Il faut que nous <s>buvions</s> de l'eau." },
+  "voir": { ru: "видеть", type: "irrégulier", forms: ["voie","voies","voie","voyions","voyiez","voient"], ex: "Je souhaite que tu <s>voies</s> ce film." },
+  "croire": { ru: "верить, думать", type: "irrégulier", forms: ["croie","croies","croie","croyions","croyiez","croient"], ex: "Je doute qu'il <s>croie</s> cette histoire." },
+  "écrire": { ru: "писать", type: "irrégulier", forms: ["écrive","écrives","écrive","écrivions","écriviez","écrivent"], ex: "Il faut que vous <s>écriviez</s> une lettre." },
+  "dire": { ru: "говорить, сказать", type: "irrégulier", forms: ["dise","dises","dise","disions","disiez","disent"], ex: "Je ne crois pas qu'il <s>dise</s> la vérité." },
+  "lire": { ru: "читать", type: "irrégulier", forms: ["lise","lises","lise","lisions","lisiez","lisent"], ex: "Il est important que tu <s>lises</s> ce livre." },
+  "mettre": { ru: "ставить, класть", type: "irrégulier", forms: ["mette","mettes","mette","mettions","mettiez","mettent"], ex: "Il faut que tu <s>mettes</s> ton manteau." },
+  "partir": { ru: "уезжать", type: "irrégulier", forms: ["parte","partes","parte","partions","partiez","partent"], ex: "Avant qu'il <s>parte</s>, dis-lui au revoir." },
+  "sortir": { ru: "выходить", type: "irrégulier", forms: ["sorte","sortes","sorte","sortions","sortiez","sortent"], ex: "Je veux que tu <s>sortes</s> ce soir." },
+  "mourir": { ru: "умирать", type: "irrégulier", forms: ["meure","meures","meure","mourions","mouriez","meurent"], ex: "J'ai peur qu'il <s>meure</s> de faim." },
+  "pleuvoir": { ru: "идти (о дожде)", type: "irrégulier (безличный)", forms: [null,null,"pleuve",null,null,null], ex: "Il est possible qu'il <s>pleuve</s> demain." },
+  "falloir": { ru: "быть необходимым", type: "irrégulier (безличный)", forms: [null,null,"faille",null,null,null], ex: "Bien qu'il <s>faille</s> attendre, je reste." },
+  "parler": { ru: "говорить", type: "régulier", forms: ["parle","parles","parle","parlions","parliez","parlent"], ex: "Il faut que nous <s>parlions</s> français." },
+  "finir": { ru: "заканчивать", type: "régulier", forms: ["finisse","finisses","finisse","finissions","finissiez","finissent"], ex: "Il faut que tu <s>finisses</s> ton travail." },
+  "vendre": { ru: "продавать", type: "régulier", forms: ["vende","vendes","vende","vendions","vendiez","vendent"], ex: "Je veux qu'il <s>vende</s> sa voiture." },
+  "manger": { ru: "есть, кушать", type: "régulier", forms: ["mange","manges","mange","mangions","mangiez","mangent"], ex: "Il faut que tu <s>manges</s> des légumes." },
+  "choisir": { ru: "выбирать", type: "régulier", forms: ["choisisse","choisisses","choisisse","choisissions","choisissiez","choisissent"], ex: "Il faut que vous <s>choisissiez</s> un cadeau." },
+  "attendre": { ru: "ждать", type: "régulier", forms: ["attende","attendes","attende","attendions","attendiez","attendent"], ex: "Il faut que j'<s>attende</s> le bus." },
+  "répondre": { ru: "отвечать", type: "régulier", forms: ["réponde","répondes","réponde","répondions","répondiez","répondent"], ex: "Il faut que tu <s>répondes</s> à la question." },
+  "dormir": { ru: "спать", type: "régulier", forms: ["dorme","dormes","dorme","dormions","dormiez","dorment"], ex: "Il faut que tu <s>dormes</s> plus." },
+  "connaître": { ru: "знать (быть знакомым)", type: "irrégulier", forms: ["connaisse","connaisses","connaisse","connaissions","connaissiez","connaissent"], ex: "Il faut que tu <s>connaisses</s> cette ville." },
+  "vivre": { ru: "жить", type: "irrégulier", forms: ["vive","vives","vive","vivions","viviez","vivent"], ex: "Il faut que nous <s>vivions</s> ensemble." },
+  "tenir": { ru: "держать", type: "irrégulier", forms: ["tienne","tiennes","tienne","tenions","teniez","tiennent"], ex: "Il faut que tu <s>tiennes</s> ta promesse." },
+  "recevoir": { ru: "получать", type: "irrégulier", forms: ["reçoive","reçoives","reçoive","recevions","receviez","reçoivent"], ex: "Il faut qu'il <s>reçoive</s> ce message." },
+  "comprendre": { ru: "понимать", type: "irrégulier", forms: ["comprenne","comprennes","comprenne","comprenions","compreniez","comprennent"], ex: "Il faut que tu <s>comprennes</s> la situation." },
+  "apprendre": { ru: "учить, узнавать", type: "irrégulier", forms: ["apprenne","apprennes","apprenne","apprenions","appreniez","apprennent"], ex: "Il faut que tu <s>apprennes</s> le français." },
+  "ouvrir": { ru: "открывать", type: "régulier", forms: ["ouvre","ouvres","ouvre","ouvrions","ouvriez","ouvrent"], ex: "Il faut que tu <s>ouvres</s> la fenêtre." },
+  "courir": { ru: "бежать", type: "irrégulier", forms: ["coure","coures","coure","courions","couriez","courent"], ex: "Il faut que tu <s>coures</s> plus vite." },
+  "suivre": { ru: "следовать", type: "irrégulier", forms: ["suive","suives","suive","suivions","suiviez","suivent"], ex: "Il faut que vous <s>suiviez</s> les instructions." },
+  "rendre": { ru: "возвращать, делать (каким-л.)", type: "régulier", forms: ["rende","rendes","rende","rendions","rendiez","rendent"], ex: "Il faut que tu <s>rendes</s> ce livre." },
+  "perdre": { ru: "терять", type: "régulier", forms: ["perde","perdes","perde","perdions","perdiez","perdent"], ex: "Je ne veux pas que tu <s>perdes</s> ton temps." }
+};
+
+// ═══════════════════════════════════════════
+// TAB SWITCHING
+// ═══════════════════════════════════════════
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', (tab === 'triggers' ? i === 0 : i === 1));
+  });
+  document.getElementById('tab-triggers').classList.toggle('active', tab === 'triggers');
+  document.getElementById('tab-conjugation').classList.toggle('active', tab === 'conjugation');
+  if (tab === 'conjugation') {
+    document.getElementById('verb-input').focus();
+  }
+}
+
+// ═══════════════════════════════════════════
+// RENDER TRIGGERS
+// ═══════════════════════════════════════════
+function renderTriggers() {
+  const container = document.getElementById('triggers-list');
+  let html = '';
+  triggerCategories.forEach((cat, ci) => {
+    html += `<div class="category-card">`;
+    html += `<div class="category-header" onclick="toggleCategory(this)">
+      <span>${cat.ru} <span class="fr-label">${cat.fr}</span></span>
+      <span class="toggle-icon">▼</span>
+    </div>`;
+    html += `<div class="category-body">`;
+    cat.triggers.forEach(t => {
+      const exHtml = t.ex.replace(/<s>(.*?)<\/s>/g, '<span class="subj-form">$1</span>');
+      html += `<div class="trigger-row">
+        <div class="trigger-fr">${t.expr}</div>
+        <div class="trigger-ru">${t.ru}</div>
+        <div class="trigger-example">${exHtml}</div>
+      </div>`;
+    });
+    if (cat.note) {
+      html += `<div class="note-box"><strong>⚠ Внимание:</strong> ${cat.note}</div>`;
+    }
+    html += `</div></div>`;
+  });
+  container.innerHTML = html;
+}
+
+function toggleCategory(el) {
+  el.classList.toggle('collapsed');
+  el.nextElementSibling.classList.toggle('collapsed');
+}
+
+// ═══════════════════════════════════════════
+// CONJUGATION LOOKUP
+// ═══════════════════════════════════════════
+const pronouns = [
+  "que je (j')", "que tu", "qu'il / elle / on",
+  "que nous", "que vous", "qu'ils / elles"
+];
+
+function lookupVerb() {
+  const raw = document.getElementById('verb-input').value.trim().toLowerCase();
+  if (!raw) return;
+
+  const v = verbs[raw];
+  const infoEl = document.getElementById('verb-info');
+  const cardEl = document.getElementById('conj-card');
+
+  if (!v) {
+    infoEl.style.display = 'block';
+    infoEl.innerHTML = `<p style="color:#c62828;">Глагол «<strong>${raw}</strong>» не найден в базе. Попробуйте ввести инфинитив.</p>`;
+    cardEl.style.display = 'none';
+    return;
+  }
+
+  const badgeClass = v.type.startsWith('rég') ? 'badge-reg' : 'badge-irreg';
+  const badgeLabel = v.type.startsWith('rég') ? 'régulier' : v.type;
+  infoEl.style.display = 'block';
+  infoEl.innerHTML = `<span class="badge ${badgeClass}">${badgeLabel}</span>
+    <strong style="font-size:1.15em;">${raw}</strong> — <span style="color:#666;">${v.ru}</span>`;
+
+  let tableHtml = '<table>';
+  const isImpersonal = v.forms[0] === null;
+  for (let i = 0; i < 6; i++) {
+    if (isImpersonal && v.forms[i] === null) continue;
+    tableHtml += `<tr>
+      <td class="pronoun">${pronouns[i]}</td>
+      <td class="verb-form">${v.forms[i]}</td>
+    </tr>`;
+  }
+  tableHtml += '</table>';
+
+  const exHtml = v.ex.replace(/<s>(.*?)<\/s>/g, '<span class="subj-form">$1</span>');
+  tableHtml += `<div class="conj-example">${exHtml}</div>`;
+
+  document.getElementById('conj-body').innerHTML = tableHtml;
+  cardEl.style.display = 'block';
+}
+
+function fillVerb(v) {
+  document.getElementById('verb-input').value = v;
+  lookupVerb();
+}
+
+// Enter key support
+document.addEventListener('DOMContentLoaded', () => {
+  renderTriggers();
+  document.getElementById('verb-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') lookupVerb();
+  });
+});
+</script>
+</body>
+</html>

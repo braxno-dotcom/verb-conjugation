@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇬🇧</text></svg>">
+<meta name="apple-mobile-web-app-title" content="EN phrasal">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇬🇧 Английские фразовые глаголы</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #edf5f0;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #0d4025, #1a5c3a);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  .search-area {
+    max-width: 600px;
+    margin: 30px auto 10px;
+    padding: 0 20px;
+    display: flex;
+    gap: 10px;
+  }
+  .search-area input {
+    flex: 1;
+    padding: 14px 18px;
+    font-size: 1.15em;
+    border: 2px solid #b8d4c4;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-area input:focus { border-color: #1a5c3a; }
+  .search-area button {
+    padding: 14px 28px;
+    font-size: 1.05em;
+    background: #1a5c3a;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .search-area button:hover { background: #0d4025; }
+
+  .hint {
+    max-width: 600px;
+    margin: 8px auto 0;
+    padding: 0 20px;
+    font-size: 0.85em;
+    color: #888;
+  }
+  .hint span { cursor: pointer; color: #1a5c3a; text-decoration: underline; }
+  .hint span:hover { color: #0d4025; }
+
+  .filters {
+    max-width: 900px;
+    margin: 16px auto 0;
+    padding: 0 20px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .filter-label {
+    font-size: 0.85em;
+    color: #666;
+    margin-right: 4px;
+  }
+  .filter-btn {
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 1.5px solid #b8d4c4;
+    background: white;
+    color: #555;
+    font-size: 0.85em;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+  }
+  .filter-btn:hover { border-color: #1a5c3a; color: #1a5c3a; }
+  .filter-btn.active { background: #1a5c3a; color: white; border-color: #1a5c3a; }
+  .filter-sep {
+    width: 1px;
+    height: 20px;
+    background: #ccc;
+    margin: 0 6px;
+  }
+
+  .count-bar {
+    max-width: 900px;
+    margin: 12px auto 0;
+    padding: 0 20px;
+    font-size: 0.85em;
+    color: #888;
+    display: none;
+  }
+
+  #results {
+    max-width: 900px;
+    margin: 14px auto 40px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 14px;
+  }
+
+  .pv-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    transition: transform 0.15s;
+  }
+  .pv-card:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.1); }
+  .pv-head {
+    padding: 14px 16px 10px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .pv-phrasal {
+    font-size: 1.25em;
+    font-weight: 700;
+    color: #0d4025;
+  }
+  .pv-ru {
+    font-size: 1em;
+    color: #555;
+  }
+  .pv-badges {
+    padding: 0 16px 8px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 5px;
+    font-size: 0.78em;
+    font-weight: 600;
+  }
+  .badge-level-a2 { background: #e8f5e9; color: #2e7d32; }
+  .badge-level-b1 { background: #fff3e0; color: #e65100; }
+  .badge-level-b2 { background: #fce4ec; color: #880e4f; }
+  .badge-sep { background: #e3f2fd; color: #1565c0; }
+  .badge-insep { background: #f3e5f5; color: #7b1fa2; }
+  .badge-intrans { background: #efebe9; color: #5d4037; }
+  .badge-base { background: #e0f2f1; color: #00695c; }
+  .pv-example {
+    padding: 10px 16px 14px;
+    background: #fafcfb;
+    border-top: 1px solid #eee;
+    font-size: 0.92em;
+    line-height: 1.6;
+  }
+  .pv-example .en { color: #333; }
+  .pv-example .en b { color: #0d4025; font-weight: 700; }
+  .pv-example .ru-ex { color: #888; font-style: italic; }
+  .pv-sep-note {
+    padding: 4px 16px 12px;
+    font-size: 0.82em;
+    color: #1a5c3a;
+    background: #fafcfb;
+  }
+
+  .no-result {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: #999;
+    font-size: 1.1em;
+  }
+
+  .info-section {
+    max-width: 900px;
+    margin: 30px auto 40px;
+    padding: 0 20px;
+  }
+  .info-block {
+    background: white;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .info-block h3 {
+    color: #0d4025;
+    font-size: 1.05em;
+    margin-bottom: 10px;
+  }
+  .info-block p, .info-block ul {
+    font-size: 0.92em;
+    color: #555;
+    line-height: 1.7;
+  }
+  .info-block ul { padding-left: 20px; }
+  .info-block li { margin-bottom: 4px; }
+  .info-block code {
+    background: #edf5f0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.95em;
+    color: #0d4025;
+  }
+  .info-block .ok { color: #2e7d32; font-weight: 600; }
+  .info-block .bad { color: #c62828; font-weight: 600; }
+
+  @media (max-width: 500px) {
+    #results { grid-template-columns: 1fr; padding: 0 10px; }
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switch { padding: 6px 12px; font-size: 0.85em; }
+    .search-area { padding: 0 10px; flex-direction: column; }
+    .search-area input { font-size: 1em; padding: 12px 14px; width: 100%; }
+    .search-area button { padding: 12px 18px; font-size: 0.95em; width: 100%; }
+    .hint { padding: 0 10px; }
+    .filters { padding: 0 10px; }
+    .count-bar { padding: 0 10px; }
+    .info-section { padding: 0 10px; }
+    .info-block { padding: 16px 16px; }
+    .pv-phrasal { font-size: 1.1em; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="english.html" class="lang-switch">📖 Портал</a>
+    <a href="english-verbs.html" class="lang-switch">📝 Глаголы</a>
+  </div>
+  <h1>🇬🇧 Английские фразовые глаголы</h1>
+  <p>Введите глагол (get, take, look) или перевод на русском — найдите все фразовые глаголы</p>
+</header>
+
+<div class="search-area">
+  <input type="text" id="searchInput" placeholder="get, turn off, встать…" autocomplete="off" autofocus>
+  <button onclick="doSearch()">Найти</button>
+</div>
+<div class="hint">
+  Попробуйте: <span onclick="trySearch('get')">get</span>, <span onclick="trySearch('take')">take</span>, <span onclick="trySearch('look')">look</span>, <span onclick="trySearch('turn')">turn</span>, <span onclick="trySearch('сдаться')">сдаться</span>, <span onclick="trySearch('off')">off</span>
+</div>
+
+<div class="filters">
+  <span class="filter-label">Уровень:</span>
+  <button class="filter-btn" data-level="all" onclick="setLevel('all')">Все</button>
+  <button class="filter-btn" data-level="A2" onclick="setLevel('A2')">A2</button>
+  <button class="filter-btn" data-level="B1" onclick="setLevel('B1')">B1</button>
+  <button class="filter-btn" data-level="B2" onclick="setLevel('B2')">B2</button>
+  <span class="filter-sep"></span>
+  <span class="filter-label">Частица:</span>
+  <button class="filter-btn" data-particle="all" onclick="setParticle('all')">Все</button>
+  <button class="filter-btn" data-particle="up" onclick="setParticle('up')">up</button>
+  <button class="filter-btn" data-particle="down" onclick="setParticle('down')">down</button>
+  <button class="filter-btn" data-particle="out" onclick="setParticle('out')">out</button>
+  <button class="filter-btn" data-particle="in" onclick="setParticle('in')">in</button>
+  <button class="filter-btn" data-particle="on" onclick="setParticle('on')">on</button>
+  <button class="filter-btn" data-particle="off" onclick="setParticle('off')">off</button>
+  <button class="filter-btn" data-particle="other" onclick="setParticle('other')">другие</button>
+</div>
+
+<div class="count-bar" id="countBar"></div>
+
+<div id="results"></div>
+
+<div class="info-section" id="infoSection">
+  <div class="info-block">
+    <h3>Что такое фразовый глагол?</h3>
+    <p>Фразовый глагол = глагол + частица (предлог или наречие), которая <b>меняет значение</b> глагола. <code>look</code> = смотреть, но <code>look after</code> = заботиться, <code>look up</code> = искать в словаре. Это как отдельные слова — их нужно учить целиком.</p>
+  </div>
+  <div class="info-block">
+    <h3>Разделяемые vs неразделяемые</h3>
+    <p><b>Разделяемые (separable):</b> объект можно поставить между глаголом и частицей.</p>
+    <ul>
+      <li><code>Turn off the light</code> = <code>Turn the light off</code> <span class="ok">— оба верно</span></li>
+      <li>Если объект — местоимение, <b>обязательно</b> разделяем: <code>Turn it off</code> <span class="ok">✓</span> &nbsp; <code>Turn off it</code> <span class="bad">✗</span></li>
+    </ul>
+    <p style="margin-top:8px"><b>Неразделяемые (inseparable):</b> объект всегда после частицы.</p>
+    <ul>
+      <li><code>Look after the kids</code> <span class="ok">✓</span> &nbsp; <code>Look the kids after</code> <span class="bad">✗</span></li>
+    </ul>
+  </div>
+  <div class="info-block">
+    <h3>Три типа фразовых глаголов</h3>
+    <ul>
+      <li><b>Непереходные</b> (intransitive) — без объекта: <code>The plane took off</code>, <code>Please go away</code></li>
+      <li><b>Разделяемые переходные</b> — объект можно вставить: <code>Pick up the phone</code> / <code>Pick the phone up</code></li>
+      <li><b>Неразделяемые переходные</b> — объект только после: <code>Look after your health</code></li>
+    </ul>
+  </div>
+  <div class="info-block">
+    <h3>Что значат частицы?</h3>
+    <ul>
+      <li><b>UP</b> — завершение, увеличение: <code>give up</code> (сдаться), <code>turn up</code> (прибавить)</li>
+      <li><b>DOWN</b> — уменьшение, запись: <code>turn down</code> (убавить), <code>put down</code> (записать)</li>
+      <li><b>OUT</b> — наружу, погасить, узнать: <code>find out</code> (узнать), <code>put out</code> (потушить)</li>
+      <li><b>OFF</b> — отключение, уход: <code>turn off</code> (выключить), <code>take off</code> (взлететь)</li>
+      <li><b>ON</b> — продолжение, включение: <code>carry on</code> (продолжать), <code>turn on</code> (включить)</li>
+      <li><b>IN</b> — внутрь, вовлечение: <code>come in</code> (войти), <code>give in</code> (уступить)</li>
+    </ul>
+  </div>
+  <div class="info-block">
+    <h3>💡 Совет</h3>
+    <p>Учите фразовые глаголы <b>группами по базовому глаголу</b>: все с GET, все с TAKE и т.д. Так легче запомнить, чем по алфавиту. Используйте поиск выше — введите базовый глагол и изучайте всю группу сразу!</p>
+  </div>
+</div>
+
+<script>
+const VERBS = [
+  // ===== GET =====
+  { verb:"get", particle:"up", meaning_ru:"встать", example:"I get up at 7 every morning.", example_ru:"Я встаю в 7 каждое утро.", separable:false, level:"A2" },
+  { verb:"get", particle:"down", meaning_ru:"спуститься; расстроить", example:"This rainy weather really gets me down.", example_ru:"Эта дождливая погода меня очень расстраивает.", separable:true, level:"B1" },
+  { verb:"get", particle:"out", meaning_ru:"выйти; убраться", example:"Get out of the car slowly.", example_ru:"Выходи из машины медленно.", separable:false, level:"A2" },
+  { verb:"get", particle:"in", meaning_ru:"сесть в (транспорт)", example:"We got in the taxi and drove off.", example_ru:"Мы сели в такси и уехали.", separable:false, level:"A2" },
+  { verb:"get", particle:"on", meaning_ru:"ладить; садиться (в автобус)", example:"Do you get on well with your neighbours?", example_ru:"Ты хорошо ладишь с соседями?", separable:false, level:"A2" },
+  { verb:"get", particle:"off", meaning_ru:"сойти (с транспорта)", example:"We need to get off at the next stop.", example_ru:"Нам нужно сойти на следующей остановке.", separable:false, level:"A2" },
+  { verb:"get", particle:"along", meaning_ru:"ладить", example:"The two sisters get along very well.", example_ru:"Две сестры очень хорошо ладят.", separable:false, level:"B1" },
+  { verb:"get", particle:"away", meaning_ru:"сбежать; уехать", example:"The thief got away before the police arrived.", example_ru:"Вор сбежал до приезда полиции.", separable:false, level:"B1" },
+  { verb:"get", particle:"back", meaning_ru:"вернуться", example:"What time did you get back from work?", example_ru:"Во сколько ты вернулся с работы?", separable:false, level:"A2" },
+  { verb:"get", particle:"over", meaning_ru:"пережить; преодолеть", example:"It took her months to get over the breakup.", example_ru:"Ей понадобились месяцы, чтобы пережить расставание.", separable:false, level:"B1" },
+  { verb:"get", particle:"through", meaning_ru:"дозвониться; пройти через", example:"I tried calling but couldn't get through.", example_ru:"Я пытался позвонить, но не мог дозвониться.", separable:false, level:"B1" },
+  { verb:"get", particle:"by", meaning_ru:"перебиваться; сводить концы с концами", example:"It's hard to get by on such a small salary.", example_ru:"Тяжело перебиваться на такую маленькую зарплату.", separable:false, level:"B2" },
+  { verb:"get", particle:"around", meaning_ru:"обходить; передвигаться", example:"She gets around the city by bicycle.", example_ru:"Она передвигается по городу на велосипеде.", separable:false, level:"B1" },
+  { verb:"get", particle:"rid of", meaning_ru:"избавиться от", example:"I need to get rid of these old clothes.", example_ru:"Мне нужно избавиться от этой старой одежды.", separable:false, level:"B1" },
+  { verb:"get", particle:"together", meaning_ru:"собраться", example:"Let's get together this weekend.", example_ru:"Давай соберёмся на этих выходных.", separable:false, level:"A2" },
+  { verb:"get", particle:"ahead", meaning_ru:"продвинуться; преуспеть", example:"You need to work hard to get ahead in this company.", example_ru:"Нужно много работать, чтобы продвинуться в этой компании.", separable:false, level:"B2" },
+  { verb:"get", particle:"across", meaning_ru:"донести мысль", example:"I couldn't get my point across clearly.", example_ru:"Я не мог ясно донести свою мысль.", separable:true, level:"B2" },
+  { verb:"get", particle:"into", meaning_ru:"увлечься; попасть в", example:"She's really getting into photography lately.", example_ru:"Она в последнее время очень увлеклась фотографией.", separable:false, level:"B1" },
+
+  // ===== TAKE =====
+  { verb:"take", particle:"off", meaning_ru:"взлететь; снять (одежду)", example:"The plane took off on time.", example_ru:"Самолёт взлетел вовремя.", separable:true, level:"A2" },
+  { verb:"take", particle:"on", meaning_ru:"взять на себя; нанять", example:"She took on too many responsibilities.", example_ru:"Она взяла на себя слишком много обязанностей.", separable:true, level:"B1" },
+  { verb:"take", particle:"out", meaning_ru:"вынуть; пригласить куда-то", example:"He took her out to a nice restaurant.", example_ru:"Он пригласил её в хороший ресторан.", separable:true, level:"A2" },
+  { verb:"take", particle:"up", meaning_ru:"начать заниматься (хобби)", example:"I took up painting during lockdown.", example_ru:"Я начал заниматься рисованием во время карантина.", separable:true, level:"B1" },
+  { verb:"take", particle:"over", meaning_ru:"захватить; принять дела", example:"A large company took over our firm.", example_ru:"Крупная компания захватила нашу фирму.", separable:true, level:"B1" },
+  { verb:"take", particle:"back", meaning_ru:"забрать назад; взять слова назад", example:"I take back everything I said.", example_ru:"Я беру назад всё, что сказал.", separable:true, level:"B1" },
+  { verb:"take", particle:"after", meaning_ru:"быть похожим на (родственника)", example:"She takes after her mother.", example_ru:"Она похожа на свою маму.", separable:false, level:"B1" },
+  { verb:"take", particle:"down", meaning_ru:"записать; снять (со стены)", example:"Let me take down your phone number.", example_ru:"Позвольте мне записать ваш номер телефона.", separable:true, level:"B1" },
+  { verb:"take", particle:"in", meaning_ru:"понять; обмануть; приютить", example:"It was hard to take in so much information at once.", example_ru:"Было сложно усвоить столько информации сразу.", separable:true, level:"B2" },
+  { verb:"take", particle:"apart", meaning_ru:"разобрать (на части)", example:"He took the engine apart to fix it.", example_ru:"Он разобрал двигатель, чтобы починить его.", separable:true, level:"B2" },
+  { verb:"take", particle:"away", meaning_ru:"убрать; унести", example:"The waiter took away our plates.", example_ru:"Официант убрал наши тарелки.", separable:true, level:"A2" },
+
+  // ===== LOOK =====
+  { verb:"look", particle:"up", meaning_ru:"посмотреть вверх; найти в словаре", example:"I need to look up this word in a dictionary.", example_ru:"Мне нужно найти это слово в словаре.", separable:true, level:"A2" },
+  { verb:"look", particle:"for", meaning_ru:"искать", example:"I'm looking for my car keys.", example_ru:"Я ищу ключи от машины.", separable:false, level:"A2" },
+  { verb:"look", particle:"after", meaning_ru:"заботиться о", example:"Can you look after my cat while I'm away?", example_ru:"Можешь присмотреть за моим котом, пока меня не будет?", separable:false, level:"A2" },
+  { verb:"look", particle:"into", meaning_ru:"расследовать; изучить вопрос", example:"The police are looking into the matter.", example_ru:"Полиция расследует это дело.", separable:false, level:"B1" },
+  { verb:"look", particle:"out", meaning_ru:"осторожно! берегись!", example:"Look out! There's a car coming!", example_ru:"Осторожно! Едет машина!", separable:false, level:"A2" },
+  { verb:"look", particle:"forward to", meaning_ru:"ждать с нетерпением", example:"I'm looking forward to the holiday.", example_ru:"Я с нетерпением жду отпуска.", separable:false, level:"A2" },
+  { verb:"look", particle:"down on", meaning_ru:"смотреть свысока на", example:"She looks down on people without degrees.", example_ru:"Она смотрит свысока на людей без дипломов.", separable:false, level:"B2" },
+  { verb:"look", particle:"over", meaning_ru:"просмотреть; проверить", example:"Could you look over my essay before I submit it?", example_ru:"Можешь просмотреть моё эссе перед сдачей?", separable:true, level:"B1" },
+  { verb:"look", particle:"through", meaning_ru:"просматривать (документы)", example:"I spent an hour looking through old photos.", example_ru:"Я потратил час на просмотр старых фотографий.", separable:false, level:"B1" },
+  { verb:"look", particle:"around", meaning_ru:"осматриваться", example:"We looked around the museum for two hours.", example_ru:"Мы осматривали музей два часа.", separable:false, level:"A2" },
+  { verb:"look", particle:"up to", meaning_ru:"восхищаться; уважать", example:"He always looked up to his older brother.", example_ru:"Он всегда восхищался своим старшим братом.", separable:false, level:"B1" },
+
+  // ===== GO =====
+  { verb:"go", particle:"on", meaning_ru:"продолжать; происходить", example:"Please go on, I'm listening.", example_ru:"Пожалуйста, продолжай, я слушаю.", separable:false, level:"A2" },
+  { verb:"go", particle:"out", meaning_ru:"выйти (из дома); погаснуть", example:"The lights went out during the storm.", example_ru:"Свет погас во время грозы.", separable:false, level:"A2" },
+  { verb:"go", particle:"off", meaning_ru:"взорваться; зазвонить; испортиться", example:"My alarm went off at 6 a.m.", example_ru:"Мой будильник зазвонил в 6 утра.", separable:false, level:"B1" },
+  { verb:"go", particle:"away", meaning_ru:"уйти; уехать", example:"Go away! I want to be alone.", example_ru:"Уходи! Я хочу побыть один.", separable:false, level:"A2" },
+  { verb:"go", particle:"back", meaning_ru:"вернуться", example:"Let's go back to the hotel.", example_ru:"Давай вернёмся в отель.", separable:false, level:"A2" },
+  { verb:"go", particle:"up", meaning_ru:"подняться; вырасти (цена)", example:"The price of petrol has gone up again.", example_ru:"Цена на бензин снова выросла.", separable:false, level:"A2" },
+  { verb:"go", particle:"down", meaning_ru:"спуститься; уменьшиться", example:"Temperatures will go down tonight.", example_ru:"Температура ночью снизится.", separable:false, level:"A2" },
+  { verb:"go", particle:"through", meaning_ru:"пройти через; пережить", example:"She went through a very difficult time.", example_ru:"Она прошла через очень тяжёлый период.", separable:false, level:"B1" },
+  { verb:"go", particle:"ahead", meaning_ru:"продолжай; начинай; давай", example:"Go ahead, take a seat.", example_ru:"Давай, садись.", separable:false, level:"A2" },
+  { verb:"go", particle:"over", meaning_ru:"просмотреть; повторить", example:"Let's go over the plan one more time.", example_ru:"Давай просмотрим план ещё раз.", separable:false, level:"B1" },
+  { verb:"go", particle:"along with", meaning_ru:"согласиться с", example:"I'll go along with your decision.", example_ru:"Я соглашусь с твоим решением.", separable:false, level:"B2" },
+
+  // ===== COME =====
+  { verb:"come", particle:"back", meaning_ru:"вернуться", example:"She promised to come back before dark.", example_ru:"Она пообещала вернуться до темноты.", separable:false, level:"A2" },
+  { verb:"come", particle:"in", meaning_ru:"войти", example:"Come in, the door is open.", example_ru:"Входите, дверь открыта.", separable:false, level:"A2" },
+  { verb:"come", particle:"out", meaning_ru:"выйти; стать известным", example:"The truth finally came out.", example_ru:"Правда наконец вышла наружу.", separable:false, level:"A2" },
+  { verb:"come", particle:"on", meaning_ru:"давай!; включиться", example:"Come on, we're going to be late!", example_ru:"Давай, мы опоздаем!", separable:false, level:"A2" },
+  { verb:"come", particle:"up", meaning_ru:"подняться; возникнуть", example:"Something unexpected came up at work.", example_ru:"На работе возникло что-то неожиданное.", separable:false, level:"B1" },
+  { verb:"come", particle:"up with", meaning_ru:"придумать (идею)", example:"She came up with a brilliant idea.", example_ru:"Она придумала блестящую идею.", separable:false, level:"B1" },
+  { verb:"come", particle:"across", meaning_ru:"наткнуться; произвести впечатление", example:"I came across an interesting article online.", example_ru:"Я наткнулся на интересную статью в интернете.", separable:false, level:"B1" },
+  { verb:"come", particle:"over", meaning_ru:"зайти в гости", example:"Would you like to come over for dinner?", example_ru:"Хочешь зайти к нам на ужин?", separable:false, level:"A2" },
+  { verb:"come", particle:"down", meaning_ru:"спуститься; снизиться", example:"House prices have come down recently.", example_ru:"Цены на жильё недавно снизились.", separable:false, level:"B1" },
+  { verb:"come", particle:"along", meaning_ru:"идти вместе; продвигаться", example:"My English is coming along nicely.", example_ru:"Мой английский неплохо продвигается.", separable:false, level:"B1" },
+
+  // ===== TURN =====
+  { verb:"turn", particle:"on", meaning_ru:"включить", example:"Can you turn on the light, please?", example_ru:"Можешь включить свет, пожалуйста?", separable:true, level:"A2" },
+  { verb:"turn", particle:"off", meaning_ru:"выключить", example:"Don't forget to turn off the TV.", example_ru:"Не забудь выключить телевизор.", separable:true, level:"A2" },
+  { verb:"turn", particle:"up", meaning_ru:"появиться; прибавить (звук)", example:"He turned up an hour late to the meeting.", example_ru:"Он появился на встрече на час позже.", separable:true, level:"B1" },
+  { verb:"turn", particle:"down", meaning_ru:"убавить (звук); отказать", example:"She turned down the job offer.", example_ru:"Она отказала в предложении работы.", separable:true, level:"B1" },
+  { verb:"turn", particle:"out", meaning_ru:"оказаться", example:"The rumour turned out to be true.", example_ru:"Слух оказался правдой.", separable:false, level:"B1" },
+  { verb:"turn", particle:"around", meaning_ru:"развернуться; изменить ситуацию", example:"The company managed to turn around its finances.", example_ru:"Компания смогла исправить своё финансовое положение.", separable:true, level:"B2" },
+  { verb:"turn", particle:"into", meaning_ru:"превратиться в", example:"The caterpillar turned into a butterfly.", example_ru:"Гусеница превратилась в бабочку.", separable:false, level:"B1" },
+  { verb:"turn", particle:"over", meaning_ru:"перевернуть", example:"She turned over the page and kept reading.", example_ru:"Она перевернула страницу и продолжила читать.", separable:true, level:"B1" },
+  { verb:"turn", particle:"back", meaning_ru:"повернуть назад", example:"The road was blocked, so we had to turn back.", example_ru:"Дорога была перекрыта, и нам пришлось повернуть назад.", separable:false, level:"B1" },
+
+  // ===== PUT =====
+  { verb:"put", particle:"on", meaning_ru:"надеть; включить (музыку)", example:"Put on your jacket, it's cold outside.", example_ru:"Надень куртку, на улице холодно.", separable:true, level:"A2" },
+  { verb:"put", particle:"off", meaning_ru:"отложить; оттолкнуть", example:"Don't put off your homework until tomorrow.", example_ru:"Не откладывай домашнее задание на завтра.", separable:true, level:"B1" },
+  { verb:"put", particle:"out", meaning_ru:"потушить (огонь)", example:"The firemen put out the fire quickly.", example_ru:"Пожарные быстро потушили огонь.", separable:true, level:"B1" },
+  { verb:"put", particle:"up with", meaning_ru:"мириться с; терпеть", example:"I can't put up with this noise anymore.", example_ru:"Я больше не могу терпеть этот шум.", separable:false, level:"B1" },
+  { verb:"put", particle:"away", meaning_ru:"убрать на место", example:"Please put away your toys.", example_ru:"Пожалуйста, убери свои игрушки на место.", separable:true, level:"A2" },
+  { verb:"put", particle:"down", meaning_ru:"положить; записать; усыпить (животное)", example:"Put down your phone and listen to me.", example_ru:"Положи телефон и слушай меня.", separable:true, level:"B1" },
+  { verb:"put", particle:"together", meaning_ru:"собрать (конструкцию)", example:"It took us two hours to put together the furniture.", example_ru:"Нам понадобилось два часа, чтобы собрать мебель.", separable:true, level:"B1" },
+  { verb:"put", particle:"back", meaning_ru:"вернуть на место", example:"Put the book back on the shelf when you're done.", example_ru:"Верни книгу на полку, когда закончишь.", separable:true, level:"A2" },
+
+  // ===== BREAK =====
+  { verb:"break", particle:"up", meaning_ru:"расстаться; разбиться", example:"They broke up after five years together.", example_ru:"Они расстались после пяти лет вместе.", separable:false, level:"B1" },
+  { verb:"break", particle:"down", meaning_ru:"сломаться; расплакаться", example:"My car broke down on the highway.", example_ru:"Моя машина сломалась на трассе.", separable:false, level:"B1" },
+  { verb:"break", particle:"in", meaning_ru:"вломиться; разносить (обувь)", example:"Someone broke in and stole the TV.", example_ru:"Кто-то вломился и украл телевизор.", separable:false, level:"B1" },
+  { verb:"break", particle:"out", meaning_ru:"вспыхнуть (война, пожар); сбежать", example:"A fire broke out in the kitchen.", example_ru:"На кухне вспыхнул пожар.", separable:false, level:"B1" },
+  { verb:"break", particle:"through", meaning_ru:"прорваться", example:"Scientists broke through with a new treatment.", example_ru:"Учёные совершили прорыв с новым методом лечения.", separable:false, level:"B2" },
+  { verb:"break", particle:"off", meaning_ru:"отломить; прервать (отношения)", example:"She broke off the engagement.", example_ru:"Она разорвала помолвку.", separable:true, level:"B2" },
+  { verb:"break", particle:"into", meaning_ru:"ворваться; проникнуть", example:"Thieves broke into the jewellery shop.", example_ru:"Воры ворвались в ювелирный магазин.", separable:false, level:"B1" },
+
+  // ===== GIVE =====
+  { verb:"give", particle:"up", meaning_ru:"сдаться; бросить (привычку)", example:"I gave up smoking three years ago.", example_ru:"Я бросил курить три года назад.", separable:true, level:"A2" },
+  { verb:"give", particle:"in", meaning_ru:"уступить; сдаться", example:"The kids begged so much that I gave in.", example_ru:"Дети так просили, что я уступил.", separable:false, level:"B1" },
+  { verb:"give", particle:"out", meaning_ru:"раздать; закончиться (запас)", example:"They gave out free samples at the store.", example_ru:"Они раздавали бесплатные образцы в магазине.", separable:true, level:"B1" },
+  { verb:"give", particle:"away", meaning_ru:"отдать бесплатно; выдать секрет", example:"Don't give away the ending of the movie!", example_ru:"Не выдавай концовку фильма!", separable:true, level:"B1" },
+  { verb:"give", particle:"back", meaning_ru:"вернуть (отдать обратно)", example:"Can you give me back my book?", example_ru:"Можешь вернуть мне мою книгу?", separable:true, level:"A2" },
+
+  // ===== MAKE =====
+  { verb:"make", particle:"up", meaning_ru:"придумать; помириться; накраситься", example:"He made up an excuse for being late.", example_ru:"Он придумал оправдание за опоздание.", separable:true, level:"B1" },
+  { verb:"make", particle:"out", meaning_ru:"разобрать (текст, слова); целоваться", example:"I couldn't make out what the sign said.", example_ru:"Я не мог разобрать, что написано на табличке.", separable:true, level:"B1" },
+  { verb:"make", particle:"up for", meaning_ru:"компенсировать", example:"He tried to make up for his mistake.", example_ru:"Он попытался компенсировать свою ошибку.", separable:false, level:"B2" },
+  { verb:"make", particle:"off", meaning_ru:"удрать; сбежать", example:"The robbers made off with the cash.", example_ru:"Грабители удрали с деньгами.", separable:false, level:"B2" },
+
+  // ===== BRING =====
+  { verb:"bring", particle:"up", meaning_ru:"воспитать; поднять тему", example:"She was brought up by her grandparents.", example_ru:"Её воспитали бабушка с дедушкой.", separable:true, level:"B1" },
+  { verb:"bring", particle:"back", meaning_ru:"вернуть; вызвать воспоминания", example:"This song brings back so many memories.", example_ru:"Эта песня вызывает столько воспоминаний.", separable:true, level:"B1" },
+  { verb:"bring", particle:"about", meaning_ru:"вызвать; привести к", example:"The new law brought about major changes.", example_ru:"Новый закон привёл к серьёзным изменениям.", separable:true, level:"B2" },
+  { verb:"bring", particle:"down", meaning_ru:"понизить; свалить", example:"They want to bring down the price of medicine.", example_ru:"Они хотят снизить цену на лекарства.", separable:true, level:"B2" },
+  { verb:"bring", particle:"out", meaning_ru:"выпустить (продукт)", example:"The company is bringing out a new phone next month.", example_ru:"Компания выпускает новый телефон в следующем месяце.", separable:true, level:"B1" },
+  { verb:"bring", particle:"in", meaning_ru:"ввести (правило); принести (доход)", example:"The government brought in a new tax.", example_ru:"Правительство ввело новый налог.", separable:true, level:"B2" },
+
+  // ===== RUN =====
+  { verb:"run", particle:"out of", meaning_ru:"закончиться (запас чего-то)", example:"We've run out of milk. Can you buy some?", example_ru:"У нас закончилось молоко. Можешь купить?", separable:false, level:"B1" },
+  { verb:"run", particle:"into", meaning_ru:"случайно встретить", example:"I ran into my old teacher at the supermarket.", example_ru:"Я случайно встретил своего старого учителя в супермаркете.", separable:false, level:"B1" },
+  { verb:"run", particle:"away", meaning_ru:"убежать", example:"The dog ran away from home.", example_ru:"Собака убежала из дома.", separable:false, level:"A2" },
+
+  // ===== SET =====
+  { verb:"set", particle:"up", meaning_ru:"организовать; настроить", example:"He set up his own business last year.", example_ru:"Он открыл своё дело в прошлом году.", separable:true, level:"B1" },
+  { verb:"set", particle:"off", meaning_ru:"отправиться в путь", example:"We set off early to avoid traffic.", example_ru:"Мы отправились рано, чтобы избежать пробок.", separable:false, level:"B1" },
+
+  // ===== PICK =====
+  { verb:"pick", particle:"up", meaning_ru:"поднять; заехать за; подхватить", example:"Can you pick me up from the airport?", example_ru:"Можешь заехать за мной в аэропорт?", separable:true, level:"A2" },
+
+  // ===== CARRY =====
+  { verb:"carry", particle:"on", meaning_ru:"продолжать", example:"Carry on with your work, don't mind me.", example_ru:"Продолжай работать, не обращай на меня внимания.", separable:false, level:"A2" },
+
+  // ===== WORK =====
+  { verb:"work", particle:"out", meaning_ru:"тренироваться; решить; получиться", example:"Things didn't work out between them.", example_ru:"Между ними ничего не получилось.", separable:true, level:"B1" },
+
+  // ===== FIGURE =====
+  { verb:"figure", particle:"out", meaning_ru:"разобраться; понять", example:"I can't figure out how to use this app.", example_ru:"Я не могу разобраться, как пользоваться этим приложением.", separable:true, level:"B1" },
+
+  // ===== FIND =====
+  { verb:"find", particle:"out", meaning_ru:"узнать; выяснить", example:"I just found out that she's moving to London.", example_ru:"Я только что узнал, что она переезжает в Лондон.", separable:true, level:"A2" },
+
+  // ===== POINT =====
+  { verb:"point", particle:"out", meaning_ru:"указать; обратить внимание", example:"She pointed out several mistakes in my report.", example_ru:"Она указала на несколько ошибок в моём отчёте.", separable:true, level:"B1" },
+
+  // ===== STAND =====
+  { verb:"stand", particle:"up", meaning_ru:"встать", example:"Please stand up when the teacher enters.", example_ru:"Пожалуйста, встаньте, когда входит учитель.", separable:false, level:"A2" },
+
+  // ===== SIT =====
+  { verb:"sit", particle:"down", meaning_ru:"сесть", example:"Please sit down and make yourself comfortable.", example_ru:"Пожалуйста, садитесь и чувствуйте себя как дома.", separable:false, level:"A2" },
+
+  // ===== HOLD =====
+  { verb:"hold", particle:"on", meaning_ru:"подождать; держаться", example:"Hold on, I'll be right back.", example_ru:"Подожди, я сейчас вернусь.", separable:false, level:"A2" },
+
+  // ===== HANG =====
+  { verb:"hang", particle:"up", meaning_ru:"повесить трубку", example:"She hung up before I could explain.", example_ru:"Она повесила трубку, прежде чем я смог объяснить.", separable:true, level:"B1" },
+  { verb:"hang", particle:"out", meaning_ru:"проводить время; тусоваться", example:"We used to hang out at the park after school.", example_ru:"Мы обычно тусовались в парке после школы.", separable:false, level:"B1" },
+
+  // ===== SHOW =====
+  { verb:"show", particle:"up", meaning_ru:"появиться; прийти", example:"He didn't show up for the meeting.", example_ru:"Он не появился на встрече.", separable:false, level:"B1" },
+
+  // ===== END =====
+  { verb:"end", particle:"up", meaning_ru:"оказаться в итоге", example:"We got lost and ended up in the wrong town.", example_ru:"Мы заблудились и оказались не в том городе.", separable:false, level:"B1" },
+
+  // ===== FILL =====
+  { verb:"fill", particle:"in", meaning_ru:"заполнить (форму, бланк)", example:"Please fill in this application form.", example_ru:"Пожалуйста, заполните эту анкету.", separable:true, level:"A2" },
+  { verb:"fill", particle:"out", meaning_ru:"заполнить (форму — амер.)", example:"You need to fill out all the required fields.", example_ru:"Вам нужно заполнить все обязательные поля.", separable:true, level:"A2" },
+
+  // ===== CUT =====
+  { verb:"cut", particle:"off", meaning_ru:"отрезать; прервать (связь)", example:"We were cut off in the middle of the conversation.", example_ru:"Нас прервали посреди разговора.", separable:true, level:"B1" },
+  { verb:"cut", particle:"down on", meaning_ru:"сократить потребление", example:"The doctor told me to cut down on sugar.", example_ru:"Врач велел мне сократить потребление сахара.", separable:false, level:"B2" },
+
+  // ===== CALL =====
+  { verb:"call", particle:"off", meaning_ru:"отменить", example:"They called off the wedding at the last moment.", example_ru:"Они отменили свадьбу в последний момент.", separable:true, level:"B1" },
+  { verb:"call", particle:"back", meaning_ru:"перезвонить", example:"I'll call you back in five minutes.", example_ru:"Я перезвоню тебе через пять минут.", separable:true, level:"A2" },
+
+  // ===== CHECK =====
+  { verb:"check", particle:"in", meaning_ru:"зарегистрироваться (в отеле, на рейс)", example:"We checked in at the hotel at noon.", example_ru:"Мы зарегистрировались в отеле в полдень.", separable:false, level:"A2" },
+  { verb:"check", particle:"out", meaning_ru:"выписаться (из отеля); посмотреть", example:"Check out this cool video I found.", example_ru:"Посмотри это крутое видео, которое я нашёл.", separable:true, level:"A2" },
+
+  // ===== KEEP =====
+  { verb:"keep", particle:"up", meaning_ru:"не отставать; поддерживать", example:"You're walking too fast, I can't keep up.", example_ru:"Ты идёшь слишком быстро, я не успеваю.", separable:false, level:"B1" },
+  { verb:"keep", particle:"on", meaning_ru:"продолжать (делать)", example:"She keeps on making the same mistakes.", example_ru:"Она продолжает делать одни и те же ошибки.", separable:false, level:"B1" },
+
+  // ===== THROW =====
+  { verb:"throw", particle:"away", meaning_ru:"выбросить", example:"Don't throw away those old magazines.", example_ru:"Не выбрасывай эти старые журналы.", separable:true, level:"A2" },
+  { verb:"throw", particle:"up", meaning_ru:"вырвать (тошнить)", example:"The child threw up after eating too much candy.", example_ru:"Ребёнка вырвало после того, как он съел слишком много конфет.", separable:false, level:"B1" },
+
+  // ===== CLOSE / SHUT =====
+  { verb:"shut", particle:"down", meaning_ru:"закрыть (бизнес); выключить", example:"The factory was shut down last year.", example_ru:"Завод был закрыт в прошлом году.", separable:true, level:"B1" },
+  { verb:"shut", particle:"up", meaning_ru:"замолчать (грубо)", example:"I wish he would just shut up.", example_ru:"Хотелось бы, чтобы он просто замолчал.", separable:false, level:"B1" },
+
+  // ===== PASS =====
+  { verb:"pass", particle:"away", meaning_ru:"скончаться (эвфемизм)", example:"Her grandfather passed away peacefully.", example_ru:"Её дедушка мирно скончался.", separable:false, level:"B1" },
+  { verb:"pass", particle:"out", meaning_ru:"потерять сознание", example:"It was so hot that she almost passed out.", example_ru:"Было так жарко, что она чуть не потеряла сознание.", separable:false, level:"B1" },
+
+  // ===== SLOW / SPEED =====
+  { verb:"slow", particle:"down", meaning_ru:"замедлиться", example:"Slow down, you're driving too fast!", example_ru:"Притормози, ты едешь слишком быстро!", separable:false, level:"A2" },
+
+  // ===== GROW =====
+  { verb:"grow", particle:"up", meaning_ru:"вырасти; повзрослеть", example:"I grew up in a small village.", example_ru:"Я вырос в маленькой деревне.", separable:false, level:"A2" },
+
+  // ===== FALL =====
+  { verb:"fall", particle:"down", meaning_ru:"упасть", example:"Be careful, don't fall down the stairs.", example_ru:"Осторожно, не упади с лестницы.", separable:false, level:"A2" },
+  { verb:"fall", particle:"apart", meaning_ru:"развалиться", example:"My old shoes are falling apart.", example_ru:"Мои старые ботинки разваливаются.", separable:false, level:"B1" },
+  { verb:"fall", particle:"behind", meaning_ru:"отстать", example:"She fell behind in her studies after being ill.", example_ru:"Она отстала в учёбе после болезни.", separable:false, level:"B1" },
+
+  // ===== BLOW =====
+  { verb:"blow", particle:"up", meaning_ru:"взорваться; надуть; вспылить", example:"The building blew up without warning.", example_ru:"Здание взорвалось без предупреждения.", separable:true, level:"B1" },
+
+  // ===== CLEAN / TIDY =====
+  { verb:"clean", particle:"up", meaning_ru:"убрать; навести порядок", example:"We need to clean up after the party.", example_ru:"Нам нужно убрать после вечеринки.", separable:true, level:"A2" },
+
+  // ===== PAY =====
+  { verb:"pay", particle:"back", meaning_ru:"отдать долг; отомстить", example:"I'll pay you back next week.", example_ru:"Я верну тебе деньги на следующей неделе.", separable:true, level:"B1" },
+
+  // ===== BACK =====
+  { verb:"back", particle:"up", meaning_ru:"подтвердить; сделать копию; сдать назад", example:"Can you back up your claim with evidence?", example_ru:"Можешь подтвердить своё утверждение доказательствами?", separable:true, level:"B2" },
+
+  // ===== WAKE =====
+  { verb:"wake", particle:"up", meaning_ru:"проснуться; разбудить", example:"I woke up at dawn and couldn't fall back asleep.", example_ru:"Я проснулся на рассвете и не смог снова уснуть.", separable:true, level:"A2" },
+
+  // ===== CHEER =====
+  { verb:"cheer", particle:"up", meaning_ru:"подбодрить; повеселеть", example:"This song always cheers me up.", example_ru:"Эта песня всегда меня подбадривает.", separable:true, level:"B1" },
+
+  // ===== SORT =====
+  { verb:"sort", particle:"out", meaning_ru:"разобраться; решить (проблему)", example:"Don't worry, I'll sort it out.", example_ru:"Не переживай, я разберусь.", separable:true, level:"B1" },
+
+  // ===== GIVE (extra) =====
+
+  // ===== DRESS =====
+  { verb:"dress", particle:"up", meaning_ru:"нарядиться; переодеться", example:"The kids love to dress up for Halloween.", example_ru:"Дети любят наряжаться на Хэллоуин.", separable:false, level:"A2" },
+
+  // ===== LINE =====
+  { verb:"line", particle:"up", meaning_ru:"выстроиться в очередь", example:"People lined up outside the store for hours.", example_ru:"Люди выстроились в очередь у магазина на часы.", separable:false, level:"B1" },
+
+  // ===== MIX =====
+  { verb:"mix", particle:"up", meaning_ru:"перепутать", example:"I always mix up their names.", example_ru:"Я всегда путаю их имена.", separable:true, level:"B1" },
+
+  // ===== SETTLE =====
+  { verb:"settle", particle:"down", meaning_ru:"остепениться; успокоиться", example:"He finally settled down and started a family.", example_ru:"Он наконец остепенился и завёл семью.", separable:false, level:"B2" },
+
+  // ===== WEAR =====
+  { verb:"wear", particle:"out", meaning_ru:"износить(ся); вымотать", example:"These shoes are completely worn out.", example_ru:"Эти ботинки полностью изношены.", separable:true, level:"B1" },
+
+  // ===== PULL =====
+  { verb:"pull", particle:"over", meaning_ru:"остановиться у обочины", example:"The police officer told me to pull over.", example_ru:"Полицейский приказал мне остановиться.", separable:false, level:"B1" },
+
+  // ===== LET =====
+  { verb:"let", particle:"down", meaning_ru:"подвести; разочаровать", example:"I trusted you, and you let me down.", example_ru:"Я тебе доверял, а ты меня подвёл.", separable:true, level:"B1" },
+
+  // ===== DROP =====
+  { verb:"drop", particle:"off", meaning_ru:"подвезти; высадить", example:"I'll drop you off at the station.", example_ru:"Я подвезу тебя до вокзала.", separable:true, level:"A2" },
+  { verb:"drop", particle:"out", meaning_ru:"бросить (учёбу); выбыть", example:"He dropped out of university in his second year.", example_ru:"Он бросил университет на втором курсе.", separable:false, level:"B2" },
+
+  // ===== TRY =====
+  { verb:"try", particle:"on", meaning_ru:"примерить (одежду)", example:"Can I try on this jacket in a larger size?", example_ru:"Могу я примерить эту куртку на размер больше?", separable:true, level:"A2" },
+
+  // ===== HAND =====
+  { verb:"hand", particle:"in", meaning_ru:"сдать (работу, документы)", example:"Please hand in your homework by Friday.", example_ru:"Пожалуйста, сдайте домашнее задание до пятницы.", separable:true, level:"A2" },
+  { verb:"hand", particle:"out", meaning_ru:"раздать", example:"The teacher handed out the exam papers.", example_ru:"Учитель раздал экзаменационные листы.", separable:true, level:"B1" },
+];
+
+// ===== STATE =====
+let activeLevel = 'all';
+let activeParticle = 'all';
+const mainParticles = ['up','down','out','in','on','off'];
+
+function setLevel(lv) {
+  activeLevel = lv;
+  document.querySelectorAll('[data-level]').forEach(b => b.classList.toggle('active', b.dataset.level === lv));
+  doSearch();
+}
+function setParticle(p) {
+  activeParticle = p;
+  document.querySelectorAll('[data-particle]').forEach(b => b.classList.toggle('active', b.dataset.particle === p));
+  doSearch();
+}
+
+// init filter buttons
+document.querySelector('[data-level="all"]').classList.add('active');
+document.querySelector('[data-particle="all"]').classList.add('active');
+
+function trySearch(q) {
+  document.getElementById('searchInput').value = q;
+  doSearch();
+}
+
+function normalize(s) { return s.toLowerCase().replace(/ё/g,'е').trim(); }
+
+function doSearch() {
+  const raw = document.getElementById('searchInput').value;
+  const q = normalize(raw);
+  const res = document.getElementById('results');
+  const countBar = document.getElementById('countBar');
+  const info = document.getElementById('infoSection');
+
+  let filtered = VERBS;
+
+  // text search
+  if (q) {
+    filtered = filtered.filter(v => {
+      const full = v.verb + ' ' + v.particle;
+      return normalize(full).includes(q)
+        || normalize(v.meaning_ru).includes(q)
+        || normalize(v.verb).includes(q)
+        || normalize(v.example).includes(q)
+        || normalize(v.example_ru).includes(q);
+    });
+  }
+
+  // level filter
+  if (activeLevel !== 'all') {
+    filtered = filtered.filter(v => v.level === activeLevel);
+  }
+
+  // particle filter
+  if (activeParticle !== 'all') {
+    if (activeParticle === 'other') {
+      filtered = filtered.filter(v => {
+        const p = v.particle.split(' ')[0];
+        return !mainParticles.includes(p);
+      });
+    } else {
+      filtered = filtered.filter(v => v.particle.split(' ')[0] === activeParticle || v.particle === activeParticle);
+    }
+  }
+
+  if (!q && activeLevel === 'all' && activeParticle === 'all') {
+    res.innerHTML = '';
+    countBar.style.display = 'none';
+    info.style.display = '';
+    return;
+  }
+
+  info.style.display = 'none';
+
+  if (filtered.length === 0) {
+    res.innerHTML = '<div class="no-result">Ничего не найдено. Попробуйте другой запрос.</div>';
+    countBar.style.display = 'none';
+    return;
+  }
+
+  countBar.style.display = '';
+  countBar.textContent = 'Найдено: ' + filtered.length + ' ' + pluralize(filtered.length);
+
+  res.innerHTML = filtered.map(v => {
+    const full = v.verb + ' ' + v.particle;
+    const levelClass = 'badge-level-' + v.level.toLowerCase();
+
+    let typeLabel, typeClass;
+    if (v.separable) {
+      typeLabel = 'разделяемый';
+      typeClass = 'badge-sep';
+    } else {
+      // check if it seems intransitive by heuristic (no object in typical usage)
+      const intrans = ['get up','go on','go out','go off','go away','go back','go up','go down','go ahead','come back','come in','come out','come on','come up','come over','come down','come along','break up','break down','break in','break out','look out','stand up','sit down','hold on','show up','end up','run away','set off','carry on','pass away','pass out','slow down','grow up','fall down','fall apart','fall behind','shut up','dress up','line up','settle down','drop out','hang out','keep on','throw up','blow up','pull over','wake up','turn out','turn back','turn into','go through','go along with','get up','get out','get on','get off','get along','get away','get back','get over','get through','get by','get around','get together','get ahead','get into','check in','clean up'];
+      if (intrans.includes(full)) {
+        typeLabel = 'непереходный';
+        typeClass = 'badge-intrans';
+      } else {
+        typeLabel = 'неразделяемый';
+        typeClass = 'badge-insep';
+      }
+    }
+
+    // highlight search in example
+    let exHtml = escHtml(v.example);
+    const fullRe = v.verb + '\\w*\\s+' + v.particle.replace(/ /g, '\\s+');
+    try {
+      const re = new RegExp('(' + fullRe + ')', 'gi');
+      exHtml = exHtml.replace(re, '<b>$1</b>');
+    } catch(e) {}
+    // also try past forms
+    exHtml = exHtml.replace(new RegExp('(' + escRegex(v.verb) + '\\w*)', 'gi'), function(m) {
+      return exHtml.includes('<b>') ? m : '<b>' + m + '</b>';
+    });
+
+    let sepNote = '';
+    if (v.separable) {
+      sepNote = `<div class="pv-sep-note">✂ Разделяемый: <code>${escHtml(capitalize(v.verb))} ${v.particle} the…</code> = <code>${escHtml(capitalize(v.verb))} the… ${v.particle}</code>  |  С местоимением: <code>${escHtml(capitalize(v.verb))} it ${v.particle}</code> ✓</div>`;
+    }
+
+    return `<div class="pv-card">
+      <div class="pv-head">
+        <span class="pv-phrasal">${escHtml(full)}</span>
+        <span class="pv-ru">— ${escHtml(v.meaning_ru)}</span>
+      </div>
+      <div class="pv-badges">
+        <span class="badge ${levelClass}">${v.level}</span>
+        <span class="badge ${typeClass}">${typeLabel}</span>
+        <span class="badge badge-base">${escHtml(v.verb)}</span>
+      </div>
+      <div class="pv-example">
+        <div class="en">${exHtml}</div>
+        <div class="ru-ex">${escHtml(v.example_ru)}</div>
+      </div>
+      ${sepNote}
+    </div>`;
+  }).join('');
+}
+
+function pluralize(n) {
+  const m = n % 100;
+  if (m >= 11 && m <= 19) return 'глаголов';
+  const d = n % 10;
+  if (d === 1) return 'глагол';
+  if (d >= 2 && d <= 4) return 'глагола';
+  return 'глаголов';
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function escRegex(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+// search on enter
+document.getElementById('searchInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doSearch();
+});
+// live search
+document.getElementById('searchInput').addEventListener('input', doSearch);
+</script>
+
+</body>
+</html>

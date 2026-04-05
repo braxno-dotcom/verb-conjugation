@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇫🇷</text></svg>">
+<meta name="apple-mobile-web-app-title" content="FR articles">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇫🇷 Французские артикли и род существительных</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #eef0f5;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #1a365d, #2a4a7f);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  .search-area {
+    max-width: 600px;
+    margin: 30px auto 10px;
+    padding: 0 20px;
+    display: flex;
+    gap: 10px;
+  }
+  .search-area input {
+    flex: 1;
+    padding: 14px 18px;
+    font-size: 1.15em;
+    border: 2px solid #b8c3d9;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-area input:focus { border-color: #2a4a7f; }
+  .search-area button {
+    padding: 14px 28px;
+    font-size: 1.05em;
+    background: #2a4a7f;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .search-area button:hover { background: #1a365d; }
+
+  .hint {
+    max-width: 600px;
+    margin: 8px auto 0;
+    padding: 0 20px;
+    font-size: 0.85em;
+    color: #888;
+  }
+  .hint span { cursor: pointer; color: #2a4a7f; text-decoration: underline; }
+  .hint span:hover { color: #1a365d; }
+
+  .noun-info {
+    max-width: 900px;
+    margin: 18px auto 8px;
+    padding: 0 20px;
+    display: none;
+  }
+  .noun-info .word-display {
+    font-size: 2em;
+    font-weight: 700;
+    color: #1a365d;
+    margin-bottom: 8px;
+  }
+  .noun-info .badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 600;
+    margin-right: 8px;
+    margin-bottom: 6px;
+  }
+  .badge-m { background: #d6e4f7; color: #1a365d; }
+  .badge-f { background: #fce4ec; color: #880e4f; }
+  .badge-ru { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+  .badge-pl { background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; }
+  .tip-box {
+    max-width: 900px;
+    margin: 0 auto 10px;
+    padding: 0 20px;
+    display: none;
+  }
+  .tip-card {
+    background: #fffde7;
+    border: 1px solid #fff59d;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.9em;
+    color: #5d4037;
+  }
+  .tip-card b { color: #e65100; }
+
+  #results {
+    max-width: 900px;
+    margin: 10px auto 40px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+  }
+
+  .form-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .form-header {
+    padding: 12px 16px;
+    background: #2a4a7f;
+    color: white;
+    font-weight: 600;
+  }
+  .form-header .fr-name { font-size: 1.05em; }
+  .form-header .ru-name { font-size: 0.85em; opacity: 0.9; margin-top: 2px; }
+  .form-body { padding: 14px 16px; }
+  .form-body .article-form {
+    font-size: 1.4em;
+    font-weight: 700;
+    color: #2c2c2c;
+    margin-bottom: 4px;
+  }
+  .form-body .article-example {
+    font-size: 0.88em;
+    color: #888;
+    font-style: italic;
+  }
+
+  .no-result {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: #999;
+    font-size: 1.1em;
+  }
+
+  .info-section {
+    max-width: 900px;
+    margin: 10px auto 40px;
+    padding: 0 20px;
+  }
+  .info-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    line-height: 1.7;
+    font-size: 0.92em;
+    color: #555;
+    margin-bottom: 16px;
+  }
+  .info-card h3 { color: #1a365d; margin-bottom: 10px; font-size: 1.05em; }
+  .info-card b { color: #333; }
+  .info-card code {
+    background: #eef0f5;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.92em;
+    color: #2a4a7f;
+    font-weight: 600;
+  }
+  .gender-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+  .dot-m { background: #1a365d; }
+  .dot-f { background: #c2185b; }
+
+  .info-card table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+  }
+  .info-card th, .info-card td {
+    padding: 6px 10px;
+    border: 1px solid #dde;
+    text-align: left;
+    font-size: 0.95em;
+  }
+  .info-card th {
+    background: #eef0f5;
+    font-weight: 600;
+    color: #1a365d;
+  }
+
+  @media (max-width: 500px) {
+    #results { grid-template-columns: 1fr; padding: 0 10px; }
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switch { padding: 6px 12px; font-size: 0.85em; }
+    .search-area { padding: 0 10px; flex-direction: column; }
+    .search-area input { font-size: 1em; padding: 12px 14px; width: 100%; }
+    .search-area button { padding: 12px 18px; font-size: 0.95em; width: 100%; }
+    .hint { padding: 0 10px; }
+    .noun-info { padding: 0 10px; }
+    .noun-info .badge { font-size: 0.8em; padding: 4px 10px; }
+    .noun-info .word-display { font-size: 1.5em; }
+    .tip-box { padding: 0 10px; }
+    .info-section { padding: 0 10px; }
+    .form-header { padding: 10px 12px; }
+    .form-body { padding: 10px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="french.html" class="lang-switch">📖 Портал</a>
+    <a href="french-verbs.html" class="lang-switch">📝 Глаголы</a>
+  </div>
+  <h1>🇫🇷 Французские артикли и род существительных</h1>
+  <p>Введите существительное — увидите все формы артиклей и род</p>
+</header>
+
+<div class="search-area">
+  <input type="text" id="nounInput" placeholder="pain, école, eau... или по-русски: хлеб, школа, вода..." autofocus
+    onkeydown="if(event.key==='Enter')lookup()">
+  <button onclick="lookup()">Найти</button>
+</div>
+<div class="hint">
+  Попробуйте:
+  <span onclick="tryWord('pain')">pain</span>,
+  <span onclick="tryWord('eau')">eau</span>,
+  <span onclick="tryWord('école')">école</span>,
+  <span onclick="tryWord('homme')">homme</span>,
+  <span onclick="tryWord('problème')">problème</span>,
+  <span onclick="tryWord('main')">main</span>
+  | по-русски:
+  <span onclick="tryWord('хлеб')">хлеб</span>,
+  <span onclick="tryWord('вода')">вода</span>,
+  <span onclick="tryWord('любовь')">любовь</span>,
+  <span onclick="tryWord('кино')">кино</span>
+</div>
+
+<div class="noun-info" id="nounInfo"></div>
+<div class="tip-box" id="tipBox"></div>
+<div id="results"></div>
+
+<div class="info-section" id="infoSection">
+  <div class="info-card">
+    <h3>📚 Три типа артиклей во французском</h3>
+    <p>
+      Во французском языке <b>2 рода</b> существительных:
+      <span class="gender-dot dot-m"></span><b>мужской</b> (masculin) и
+      <span class="gender-dot dot-f"></span><b>женский</b> (féminin).
+      Среднего рода нет.
+    </p>
+    <br>
+    <p><b>1. Article défini (определённый артикль)</b> — указывает на конкретный предмет:</p>
+    <table>
+      <tr><th></th><th>Муж. род</th><th>Жен. род</th><th>Перед гласной/h</th><th>Мн. число</th></tr>
+      <tr><td><b>Форма</b></td><td><code>le</code></td><td><code>la</code></td><td><code>l'</code></td><td><code>les</code></td></tr>
+      <tr><td><b>Пример</b></td><td>le pain</td><td>la maison</td><td>l'eau, l'homme</td><td>les livres</td></tr>
+    </table>
+    <br>
+    <p><b>2. Article indéfini (неопределённый артикль)</b> — какой-то, один из:</p>
+    <table>
+      <tr><th></th><th>Муж. род</th><th>Жен. род</th><th>Мн. число</th></tr>
+      <tr><td><b>Форма</b></td><td><code>un</code></td><td><code>une</code></td><td><code>des</code></td></tr>
+      <tr><td><b>Пример</b></td><td>un livre</td><td>une table</td><td>des enfants</td></tr>
+    </table>
+    <br>
+    <p><b>3. Article partitif (частичный артикль)</b> — часть от целого, немного:</p>
+    <table>
+      <tr><th></th><th>Муж. род</th><th>Жен. род</th><th>Перед гласной/h</th><th>Мн. число</th></tr>
+      <tr><td><b>Форма</b></td><td><code>du</code></td><td><code>de la</code></td><td><code>de l'</code></td><td><code>des</code></td></tr>
+      <tr><td><b>Пример</b></td><td>du pain</td><td>de la viande</td><td>de l'eau</td><td>des légumes</td></tr>
+    </table>
+  </div>
+
+  <div class="info-card">
+    <h3>🔗 Слитные артикли (contractions)</h3>
+    <p>Предлоги <code>à</code> и <code>de</code> сливаются с определённым артиклем <code>le</code> и <code>les</code>:</p>
+    <table>
+      <tr><th></th><th>+ le</th><th>+ la</th><th>+ l'</th><th>+ les</th></tr>
+      <tr><td><b>à +</b></td><td><code>au</code></td><td>à la</td><td>à l'</td><td><code>aux</code></td></tr>
+      <tr><td><b>de +</b></td><td><code>du</code></td><td>de la</td><td>de l'</td><td><code>des</code></td></tr>
+    </table>
+    <br>
+    <p>
+      <b>Примеры:</b><br>
+      <code>au cinéma</code> (= à le cinéma) — в кино<br>
+      <code>à la gare</code> — на вокзале<br>
+      <code>à l'école</code> — в школе<br>
+      <code>aux enfants</code> — детям<br>
+      <code>du fromage</code> (= de le fromage) — сыра (немного)<br>
+      <code>des amis</code> (= de les amis) — друзей
+    </p>
+  </div>
+
+  <div class="info-card">
+    <h3>💡 Как угадать род? Подсказки по окончаниям</h3>
+    <p><b>Обычно мужской род</b> (masculin):</p>
+    <p>
+      <code>-ment</code> (le moment, le gouvernement)<br>
+      <code>-age</code> (le voyage, le fromage; <b>исключения:</b> la page, la plage, la cage, l'image)<br>
+      <code>-isme</code> (le tourisme, le capitalisme)<br>
+      <code>-ème</code> (le problème, le système)<br>
+      <code>-eau</code> (le chapeau, le gâteau; <b>исключения:</b> l'eau, la peau)<br>
+      <code>-ier</code> (le cahier, le papier)<br>
+      <code>-phone/-scope</code> (le téléphone, le microscope)
+    </p>
+    <br>
+    <p><b>Обычно женский род</b> (féminin):</p>
+    <p>
+      <code>-tion/-sion</code> (la nation, la décision)<br>
+      <code>-ure</code> (la nature, la voiture)<br>
+      <code>-ée</code> (la journée, la idée; <b>исключение:</b> le musée, le lycée)<br>
+      <code>-ette</code> (la fourchette, la serviette)<br>
+      <code>-ence/-ance</code> (la patience, la chance)<br>
+      <code>-té</code> (la liberté, la santé)<br>
+      <code>-ie</code> (la vie, la boulangerie)
+    </p>
+    <br>
+    <p><b>Коварные слова:</b></p>
+    <p>
+      <code>le problème</code> — мужской, хотя заканчивается на -e<br>
+      <code>la main</code> — женский, хотя не на типичное «женское» окончание<br>
+      <code>l'homme</code> — мужской (артикль скрыт за элизией)<br>
+      <code>l'eau</code> — женский (артикль скрыт за элизией)<br>
+      <code>le musée</code> — мужской, хотя на -ée
+    </p>
+  </div>
+
+  <div class="info-card">
+    <h3>📖 Когда какой артикль использовать?</h3>
+    <p>
+      <b>Определённый (le/la/les)</b> — когда предмет известен, конкретен, уникален или речь идёт о понятии в целом:<br>
+      <code>Le soleil brille.</code> — Солнце светит. (единственное)<br>
+      <code>J'aime le chocolat.</code> — Я люблю шоколад. (в общем)
+    </p>
+    <br>
+    <p>
+      <b>Неопределённый (un/une/des)</b> — когда предмет упоминается впервые, один из многих:<br>
+      <code>J'ai un chat.</code> — У меня есть кот.<br>
+      <code>Il y a des fleurs.</code> — Есть (какие-то) цветы.
+    </p>
+    <br>
+    <p>
+      <b>Частичный (du/de la/de l')</b> — когда речь о неисчислимом количестве (еда, жидкости, абстрактные понятия):<br>
+      <code>Je veux du pain.</code> — Я хочу хлеба.<br>
+      <code>Il faut de la patience.</code> — Нужно терпение.<br>
+      <code>Je bois de l'eau.</code> — Я пью воду.
+    </p>
+    <br>
+    <p>
+      <b>После отрицания</b> — все неопределённые и частичные артикли заменяются на <code>de/d'</code>:<br>
+      <code>Je n'ai pas de pain.</code> — У меня нет хлеба.<br>
+      <code>Il n'y a pas d'eau.</code> — Воды нет.
+    </p>
+  </div>
+</div>
+
+<script>
+const nouns = [
+  // === FOOD / ЕДА ===
+  { word: "pain", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "pains", ru: "хлеб", note: "" },
+  { word: "fromage", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "fromages", ru: "сыр", note: "Окончание -age обычно мужской род" },
+  { word: "gâteau", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "gâteaux", ru: "торт / пирожное", note: "Окончание -eau обычно мужской род. Мн. ч. на -x" },
+  { word: "poulet", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "poulets", ru: "курица (мясо)", note: "" },
+  { word: "poisson", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "poissons", ru: "рыба", note: "" },
+  { word: "riz", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "riz", ru: "рис", note: "" },
+  { word: "chocolat", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "chocolats", ru: "шоколад", note: "" },
+  { word: "lait", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "laits", ru: "молоко", note: "" },
+  { word: "beurre", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "beurres", ru: "масло (сливочное)", note: "" },
+  { word: "café", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "cafés", ru: "кофе / кафе", note: "" },
+  { word: "vin", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "vins", ru: "вино", note: "" },
+  { word: "sucre", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "sucres", ru: "сахар", note: "" },
+  { word: "sel", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "sels", ru: "соль", note: "Мужской род, хотя в русском «соль» — женского" },
+  { word: "fruit", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "fruits", ru: "фрукт", note: "" },
+  { word: "légume", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "légumes", ru: "овощ", note: "Мужской род, хотя заканчивается на -e" },
+  { word: "eau", gender: "f", article_indef: "une", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "eaux", ru: "вода", note: "Женский род, но артикль скрыт элизией: l'eau. Мн. ч. на -x" },
+  { word: "viande", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "viandes", ru: "мясо", note: "" },
+  { word: "soupe", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "soupes", ru: "суп", note: "" },
+  { word: "salade", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "salades", ru: "салат", note: "" },
+  { word: "bière", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "bières", ru: "пиво", note: "Женский род, хотя в русском «пиво» — среднего" },
+  { word: "pomme", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "pommes", ru: "яблоко", note: "" },
+  { word: "orange", gender: "f", article_indef: "une", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "oranges", ru: "апельсин", note: "Начинается на гласную — элизия: l'orange" },
+  { word: "huile", gender: "f", article_indef: "une", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "huiles", ru: "масло (растительное)", note: "h немое — элизия: l'huile" },
+
+  // === BODY / ТЕЛО ===
+  { word: "corps", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "corps", ru: "тело", note: "" },
+  { word: "bras", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "bras", ru: "рука (от плеча)", note: "" },
+  { word: "doigt", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "doigts", ru: "палец", note: "" },
+  { word: "dos", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "dos", ru: "спина", note: "" },
+  { word: "nez", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "nez", ru: "нос", note: "" },
+  { word: "pied", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "pieds", ru: "нога (стопа)", note: "" },
+  { word: "cœur", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "cœurs", ru: "сердце", note: "" },
+  { word: "ventre", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "ventres", ru: "живот", note: "" },
+  { word: "œil", gender: "m", article_indef: "un", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "yeux", ru: "глаз", note: "Начинается на гласную — элизия. Мн. ч. неправильное: yeux" },
+  { word: "main", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "mains", ru: "рука (кисть)", note: "Женский род — одно из немногих слов на -ain, которое женского рода" },
+  { word: "tête", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "têtes", ru: "голова", note: "" },
+  { word: "bouche", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "bouches", ru: "рот", note: "" },
+  { word: "jambe", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "jambes", ru: "нога", note: "" },
+  { word: "oreille", gender: "f", article_indef: "une", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "oreilles", ru: "ухо", note: "Начинается на гласную — элизия" },
+  { word: "dent", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "dents", ru: "зуб", note: "" },
+
+  // === PLACES / МЕСТА ===
+  { word: "cinéma", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "cinémas", ru: "кино / кинотеатр", note: "au cinéma — в кино (слитный артикль)" },
+  { word: "restaurant", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "restaurants", ru: "ресторан", note: "" },
+  { word: "marché", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "marchés", ru: "рынок", note: "" },
+  { word: "magasin", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "magasins", ru: "магазин", note: "" },
+  { word: "bureau", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "bureaux", ru: "офис / бюро", note: "Окончание -eau — мужской. Мн. ч. на -x" },
+  { word: "jardin", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "jardins", ru: "сад", note: "" },
+  { word: "parc", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "parcs", ru: "парк", note: "" },
+  { word: "musée", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "musées", ru: "музей", note: "Мужской род, хотя окончание -ée обычно женское!" },
+  { word: "hôpital", gender: "m", article_indef: "un", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "hôpitaux", ru: "больница", note: "h немое — элизия: l'hôpital. Мн. ч. -aux" },
+  { word: "hôtel", gender: "m", article_indef: "un", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "hôtels", ru: "отель", note: "h немое — элизия: l'hôtel" },
+  { word: "aéroport", gender: "m", article_indef: "un", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "aéroports", ru: "аэропорт", note: "Начинается на гласную — элизия" },
+  { word: "pays", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "pays", ru: "страна", note: "" },
+  { word: "école", gender: "f", article_indef: "une", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "écoles", ru: "школа", note: "Начинается на гласную — элизия: à l'école" },
+  { word: "gare", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "gares", ru: "вокзал", note: "à la gare — на вокзале" },
+  { word: "maison", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "maisons", ru: "дом", note: "" },
+  { word: "ville", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "villes", ru: "город", note: "" },
+  { word: "rue", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "rues", ru: "улица", note: "" },
+  { word: "place", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "places", ru: "площадь / место", note: "" },
+  { word: "plage", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "plages", ru: "пляж", note: "Исключение: окончание -age, но женский род" },
+  { word: "église", gender: "f", article_indef: "une", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "églises", ru: "церковь", note: "Начинается на гласную — элизия" },
+  { word: "bibliothèque", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "bibliothèques", ru: "библиотека", note: "" },
+  { word: "pharmacie", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "pharmacies", ru: "аптека", note: "Окончание -ie — женский род" },
+  { word: "boulangerie", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "boulangeries", ru: "булочная / пекарня", note: "Окончание -ie — женский род" },
+  { word: "université", gender: "f", article_indef: "une", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "universités", ru: "университет", note: "Окончание -té — женский род. Элизия: l'université" },
+
+  // === PEOPLE / ЛЮДИ ===
+  { word: "homme", gender: "m", article_indef: "un", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "hommes", ru: "мужчина / человек", note: "h немое — элизия: l'homme. Род скрыт!" },
+  { word: "garçon", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "garçons", ru: "мальчик", note: "" },
+  { word: "père", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "pères", ru: "отец", note: "" },
+  { word: "fils", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "fils", ru: "сын", note: "" },
+  { word: "frère", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "frères", ru: "брат", note: "" },
+  { word: "ami", gender: "m", article_indef: "un", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "amis", ru: "друг", note: "Начинается на гласную — элизия: l'ami" },
+  { word: "enfant", gender: "m", article_indef: "un", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "enfants", ru: "ребёнок", note: "Может быть m/f в зависимости от пола; по умолчанию мужской" },
+  { word: "étudiant", gender: "m", article_indef: "un", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "étudiants", ru: "студент", note: "Начинается на гласную — элизия" },
+  { word: "professeur", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "professeurs", ru: "преподаватель / профессор", note: "" },
+  { word: "voisin", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "voisins", ru: "сосед", note: "" },
+  { word: "femme", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "femmes", ru: "женщина / жена", note: "" },
+  { word: "fille", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "filles", ru: "девочка / дочь", note: "" },
+  { word: "mère", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "mères", ru: "мать", note: "" },
+  { word: "sœur", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "sœurs", ru: "сестра", note: "" },
+  { word: "personne", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "personnes", ru: "человек / персона", note: "Всегда женский род, даже про мужчину" },
+  { word: "famille", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "familles", ru: "семья", note: "" },
+
+  // === HOUSEHOLD / ДОМ И БЫТ ===
+  { word: "lit", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "lits", ru: "кровать", note: "" },
+  { word: "mur", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "murs", ru: "стена", note: "" },
+  { word: "miroir", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "miroirs", ru: "зеркало", note: "" },
+  { word: "canapé", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "canapés", ru: "диван", note: "" },
+  { word: "escalier", gender: "m", article_indef: "un", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "escaliers", ru: "лестница", note: "Начинается на гласную — элизия" },
+  { word: "étage", gender: "m", article_indef: "un", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "étages", ru: "этаж", note: "Окончание -age — мужской род" },
+  { word: "table", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "tables", ru: "стол", note: "" },
+  { word: "chaise", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "chaises", ru: "стул", note: "" },
+  { word: "cuisine", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "cuisines", ru: "кухня", note: "" },
+  { word: "chambre", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "chambres", ru: "комната / спальня", note: "" },
+  { word: "porte", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "portes", ru: "дверь", note: "" },
+  { word: "fenêtre", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "fenêtres", ru: "окно", note: "" },
+  { word: "clé", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "clés", ru: "ключ", note: "" },
+  { word: "lampe", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "lampes", ru: "лампа", note: "" },
+  { word: "serviette", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "serviettes", ru: "полотенце / салфетка", note: "Окончание -ette — женский род" },
+  { word: "fourchette", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "fourchettes", ru: "вилка", note: "Окончание -ette — женский род" },
+  { word: "assiette", gender: "f", article_indef: "une", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "assiettes", ru: "тарелка", note: "Начинается на гласную — элизия" },
+  { word: "bouteille", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "bouteilles", ru: "бутылка", note: "" },
+
+  // === NATURE / ПРИРОДА ===
+  { word: "soleil", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "soleils", ru: "солнце", note: "" },
+  { word: "ciel", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "cieux", ru: "небо", note: "Неправильное мн. ч.: cieux" },
+  { word: "arbre", gender: "m", article_indef: "un", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "arbres", ru: "дерево", note: "Начинается на гласную — элизия" },
+  { word: "animal", gender: "m", article_indef: "un", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "animaux", ru: "животное", note: "Начинается на гласную. Мн. ч. -aux" },
+  { word: "oiseau", gender: "m", article_indef: "un", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "oiseaux", ru: "птица", note: "Окончание -eau — мужской. Элизия. Мн. ч. -x" },
+  { word: "chat", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "chats", ru: "кот", note: "" },
+  { word: "chien", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "chiens", ru: "собака", note: "" },
+  { word: "lune", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "lunes", ru: "луна", note: "" },
+  { word: "mer", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "mers", ru: "море", note: "" },
+  { word: "montagne", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "montagnes", ru: "гора", note: "" },
+  { word: "fleur", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "fleurs", ru: "цветок", note: "" },
+  { word: "rivière", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "rivières", ru: "река", note: "" },
+  { word: "forêt", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "forêts", ru: "лес", note: "" },
+  { word: "étoile", gender: "f", article_indef: "une", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "étoiles", ru: "звезда", note: "Начинается на гласную — элизия" },
+  { word: "terre", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "terres", ru: "земля", note: "" },
+
+  // === ABSTRACT / АБСТРАКТНЫЕ ===
+  { word: "temps", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "temps", ru: "время / погода", note: "" },
+  { word: "travail", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "travaux", ru: "работа", note: "Мн. ч. неправильное: travaux" },
+  { word: "problème", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "problèmes", ru: "проблема", note: "Мужской род! Окончание -ème всегда мужское (le thème, le système)" },
+  { word: "moment", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "moments", ru: "момент", note: "Окончание -ment — мужской род" },
+  { word: "voyage", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "voyages", ru: "путешествие", note: "Окончание -age — мужской род" },
+  { word: "argent", gender: "m", article_indef: "un", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "argents", ru: "деньги / серебро", note: "Начинается на гласную — элизия" },
+  { word: "amour", gender: "m", article_indef: "un", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "amours", ru: "любовь", note: "Мужской род! Во мн. ч. может быть женским (литературный стиль)" },
+  { word: "bonheur", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "bonheurs", ru: "счастье", note: "" },
+  { word: "vie", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "vies", ru: "жизнь", note: "Окончание -ie — женский род" },
+  { word: "chance", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "chances", ru: "удача / шанс", note: "Окончание -ance — женский род" },
+  { word: "santé", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "santés", ru: "здоровье", note: "Окончание -té — женский род" },
+  { word: "liberté", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "libertés", ru: "свобода", note: "Окончание -té — женский род" },
+  { word: "nature", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "natures", ru: "природа", note: "Окончание -ure — женский род" },
+  { word: "question", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "questions", ru: "вопрос", note: "Окончание -tion — женский род" },
+  { word: "situation", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "situations", ru: "ситуация", note: "Окончание -tion — женский род" },
+  { word: "décision", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "décisions", ru: "решение", note: "Окончание -sion — женский род" },
+  { word: "patience", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "patiences", ru: "терпение", note: "Окончание -ence — женский род" },
+  { word: "différence", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "différences", ru: "разница", note: "Окончание -ence — женский род" },
+  { word: "idée", gender: "f", article_indef: "une", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "idées", ru: "идея", note: "Окончание -ée обычно женский (но le musée, le lycée — исключения)" },
+
+  // === THINGS & TRANSPORT / ВЕЩИ И ТРАНСПОРТ ===
+  { word: "livre", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "livres", ru: "книга", note: "" },
+  { word: "journal", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "journaux", ru: "газета / дневник", note: "Мн. ч. -aux" },
+  { word: "téléphone", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "téléphones", ru: "телефон", note: "Окончание -phone — мужской род" },
+  { word: "ordinateur", gender: "m", article_indef: "un", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "ordinateurs", ru: "компьютер", note: "Начинается на гласную — элизия" },
+  { word: "train", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "trains", ru: "поезд", note: "" },
+  { word: "avion", gender: "m", article_indef: "un", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "avions", ru: "самолёт", note: "Начинается на гласную — элизия" },
+  { word: "bus", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "bus", ru: "автобус", note: "" },
+  { word: "métro", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "métros", ru: "метро", note: "" },
+  { word: "vélo", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "vélos", ru: "велосипед", note: "" },
+  { word: "chapeau", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "chapeaux", ru: "шляпа", note: "Окончание -eau — мужской. Мн. ч. -x" },
+  { word: "sac", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "sacs", ru: "сумка", note: "" },
+  { word: "cadeau", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "cadeaux", ru: "подарок", note: "Окончание -eau — мужской. Мн. ч. -x" },
+  { word: "voiture", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "voitures", ru: "машина", note: "Окончание -ure — женский род" },
+  { word: "lettre", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "lettres", ru: "письмо / буква", note: "" },
+  { word: "montre", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "montres", ru: "часы (наручные)", note: "" },
+  { word: "photo", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "photos", ru: "фотография", note: "Сокращение от la photographie — женский род" },
+  { word: "carte", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "cartes", ru: "карта / открытка", note: "" },
+  { word: "chose", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "choses", ru: "вещь", note: "" },
+  { word: "journée", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "journées", ru: "день (весь день)", note: "Окончание -ée — женский род" },
+
+  // === TIME / ВРЕМЯ ===
+  { word: "jour", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "jours", ru: "день", note: "" },
+  { word: "matin", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "matins", ru: "утро", note: "" },
+  { word: "soir", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "soirs", ru: "вечер", note: "" },
+  { word: "mois", gender: "m", article_indef: "un", article_def: "le", article_partitif: "du", article_contracte_a: "au", plural: "mois", ru: "месяц", note: "" },
+  { word: "an", gender: "m", article_indef: "un", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "ans", ru: "год", note: "Начинается на гласную — элизия" },
+  { word: "été", gender: "m", article_indef: "un", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "étés", ru: "лето", note: "Начинается на гласную — элизия" },
+  { word: "hiver", gender: "m", article_indef: "un", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "hivers", ru: "зима", note: "h немое — элизия: l'hiver" },
+  { word: "nuit", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "nuits", ru: "ночь", note: "" },
+  { word: "semaine", gender: "f", article_indef: "une", article_def: "la", article_partitif: "de la", article_contracte_a: "à la", plural: "semaines", ru: "неделя", note: "" },
+  { word: "heure", gender: "f", article_indef: "une", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "heures", ru: "час", note: "h немое — элизия: l'heure" },
+  { word: "année", gender: "f", article_indef: "une", article_def: "l'", article_partitif: "de l'", article_contracte_a: "à l'", plural: "années", ru: "год (длительность)", note: "Окончание -ée — женский род. Элизия" },
+];
+
+const genderLabels = {
+  m: { fr: "Masculin", ru: "мужской род", badgeClass: "badge-m", letter: "M" },
+  f: { fr: "Féminin", ru: "женский род", badgeClass: "badge-f", letter: "F" }
+};
+
+function tryWord(w) {
+  document.getElementById('nounInput').value = w;
+  lookup();
+}
+
+function normalize(s) {
+  return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+function lookup() {
+  const q = document.getElementById('nounInput').value.trim().toLowerCase();
+  if (!q) return;
+
+  const qn = normalize(q);
+
+  const found = nouns.find(n =>
+    n.word === q ||
+    normalize(n.word) === qn ||
+    n.ru.toLowerCase() === q ||
+    n.ru.toLowerCase().includes(q) ||
+    n.plural === q ||
+    normalize(n.plural) === qn
+  );
+
+  const resultsDiv = document.getElementById('results');
+  const infoDiv = document.getElementById('nounInfo');
+  const tipDiv = document.getElementById('tipBox');
+  const infoSection = document.getElementById('infoSection');
+
+  if (!found) {
+    infoDiv.style.display = 'none';
+    tipDiv.style.display = 'none';
+    infoSection.style.display = 'none';
+    resultsDiv.innerHTML = '<div class="no-result">Существительное не найдено. Попробуйте другое слово.</div>';
+    return;
+  }
+
+  infoSection.style.display = 'none';
+
+  const g = genderLabels[found.gender];
+
+  // Compute contraction with "de"
+  const article_contracte_de = found.article_def === "l'"
+    ? "de l'"
+    : found.gender === "m"
+      ? "du"
+      : "de la";
+
+  infoDiv.style.display = 'block';
+  infoDiv.innerHTML = `
+    <div class="word-display">${found.word}</div>
+    <span class="badge ${g.badgeClass}">${g.letter} — ${g.fr} (${g.ru})</span>
+    <span class="badge badge-ru">🇷🇺 ${found.ru}</span>
+    <span class="badge badge-pl">мн. ч.: ${found.plural}</span>
+  `;
+
+  // Show tip if available
+  if (found.note) {
+    tipDiv.style.display = 'block';
+    tipDiv.innerHTML = `<div class="tip-card">💡 <b>Подсказка:</b> ${found.note}</div>`;
+  } else {
+    tipDiv.style.display = 'none';
+  }
+
+  const cards = [
+    {
+      frName: "Article défini",
+      ruName: "Определённый артикль",
+      singular: `${found.article_def} ${found.article_def.endsWith("'") ? "" : " "}${found.word}`.replace("  ", " "),
+      plural: `les ${found.plural}`,
+      example: found.article_def.endsWith("'")
+        ? `${found.article_def}${found.word}`
+        : `${found.article_def} ${found.word}`
+    },
+    {
+      frName: "Article indéfini",
+      ruName: "Неопределённый артикль",
+      singular: `${found.article_indef} ${found.word}`,
+      plural: `des ${found.plural}`,
+      example: `${found.article_indef} ${found.word}`
+    },
+    {
+      frName: "Article partitif",
+      ruName: "Частичный артикль",
+      singular: found.article_partitif.endsWith("'")
+        ? `${found.article_partitif}${found.word}`
+        : `${found.article_partitif} ${found.word}`,
+      plural: `des ${found.plural}`,
+      example: found.article_partitif.endsWith("'")
+        ? `${found.article_partitif}${found.word}`
+        : `${found.article_partitif} ${found.word}`
+    },
+    {
+      frName: "Contraction: à + article",
+      ruName: "Слитный с «à»",
+      singular: found.article_contracte_a.endsWith("'")
+        ? `${found.article_contracte_a}${found.word}`
+        : `${found.article_contracte_a} ${found.word}`,
+      plural: `aux ${found.plural}`,
+      example: found.article_contracte_a.endsWith("'")
+        ? `${found.article_contracte_a}${found.word}`
+        : `${found.article_contracte_a} ${found.word}`
+    },
+    {
+      frName: "Contraction: de + article",
+      ruName: "Слитный с «de»",
+      singular: article_contracte_de.endsWith("'")
+        ? `${article_contracte_de}${found.word}`
+        : `${article_contracte_de} ${found.word}`,
+      plural: `des ${found.plural}`,
+      example: article_contracte_de.endsWith("'")
+        ? `${article_contracte_de}${found.word}`
+        : `${article_contracte_de} ${found.word}`
+    }
+  ];
+
+  resultsDiv.innerHTML = cards.map(c => `
+    <div class="form-card">
+      <div class="form-header">
+        <div class="fr-name">${c.frName}</div>
+        <div class="ru-name">${c.ruName}</div>
+      </div>
+      <div class="form-body">
+        <div class="article-form">${c.singular}</div>
+        <div class="article-example">мн. ч.: ${c.plural}</div>
+      </div>
+    </div>
+  `).join('');
+}
+</script>
+
+</body>
+</html>

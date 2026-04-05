@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇪🇸</text></svg>">
+<meta name="apple-mobile-web-app-title" content="ES pron">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇪🇸 Испанские местоимения</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5eee8;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #8b1a1a, #c0392b);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 20px 60px;
+  }
+
+  /* Filter buttons */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px 0 10px;
+  }
+  .filter-btn {
+    background: white;
+    color: #8b1a1a;
+    border: 2px solid transparent;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.88em;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .filter-btn:hover { background: #c0392b; color: white; }
+  .filter-btn.active { background: #8b1a1a; color: white; border-color: #5a1010; }
+
+  /* Cards / sections */
+  .card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    margin-top: 20px;
+    overflow: hidden;
+    transition: opacity 0.3s, max-height 0.4s;
+  }
+  .card.hidden-cat {
+    display: none;
+  }
+  .card-header {
+    padding: 14px 20px;
+    font-weight: 600;
+    font-size: 1.1em;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    transition: filter 0.2s;
+  }
+  .card-header:hover { filter: brightness(0.93); }
+  .card-header .toggle { font-size: 1.2em; transition: transform 0.3s; }
+  .card-header.collapsed .toggle { transform: rotate(-90deg); }
+  .card-body {
+    padding: 20px;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    overflow: hidden;
+  }
+  .card-body.collapsed {
+    max-height: 0 !important;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  /* Category header colors */
+  .cat-sujeto .card-header { background: #fce4ec; color: #880e4f; }
+  .cat-tonico .card-header { background: #f3e5f5; color: #4a148c; }
+  .cat-cod .card-header { background: #e3f2fd; color: #0d47a1; }
+  .cat-coi .card-header { background: #e8f5e9; color: #1b5e20; }
+  .cat-reflexivo .card-header { background: #fff3e0; color: #e65100; }
+  .cat-posicion .card-header { background: #fce4ec; color: #b71c1c; }
+  .cat-combo .card-header { background: #ede7f6; color: #311b92; }
+
+  .sub-header {
+    font-size: 1em;
+    font-weight: 600;
+    color: #8b1a1a;
+    margin: 18px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #f5ddd5;
+  }
+  .sub-header:first-child { margin-top: 0; }
+
+  .explanation {
+    font-size: 0.92em;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+
+  /* Pronoun table */
+  .pron-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92em;
+    margin-bottom: 16px;
+  }
+  .pron-table th {
+    background: #8b1a1a;
+    color: white;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .pron-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f0e8e2;
+  }
+  .pron-table tr:nth-child(even) td { background: #fdf8f5; }
+  .pron-table .es { font-weight: 600; color: #8b1a1a; }
+
+  /* Example rows */
+  .example-row {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0e8e2;
+    flex-wrap: wrap;
+  }
+  .example-row:last-child { border-bottom: none; }
+  .example-es {
+    font-size: 1.05em;
+    line-height: 1.5;
+    flex: 1;
+    min-width: 200px;
+  }
+  .example-ru {
+    font-size: 0.9em;
+    color: #888;
+    flex-shrink: 0;
+  }
+
+  /* Color-coded pronoun highlights */
+  .hl-cod {
+    background: #bbdefb;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  .hl-coi {
+    background: #c8e6c9;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  .hl-refl {
+    background: #ffe0b2;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  .hl-subj {
+    background: #f8bbd0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  .hl-verb {
+    background: #ffcdd2;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+  }
+  .hl-combo {
+    background: #d1c4e9;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  /* Position diagrams */
+  .pos-diagram {
+    background: #fdf5f0;
+    border: 2px solid #e8d5cb;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 10px 0 14px;
+    font-size: 1em;
+    line-height: 1.8;
+  }
+  .pos-diagram .rule-label {
+    font-weight: 700;
+    color: #8b1a1a;
+    font-size: 0.85em;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .pos-diagram .rule-example {
+    font-size: 1.05em;
+  }
+  .pos-diagram .rule-note {
+    font-size: 0.82em;
+    color: #888;
+  }
+
+  /* Note boxes */
+  .note-box {
+    background: #fff8e1;
+    border-left: 4px solid #ffc107;
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    margin: 12px 0;
+    font-size: 0.9em;
+    line-height: 1.6;
+  }
+  .note-box.warning {
+    background: #fce4ec;
+    border-left-color: #e53935;
+  }
+  .note-box.tip {
+    background: #e8f5e9;
+    border-left-color: #43a047;
+  }
+
+  /* Info section */
+  .info-section {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    margin-top: 30px;
+    padding: 24px;
+  }
+  .info-section h3 {
+    font-size: 1.1em;
+    color: #8b1a1a;
+    margin-bottom: 14px;
+  }
+  .info-section ul {
+    padding-left: 20px;
+    font-size: 0.92em;
+    line-height: 1.7;
+    color: #555;
+  }
+  .info-section li { margin-bottom: 6px; }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    font-size: 0.85em;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .legend-swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    display: inline-block;
+  }
+
+  /* Responsive */
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switch { padding: 6px 12px; font-size: 0.85em; }
+    .container { padding: 12px 10px 40px; }
+    .card-body { padding: 14px; }
+    .example-row { flex-direction: column; gap: 4px; }
+    .example-es { min-width: auto; }
+    .filter-btn { padding: 6px 10px; font-size: 0.8em; }
+    .pron-table { font-size: 0.82em; }
+    .pron-table th, .pron-table td { padding: 7px 6px; }
+    .pos-diagram { padding: 10px 12px; font-size: 0.92em; }
+  }
+
+  html { scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="spanish.html" class="lang-switch">📖 Портал</a>
+    <a href="spanish-verbs.html" class="lang-switch">📝 Глаголы</a>
+  </div>
+  <h1>🇪🇸 Испанские местоимения</h1>
+  <p>Полный справочник: подлежащие, дополнения, позиция и комбинации</p>
+</header>
+
+<div class="container">
+
+  <div class="filter-bar">
+    <button class="filter-btn active" data-cat="all">Все</button>
+    <button class="filter-btn" data-cat="sujeto">Подлежащие</button>
+    <button class="filter-btn" data-cat="tonico">Ударные</button>
+    <button class="filter-btn" data-cat="cod">COD</button>
+    <button class="filter-btn" data-cat="coi">COI</button>
+    <button class="filter-btn" data-cat="reflexivo">Возвратные</button>
+    <button class="filter-btn" data-cat="posicion">Позиция</button>
+    <button class="filter-btn" data-cat="combo">Комбинации</button>
+  </div>
+
+  <!-- ===== 1. Pronombres sujeto ===== -->
+  <div class="card cat-sujeto" data-category="sujeto" id="sujeto">
+    <div class="card-header" onclick="toggleSection(this)">
+      <span>1. Pronombres sujeto — Подлежащие</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+
+      <table class="pron-table">
+        <tr><th>Лицо</th><th>Единственное число</th><th>Множественное число</th></tr>
+        <tr><td>1-е</td><td class="es">yo</td><td class="es">nosotros / nosotras</td></tr>
+        <tr><td>2-е</td><td class="es">tú</td><td class="es">vosotros / vosotras</td></tr>
+        <tr><td>3-е</td><td class="es">él / ella</td><td class="es">ellos / ellas</td></tr>
+        <tr><td>Вежл.</td><td class="es">usted (Ud.)</td><td class="es">ustedes (Uds.)</td></tr>
+      </table>
+
+      <div class="note-box tip">
+        <b>Pro-drop:</b> В испанском подлежащее обычно <b>опускается</b>, потому что окончание глагола однозначно указывает на лицо. Говорить <i>yo quiero</i> вместо просто <i>quiero</i> — это как выделять слово ударением.
+      </div>
+
+      <p class="sub-header">Когда нужно употребить подлежащее</p>
+      <p class="explanation">Подлежащее ставят для <b>контраста</b>, <b>уточнения</b> или <b>эмфазы</b>:</p>
+
+      <div class="example-row">
+        <div class="example-es"><span class="hl-subj">Yo</span> quiero café, pero <span class="hl-subj">ella</span> quiere té</div>
+        <div class="example-ru">Я хочу кофе, а она хочет чай (контраст)</div>
+      </div>
+      <div class="example-row">
+        <div class="example-es"><span class="hl-subj">Usted</span> tiene razón</div>
+        <div class="example-ru">Вы правы (вежливость)</div>
+      </div>
+
+      <div class="note-box">
+        <b>Vosotros vs Ustedes:</b> В <b>Испании</b> используют <i>vosotros</i> (неформально) и <i>ustedes</i> (формально). В <b>Латинской Америке</b> <i>vosotros</i> не используется вообще — для любого «вы» говорят <i>ustedes</i>.
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 2. Pronombres tónicos ===== -->
+  <div class="card cat-tonico" data-category="tonico" id="tonico">
+    <div class="card-header" onclick="toggleSection(this)">
+      <span>2. Pronombres tónicos — Ударные (предложные)</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+
+      <table class="pron-table">
+        <tr><th>Лицо</th><th>Единственное число</th><th>Множественное число</th></tr>
+        <tr><td>1-е</td><td class="es">mí</td><td class="es">nosotros / nosotras</td></tr>
+        <tr><td>2-е</td><td class="es">ti</td><td class="es">vosotros / vosotras</td></tr>
+        <tr><td>3-е</td><td class="es">él / ella / sí</td><td class="es">ellos / ellas / sí</td></tr>
+        <tr><td>Вежл.</td><td class="es">usted</td><td class="es">ustedes</td></tr>
+      </table>
+
+      <p class="explanation">Употребляются <b>после предлогов</b>: para, sin, por, a, de, en, con и др.</p>
+
+      <div class="example-row">
+        <div class="example-es">Este regalo es para <b>mí</b></div>
+        <div class="example-ru">Этот подарок для меня</div>
+      </div>
+      <div class="example-row">
+        <div class="example-es">No puedo vivir sin <b>ti</b></div>
+        <div class="example-ru">Я не могу жить без тебя</div>
+      </div>
+      <div class="example-row">
+        <div class="example-es">Hablaron de <b>nosotros</b></div>
+        <div class="example-ru">Они говорили о нас</div>
+      </div>
+
+      <div class="note-box warning">
+        <b>Особые формы с con:</b><br>
+        con + mí = <b>conmigo</b> (не <s>con mí</s>)<br>
+        con + ti = <b>contigo</b> (не <s>con ti</s>)<br>
+        con + sí = <b>consigo</b> (не <s>con sí</s>)
+      </div>
+
+      <p class="sub-header">Эмфатическое удвоение</p>
+      <p class="explanation">В испанском часто используют ударное местоимение <b>вместе</b> с безударным для усиления:</p>
+
+      <div class="example-row">
+        <div class="example-es"><b>A mí</b> <span class="hl-coi">me</span> gusta el chocolate</div>
+        <div class="example-ru">Мне (именно мне!) нравится шоколад</div>
+      </div>
+      <div class="example-row">
+        <div class="example-es"><b>A ti</b> <span class="hl-coi">te</span> lo digo</div>
+        <div class="example-ru">Тебе (именно тебе!) говорю</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 3. COD ===== -->
+  <div class="card cat-cod" data-category="cod" id="cod">
+    <div class="card-header" onclick="toggleSection(this)">
+      <span>3. COD — Прямое дополнение (Complemento directo)</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+
+      <div class="legend">
+        <div class="legend-item"><span class="legend-swatch" style="background:#bbdefb"></span> Прямое дополнение (COD)</div>
+      </div>
+
+      <table class="pron-table">
+        <tr><th>Лицо</th><th>Единственное число</th><th>Множественное число</th></tr>
+        <tr><td>1-е</td><td class="es">me</td><td class="es">nos</td></tr>
+        <tr><td>2-е</td><td class="es">te</td><td class="es">os</td></tr>
+        <tr><td>3-е м.р.</td><td class="es">lo</td><td class="es">los</td></tr>
+        <tr><td>3-е ж.р.</td><td class="es">la</td><td class="es">las</td></tr>
+      </table>
+
+      <p class="explanation">COD отвечает на вопрос <b>«что?»</b> или <b>«кого?»</b> (без предлога).</p>
+
+      <div class="example-row">
+        <div class="example-es">¿El libro? <span class="hl-cod">Lo</span> tengo aquí</div>
+        <div class="example-ru">Книга? Она у меня здесь</div>
+      </div>
+      <div class="example-row">
+        <div class="example-es">¿Las llaves? <span class="hl-cod">Las</span> busco</div>
+        <div class="example-ru">Ключи? Ищу их</div>
+      </div>
+      <div class="example-row">
+        <div class="example-es"><span class="hl-cod">Me</span> llaman por teléfono</div>
+        <div class="example-ru">Мне звонят по телефону</div>
+      </div>
+
+      <p class="sub-header">«A personal» с одушевлёнными COD</p>
+      <p class="explanation">Когда прямое дополнение — <b>человек</b>, перед ним ставится предлог <b>a</b>:</p>
+
+      <div class="example-row">
+        <div class="example-es">Veo <b>a</b> María → <span class="hl-cod">La</span> veo</div>
+        <div class="example-ru">Вижу Марию → Вижу её</div>
+      </div>
+      <div class="example-row">
+        <div class="example-es">Llamo <b>a</b> mis amigos → <span class="hl-cod">Los</span> llamo</div>
+        <div class="example-ru">Звоню друзьям → Звоню им</div>
+      </div>
+
+      <div class="note-box">
+        <b>Leísmo:</b> В Испании часто говорят <i>le</i> вместо <i>lo</i> для мужчин: <i>Le vi ayer</i> (= <i>Lo vi ayer</i>, «я его видел вчера»). Это принято RAE для ед. числа муж. рода, но <i>les</i> вместо <i>los</i> — уже нестандартно.
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 4. COI ===== -->
+  <div class="card cat-coi" data-category="coi" id="coi">
+    <div class="card-header" onclick="toggleSection(this)">
+      <span>4. COI — Косвенное дополнение (Complemento indirecto)</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+
+      <div class="legend">
+        <div class="legend-item"><span class="legend-swatch" style="background:#c8e6c9"></span> Косвенное дополнение (COI)</div>
+      </div>
+
+      <table class="pron-table">
+        <tr><th>Лицо</th><th>Единственное число</th><th>Множественное число</th></tr>
+        <tr><td>1-е</td><td class="es">me</td><td class="es">nos</td></tr>
+        <tr><td>2-е</td><td class="es">te</td><td class="es">os</td></tr>
+        <tr><td>3-е</td><td class="es">le</td><td class="es">les</td></tr>
+      </table>
+
+      <p class="explanation">COI отвечает на вопрос <b>«кому?»</b> / <b>«для кого?»</b> (= <b>a quién</b>).</p>
+
+      <div class="example-row">
+        <div class="example-es"><span class="hl-coi">Le</span> doy el libro <b>a María</b></div>
+        <div class="example-ru">Даю книгу Марии</div>
+      </div>
+      <div class="example-row">
+        <div class="example-es"><span class="hl-coi">Les</span> escribo una carta <b>a mis padres</b></div>
+        <div class="example-ru">Пишу письмо родителям</div>
+      </div>
+      <div class="example-row">
+        <div class="example-es"><span class="hl-coi">Te</span> compro un helado</div>
+        <div class="example-ru">Куплю тебе мороженое</div>
+      </div>
+
+      <div class="note-box warning">
+        <b>Обязательное удвоение!</b> В испанском COI-местоимение ставится <b>всегда</b>, даже когда уже есть «a + существительное»:<br>
+        <span class="hl-coi">Le</span> doy el libro <b>a Juan</b> (нельзя: <s>Doy el libro a Juan</s> без <i>le</i>)
+      </div>
+
+      <p class="sub-header">Замена le/les на se</p>
+      <p class="explanation">Когда COI (<i>le</i>/<i>les</i>) стоит перед COD (<i>lo</i>/<i>la</i>/<i>los</i>/<i>las</i>), он превращается в <b>se</b>:</p>
+
+      <div class="example-row">
+        <div class="example-es">Doy el libro a ella → <span class="hl-combo">Se</span> <span class="hl-cod">lo</span> doy</div>
+        <div class="example-ru">Даю ей книгу → Даю ей его (не <s>le lo</s>!)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 5. Reflexivos ===== -->
+  <div class="card cat-reflexivo" data-category="reflexivo" id="reflexivo">
+    <div class="card-header" onclick="toggleSection(this)">
+      <span>5. Pronombres reflexivos — Возвратные</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+
+      <table class="pron-table">
+        <tr><th>Лицо</th><th>Единственное число</th><th>Множественное число</th></tr>
+        <tr><td>1-е</td><td class="es">me</td><td class="es">nos</td></tr>
+        <tr><td>2-е</td><td class="es">te</td><td class="es">os</td></tr>
+        <tr><td>3-е</td><td class="es">se</td><td class="es">se</td></tr>
+      </table>
+
+      <p class="sub-header">Возвратные глаголы</p>
+      <p class="explanation">В словаре обозначаются с <b>-se</b>: lavarse, vestirse, levantarse, acostarse...</p>
+
+      <div class="example-row">
+        <div class="example-es"><span class="hl-refl">Me</span> lavo las manos</div>
+        <div class="example-ru">Я мою (себе) руки</div>
+      </div>
+      <div class="example-row">
+        <div class="example-es">Ella <span class="hl-refl">se</span> viste rápido</div>
+        <div class="example-ru">Она одевается быстро</div>
+      </div>
+      <div class="example-row">
+        <div class="example-es"><span class="hl-refl">Nos</span> levantamos a las siete</div>
+        <div class="example-ru">Мы встаём в семь</div>
+      </div>
+
+      <p class="sub-header">Взаимное значение</p>
+      <div class="example-row">
+        <div class="example-es"><span class="hl-refl">Nos</span> vemos mañana</div>
+        <div class="example-ru">Увидимся завтра (мы видим друг друга)</div>
+      </div>
+      <div class="example-row">
+        <div class="example-es"><span class="hl-refl">Se</span> quieren mucho</div>
+        <div class="example-ru">Они очень любят друг друга</div>
+      </div>
+
+      <p class="sub-header">Безличное «se»</p>
+      <p class="explanation"><b>Se</b> также используется для безличных и пассивных конструкций:</p>
+
+      <div class="example-row">
+        <div class="example-es">Aquí <span class="hl-refl">se</span> habla español</div>
+        <div class="example-ru">Здесь говорят по-испански</div>
+      </div>
+      <div class="example-row">
+        <div class="example-es"><span class="hl-refl">Se</span> dice que va a llover</div>
+        <div class="example-ru">Говорят, что будет дождь</div>
+      </div>
+      <div class="example-row">
+        <div class="example-es"><span class="hl-refl">Se</span> venden pisos</div>
+        <div class="example-ru">Продаются квартиры</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 6. Позиция местоимений ===== -->
+  <div class="card cat-posicion" data-category="posicion" id="posicion">
+    <div class="card-header" onclick="toggleSection(this)">
+      <span>6. ПОЗИЦИЯ местоимений — ключевой раздел</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+
+      <p class="explanation">Позиция безударных местоимений (me, te, lo, le, se, nos, os, los...) — одна из главных трудностей испанского. Запомните пять правил:</p>
+
+      <div class="pos-diagram">
+        <span class="rule-label">1. Перед спрягаемым глаголом</span>
+        <span class="rule-example"><span class="hl-cod">Lo</span> <span class="hl-verb">veo</span></span>
+        <span class="rule-note"> — Я его вижу</span>
+      </div>
+
+      <div class="pos-diagram">
+        <span class="rule-label">2. Присоединяется к инфинитиву</span>
+        <span class="rule-example">Quiero <span class="hl-verb">ver</span><span class="hl-cod">lo</span></span> = <span class="hl-cod">Lo</span> quiero <span class="hl-verb">ver</span>
+        <span class="rule-note"> — оба варианта правильные!</span>
+      </div>
+
+      <div class="pos-diagram">
+        <span class="rule-label">3. Присоединяется к герундию</span>
+        <span class="rule-example">Estoy <span class="hl-verb">haciéndo</span><span class="hl-cod">lo</span></span> = <span class="hl-cod">Lo</span> estoy <span class="hl-verb">haciendo</span>
+        <span class="rule-note"> — оба варианта правильные!</span>
+      </div>
+
+      <div class="pos-diagram">
+        <span class="rule-label">4. Присоединяется к утвердительному императиву</span>
+        <span class="rule-example">¡<span class="hl-verb">Da</span><span class="hl-coi">me</span><span class="hl-cod">lo</span>!</span>
+        <span class="rule-note"> — Дай мне это!</span>
+      </div>
+
+      <div class="pos-diagram">
+        <span class="rule-label">5. ПЕРЕД отрицательным императивом</span>
+        <span class="rule-example">¡No <span class="hl-coi">me</span> <span class="hl-cod">lo</span> <span class="hl-verb">des</span>!</span>
+        <span class="rule-note"> — Не давай мне это!</span>
+      </div>
+
+      <div class="note-box warning">
+        <b>Ударение!</b> При присоединении местоимения к глаголу может понадобиться графическое ударение, чтобы сохранить исходное ударение слова:<br>
+        dando → <b>dándolo</b> &nbsp;|&nbsp; diga → <b>dígame</b> &nbsp;|&nbsp; da → <b>dámelo</b>
+      </div>
+
+      <p class="sub-header">Сводная таблица позиций</p>
+      <table class="pron-table">
+        <tr><th>Контекст</th><th>Позиция</th><th>Пример</th></tr>
+        <tr><td>Простой глагол</td><td>Перед</td><td class="es"><span class="hl-cod">Lo</span> como</td></tr>
+        <tr><td>Инфинитив</td><td>Перед / после</td><td class="es"><span class="hl-cod">Lo</span> quiero ver = Quiero ver<span class="hl-cod">lo</span></td></tr>
+        <tr><td>Герундий</td><td>Перед / после</td><td class="es"><span class="hl-cod">Lo</span> estoy viendo = Estoy viéndo<span class="hl-cod">lo</span></td></tr>
+        <tr><td>Императив (+)</td><td>После (слитно)</td><td class="es">¡Cóme<span class="hl-cod">lo</span>!</td></tr>
+        <tr><td>Императив (−)</td><td>Перед</td><td class="es">¡No <span class="hl-cod">lo</span> comas!</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ===== 7. Комбинации ===== -->
+  <div class="card cat-combo" data-category="combo" id="combo">
+    <div class="card-header" onclick="toggleSection(this)">
+      <span>7. Комбинации — двойные местоимения</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+
+      <p class="explanation">Когда в предложении есть и COI, и COD, порядок всегда: <b>COI + COD + глагол</b> (или оба присоединяются к глаголу в том же порядке).</p>
+
+      <p class="sub-header">Таблица комбинаций</p>
+      <table class="pron-table">
+        <tr><th>COI</th><th>+ lo</th><th>+ la</th><th>+ los</th><th>+ las</th></tr>
+        <tr><td class="es">me</td><td class="es">me lo</td><td class="es">me la</td><td class="es">me los</td><td class="es">me las</td></tr>
+        <tr><td class="es">te</td><td class="es">te lo</td><td class="es">te la</td><td class="es">te los</td><td class="es">te las</td></tr>
+        <tr><td class="es">le → <b>se</b></td><td class="es">se lo</td><td class="es">se la</td><td class="es">se los</td><td class="es">se las</td></tr>
+        <tr><td class="es">nos</td><td class="es">nos lo</td><td class="es">nos la</td><td class="es">nos los</td><td class="es">nos las</td></tr>
+        <tr><td class="es">os</td><td class="es">os lo</td><td class="es">os la</td><td class="es">os los</td><td class="es">os las</td></tr>
+        <tr><td class="es">les → <b>se</b></td><td class="es">se lo</td><td class="es">se la</td><td class="es">se los</td><td class="es">se las</td></tr>
+      </table>
+
+      <div class="note-box warning">
+        <b>Правило замены:</b> <i>le</i>/<i>les</i> + <i>lo</i>/<i>la</i>/<i>los</i>/<i>las</i> → <b>se</b> + <i>lo</i>/<i>la</i>/<i>los</i>/<i>las</i>. Нельзя сказать <s>le lo</s> или <s>les las</s>!
+      </div>
+
+      <p class="sub-header">Примеры</p>
+
+      <div class="example-row">
+        <div class="example-es"><span class="hl-coi">Me</span> <span class="hl-cod">lo</span> da</div>
+        <div class="example-ru">Он даёт мне это</div>
+      </div>
+      <div class="example-row">
+        <div class="example-es"><span class="hl-coi">Te</span> <span class="hl-cod">la</span> compro</div>
+        <div class="example-ru">Я покупаю тебе её</div>
+      </div>
+      <div class="example-row">
+        <div class="example-es"><span class="hl-combo">Se</span> <span class="hl-cod">lo</span> dije</div>
+        <div class="example-ru">Я сказал ему/ей это (se заменяет le)</div>
+      </div>
+      <div class="example-row">
+        <div class="example-es"><span class="hl-combo">Se</span> <span class="hl-cod">las</span> envié ayer</div>
+        <div class="example-ru">Я отправил им их вчера</div>
+      </div>
+      <div class="example-row">
+        <div class="example-es"><span class="hl-coi">Nos</span> <span class="hl-cod">lo</span> explicaron</div>
+        <div class="example-ru">Нам это объяснили</div>
+      </div>
+      <div class="example-row">
+        <div class="example-es">¿<span class="hl-coi">Me</span> <span class="hl-cod">lo</span> puedes dar? = ¿Puedes <span class="hl-verb">dár</span><span class="hl-coi">me</span><span class="hl-cod">lo</span>?</div>
+        <div class="example-ru">Можешь мне это дать?</div>
+      </div>
+      <div class="example-row">
+        <div class="example-es">Estoy <span class="hl-verb">explicándo</span><span class="hl-combo">se</span><span class="hl-cod">lo</span></div>
+        <div class="example-ru">Я объясняю ему/ей это (= Se lo estoy explicando)</div>
+      </div>
+      <div class="example-row">
+        <div class="example-es">¡<span class="hl-verb">Dá</span><span class="hl-coi">me</span><span class="hl-cod">lo</span>!</div>
+        <div class="example-ru">Дай мне это!</div>
+      </div>
+      <div class="example-row">
+        <div class="example-es">¡No <span class="hl-coi">me</span> <span class="hl-cod">lo</span> <span class="hl-verb">des</span>!</div>
+        <div class="example-ru">Не давай мне это!</div>
+      </div>
+      <div class="example-row">
+        <div class="example-es"><span class="hl-coi">Te</span> <span class="hl-cod">los</span> traigo mañana</div>
+        <div class="example-ru">Принесу тебе их завтра</div>
+      </div>
+      <div class="example-row">
+        <div class="example-es">Voy a <span class="hl-verb">contár</span><span class="hl-coi">te</span><span class="hl-cod">lo</span> todo</div>
+        <div class="example-ru">Я расскажу тебе всё</div>
+      </div>
+      <div class="example-row">
+        <div class="example-es"><span class="hl-combo">Se</span> <span class="hl-cod">lo</span> he dicho muchas veces</div>
+        <div class="example-ru">Я говорил ему/ей это много раз</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Info section ===== -->
+  <div class="info-section" id="info">
+    <h3>Справочная информация</h3>
+
+    <p class="sub-header">Как различать COD и COI</p>
+    <ul>
+      <li><b>COD</b> отвечает на <b>¿qué?</b> (что?) / <b>¿a quién?</b> (кого?) — <i>Veo <u>la película</u></i> (вижу <u>что?</u>)</li>
+      <li><b>COI</b> отвечает на <b>¿a quién?</b> (кому?) — <i>Doy el libro <u>a Juan</u></i> (даю <u>кому?</u>)</li>
+      <li>Если можно заменить на <i>lo/la/los/las</i> — это COD. Если на <i>le/les</i> — это COI.</li>
+    </ul>
+
+    <p class="sub-header">Предлог «a» с прямым дополнением</p>
+    <ul>
+      <li>Перед одушевлённым COD обязателен предлог <b>a</b>: <i>Veo <b>a</b> mi madre</i></li>
+      <li>Перед неодушевлённым — без «a»: <i>Veo la casa</i></li>
+      <li>Исключения: глагол <i>tener</i> обычно без «a»: <i>Tengo un hermano</i></li>
+    </ul>
+
+    <p class="sub-header">Leísmo, laísmo, loísmo</p>
+    <ul>
+      <li><b>Leísmo</b> — использование <i>le</i> вместо <i>lo</i> для муж. рода (COD): <i>Le vi ayer</i>. Допустимо RAE в ед. числе.</li>
+      <li><b>Laísmo</b> — использование <i>la</i> вместо <i>le</i> для жен. рода (COI): <i><s>La dije</s></i> (неправильно! Надо: <i>Le dije</i>). Распространено в Мадриде, но некорректно.</li>
+      <li><b>Loísmo</b> — использование <i>lo</i> вместо <i>le</i> для COI: очень редко и всегда некорректно.</li>
+    </ul>
+
+    <p class="sub-header">Удвоение COI</p>
+    <ul>
+      <li>COI-местоимение <b>почти всегда</b> присутствует, даже если есть «a + существительное»</li>
+      <li><span class="hl-coi">Le</span> doy el libro <b>a Juan</b> — обязательно с <i>le</i></li>
+      <li>COD удваивается реже, обычно только при вынесении: <i>A María <span class="hl-cod">la</span> conozco bien</i></li>
+    </ul>
+
+    <p class="sub-header">Типичные ошибки русскоговорящих</p>
+    <ul>
+      <li><b>Путают COD и COI:</b> В русском нет такого разделения — и «вижу его» (COD), и «даю ему» (COI) используют разные падежи, но не отдельные слова-местоимения</li>
+      <li><b>Забывают удвоение COI:</b> В русском «Даю книгу Ивану» не требует «ему» — а в испанском <i>le</i> обязательно</li>
+      <li><b>Ставят местоимение после глагола</b> в обычных предложениях: <s>Veo lo</s> вместо <i>Lo veo</i></li>
+      <li><b>Не опускают подлежащее:</b> <s>Yo quiero, yo tengo, yo hago</s> — звучит навязчиво. Просто <i>quiero, tengo, hago</i></li>
+      <li><b>Забывают «a personal»:</b> <s>Veo mi madre</s> → <i>Veo <b>a</b> mi madre</i></li>
+      <li><b>Путают замену le → se:</b> <s>Le lo doy</s> → <i>Se lo doy</i></li>
+    </ul>
+
+    <p class="sub-header">Pro-drop: почему подлежащее не нужно</p>
+    <ul>
+      <li>Испанский — <b>pro-drop</b> язык: окончание глагола уже показывает лицо и число</li>
+      <li><i>Hablo</i> — может быть только «я говорю» (окончание <i>-o</i> = 1 л. ед.ч.)</li>
+      <li>Подлежащее добавляют для <b>контраста</b> (<i>Yo hablo español, él habla francés</i>), <b>уточнения</b> (3 л.: <i>él/ella/usted</i>) или <b>эмфазы</b></li>
+      <li>По-русски это тоже бывает: «Пойду домой» (без «я») — но в испанском это <b>норма</b>, а не разговорный стиль</li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+function toggleSection(header) {
+  header.classList.toggle('collapsed');
+  const body = header.nextElementSibling;
+  if (body.classList.contains('collapsed')) {
+    body.classList.remove('collapsed');
+    body.style.maxHeight = body.scrollHeight + 'px';
+    setTimeout(() => body.style.maxHeight = 'none', 400);
+  } else {
+    body.style.maxHeight = body.scrollHeight + 'px';
+    requestAnimationFrame(() => {
+      body.style.maxHeight = body.scrollHeight + 'px';
+      requestAnimationFrame(() => {
+        body.classList.add('collapsed');
+        body.style.maxHeight = '0';
+      });
+    });
+  }
+}
+
+// Filter buttons
+document.addEventListener('DOMContentLoaded', () => {
+  const buttons = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('.card[data-category]');
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const cat = btn.dataset.cat;
+
+      // Update active button
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Show/hide cards
+      cards.forEach(card => {
+        if (cat === 'all' || card.dataset.category === cat) {
+          card.classList.remove('hidden-cat');
+        } else {
+          card.classList.add('hidden-cat');
+        }
+      });
+    });
+  });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇬🇧</text></svg>">
+<meta name="apple-mobile-web-app-title" content="EN prep">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇬🇧 Английские предлоги</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #edf5f0;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #0d4025, #1a5c3a);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  .search-area {
+    max-width: 600px;
+    margin: 30px auto 10px;
+    padding: 0 20px;
+  }
+  .search-area input {
+    width: 100%;
+    padding: 14px 18px;
+    font-size: 1.15em;
+    border: 2px solid #b0cfba;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-area input:focus { border-color: #1a5c3a; }
+  .search-hint {
+    max-width: 600px;
+    margin: 8px auto 0;
+    padding: 0 20px;
+    font-size: 0.85em;
+    color: #888;
+  }
+  .search-hint span {
+    cursor: pointer;
+    color: #1a5c3a;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+  }
+  .search-hint span:hover { color: #0d4025; }
+
+  .content {
+    max-width: 900px;
+    margin: 20px auto 40px;
+    padding: 0 20px;
+  }
+
+  .category {
+    margin-bottom: 20px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .category-header {
+    padding: 14px 18px;
+    font-weight: 600;
+    font-size: 1.1em;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    transition: filter 0.2s;
+  }
+  .category-header:hover { filter: brightness(0.95); }
+  .category-header .chevron {
+    font-size: 0.8em;
+    transition: transform 0.3s;
+  }
+  .category-header.collapsed .chevron { transform: rotate(-90deg); }
+  .category-body {
+    background: white;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+  .category-body.collapsed {
+    max-height: 0 !important;
+  }
+
+  .cat-big3 .category-header { background: #c8e6d0; color: #0d4025; }
+  .cat-direction .category-header { background: #d4edda; color: #155724; }
+  .cat-time .category-header { background: #fff3cd; color: #856404; }
+  .cat-other .category-header { background: #e2d9f3; color: #4a235a; }
+  .cat-spatial .category-header { background: #d6e8f7; color: #003366; }
+  .cat-abstract .category-header { background: #fde2d4; color: #7a3b10; }
+  .cat-table .category-header { background: #f8d7da; color: #721c24; }
+  .cat-info .category-header { background: #d1ecf1; color: #0c5460; }
+
+  .prep-card {
+    padding: 14px 18px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.15s;
+  }
+  .prep-card:last-child { border-bottom: none; }
+  .prep-card:hover { background: #f7fbf8; }
+  .prep-word {
+    font-weight: 700;
+    font-size: 1.15em;
+    color: #1a5c3a;
+    display: inline;
+  }
+  .prep-translation {
+    font-size: 0.95em;
+    color: #666;
+    margin-left: 4px;
+    display: inline;
+  }
+  .prep-examples {
+    margin-top: 6px;
+    padding-left: 2px;
+  }
+  .prep-example {
+    font-size: 0.92em;
+    line-height: 1.6;
+    color: #444;
+  }
+  .prep-example .en-text { font-weight: 500; }
+  .prep-example .ru-text { color: #888; font-style: italic; }
+  .usage-label {
+    display: inline-block;
+    background: #edf5f0;
+    color: #1a5c3a;
+    font-size: 0.78em;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin: 6px 0 4px;
+    font-weight: 600;
+  }
+
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 4px 0;
+  }
+  .comparison-table th {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 0.92em;
+    font-weight: 600;
+    border-bottom: 2px solid #ddd;
+  }
+  .comparison-table th.col-in { color: #1a5c3a; }
+  .comparison-table th.col-on { color: #c0392b; }
+  .comparison-table th.col-at { color: #2c3e80; }
+  .comparison-table td {
+    padding: 10px 14px;
+    font-size: 0.92em;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: top;
+  }
+  .comparison-table tr:last-child td { border-bottom: none; }
+  .comparison-table .en-text { font-weight: 600; }
+  .comparison-table .ru-text { color: #888; font-size: 0.9em; }
+  .comparison-table .col-in-cell { background: #eef7f1; }
+  .comparison-table .col-on-cell { background: #fff5f5; }
+  .comparison-table .col-at-cell { background: #eef0fa; }
+
+  .ru-map-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 4px 0;
+  }
+  .ru-map-table th {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 0.92em;
+    font-weight: 600;
+    border-bottom: 2px solid #ddd;
+  }
+  .ru-map-table td {
+    padding: 10px 14px;
+    font-size: 0.92em;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: top;
+    line-height: 1.7;
+  }
+  .ru-map-table tr:last-child td { border-bottom: none; }
+  .ru-map-table .ru-prep {
+    font-weight: 700;
+    font-size: 1.15em;
+    color: #1a5c3a;
+  }
+  .ru-map-table .en-text { font-weight: 600; }
+  .ru-map-table .example { color: #666; font-size: 0.9em; }
+
+  .info-block {
+    padding: 16px 18px;
+    line-height: 1.7;
+    font-size: 0.93em;
+    color: #444;
+  }
+  .info-block h3 {
+    color: #0d4025;
+    font-size: 1.05em;
+    margin: 14px 0 6px;
+  }
+  .info-block h3:first-child { margin-top: 0; }
+  .info-block ul { padding-left: 20px; margin: 4px 0; }
+  .info-block li { margin-bottom: 4px; }
+  .info-block .mistake {
+    background: #fff0f0;
+    border-left: 3px solid #e74c3c;
+    padding: 6px 12px;
+    margin: 4px 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .info-block .correct {
+    background: #f0fff4;
+    border-left: 3px solid #27ae60;
+    padding: 6px 12px;
+    margin: 4px 0;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .no-results-msg {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+    font-size: 1.1em;
+    display: none;
+  }
+
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switch { padding: 6px 12px; font-size: 0.85em; }
+    .search-area { padding: 0 10px; }
+    .search-area input { font-size: 1em; padding: 12px 14px; }
+    .search-hint { padding: 0 10px; }
+    .content { padding: 0 10px; }
+    .category-header { padding: 12px 14px; font-size: 1em; }
+    .prep-card { padding: 12px 14px; }
+    .comparison-table th, .comparison-table td { padding: 8px 10px; font-size: 0.85em; }
+    .ru-map-table th, .ru-map-table td { padding: 8px 10px; font-size: 0.85em; }
+    .info-block { padding: 14px; font-size: 0.88em; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="english.html" class="lang-switch">📖 Портал</a>
+    <a href="english-verbs.html" class="lang-switch">📝 Глаголы</a>
+  </div>
+  <h1>🇬🇧 Английские предлоги</h1>
+  <p>Все предлоги с примерами и сравнительными таблицами</p>
+</header>
+
+<div class="search-area">
+  <input type="text" id="searchInput" placeholder="Введите предлог (in, on, at) или русское слово (в, на, к)..." oninput="filterPrepositions()">
+</div>
+<div class="search-hint">
+  Попробуйте: <span onclick="setSearch('in')">in</span>, <span onclick="setSearch('on')">on</span>, <span onclick="setSearch('at')">at</span>, <span onclick="setSearch('в')">в</span>, <span onclick="setSearch('на')">на</span>, <span onclick="setSearch('for')">for</span>, <span onclick="setSearch('about')">about</span>
+</div>
+
+<div class="content" id="content">
+
+  <!-- IN -->
+  <div class="category cat-big3" data-category="preposition">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>📌 IN — в, внутри, через</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div class="prep-card" data-search="in в внутри время месяц год сезон утро через">
+        <span class="prep-word">IN</span>
+        <span class="prep-translation">— в, внутри, через</span>
+
+        <div class="usage-label">⏰ Время (периоды, месяцы, годы, части дня)</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">in January</span> — <span class="ru-text">в январе</span></div>
+          <div class="prep-example"><span class="en-text">in 2024</span> — <span class="ru-text">в 2024 году</span></div>
+          <div class="prep-example"><span class="en-text">in summer</span> — <span class="ru-text">летом</span></div>
+          <div class="prep-example"><span class="en-text">in the morning</span> — <span class="ru-text">утром</span></div>
+          <div class="prep-example"><span class="en-text">in the afternoon</span> — <span class="ru-text">днём</span></div>
+          <div class="prep-example"><span class="en-text">in the evening</span> — <span class="ru-text">вечером</span></div>
+          <div class="prep-example"><span class="en-text">in the 21st century</span> — <span class="ru-text">в 21-м веке</span></div>
+          <div class="prep-example"><span class="en-text">in 5 minutes</span> — <span class="ru-text">через 5 минут</span></div>
+          <div class="prep-example"><span class="en-text">in a week</span> — <span class="ru-text">через неделю</span></div>
+        </div>
+
+        <div class="usage-label">📍 Место (закрытое пространство, территория)</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">in the room</span> — <span class="ru-text">в комнате</span></div>
+          <div class="prep-example"><span class="en-text">in Moscow</span> — <span class="ru-text">в Москве</span></div>
+          <div class="prep-example"><span class="en-text">in Russia</span> — <span class="ru-text">в России</span></div>
+          <div class="prep-example"><span class="en-text">in the car</span> — <span class="ru-text">в машине</span></div>
+          <div class="prep-example"><span class="en-text">in the photo</span> — <span class="ru-text">на фотографии</span></div>
+          <div class="prep-example"><span class="en-text">in the world</span> — <span class="ru-text">в мире</span></div>
+          <div class="prep-example"><span class="en-text">in the street</span> — <span class="ru-text">на улице</span></div>
+        </div>
+
+        <div class="usage-label">🔗 Устойчивые выражения</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">in English</span> — <span class="ru-text">на английском языке</span></div>
+          <div class="prep-example"><span class="en-text">in a hurry</span> — <span class="ru-text">второпях</span></div>
+          <div class="prep-example"><span class="en-text">in time</span> — <span class="ru-text">вовремя (успеть)</span></div>
+          <div class="prep-example"><span class="en-text">in love</span> — <span class="ru-text">влюблён</span></div>
+          <div class="prep-example"><span class="en-text">in fact</span> — <span class="ru-text">на самом деле</span></div>
+          <div class="prep-example"><span class="en-text">in general</span> — <span class="ru-text">в целом</span></div>
+          <div class="prep-example"><span class="en-text">in common</span> — <span class="ru-text">общее (что-то общее)</span></div>
+          <div class="prep-example"><span class="en-text">in advance</span> — <span class="ru-text">заранее</span></div>
+          <div class="prep-example"><span class="en-text">interested in</span> — <span class="ru-text">интересоваться чем-то</span></div>
+          <div class="prep-example"><span class="en-text">succeed in</span> — <span class="ru-text">преуспеть в чём-то</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ON -->
+  <div class="category cat-big3" data-category="preposition">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>📌 ON — на, в (день)</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div class="prep-card" data-search="on на поверхность день дата понедельник транспорт">
+        <span class="prep-word">ON</span>
+        <span class="prep-translation">— на, в (конкретный день)</span>
+
+        <div class="usage-label">⏰ Время (дни, даты)</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">on Monday</span> — <span class="ru-text">в понедельник</span></div>
+          <div class="prep-example"><span class="en-text">on the 5th of June</span> — <span class="ru-text">5 июня</span></div>
+          <div class="prep-example"><span class="en-text">on Christmas Day</span> — <span class="ru-text">в Рождество</span></div>
+          <div class="prep-example"><span class="en-text">on my birthday</span> — <span class="ru-text">в мой день рождения</span></div>
+          <div class="prep-example"><span class="en-text">on time</span> — <span class="ru-text">вовремя (по расписанию)</span></div>
+          <div class="prep-example"><span class="en-text">on a rainy day</span> — <span class="ru-text">в дождливый день</span></div>
+          <div class="prep-example"><span class="en-text">on the weekend</span> — <span class="ru-text">в выходные (AmE)</span></div>
+        </div>
+
+        <div class="usage-label">📍 Место (поверхность, линия)</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">on the table</span> — <span class="ru-text">на столе</span></div>
+          <div class="prep-example"><span class="en-text">on the wall</span> — <span class="ru-text">на стене</span></div>
+          <div class="prep-example"><span class="en-text">on the floor</span> — <span class="ru-text">на полу</span></div>
+          <div class="prep-example"><span class="en-text">on the 2nd floor</span> — <span class="ru-text">на втором этаже</span></div>
+          <div class="prep-example"><span class="en-text">on the bus / train / plane</span> — <span class="ru-text">в автобусе / поезде / самолёте</span></div>
+          <div class="prep-example"><span class="en-text">on the street</span> — <span class="ru-text">на улице</span></div>
+          <div class="prep-example"><span class="en-text">on the right / left</span> — <span class="ru-text">справа / слева</span></div>
+        </div>
+
+        <div class="usage-label">🔗 Устойчивые выражения</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">on TV</span> — <span class="ru-text">по телевизору</span></div>
+          <div class="prep-example"><span class="en-text">on the phone</span> — <span class="ru-text">по телефону</span></div>
+          <div class="prep-example"><span class="en-text">on the internet</span> — <span class="ru-text">в интернете</span></div>
+          <div class="prep-example"><span class="en-text">on holiday / on vacation</span> — <span class="ru-text">в отпуске</span></div>
+          <div class="prep-example"><span class="en-text">on purpose</span> — <span class="ru-text">нарочно, специально</span></div>
+          <div class="prep-example"><span class="en-text">on foot</span> — <span class="ru-text">пешком</span></div>
+          <div class="prep-example"><span class="en-text">on average</span> — <span class="ru-text">в среднем</span></div>
+          <div class="prep-example"><span class="en-text">depend on</span> — <span class="ru-text">зависеть от</span></div>
+          <div class="prep-example"><span class="en-text">congratulate on</span> — <span class="ru-text">поздравить с</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AT -->
+  <div class="category cat-big3" data-category="preposition">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>📌 AT — в (точка), у, за</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div class="prep-card" data-search="at в у точка время час полдень ночь школа дом работа">
+        <span class="prep-word">AT</span>
+        <span class="prep-translation">— в (точный момент/место), у</span>
+
+        <div class="usage-label">⏰ Время (точный момент)</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">at 5 o'clock</span> — <span class="ru-text">в 5 часов</span></div>
+          <div class="prep-example"><span class="en-text">at noon</span> — <span class="ru-text">в полдень</span></div>
+          <div class="prep-example"><span class="en-text">at midnight</span> — <span class="ru-text">в полночь</span></div>
+          <div class="prep-example"><span class="en-text">at night</span> — <span class="ru-text">ночью</span></div>
+          <div class="prep-example"><span class="en-text">at the weekend</span> — <span class="ru-text">в выходные (BrE)</span></div>
+          <div class="prep-example"><span class="en-text">at Christmas</span> — <span class="ru-text">на Рождество (период)</span></div>
+          <div class="prep-example"><span class="en-text">at the moment</span> — <span class="ru-text">в данный момент</span></div>
+          <div class="prep-example"><span class="en-text">at the same time</span> — <span class="ru-text">в то же время</span></div>
+        </div>
+
+        <div class="usage-label">📍 Место (точка, здание как функция)</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">at home</span> — <span class="ru-text">дома</span></div>
+          <div class="prep-example"><span class="en-text">at work</span> — <span class="ru-text">на работе</span></div>
+          <div class="prep-example"><span class="en-text">at school</span> — <span class="ru-text">в школе</span></div>
+          <div class="prep-example"><span class="en-text">at the station</span> — <span class="ru-text">на станции</span></div>
+          <div class="prep-example"><span class="en-text">at the bus stop</span> — <span class="ru-text">на автобусной остановке</span></div>
+          <div class="prep-example"><span class="en-text">at the door</span> — <span class="ru-text">у двери</span></div>
+          <div class="prep-example"><span class="en-text">at the top / bottom</span> — <span class="ru-text">наверху / внизу</span></div>
+          <div class="prep-example"><span class="en-text">at the concert</span> — <span class="ru-text">на концерте</span></div>
+        </div>
+
+        <div class="usage-label">🔗 Устойчивые выражения</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">at first</span> — <span class="ru-text">сначала</span></div>
+          <div class="prep-example"><span class="en-text">at last</span> — <span class="ru-text">наконец</span></div>
+          <div class="prep-example"><span class="en-text">at least</span> — <span class="ru-text">по крайней мере</span></div>
+          <div class="prep-example"><span class="en-text">at once</span> — <span class="ru-text">сразу, немедленно</span></div>
+          <div class="prep-example"><span class="en-text">good / bad at</span> — <span class="ru-text">хорош / плох в чём-то</span></div>
+          <div class="prep-example"><span class="en-text">look at</span> — <span class="ru-text">смотреть на</span></div>
+          <div class="prep-example"><span class="en-text">laugh at</span> — <span class="ru-text">смеяться над</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TO -->
+  <div class="category cat-direction" data-category="preposition">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>➡️ TO — к, в, до</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div class="prep-card" data-search="to к в направление до кому давать слушать идти">
+        <span class="prep-word">TO</span>
+        <span class="prep-translation">— к, в (направление), до</span>
+
+        <div class="usage-label">🧭 Направление</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">go to school</span> — <span class="ru-text">идти в школу</span></div>
+          <div class="prep-example"><span class="en-text">come to me</span> — <span class="ru-text">подойди ко мне</span></div>
+          <div class="prep-example"><span class="en-text">fly to London</span> — <span class="ru-text">лететь в Лондон</span></div>
+          <div class="prep-example"><span class="en-text">to the left / right</span> — <span class="ru-text">налево / направо</span></div>
+        </div>
+
+        <div class="usage-label">👤 Адресат</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">give it to me</span> — <span class="ru-text">дай это мне</span></div>
+          <div class="prep-example"><span class="en-text">talk to someone</span> — <span class="ru-text">разговаривать с кем-то</span></div>
+          <div class="prep-example"><span class="en-text">listen to music</span> — <span class="ru-text">слушать музыку</span></div>
+          <div class="prep-example"><span class="en-text">belong to</span> — <span class="ru-text">принадлежать кому-то</span></div>
+        </div>
+
+        <div class="usage-label">⏰ Время</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">from 9 to 5</span> — <span class="ru-text">с 9 до 5</span></div>
+          <div class="prep-example"><span class="en-text">quarter to 6</span> — <span class="ru-text">без четверти шесть</span></div>
+        </div>
+
+        <div class="usage-label">🔗 Инфинитив</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">to go, to be, to have</span> — <span class="ru-text">частица перед глаголом</span></div>
+          <div class="prep-example"><span class="en-text">I want to learn English</span> — <span class="ru-text">Я хочу учить английский</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOR -->
+  <div class="category cat-direction" data-category="preposition">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>🎯 FOR — для, за, в течение</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div class="prep-card" data-search="for для за ради цель длительность время польза обмен">
+        <span class="prep-word">FOR</span>
+        <span class="prep-translation">— для, за, ради, в течение</span>
+
+        <div class="usage-label">🎯 Цель / назначение</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">for breakfast</span> — <span class="ru-text">на завтрак</span></div>
+          <div class="prep-example"><span class="en-text">for fun</span> — <span class="ru-text">ради развлечения</span></div>
+          <div class="prep-example"><span class="en-text">for sale</span> — <span class="ru-text">на продажу</span></div>
+          <div class="prep-example"><span class="en-text">What is this for?</span> — <span class="ru-text">Для чего это?</span></div>
+        </div>
+
+        <div class="usage-label">⏰ Длительность</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">for 3 years</span> — <span class="ru-text">в течение 3 лет</span></div>
+          <div class="prep-example"><span class="en-text">for a long time</span> — <span class="ru-text">долгое время</span></div>
+          <div class="prep-example"><span class="en-text">for a week</span> — <span class="ru-text">в течение недели</span></div>
+        </div>
+
+        <div class="usage-label">👤 Адресат / получатель</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">a gift for you</span> — <span class="ru-text">подарок для тебя</span></div>
+          <div class="prep-example"><span class="en-text">good for health</span> — <span class="ru-text">полезно для здоровья</span></div>
+          <div class="prep-example"><span class="en-text">bad for you</span> — <span class="ru-text">вредно для тебя</span></div>
+        </div>
+
+        <div class="usage-label">🔗 Устойчивые выражения</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">pay for</span> — <span class="ru-text">платить за</span></div>
+          <div class="prep-example"><span class="en-text">thank you for</span> — <span class="ru-text">спасибо за</span></div>
+          <div class="prep-example"><span class="en-text">wait for</span> — <span class="ru-text">ждать кого-то/чего-то</span></div>
+          <div class="prep-example"><span class="en-text">look for</span> — <span class="ru-text">искать</span></div>
+          <div class="prep-example"><span class="en-text">ask for</span> — <span class="ru-text">просить</span></div>
+          <div class="prep-example"><span class="en-text">for example</span> — <span class="ru-text">например</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FROM -->
+  <div class="category cat-direction" data-category="preposition">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>⬅️ FROM — из, от, с</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div class="prep-card" data-search="from из от с откуда происхождение начало источник">
+        <span class="prep-word">FROM</span>
+        <span class="prep-translation">— из, от, с</span>
+
+        <div class="usage-label">🌍 Происхождение</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">I'm from Russia</span> — <span class="ru-text">Я из России</span></div>
+          <div class="prep-example"><span class="en-text">from Moscow</span> — <span class="ru-text">из Москвы</span></div>
+          <div class="prep-example"><span class="en-text">a letter from a friend</span> — <span class="ru-text">письмо от друга</span></div>
+        </div>
+
+        <div class="usage-label">⏰ Начальная точка</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">from 9 to 5</span> — <span class="ru-text">с 9 до 5</span></div>
+          <div class="prep-example"><span class="en-text">from Monday to Friday</span> — <span class="ru-text">с понедельника по пятницу</span></div>
+        </div>
+
+        <div class="usage-label">🔗 Устойчивые выражения</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">different from</span> — <span class="ru-text">отличаться от</span></div>
+          <div class="prep-example"><span class="en-text">far from</span> — <span class="ru-text">далеко от</span></div>
+          <div class="prep-example"><span class="en-text">suffer from</span> — <span class="ru-text">страдать от</span></div>
+          <div class="prep-example"><span class="en-text">prevent from</span> — <span class="ru-text">предотвращать, мешать</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BY -->
+  <div class="category cat-direction" data-category="preposition">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>🚗 BY — около, к (сроку), автором</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div class="prep-card" data-search="by около возле к сроку автором транспорт средство кем">
+        <span class="prep-word">BY</span>
+        <span class="prep-translation">— у, около; к (сроку); кем (автор); на (транспорт)</span>
+
+        <div class="usage-label">✍️ Агент / автор</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">a book by Tolstoy</span> — <span class="ru-text">книга Толстого</span></div>
+          <div class="prep-example"><span class="en-text">painted by Picasso</span> — <span class="ru-text">написано Пикассо</span></div>
+          <div class="prep-example"><span class="en-text">by car / by bus / by train</span> — <span class="ru-text">на машине / автобусе / поезде</span></div>
+          <div class="prep-example"><span class="en-text">by hand</span> — <span class="ru-text">вручную</span></div>
+          <div class="prep-example"><span class="en-text">by email</span> — <span class="ru-text">по электронной почте</span></div>
+        </div>
+
+        <div class="usage-label">⏰ Дедлайн (к какому-то моменту)</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">by Monday</span> — <span class="ru-text">к понедельнику</span></div>
+          <div class="prep-example"><span class="en-text">by 5 o'clock</span> — <span class="ru-text">к 5 часам</span></div>
+          <div class="prep-example"><span class="en-text">by the end of the week</span> — <span class="ru-text">к концу недели</span></div>
+        </div>
+
+        <div class="usage-label">📍 Место (рядом)</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">by the window</span> — <span class="ru-text">у окна</span></div>
+          <div class="prep-example"><span class="en-text">sit by me</span> — <span class="ru-text">сядь рядом со мной</span></div>
+          <div class="prep-example"><span class="en-text">by the river</span> — <span class="ru-text">у реки</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WITH / WITHOUT -->
+  <div class="category cat-other" data-category="preposition">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>🤝 WITH / WITHOUT — с / без</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div class="prep-card" data-search="with с вместе инструмент характеристика">
+        <span class="prep-word">WITH</span>
+        <span class="prep-translation">— с, вместе с</span>
+
+        <div class="usage-label">👫 Сопровождение</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">with friends</span> — <span class="ru-text">с друзьями</span></div>
+          <div class="prep-example"><span class="en-text">coffee with milk</span> — <span class="ru-text">кофе с молоком</span></div>
+          <div class="prep-example"><span class="en-text">I agree with you</span> — <span class="ru-text">Я согласен с тобой</span></div>
+        </div>
+
+        <div class="usage-label">🔧 Инструмент</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">cut with a knife</span> — <span class="ru-text">резать ножом</span></div>
+          <div class="prep-example"><span class="en-text">write with a pen</span> — <span class="ru-text">писать ручкой</span></div>
+          <div class="prep-example"><span class="en-text">with my own hands</span> — <span class="ru-text">своими руками</span></div>
+        </div>
+
+        <div class="usage-label">👤 Характеристика</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">the man with glasses</span> — <span class="ru-text">мужчина в очках</span></div>
+          <div class="prep-example"><span class="en-text">a house with a garden</span> — <span class="ru-text">дом с садом</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="without без">
+        <span class="prep-word">WITHOUT</span>
+        <span class="prep-translation">— без</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">without sugar</span> — <span class="ru-text">без сахара</span></div>
+          <div class="prep-example"><span class="en-text">without a doubt</span> — <span class="ru-text">без сомнения</span></div>
+          <div class="prep-example"><span class="en-text">without any help</span> — <span class="ru-text">без какой-либо помощи</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="category cat-other" data-category="preposition">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>💬 ABOUT — о, про, около</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div class="prep-card" data-search="about о про около приблизительно тема">
+        <span class="prep-word">ABOUT</span>
+        <span class="prep-translation">— о, про, приблизительно</span>
+
+        <div class="usage-label">💬 Тема</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">a book about Russia</span> — <span class="ru-text">книга о России</span></div>
+          <div class="prep-example"><span class="en-text">think about</span> — <span class="ru-text">думать о</span></div>
+          <div class="prep-example"><span class="en-text">talk about</span> — <span class="ru-text">говорить о</span></div>
+          <div class="prep-example"><span class="en-text">worry about</span> — <span class="ru-text">беспокоиться о</span></div>
+          <div class="prep-example"><span class="en-text">dream about</span> — <span class="ru-text">мечтать о</span></div>
+          <div class="prep-example"><span class="en-text">forget about</span> — <span class="ru-text">забыть о</span></div>
+          <div class="prep-example"><span class="en-text">What about...?</span> — <span class="ru-text">Как насчёт...?</span></div>
+        </div>
+
+        <div class="usage-label">🔢 Приблизительность</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">about 5 minutes</span> — <span class="ru-text">около 5 минут</span></div>
+          <div class="prep-example"><span class="en-text">about 100 people</span> — <span class="ru-text">около 100 человек</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OF -->
+  <div class="category cat-other" data-category="preposition">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>🔗 OF — (кого/чего), из</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div class="prep-card" data-search="of из принадлежность отношение материал родительный">
+        <span class="prep-word">OF</span>
+        <span class="prep-translation">— (родительный падеж), из</span>
+
+        <div class="usage-label">📎 Принадлежность / отношение</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">the capital of Russia</span> — <span class="ru-text">столица России</span></div>
+          <div class="prep-example"><span class="en-text">a cup of tea</span> — <span class="ru-text">чашка чая</span></div>
+          <div class="prep-example"><span class="en-text">a lot of people</span> — <span class="ru-text">много людей</span></div>
+          <div class="prep-example"><span class="en-text">the end of the story</span> — <span class="ru-text">конец истории</span></div>
+          <div class="prep-example"><span class="en-text">one of my friends</span> — <span class="ru-text">один из моих друзей</span></div>
+        </div>
+
+        <div class="usage-label">🪵 Материал</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">made of wood</span> — <span class="ru-text">сделано из дерева</span></div>
+          <div class="prep-example"><span class="en-text">made of glass</span> — <span class="ru-text">сделано из стекла</span></div>
+        </div>
+
+        <div class="usage-label">🔗 Устойчивые выражения</div>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">afraid of</span> — <span class="ru-text">бояться чего-то</span></div>
+          <div class="prep-example"><span class="en-text">full of</span> — <span class="ru-text">полный чего-то</span></div>
+          <div class="prep-example"><span class="en-text">tired of</span> — <span class="ru-text">устал от чего-то</span></div>
+          <div class="prep-example"><span class="en-text">proud of</span> — <span class="ru-text">гордиться чем-то</span></div>
+          <div class="prep-example"><span class="en-text">consist of</span> — <span class="ru-text">состоять из</span></div>
+          <div class="prep-example"><span class="en-text">dream of</span> — <span class="ru-text">мечтать о</span></div>
+          <div class="prep-example"><span class="en-text">think of</span> — <span class="ru-text">думать о (иметь мнение)</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Spatial prepositions -->
+  <div class="category cat-spatial" data-category="preposition">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>📍 Пространственные предлоги</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div class="prep-card" data-search="into в внутрь движение">
+        <span class="prep-word">INTO</span>
+        <span class="prep-translation">— в, внутрь (движение)</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">go into the room</span> — <span class="ru-text">войти в комнату</span></div>
+          <div class="prep-example"><span class="en-text">get into the car</span> — <span class="ru-text">сесть в машину</span></div>
+          <div class="prep-example"><span class="en-text">translate into English</span> — <span class="ru-text">перевести на английский</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="out of из изнутри наружу">
+        <span class="prep-word">OUT OF</span>
+        <span class="prep-translation">— из (изнутри наружу)</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">get out of the car</span> — <span class="ru-text">выйти из машины</span></div>
+          <div class="prep-example"><span class="en-text">out of the window</span> — <span class="ru-text">из окна</span></div>
+          <div class="prep-example"><span class="en-text">out of money</span> — <span class="ru-text">без денег (закончились)</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="through через сквозь насквозь">
+        <span class="prep-word">THROUGH</span>
+        <span class="prep-translation">— через, сквозь</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">through the door</span> — <span class="ru-text">через дверь</span></div>
+          <div class="prep-example"><span class="en-text">through the forest</span> — <span class="ru-text">через лес</span></div>
+          <div class="prep-example"><span class="en-text">look through the window</span> — <span class="ru-text">смотреть в окно</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="across через поверхность напротив">
+        <span class="prep-word">ACROSS</span>
+        <span class="prep-translation">— через (поверхность), напротив</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">across the street</span> — <span class="ru-text">через дорогу</span></div>
+          <div class="prep-example"><span class="en-text">swim across the river</span> — <span class="ru-text">переплыть реку</span></div>
+          <div class="prep-example"><span class="en-text">across from the bank</span> — <span class="ru-text">напротив банка</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="between между двумя">
+        <span class="prep-word">BETWEEN</span>
+        <span class="prep-translation">— между (двумя)</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">between Moscow and St. Petersburg</span> — <span class="ru-text">между Москвой и Питером</span></div>
+          <div class="prep-example"><span class="en-text">between 5 and 6 o'clock</span> — <span class="ru-text">между 5 и 6 часами</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="among среди многих">
+        <span class="prep-word">AMONG</span>
+        <span class="prep-translation">— среди (многих)</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">among friends</span> — <span class="ru-text">среди друзей</span></div>
+          <div class="prep-example"><span class="en-text">popular among students</span> — <span class="ru-text">популярный среди студентов</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="behind за позади сзади">
+        <span class="prep-word">BEHIND</span>
+        <span class="prep-translation">— за, позади</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">behind the house</span> — <span class="ru-text">за домом</span></div>
+          <div class="prep-example"><span class="en-text">behind you</span> — <span class="ru-text">за тобой</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="in front of перед впереди">
+        <span class="prep-word">IN FRONT OF</span>
+        <span class="prep-translation">— перед, впереди</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">in front of the house</span> — <span class="ru-text">перед домом</span></div>
+          <div class="prep-example"><span class="en-text">in front of me</span> — <span class="ru-text">передо мной</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="above над выше">
+        <span class="prep-word">ABOVE</span>
+        <span class="prep-translation">— над, выше</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">above the clouds</span> — <span class="ru-text">над облаками</span></div>
+          <div class="prep-example"><span class="en-text">above average</span> — <span class="ru-text">выше среднего</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="below под ниже">
+        <span class="prep-word">BELOW</span>
+        <span class="prep-translation">— под, ниже</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">below zero</span> — <span class="ru-text">ниже нуля</span></div>
+          <div class="prep-example"><span class="en-text">below average</span> — <span class="ru-text">ниже среднего</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="under под">
+        <span class="prep-word">UNDER</span>
+        <span class="prep-translation">— под (физически)</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">under the table</span> — <span class="ru-text">под столом</span></div>
+          <div class="prep-example"><span class="en-text">under the bridge</span> — <span class="ru-text">под мостом</span></div>
+          <div class="prep-example"><span class="en-text">children under 12</span> — <span class="ru-text">дети до 12 лет</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="over над через сверху больше">
+        <span class="prep-word">OVER</span>
+        <span class="prep-translation">— над, через, более</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">a bridge over the river</span> — <span class="ru-text">мост через реку</span></div>
+          <div class="prep-example"><span class="en-text">a lamp over the table</span> — <span class="ru-text">лампа над столом</span></div>
+          <div class="prep-example"><span class="en-text">over 100 people</span> — <span class="ru-text">более 100 человек</span></div>
+          <div class="prep-example"><span class="en-text">all over the world</span> — <span class="ru-text">по всему миру</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="near рядом близко возле около next to beside">
+        <span class="prep-word">NEAR / NEXT TO / BESIDE</span>
+        <span class="prep-translation">— рядом, возле, около</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">near the station</span> — <span class="ru-text">рядом со станцией</span></div>
+          <div class="prep-example"><span class="en-text">next to the bank</span> — <span class="ru-text">рядом с банком</span></div>
+          <div class="prep-example"><span class="en-text">sit beside me</span> — <span class="ru-text">сядь рядом со мной</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="along вдоль">
+        <span class="prep-word">ALONG</span>
+        <span class="prep-translation">— вдоль</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">along the river</span> — <span class="ru-text">вдоль реки</span></div>
+          <div class="prep-example"><span class="en-text">walk along the street</span> — <span class="ru-text">идти вдоль улицы</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="around вокруг кругом">
+        <span class="prep-word">AROUND</span>
+        <span class="prep-translation">— вокруг</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">around the world</span> — <span class="ru-text">вокруг света</span></div>
+          <div class="prep-example"><span class="en-text">look around</span> — <span class="ru-text">оглядеться</span></div>
+          <div class="prep-example"><span class="en-text">around the corner</span> — <span class="ru-text">за углом</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="towards к по направлению">
+        <span class="prep-word">TOWARDS</span>
+        <span class="prep-translation">— к, по направлению к</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">walk towards the park</span> — <span class="ru-text">идти в сторону парка</span></div>
+          <div class="prep-example"><span class="en-text">attitude towards</span> — <span class="ru-text">отношение к</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="opposite напротив">
+        <span class="prep-word">OPPOSITE</span>
+        <span class="prep-translation">— напротив</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">opposite the school</span> — <span class="ru-text">напротив школы</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Time prepositions (other) -->
+  <div class="category cat-time" data-category="preposition">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>⏰ Другие временные предлоги</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div class="prep-card" data-search="during во время в течение">
+        <span class="prep-word">DURING</span>
+        <span class="prep-translation">— во время</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">during the lesson</span> — <span class="ru-text">во время урока</span></div>
+          <div class="prep-example"><span class="en-text">during the summer</span> — <span class="ru-text">в течение лета</span></div>
+          <div class="prep-example"><span class="en-text">during the war</span> — <span class="ru-text">во время войны</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="until till до пока не">
+        <span class="prep-word">UNTIL / TILL</span>
+        <span class="prep-translation">— до (какого-то момента)</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">until Monday</span> — <span class="ru-text">до понедельника</span></div>
+          <div class="prep-example"><span class="en-text">wait until 5 o'clock</span> — <span class="ru-text">ждать до 5 часов</span></div>
+          <div class="prep-example"><span class="en-text">from morning till night</span> — <span class="ru-text">с утра до ночи</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="since с тех пор как начиная с">
+        <span class="prep-word">SINCE</span>
+        <span class="prep-translation">— с, с тех пор как</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">since Monday</span> — <span class="ru-text">с понедельника</span></div>
+          <div class="prep-example"><span class="en-text">since 2020</span> — <span class="ru-text">с 2020 года</span></div>
+          <div class="prep-example"><span class="en-text">since childhood</span> — <span class="ru-text">с детства</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="before до перед раньше">
+        <span class="prep-word">BEFORE</span>
+        <span class="prep-translation">— до, перед</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">before lunch</span> — <span class="ru-text">до обеда</span></div>
+          <div class="prep-example"><span class="en-text">before Monday</span> — <span class="ru-text">до понедельника</span></div>
+          <div class="prep-example"><span class="en-text">the day before yesterday</span> — <span class="ru-text">позавчера</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="after после">
+        <span class="prep-word">AFTER</span>
+        <span class="prep-translation">— после</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">after lunch</span> — <span class="ru-text">после обеда</span></div>
+          <div class="prep-example"><span class="en-text">after school</span> — <span class="ru-text">после школы</span></div>
+          <div class="prep-example"><span class="en-text">the day after tomorrow</span> — <span class="ru-text">послезавтра</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="ago назад тому назад">
+        <span class="prep-word">AGO</span>
+        <span class="prep-translation">— назад (ставится после)</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">5 minutes ago</span> — <span class="ru-text">5 минут назад</span></div>
+          <div class="prep-example"><span class="en-text">a long time ago</span> — <span class="ru-text">давным-давно</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Abstract prepositions -->
+  <div class="category cat-abstract" data-category="preposition">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>🧩 Абстрактные предлоги</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div class="prep-card" data-search="despite in spite of несмотря на вопреки">
+        <span class="prep-word">DESPITE / IN SPITE OF</span>
+        <span class="prep-translation">— несмотря на</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">despite the rain</span> — <span class="ru-text">несмотря на дождь</span></div>
+          <div class="prep-example"><span class="en-text">in spite of the problems</span> — <span class="ru-text">несмотря на проблемы</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="instead of вместо">
+        <span class="prep-word">INSTEAD OF</span>
+        <span class="prep-translation">— вместо</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">instead of coffee</span> — <span class="ru-text">вместо кофе</span></div>
+          <div class="prep-example"><span class="en-text">instead of going</span> — <span class="ru-text">вместо того чтобы идти</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="according to согласно по словам">
+        <span class="prep-word">ACCORDING TO</span>
+        <span class="prep-translation">— согласно, по словам</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">according to the news</span> — <span class="ru-text">согласно новостям</span></div>
+          <div class="prep-example"><span class="en-text">according to him</span> — <span class="ru-text">по его словам</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="except кроме за исключением">
+        <span class="prep-word">EXCEPT</span>
+        <span class="prep-translation">— кроме, за исключением</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">everyone except me</span> — <span class="ru-text">все кроме меня</span></div>
+          <div class="prep-example"><span class="en-text">every day except Sunday</span> — <span class="ru-text">каждый день кроме воскресенья</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="besides помимо кроме того">
+        <span class="prep-word">BESIDES</span>
+        <span class="prep-translation">— помимо, кроме (в дополнение)</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">besides English, I speak Russian</span> — <span class="ru-text">помимо английского, я говорю по-русски</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="because of из-за по причине">
+        <span class="prep-word">BECAUSE OF</span>
+        <span class="prep-translation">— из-за, по причине</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">because of the weather</span> — <span class="ru-text">из-за погоды</span></div>
+          <div class="prep-example"><span class="en-text">because of you</span> — <span class="ru-text">из-за тебя</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="due to благодаря из-за вследствие">
+        <span class="prep-word">DUE TO</span>
+        <span class="prep-translation">— из-за, вследствие</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">due to bad weather</span> — <span class="ru-text">из-за плохой погоды</span></div>
+          <div class="prep-example"><span class="en-text">The flight was cancelled due to fog</span> — <span class="ru-text">Рейс отменили из-за тумана</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="as как в качестве">
+        <span class="prep-word">AS</span>
+        <span class="prep-translation">— как, в качестве</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">work as a teacher</span> — <span class="ru-text">работать учителем</span></div>
+          <div class="prep-example"><span class="en-text">use it as an example</span> — <span class="ru-text">использовать как пример</span></div>
+        </div>
+      </div>
+
+      <div class="prep-card" data-search="like как похоже подобно">
+        <span class="prep-word">LIKE</span>
+        <span class="prep-translation">— как, похоже на</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="en-text">like a dream</span> — <span class="ru-text">как во сне</span></div>
+          <div class="prep-example"><span class="en-text">You look like your mother</span> — <span class="ru-text">Ты похож на маму</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== COMPARISON TABLES ========== -->
+
+  <!-- Table 1: IN vs ON vs AT (time) -->
+  <div class="category cat-table" data-category="table">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>⏰ Таблица: IN vs ON vs AT (время)</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div style="padding: 16px 18px;">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th class="col-in">IN</th>
+              <th class="col-on">ON</th>
+              <th class="col-at">AT</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="col-in-cell"><span class="en-text">in January</span><br><span class="ru-text">в январе</span></td>
+              <td class="col-on-cell"><span class="en-text">on Monday</span><br><span class="ru-text">в понедельник</span></td>
+              <td class="col-at-cell"><span class="en-text">at 5 o'clock</span><br><span class="ru-text">в 5 часов</span></td>
+            </tr>
+            <tr>
+              <td class="col-in-cell"><span class="en-text">in 2024</span><br><span class="ru-text">в 2024 году</span></td>
+              <td class="col-on-cell"><span class="en-text">on the 1st of May</span><br><span class="ru-text">1 мая</span></td>
+              <td class="col-at-cell"><span class="en-text">at noon</span><br><span class="ru-text">в полдень</span></td>
+            </tr>
+            <tr>
+              <td class="col-in-cell"><span class="en-text">in summer</span><br><span class="ru-text">летом</span></td>
+              <td class="col-on-cell"><span class="en-text">on Christmas Day</span><br><span class="ru-text">в Рождество</span></td>
+              <td class="col-at-cell"><span class="en-text">at night</span><br><span class="ru-text">ночью</span></td>
+            </tr>
+            <tr>
+              <td class="col-in-cell"><span class="en-text">in the morning</span><br><span class="ru-text">утром</span></td>
+              <td class="col-on-cell"><span class="en-text">on my birthday</span><br><span class="ru-text">в мой день рождения</span></td>
+              <td class="col-at-cell"><span class="en-text">at the weekend</span><br><span class="ru-text">в выходные (BrE)</span></td>
+            </tr>
+            <tr>
+              <td class="col-in-cell"><span class="en-text">in the 21st century</span><br><span class="ru-text">в 21-м веке</span></td>
+              <td class="col-on-cell"><span class="en-text">on a rainy day</span><br><span class="ru-text">в дождливый день</span></td>
+              <td class="col-at-cell"><span class="en-text">at the moment</span><br><span class="ru-text">в данный момент</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="margin-top: 10px; font-size: 0.88em; color: #666; line-height: 1.6;">
+          <b>Правило:</b> IN = периоды (месяцы, годы, сезоны, части дня) &bull; ON = конкретные дни и даты &bull; AT = точные моменты времени
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table 2: IN vs ON vs AT (place) -->
+  <div class="category cat-table" data-category="table">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>📍 Таблица: IN vs ON vs AT (место)</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div style="padding: 16px 18px;">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th class="col-in">IN</th>
+              <th class="col-on">ON</th>
+              <th class="col-at">AT</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="col-in-cell"><span class="en-text">in the room</span><br><span class="ru-text">в комнате</span></td>
+              <td class="col-on-cell"><span class="en-text">on the table</span><br><span class="ru-text">на столе</span></td>
+              <td class="col-at-cell"><span class="en-text">at home</span><br><span class="ru-text">дома</span></td>
+            </tr>
+            <tr>
+              <td class="col-in-cell"><span class="en-text">in Moscow</span><br><span class="ru-text">в Москве</span></td>
+              <td class="col-on-cell"><span class="en-text">on the wall</span><br><span class="ru-text">на стене</span></td>
+              <td class="col-at-cell"><span class="en-text">at work</span><br><span class="ru-text">на работе</span></td>
+            </tr>
+            <tr>
+              <td class="col-in-cell"><span class="en-text">in Russia</span><br><span class="ru-text">в России</span></td>
+              <td class="col-on-cell"><span class="en-text">on the 2nd floor</span><br><span class="ru-text">на 2-м этаже</span></td>
+              <td class="col-at-cell"><span class="en-text">at school</span><br><span class="ru-text">в школе</span></td>
+            </tr>
+            <tr>
+              <td class="col-in-cell"><span class="en-text">in the car</span><br><span class="ru-text">в машине</span></td>
+              <td class="col-on-cell"><span class="en-text">on the bus</span><br><span class="ru-text">в автобусе</span></td>
+              <td class="col-at-cell"><span class="en-text">at the bus stop</span><br><span class="ru-text">на остановке</span></td>
+            </tr>
+            <tr>
+              <td class="col-in-cell"><span class="en-text">in the photo</span><br><span class="ru-text">на фото</span></td>
+              <td class="col-on-cell"><span class="en-text">on the right</span><br><span class="ru-text">справа</span></td>
+              <td class="col-at-cell"><span class="en-text">at the door</span><br><span class="ru-text">у двери</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="margin-top: 10px; font-size: 0.88em; color: #666; line-height: 1.6;">
+          <b>Правило:</b> IN = внутри / территория &bull; ON = на поверхности / линии &bull; AT = точка / функция здания
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table 3: Russian → English mapping -->
+  <div class="category cat-table" data-category="table">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>🇷🇺 Таблица: Русский → English</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div style="padding: 16px 18px;">
+        <table class="ru-map-table">
+          <thead>
+            <tr>
+              <th>Русский</th>
+              <th>Английские варианты</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="ru-prep">В</span></td>
+              <td>
+                <span class="en-text">in</span> <span class="example">— in the room (в комнате)</span><br>
+                <span class="en-text">at</span> <span class="example">— at school (в школе)</span><br>
+                <span class="en-text">on</span> <span class="example">— on Monday (в понедельник)</span><br>
+                <span class="en-text">to</span> <span class="example">— go to Moscow (ехать в Москву)</span><br>
+                <span class="en-text">into</span> <span class="example">— get into the car (сесть в машину)</span>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="ru-prep">НА</span></td>
+              <td>
+                <span class="en-text">on</span> <span class="example">— on the table (на столе)</span><br>
+                <span class="en-text">at</span> <span class="example">— at the concert (на концерте)</span><br>
+                <span class="en-text">in</span> <span class="example">— in the photo (на фото)</span><br>
+                <span class="en-text">to</span> <span class="example">— go to the concert (идти на концерт)</span>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="ru-prep">К</span></td>
+              <td>
+                <span class="en-text">to</span> <span class="example">— come to me (подойди ко мне)</span><br>
+                <span class="en-text">by</span> <span class="example">— by Monday (к понедельнику)</span>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="ru-prep">С</span></td>
+              <td>
+                <span class="en-text">with</span> <span class="example">— with friends (с друзьями)</span><br>
+                <span class="en-text">from</span> <span class="example">— from Moscow (из Москвы)</span><br>
+                <span class="en-text">since</span> <span class="example">— since Monday (с понедельника)</span><br>
+                <span class="en-text">off</span> <span class="example">— off the table (со стола)</span>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="ru-prep">О</span></td>
+              <td>
+                <span class="en-text">about</span> <span class="example">— about Russia (о России)</span><br>
+                <span class="en-text">of</span> <span class="example">— dream of (мечтать о)</span>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="ru-prep">ЗА</span></td>
+              <td>
+                <span class="en-text">for</span> <span class="example">— for you (за тебя / для тебя)</span><br>
+                <span class="en-text">behind</span> <span class="example">— behind the house (за домом)</span><br>
+                <span class="en-text">in</span> <span class="example">— in 5 minutes (за/через 5 минут)</span>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="ru-prep">ИЗ</span></td>
+              <td>
+                <span class="en-text">from</span> <span class="example">— from Russia (из России)</span><br>
+                <span class="en-text">out of</span> <span class="example">— out of the car (из машины)</span><br>
+                <span class="en-text">of</span> <span class="example">— made of wood (из дерева)</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="margin-top: 10px; font-size: 0.88em; color: #666; line-height: 1.6;">
+          <b>Главный вывод:</b> один русский предлог может переводиться 3-5 разными английскими предлогами. Нельзя переводить дословно!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info section -->
+  <div class="category cat-info" data-category="info">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>💡 Советы и типичные ошибки</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div class="info-block">
+        <h3>Главное правило: IN / ON / AT</h3>
+        <ul>
+          <li><b>IN</b> = замкнутое пространство или период (in the room, in January)</li>
+          <li><b>ON</b> = поверхность или конкретный день (on the table, on Monday)</li>
+          <li><b>AT</b> = точка или точный момент (at the door, at 5 o'clock)</li>
+        </ul>
+
+        <h3>Русские предлоги не равны английским</h3>
+        <p>Это самая важная вещь. Русское "в" может быть in, at, on, to, into. Нельзя просто переводить русский предлог на английский 1:1. Нужно запоминать сочетания.</p>
+
+        <h3>Типичные ошибки русскоговорящих</h3>
+        <div class="mistake">&#10008; <b>in Monday</b> &rarr; on Monday (дни недели = ON)</div>
+        <div class="correct">&#10004; <b>on Monday</b> — в понедельник</div>
+
+        <div class="mistake">&#10008; <b>on home</b> &rarr; at home (at для дома, работы, школы)</div>
+        <div class="correct">&#10004; <b>at home</b> — дома</div>
+
+        <div class="mistake">&#10008; <b>in 5 o'clock</b> &rarr; at 5 o'clock (точное время = AT)</div>
+        <div class="correct">&#10004; <b>at 5 o'clock</b> — в 5 часов</div>
+
+        <div class="mistake">&#10008; <b>in the bus</b> &rarr; on the bus (общественный транспорт = ON)</div>
+        <div class="correct">&#10004; <b>on the bus</b> — в автобусе</div>
+
+        <div class="mistake">&#10008; <b>in TV</b> &rarr; on TV (телевидение = ON)</div>
+        <div class="correct">&#10004; <b>on TV</b> — по телевизору</div>
+
+        <div class="mistake">&#10008; <b>in the photo</b> — на самом деле правильно! (не "on")</div>
+        <div class="correct">&#10004; <b>in the photo</b> — на фотографии (исключение!)</div>
+
+        <h3>IN TIME vs. ON TIME</h3>
+        <ul>
+          <li><b>in time</b> = вовремя (успеть до дедлайна): I arrived in time for the meeting</li>
+          <li><b>on time</b> = по расписанию (точно): The train arrived on time</li>
+        </ul>
+
+        <h3>Предлог + глагол (запомнить!)</h3>
+        <ul>
+          <li><b>depend on</b> — зависеть от</li>
+          <li><b>consist of</b> — состоять из</li>
+          <li><b>interested in</b> — интересоваться</li>
+          <li><b>good at</b> — хорош в чём-то</li>
+          <li><b>afraid of</b> — бояться</li>
+          <li><b>listen to</b> — слушать</li>
+          <li><b>look at</b> — смотреть на</li>
+          <li><b>look for</b> — искать</li>
+          <li><b>wait for</b> — ждать</li>
+          <li><b>pay for</b> — платить за</li>
+          <li><b>think about/of</b> — думать о</li>
+          <li><b>dream about/of</b> — мечтать о</li>
+          <li><b>apologize for</b> — извиняться за</li>
+          <li><b>belong to</b> — принадлежать</li>
+          <li><b>believe in</b> — верить в</li>
+          <li><b>succeed in</b> — преуспеть в</li>
+        </ul>
+
+        <h3>British vs. American English</h3>
+        <ul>
+          <li><b>at the weekend</b> (BrE) / <b>on the weekend</b> (AmE)</li>
+          <li><b>at Christmas</b> (BrE) / <b>on Christmas</b> (AmE)</li>
+          <li><b>in the street</b> (BrE) / <b>on the street</b> (AmE)</li>
+          <li><b>different from</b> (BrE) / <b>different than</b> (AmE) / <b>different to</b> (BrE)</li>
+          <li><b>Monday to Friday</b> (BrE) / <b>Monday through Friday</b> (AmE)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-results-msg" id="noResults">Ничего не найдено. Попробуйте другой запрос.</div>
+</div>
+
+<script>
+function setSearch(text) {
+  const input = document.getElementById('searchInput');
+  input.value = text;
+  filterPrepositions();
+  input.focus();
+}
+
+function toggleCategory(header) {
+  header.classList.toggle('collapsed');
+  const body = header.nextElementSibling;
+  body.classList.toggle('collapsed');
+}
+
+function filterPrepositions() {
+  const query = document.getElementById('searchInput').value.toLowerCase().trim();
+  const categories = document.querySelectorAll('.category');
+  let anyVisible = false;
+
+  categories.forEach(cat => {
+    const catType = cat.dataset.category;
+
+    // For tables and info sections, search in all text content
+    if (catType === 'table' || catType === 'info') {
+      const text = cat.textContent.toLowerCase();
+      const match = !query || text.includes(query);
+      cat.style.display = match ? '' : 'none';
+      if (match) anyVisible = true;
+      return;
+    }
+
+    const cards = cat.querySelectorAll('.prep-card');
+    let catHasVisible = false;
+
+    cards.forEach(card => {
+      const searchData = card.getAttribute('data-search').toLowerCase();
+      const cardText = card.textContent.toLowerCase();
+      const match = !query || searchData.includes(query) || cardText.includes(query);
+      card.style.display = match ? '' : 'none';
+      if (match) catHasVisible = true;
+    });
+
+    cat.style.display = catHasVisible ? '' : 'none';
+    if (catHasVisible) anyVisible = true;
+
+    // Expand category if filtering
+    if (query && catHasVisible) {
+      const header = cat.querySelector('.category-header');
+      const body = cat.querySelector('.category-body');
+      header.classList.remove('collapsed');
+      body.classList.remove('collapsed');
+    }
+  });
+
+  document.getElementById('noResults').style.display = anyVisible ? 'none' : 'block';
+}
+
+// Set initial max-height for all category bodies (for smooth collapse animation)
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.category-body').forEach(body => {
+    body.style.maxHeight = body.scrollHeight + 'px';
+  });
+
+  // Observe for changes
+  const observer = new MutationObserver(() => {
+    document.querySelectorAll('.category-body:not(.collapsed)').forEach(body => {
+      body.style.maxHeight = body.scrollHeight + 'px';
+    });
+  });
+  observer.observe(document.getElementById('content'), { childList: true, subtree: true, attributes: true });
+});
+</script>
+
+</body>
+</html>

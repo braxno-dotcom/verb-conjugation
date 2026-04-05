@@ -25,10 +25,14 @@
   }
   header h1 { font-size: 1.8em; font-weight: 600; }
   header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
   .lang-switch {
-    position: absolute;
-    top: 16px;
-    right: 20px;
     background: rgba(255,255,255,0.15);
     color: white;
     text-decoration: none;
@@ -131,7 +135,7 @@
     #results { grid-template-columns: 1fr; padding: 0 10px; }
     header h1 { font-size: 1.3em; }
     header { padding: 20px 14px 16px; }
-    .lang-switch { position: static; display: inline-block; margin-bottom: 10px; padding: 6px 12px; font-size: 0.85em; }
+    .lang-switch { padding: 6px 12px; font-size: 0.85em; }
     .search-area { padding: 0 10px; flex-direction: column; }
     .search-area input { font-size: 1em; padding: 12px 14px; width: 100%; }
     .search-area button { padding: 12px 18px; font-size: 0.95em; width: 100%; }
@@ -221,8 +225,11 @@
 <body>
 
 <header>
-  <a href="spanish-verbs.html" class="lang-switch">🇪🇸 Испанский</a>
-  <a href="english-verbs.html" class="lang-switch">🇬🇧 Английский</a>
+  <div class="lang-switches">
+    <a href="french.html" class="lang-switch">📖 Портал</a>
+    <a href="spanish-verbs.html" class="lang-switch">🇪🇸 Испанский</a>
+    <a href="english-verbs.html" class="lang-switch">🇬🇧 Английский</a>
+  </div>
   <h1>🇫🇷 Спряжение французских глаголов</h1>
   <p>Введите глагол в инфинитиве — получите все времена с объяснениями на русском</p>
 </header>
