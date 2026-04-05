@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇬🇧</text></svg>">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="EN quiz">
+<title>🇬🇧 Тренажёр английской грамматики</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #eef2ed;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #1a3d2e, #1a5c3a);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px 20px 60px;
+  }
+
+  /* Topic selector */
+  .topics {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0 0 18px;
+  }
+  .topic-btn {
+    padding: 10px 18px;
+    border: 2px solid #1a5c3a;
+    background: white;
+    color: #1a5c3a;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .topic-btn:hover { background: #e8f0ec; }
+  .topic-btn.active {
+    background: #1a5c3a;
+    color: white;
+  }
+
+  /* Score bar */
+  .score-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    background: white;
+    border-radius: 12px;
+    padding: 14px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    margin-bottom: 18px;
+    font-size: 0.95em;
+  }
+  .score-item { display: flex; align-items: center; gap: 5px; }
+  .score-item .label { color: #888; }
+  .score-item .value { font-weight: 700; color: #1a3d2e; }
+  .streak-fire { font-size: 1.2em; }
+  .score-bar .reset-btn {
+    padding: 6px 14px;
+    background: #e8f0ec;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85em;
+    color: #555;
+    transition: background 0.2s;
+  }
+  .score-bar .reset-btn:hover { background: #d0e0d6; }
+
+  /* Progress bar */
+  .progress-wrap {
+    height: 6px;
+    background: #dde5dd;
+    border-radius: 3px;
+    margin-bottom: 18px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #1a5c3a, #2d8a5e);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  /* Quiz card */
+  .quiz-card {
+    background: white;
+    border-radius: 16px;
+    padding: 36px 30px 30px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    text-align: center;
+    transition: background-color 0.3s;
+    min-height: 260px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .quiz-card.flash-correct { background-color: #e6f9ec; }
+  .quiz-card.flash-wrong { background-color: #fde8e8; }
+
+  .q-type {
+    font-size: 0.85em;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+  }
+  .q-sentence {
+    font-size: 1.5em;
+    font-weight: 600;
+    color: #1a3d2e;
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .q-hint {
+    font-size: 0.9em;
+    color: #888;
+    margin-bottom: 24px;
+    font-style: italic;
+  }
+  .q-blank {
+    background: #edf5f0;
+    border: 2px dashed #a8c9b8;
+    border-radius: 8px;
+    padding: 4px 14px;
+    display: inline-block;
+    min-width: 60px;
+    color: #1a5c3a;
+    font-weight: 700;
+  }
+
+  /* Answer buttons */
+  .answers {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  .ans-btn {
+    padding: 14px 24px;
+    min-width: 100px;
+    min-height: 48px;
+    border: 2px solid #c0d5c8;
+    background: white;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #2c2c2c;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .ans-btn:hover:not(.disabled) {
+    border-color: #1a5c3a;
+    background: #edf5f0;
+    transform: translateY(-1px);
+  }
+  .ans-btn.correct {
+    border-color: #38a169;
+    background: #e6f9ec;
+    color: #22653a;
+  }
+  .ans-btn.wrong {
+    border-color: #e53e3e;
+    background: #fde8e8;
+    color: #9b2c2c;
+  }
+  .ans-btn.disabled { cursor: default; opacity: 0.6; }
+  .ans-btn .key-hint {
+    position: absolute;
+    top: 3px;
+    right: 7px;
+    font-size: 0.6em;
+    color: #aaa;
+    font-weight: 400;
+  }
+
+  /* Feedback */
+  .feedback {
+    margin-top: 18px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-size: 0.95em;
+    line-height: 1.5;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct-fb {
+    background: #e6f9ec;
+    color: #22653a;
+    border: 1px solid #b2e5c5;
+  }
+  .feedback.wrong-fb {
+    background: #fde8e8;
+    color: #9b2c2c;
+    border: 1px solid #f5b8b8;
+  }
+  .feedback strong { display: block; margin-bottom: 4px; font-size: 1.05em; }
+  .feedback .explanation { font-size: 0.9em; opacity: 0.85; }
+
+  .continue-btn {
+    margin-top: 16px;
+    padding: 14px 36px;
+    background: linear-gradient(135deg, #1a5c3a, #2d8a5e);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.05em;
+    font-weight: 600;
+    cursor: pointer;
+    display: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .continue-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(26,92,58,0.3); }
+  .continue-btn.show { display: inline-block; }
+
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.3em; }
+    header p { font-size: 0.85em; }
+    .quiz-card { padding: 24px 16px 22px; }
+    .q-sentence { font-size: 1.25em; }
+    .ans-btn { padding: 12px 16px; min-width: 80px; font-size: 1em; }
+    .topic-btn { padding: 8px 12px; font-size: 0.85em; }
+    .score-bar { gap: 10px; font-size: 0.85em; padding: 10px 14px; }
+    .container { padding: 14px 12px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="english.html" class="lang-switch">📖 Портал</a>
+  </div>
+  <h1>🇬🇧 Тренажёр английской грамматики</h1>
+  <p>Интерактивные упражнения по ключевым темам</p>
+</header>
+
+<div class="container">
+  <div class="topics" id="topics"></div>
+
+  <div class="score-bar" id="scoreBar">
+    <div class="score-item"><span class="streak-fire">🔥</span> <span class="label">Серия:</span> <span class="value" id="streak">0</span></div>
+    <div class="score-item"><span class="label">Верно:</span> <span class="value" id="correctCount">0</span> / <span class="value" id="totalCount">0</span></div>
+    <div class="score-item"><span class="label">Точность:</span> <span class="value" id="pct">0%</span></div>
+    <button class="reset-btn" onclick="resetScore()">Сбросить</button>
+  </div>
+
+  <div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+
+  <div class="quiz-card" id="quizCard">
+    <div class="q-type" id="qType"></div>
+    <div class="q-sentence" id="qSentence"></div>
+    <div class="q-hint" id="qHint"></div>
+    <div class="answers" id="answers"></div>
+    <div class="feedback" id="feedback"></div>
+    <button class="continue-btn" id="continueBtn" onclick="nextQuestion()">Далее →</button>
+  </div>
+</div>
+
+<script>
+// ===================== DATA =====================
+
+// ---- Topic 1: Articles (a/an/the/∅) ----
+const articleQuestions = [
+  // a vs an
+  {type:"A или AN?",sentence:"___ university",hint:"Звук [juː], не гласный!",options:["a","an"],correct:"a",explanation:"a university — звук [juː] = согласный, поэтому a"},
+  {type:"A или AN?",sentence:"___ umbrella",hint:"Звук [ʌ] = гласный",options:["a","an"],correct:"an",explanation:"an umbrella — звук [ʌ] = гласный, поэтому an"},
+  {type:"A или AN?",sentence:"___ hour",hint:"H не произносится!",options:["a","an"],correct:"an",explanation:"an hour — h немое, звук [aʊ] = гласный"},
+  {type:"A или AN?",sentence:"___ honest man",hint:"H не произносится",options:["a","an"],correct:"an",explanation:"an honest man — h немое, звук [ɒn]"},
+  {type:"A или AN?",sentence:"___ European country",hint:"Звук [jʊə]",options:["a","an"],correct:"a",explanation:"a European — звук [j] = согласный"},
+  {type:"A или AN?",sentence:"___ FBI agent",hint:"F = [ef]",options:["a","an"],correct:"an",explanation:"an FBI agent — F читается [ef], начинается с гласного звука"},
+  {type:"A или AN?",sentence:"___ one-way street",hint:"One = [wʌn]",options:["a","an"],correct:"a",explanation:"a one-way street — one начинается с [w] = согласный"},
+  {type:"A или AN?",sentence:"___ X-ray",hint:"X = [eks]",options:["a","an"],correct:"an",explanation:"an X-ray — X читается [eks], начинается с гласного"},
+  {type:"A или AN?",sentence:"___ useful tool",hint:"Звук [juː]",options:["a","an"],correct:"a",explanation:"a useful — звук [juː] = согласный"},
+  {type:"A или AN?",sentence:"___ heir",hint:"H не произносится",options:["a","an"],correct:"an",explanation:"an heir — h немое, [eə] = гласный звук"},
+  {type:"A или AN?",sentence:"___ MP3 player",hint:"M = [em]",options:["a","an"],correct:"an",explanation:"an MP3 — M читается [em], начинается с гласного"},
+  {type:"A или AN?",sentence:"___ uniform",hint:"Звук [juː]",options:["a","an"],correct:"a",explanation:"a uniform — звук [juːnɪfɔːm] = согласный"},
+  {type:"A или AN?",sentence:"___ orange",hint:"Звук [ɒ]",options:["a","an"],correct:"an",explanation:"an orange — гласный звук [ɒ]"},
+  {type:"A или AN?",sentence:"___ usual day",hint:"Звук [juː]",options:["a","an"],correct:"a",explanation:"a usual — звук [juː] = согласный"},
+  {type:"A или AN?",sentence:"___ SMS",hint:"S = [es]",options:["a","an"],correct:"an",explanation:"an SMS — S читается [es], начинается с гласного"},
+
+  // a / the / ∅
+  {type:"Какой артикль?",sentence:"___ sun is very bright today.",hint:"Единственный в своём роде",options:["A","The","∅ (без артикля)"],correct:"The",explanation:"The sun — единственное солнце, уникальный объект → the"},
+  {type:"Какой артикль?",sentence:"She is ___ doctor.",hint:"Профессия",options:["a","the","∅ (без артикля)"],correct:"a",explanation:"She is a doctor — профессия = a/an"},
+  {type:"Какой артикль?",sentence:"I love ___ music.",hint:"В целом, вообще",options:["a","the","∅ (без артикля)"],correct:"∅ (без артикля)",explanation:"I love music — абстрактное/неисчисляемое в общем → без артикля"},
+  {type:"Какой артикль?",sentence:"___ water in this glass is dirty.",hint:"Конкретная вода",options:["A","The","∅ (без артикля)"],correct:"The",explanation:"The water in this glass — конкретная, определённая → the"},
+  {type:"Какой артикль?",sentence:"I need ___ water.",hint:"Вообще, любая",options:["a","the","∅ (без артикля)"],correct:"∅ (без артикля)",explanation:"I need water — неисчисляемое в общем → без артикля"},
+  {type:"Какой артикль?",sentence:"He plays ___ guitar.",hint:"Музыкальный инструмент",options:["a","the","∅ (без артикля)"],correct:"the",explanation:"He plays the guitar — музыкальные инструменты → the"},
+  {type:"Какой артикль?",sentence:"I saw ___ interesting film yesterday.",hint:"Первое упоминание",options:["a","the","∅ (без артикля)"],correct:"a",explanation:"an interesting film — первое упоминание, неизвестно какой → a/an"},
+  {type:"Какой артикль?",sentence:"___ film was about robots.",hint:"Уже упоминали",options:["A","The","∅ (без артикля)"],correct:"The",explanation:"The film — уже знаем какой (упомянули раньше) → the"},
+  {type:"Какой артикль?",sentence:"___ dogs are loyal animals.",hint:"Вид в целом",options:["A","The","∅ (без артикля)"],correct:"∅ (без артикля)",explanation:"Dogs (мн.ч. в общем) — вид в целом → без артикля"},
+  {type:"Какой артикль?",sentence:"___ dogs next door bark all night.",hint:"Конкретные собаки",options:["A","The","∅ (без артикля)"],correct:"The",explanation:"The dogs next door — конкретные, определённые собаки → the"},
+  {type:"Какой артикль?",sentence:"She went to ___ bed.",hint:"Устойчивое выражение (ложиться спать)",options:["a","the","∅ (без артикля)"],correct:"∅ (без артикля)",explanation:"go to bed — устойчивое выражение (= ложиться спать), без артикля"},
+  {type:"Какой артикль?",sentence:"I sat on ___ bed.",hint:"Конкретная кровать как предмет",options:["a","the","∅ (без артикля)"],correct:"the",explanation:"the bed — конкретный физический предмет → the"},
+  {type:"Какой артикль?",sentence:"He is ___ tallest boy in class.",hint:"Превосходная степень",options:["a","the","∅ (без артикля)"],correct:"the",explanation:"the tallest — превосходная степень → всегда the"},
+  {type:"Какой артикль?",sentence:"___ life is beautiful.",hint:"Жизнь в целом",options:["A","The","∅ (без артикля)"],correct:"∅ (без артикля)",explanation:"Life (абстрактное, в целом) → без артикля"},
+  {type:"Какой артикль?",sentence:"She goes to ___ school every day.",hint:"Устойчивое выражение (учиться)",options:["a","the","∅ (без артикля)"],correct:"∅ (без артикля)",explanation:"go to school = учиться → без артикля. Но: go to the school = идти к зданию"},
+  {type:"Какой артикль?",sentence:"___ Mount Everest is the highest peak.",hint:"Имя собственное (гора)",options:["A","The","∅ (без артикля)"],correct:"∅ (без артикля)",explanation:"Mount Everest — имена гор без артикля (но: the Alps, the Himalayas — хребты с the)"},
+  {type:"Какой артикль?",sentence:"He swam across ___ Atlantic.",hint:"Океан",options:["a","the","∅ (без артикля)"],correct:"the",explanation:"the Atlantic — океаны, моря, реки → всегда the"},
+  {type:"Какой артикль?",sentence:"I had ___ breakfast at 8.",hint:"Приём пищи",options:["a","the","∅ (без артикля)"],correct:"∅ (без артикля)",explanation:"have breakfast — приёмы пищи без артикля (но: the breakfast was delicious)"},
+  {type:"Какой артикль?",sentence:"She works in ___ hospital.",hint:"Профессиональная деятельность",options:["a","the","∅ (без артикля)"],correct:"a",explanation:"in a hospital — неопределённый, какая-то больница → a"},
+  {type:"Какой артикль?",sentence:"___ Thames flows through London.",hint:"Река",options:["A","The","∅ (без артикля)"],correct:"The",explanation:"The Thames — реки → всегда the"},
+];
+
+// ---- Topic 2: Prepositions (in/on/at etc.) ----
+const prepositionQuestions = [
+  // Time
+  {type:"Предлог времени",sentence:"I was born ___ 1995.",hint:"Год",options:["in","on","at"],correct:"in",explanation:"in 1995 — годы → in"},
+  {type:"Предлог времени",sentence:"The meeting is ___ Monday.",hint:"День недели",options:["in","on","at"],correct:"on",explanation:"on Monday — дни недели → on"},
+  {type:"Предлог времени",sentence:"I wake up ___ 7 o'clock.",hint:"Время",options:["in","on","at"],correct:"at",explanation:"at 7 o'clock — точное время → at"},
+  {type:"Предлог времени",sentence:"It's cold ___ winter.",hint:"Время года",options:["in","on","at"],correct:"in",explanation:"in winter — времена года → in"},
+  {type:"Предлог времени",sentence:"We met ___ Christmas Day.",hint:"Конкретный день",options:["in","on","at"],correct:"on",explanation:"on Christmas Day — конкретный день → on (но: at Christmas = в период Рождества)"},
+  {type:"Предлог времени",sentence:"She called ___ night.",hint:"Время суток",options:["in","on","at"],correct:"at",explanation:"at night — ИСКЛЮЧЕНИЕ: at night (но: in the morning/afternoon/evening)"},
+  {type:"Предлог времени",sentence:"I'll finish ___ the morning.",hint:"Время суток",options:["in","on","at"],correct:"in",explanation:"in the morning — утро/день/вечер → in the..."},
+  {type:"Предлог времени",sentence:"The exam is ___ March 15th.",hint:"Конкретная дата",options:["in","on","at"],correct:"on",explanation:"on March 15th — конкретная дата → on"},
+  {type:"Предлог времени",sentence:"I'll be there ___ 5 minutes.",hint:"Через...",options:["in","on","at"],correct:"in",explanation:"in 5 minutes — через (промежуток времени) → in"},
+  {type:"Предлог времени",sentence:"We go swimming ___ Saturdays.",hint:"По субботам (регулярно)",options:["in","on","at"],correct:"on",explanation:"on Saturdays — дни недели (даже регулярно) → on"},
+  {type:"Предлог времени",sentence:"I haven't seen her ___ last year.",hint:"С прошлого года",options:["since","for","during"],correct:"since",explanation:"since last year — since + момент начала"},
+  {type:"Предлог времени",sentence:"I've lived here ___ 10 years.",hint:"В течение 10 лет",options:["since","for","during"],correct:"for",explanation:"for 10 years — for + длительность"},
+  {type:"Предлог времени",sentence:"I fell asleep ___ the film.",hint:"Во время фильма",options:["since","for","during"],correct:"during",explanation:"during the film — during + существительное (период)"},
+
+  // Place
+  {type:"Предлог места",sentence:"She lives ___ Paris.",hint:"Город",options:["in","on","at"],correct:"in",explanation:"in Paris — города → in"},
+  {type:"Предлог места",sentence:"The book is ___ the table.",hint:"На поверхности",options:["in","on","at"],correct:"on",explanation:"on the table — на поверхности → on"},
+  {type:"Предлог места",sentence:"I'll meet you ___ the bus stop.",hint:"Точка/пункт",options:["in","on","at"],correct:"at",explanation:"at the bus stop — точка/пункт → at"},
+  {type:"Предлог места",sentence:"There's a bird ___ the tree.",hint:"Внутри (среди веток)",options:["in","on","at"],correct:"in",explanation:"in the tree — внутри (среди веток) → in"},
+  {type:"Предлог места",sentence:"The picture is ___ the wall.",hint:"На стене",options:["in","on","at"],correct:"on",explanation:"on the wall — на поверхности стены → on"},
+  {type:"Предлог места",sentence:"She works ___ a bank.",hint:"Внутри здания",options:["in","on","at"],correct:"in",explanation:"in a bank — внутри помещения → in (at a bank тоже можно — как пункт)"},
+  {type:"Предлог места",sentence:"He's ___ home.",hint:"Дома",options:["in","on","at"],correct:"at",explanation:"at home — устойчивое: at home, at work, at school"},
+  {type:"Предлог места",sentence:"I'm ___ the bus.",hint:"В транспорте (большом)",options:["in","on","at"],correct:"on",explanation:"on the bus — автобус, поезд, самолёт → on (но: in a car, in a taxi)"},
+  {type:"Предлог места",sentence:"She's ___ the car.",hint:"В машине",options:["in","on","at"],correct:"in",explanation:"in the car — машина, такси → in"},
+
+  // Direction & movement
+  {type:"Предлог направления",sentence:"I'm going ___ the office.",hint:"Куда? В направлении",options:["to","at","in"],correct:"to",explanation:"to the office — направление движения → to"},
+  {type:"Предлог направления",sentence:"The cat jumped ___ the box.",hint:"Внутрь",options:["into","in","to"],correct:"into",explanation:"into the box — движение внутрь → into"},
+  {type:"Предлог направления",sentence:"She walked ___ the room.",hint:"Из, наружу",options:["out of","from","off"],correct:"out of",explanation:"out of the room — изнутри наружу → out of"},
+  {type:"Предлог направления",sentence:"He ran ___ the street.",hint:"Через (с одной стороны на другую)",options:["across","through","along"],correct:"across",explanation:"across the street — по поверхности с одной стороны на другую"},
+  {type:"Предлог направления",sentence:"We drove ___ the tunnel.",hint:"Через (внутри, насквозь)",options:["across","through","along"],correct:"through",explanation:"through the tunnel — сквозь, через внутреннее пространство"},
+  {type:"Предлог направления",sentence:"They walked ___ the river.",hint:"Вдоль",options:["across","through","along"],correct:"along",explanation:"along the river — вдоль → along"},
+
+  // Tricky pairs
+  {type:"Какой предлог?",sentence:"I'm interested ___ music.",hint:"Интересоваться чем-то",options:["in","at","on","about"],correct:"in",explanation:"interested in — устойчивое сочетание"},
+  {type:"Какой предлог?",sentence:"She's good ___ maths.",hint:"Хорош в чём-то",options:["in","at","on","with"],correct:"at",explanation:"good at — быть хорошим в чём-то → at"},
+  {type:"Какой предлог?",sentence:"It depends ___ the weather.",hint:"Зависеть от",options:["on","of","from","in"],correct:"on",explanation:"depend on — зависеть от → on (НЕ from!)"},
+  {type:"Какой предлог?",sentence:"He's afraid ___ spiders.",hint:"Бояться чего-то",options:["of","from","about","at"],correct:"of",explanation:"afraid of — бояться чего-то → of"},
+  {type:"Какой предлог?",sentence:"I apologize ___ being late.",hint:"Извиняться за",options:["for","about","of","to"],correct:"for",explanation:"apologize for — извиняться за → for"},
+  {type:"Какой предлог?",sentence:"She's married ___ a doctor.",hint:"Замужем за",options:["to","with","on","at"],correct:"to",explanation:"married to — замужем/женат на → to (НЕ with!)"},
+  {type:"Какой предлог?",sentence:"I agree ___ you.",hint:"Соглашаться с",options:["with","to","on","at"],correct:"with",explanation:"agree with someone — соглашаться с кем-то → with"},
+  {type:"Какой предлог?",sentence:"He consists ___ three parts.",hint:"Состоять из",options:["of","from","in","with"],correct:"of",explanation:"consist of — состоять из → of"},
+  {type:"Какой предлог?",sentence:"She suffers ___ headaches.",hint:"Страдать от",options:["from","of","with","by"],correct:"from",explanation:"suffer from — страдать от → from"},
+  {type:"Какой предлог?",sentence:"I'm waiting ___ a friend.",hint:"Ждать кого-то",options:["for","on","to","—"],correct:"for",explanation:"wait for — ждать кого-то → for (НЕ wait someone!)"},
+];
+
+// ---- Topic 3: Tenses ----
+const tenseQuestions = [
+  // Identify the tense
+  {type:"Определите время",sentence:"I am reading a book right now.",hint:"Что происходит прямо сейчас?",options:["Present Simple","Present Continuous","Present Perfect","Past Simple"],correct:"Present Continuous",explanation:"am reading = Present Continuous — действие прямо сейчас (right now)"},
+  {type:"Определите время",sentence:"She has already finished her homework.",hint:"Результат к настоящему моменту",options:["Present Simple","Past Simple","Present Perfect","Past Continuous"],correct:"Present Perfect",explanation:"has finished = Present Perfect — результат к настоящему моменту (already)"},
+  {type:"Определите время",sentence:"They go to school every day.",hint:"Регулярное действие",options:["Present Simple","Present Continuous","Present Perfect","Future Simple"],correct:"Present Simple",explanation:"go = Present Simple — регулярное/повторяющееся действие (every day)"},
+  {type:"Определите время",sentence:"He was sleeping when I called.",hint:"Длительное действие в прошлом, прерванное другим",options:["Past Simple","Past Continuous","Past Perfect","Present Perfect"],correct:"Past Continuous",explanation:"was sleeping = Past Continuous — длительное действие в прошлом, прерванное when I called"},
+  {type:"Определите время",sentence:"By the time we arrived, the film had already started.",hint:"Действие до другого действия в прошлом",options:["Past Simple","Past Continuous","Past Perfect","Present Perfect"],correct:"Past Perfect",explanation:"had started = Past Perfect — «предпрошедшее», до другого прошлого действия"},
+  {type:"Определите время",sentence:"I will call you tomorrow.",hint:"Будущее, решение/обещание",options:["Present Simple","Future Simple","Present Continuous","Going to"],correct:"Future Simple",explanation:"will call = Future Simple — обещание/спонтанное решение"},
+  {type:"Определите время",sentence:"I have been waiting for 2 hours.",hint:"Действие началось в прошлом и продолжается",options:["Present Perfect","Present Continuous","Present Perfect Continuous","Past Perfect"],correct:"Present Perfect Continuous",explanation:"have been waiting = Present Perfect Continuous — длится с прошлого до сейчас (for 2 hours)"},
+  {type:"Определите время",sentence:"She usually drinks coffee in the morning.",hint:"Привычка",options:["Present Simple","Present Continuous","Present Perfect","Past Simple"],correct:"Present Simple",explanation:"drinks = Present Simple — привычка (usually)"},
+  {type:"Определите время",sentence:"We visited Paris last summer.",hint:"Завершённое действие в прошлом",options:["Present Perfect","Past Simple","Past Continuous","Past Perfect"],correct:"Past Simple",explanation:"visited = Past Simple — завершённое действие + конкретное время (last summer)"},
+  {type:"Определите время",sentence:"At this time tomorrow, I will be flying to London.",hint:"Длительное действие в будущем",options:["Future Simple","Future Continuous","Future Perfect","Present Continuous"],correct:"Future Continuous",explanation:"will be flying = Future Continuous — длительное действие в определённый момент в будущем"},
+
+  // Choose the correct form
+  {type:"Выберите форму",sentence:"She ___ to work every day.",hint:"Регулярное действие",options:["goes","is going","has gone","went"],correct:"goes",explanation:"goes — Present Simple, регулярное действие (every day)"},
+  {type:"Выберите форму",sentence:"Look! It ___!",hint:"Прямо сейчас, вижу!",options:["rains","is raining","has rained","rained"],correct:"is raining",explanation:"is raining — Present Continuous, прямо сейчас (Look!)"},
+  {type:"Выберите форму",sentence:"I ___ never ___ sushi.",hint:"Опыт в жизни, ни разу",options:["have...eaten","has...eaten","did...eat","was...eating"],correct:"have...eaten",explanation:"have never eaten — Present Perfect, жизненный опыт (never)"},
+  {type:"Выберите форму",sentence:"When I came home, she ___ dinner.",hint:"Длительное действие в момент прихода",options:["cooked","was cooking","has cooked","cooks"],correct:"was cooking",explanation:"was cooking — Past Continuous, длительное действие в момент прихода"},
+  {type:"Выберите форму",sentence:"By 2030, they ___ the project.",hint:"К определённому моменту в будущем",options:["will finish","will be finishing","will have finished","finish"],correct:"will have finished",explanation:"will have finished — Future Perfect, завершено к определённому моменту"},
+  {type:"Выберите форму",sentence:"I ___ this book for a week. I'm on page 50.",hint:"Начал и продолжаю",options:["read","am reading","have been reading","have read"],correct:"have been reading",explanation:"have been reading — Present Perfect Continuous, процесс с прошлого до сейчас"},
+  {type:"Выберите форму",sentence:"She ___ three cups of coffee today.",hint:"Сегодня (день не кончился)",options:["drank","has drunk","drinks","is drinking"],correct:"has drunk",explanation:"has drunk — Present Perfect, период не завершён (today)"},
+  {type:"Выберите форму",sentence:"While I ___, the phone rang.",hint:"Фон + прерывание",options:["studied","was studying","have studied","had studied"],correct:"was studying",explanation:"was studying — Past Continuous, фоновое действие прервано (the phone rang)"},
+  {type:"Выберите форму",sentence:"He ___ in London since 2010.",hint:"С 2010 до сейчас",options:["lives","lived","has lived","is living"],correct:"has lived",explanation:"has lived — Present Perfect, с прошлого до настоящего (since 2010)"},
+  {type:"Выберите форму",sentence:"I ___ to the cinema yesterday.",hint:"Конкретное время в прошлом",options:["go","went","have gone","was going"],correct:"went",explanation:"went — Past Simple, конкретное прошлое (yesterday)"},
+
+  // Signal words
+  {type:"Сигнальное слово → время",sentence:"usually",hint:"Какому времени принадлежит это слово-маркер?",options:["Present Simple","Present Continuous","Present Perfect","Past Simple"],correct:"Present Simple",explanation:"usually — маркер Present Simple (привычка, регулярность)"},
+  {type:"Сигнальное слово → время",sentence:"right now",hint:"Какому времени?",options:["Present Simple","Present Continuous","Present Perfect","Past Simple"],correct:"Present Continuous",explanation:"right now — маркер Present Continuous (прямо сейчас)"},
+  {type:"Сигнальное слово → время",sentence:"already",hint:"Какому времени?",options:["Present Simple","Present Continuous","Present Perfect","Past Simple"],correct:"Present Perfect",explanation:"already — маркер Present Perfect (уже, результат)"},
+  {type:"Сигнальное слово → время",sentence:"yesterday",hint:"Какому времени?",options:["Present Perfect","Past Simple","Past Continuous","Past Perfect"],correct:"Past Simple",explanation:"yesterday — маркер Past Simple (конкретное прошлое)"},
+  {type:"Сигнальное слово → время",sentence:"since 2020",hint:"Какому времени?",options:["Past Simple","Present Perfect","Present Simple","Past Perfect"],correct:"Present Perfect",explanation:"since — маркер Present Perfect / Present Perfect Continuous (с момента до сейчас)"},
+  {type:"Сигнальное слово → время",sentence:"while",hint:"Какому времени?",options:["Past Simple","Past Continuous","Present Perfect","Future Simple"],correct:"Past Continuous",explanation:"while — маркер Past Continuous (фоновое действие в прошлом)"},
+  {type:"Сигнальное слово → время",sentence:"by the time",hint:"Какому времени?",options:["Past Simple","Past Continuous","Past Perfect","Present Perfect"],correct:"Past Perfect",explanation:"by the time — маркер Past Perfect (до другого прошлого действия)"},
+  {type:"Сигнальное слово → время",sentence:"every day",hint:"Какому времени?",options:["Present Simple","Present Continuous","Present Perfect","Past Simple"],correct:"Present Simple",explanation:"every day — маркер Present Simple (регулярность)"},
+];
+
+// ---- Topic 4: Irregular Verbs ----
+const irregVerbs = [
+  ["be","was/were","been","быть"],
+  ["become","became","become","становиться"],
+  ["begin","began","begun","начинать"],
+  ["break","broke","broken","ломать"],
+  ["bring","brought","brought","приносить"],
+  ["build","built","built","строить"],
+  ["buy","bought","bought","покупать"],
+  ["catch","caught","caught","ловить"],
+  ["choose","chose","chosen","выбирать"],
+  ["come","came","come","приходить"],
+  ["cost","cost","cost","стоить"],
+  ["cut","cut","cut","резать"],
+  ["do","did","done","делать"],
+  ["draw","drew","drawn","рисовать"],
+  ["drink","drank","drunk","пить"],
+  ["drive","drove","driven","водить"],
+  ["eat","ate","eaten","есть"],
+  ["fall","fell","fallen","падать"],
+  ["feel","felt","felt","чувствовать"],
+  ["fight","fought","fought","бороться"],
+  ["find","found","found","находить"],
+  ["fly","flew","flown","летать"],
+  ["forget","forgot","forgotten","забывать"],
+  ["get","got","got/gotten","получать"],
+  ["give","gave","given","давать"],
+  ["go","went","gone","идти"],
+  ["grow","grew","grown","расти"],
+  ["have","had","had","иметь"],
+  ["hear","heard","heard","слышать"],
+  ["hide","hid","hidden","прятать"],
+  ["hit","hit","hit","ударять"],
+  ["hold","held","held","держать"],
+  ["hurt","hurt","hurt","причинять боль"],
+  ["keep","kept","kept","хранить"],
+  ["know","knew","known","знать"],
+  ["lead","led","led","вести"],
+  ["leave","left","left","уходить"],
+  ["lend","lent","lent","одалживать"],
+  ["let","let","let","позволять"],
+  ["lie","lay","lain","лежать"],
+  ["lose","lost","lost","терять"],
+  ["make","made","made","делать"],
+  ["mean","meant","meant","значить"],
+  ["meet","met","met","встречать"],
+  ["pay","paid","paid","платить"],
+  ["put","put","put","класть"],
+  ["read","read","read","читать"],
+  ["ride","rode","ridden","ехать верхом"],
+  ["ring","rang","rung","звонить"],
+  ["rise","rose","risen","подниматься"],
+  ["run","ran","run","бежать"],
+  ["say","said","said","говорить"],
+  ["see","saw","seen","видеть"],
+  ["sell","sold","sold","продавать"],
+  ["send","sent","sent","отправлять"],
+  ["set","set","set","устанавливать"],
+  ["shake","shook","shaken","трясти"],
+  ["show","showed","shown","показывать"],
+  ["shut","shut","shut","закрывать"],
+  ["sing","sang","sung","петь"],
+  ["sit","sat","sat","сидеть"],
+  ["sleep","slept","slept","спать"],
+  ["speak","spoke","spoken","говорить"],
+  ["spend","spent","spent","тратить"],
+  ["stand","stood","stood","стоять"],
+  ["steal","stole","stolen","красть"],
+  ["swim","swam","swum","плавать"],
+  ["take","took","taken","брать"],
+  ["teach","taught","taught","учить"],
+  ["tell","told","told","рассказывать"],
+  ["think","thought","thought","думать"],
+  ["throw","threw","thrown","бросать"],
+  ["understand","understood","understood","понимать"],
+  ["wake","woke","woken","просыпаться"],
+  ["wear","wore","worn","носить"],
+  ["win","won","won","выигрывать"],
+  ["write","wrote","written","писать"],
+];
+
+function makeVerbQuestions() {
+  const qs = [];
+  for (const [v1, v2, v3, ru] of irregVerbs) {
+    // V1 → V2
+    const wrongV2 = getWrongOptions(v2, irregVerbs.map(v => v[1]));
+    qs.push({
+      type: "Past Simple (V2)",
+      sentence: `${v1} → ___`,
+      hint: `${ru}`,
+      options: shuffle([v2, ...wrongV2]).slice(0, 4),
+      correct: v2,
+      explanation: `${v1} → ${v2} → ${v3} (${ru})`
+    });
+
+    // V1 → V3
+    const wrongV3 = getWrongOptions(v3, irregVerbs.map(v => v[2]));
+    qs.push({
+      type: "Past Participle (V3)",
+      sentence: `${v1} → ___ → ___`,
+      hint: `${ru} (3-я форма)`,
+      options: shuffle([v3, ...wrongV3]).slice(0, 4),
+      correct: v3,
+      explanation: `${v1} → ${v2} → ${v3} (${ru})`
+    });
+  }
+  return qs;
+}
+
+function getWrongOptions(correct, pool) {
+  const unique = [...new Set(pool.filter(x => x !== correct))];
+  const shuffled = shuffle([...unique]);
+  return shuffled.slice(0, 3);
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ---- Topic 5: Phrasal Verbs ----
+const phrasalVerbs = [
+  {verb:"get up",meaning:"встать",example:"I get up at 7 every morning.",options:["встать","получить","добраться","сдаться"]},
+  {verb:"get along",meaning:"ладить",example:"She gets along with everyone.",options:["ладить","добраться","встать","получить"]},
+  {verb:"get over",meaning:"преодолеть / оправиться",example:"He got over his illness.",options:["преодолеть / оправиться","перейти","получить","уйти"]},
+  {verb:"get rid of",meaning:"избавиться от",example:"I want to get rid of old clothes.",options:["избавиться от","найти","получить","достать"]},
+  {verb:"give up",meaning:"сдаться / бросить",example:"He gave up smoking.",options:["сдаться / бросить","отдать","раздать","уступить"]},
+  {verb:"give in",meaning:"уступить",example:"She finally gave in to their demands.",options:["уступить","сдаться","раздать","отдать"]},
+  {verb:"give away",meaning:"отдать бесплатно / выдать секрет",example:"Don't give away the ending!",options:["отдать бесплатно / выдать секрет","сдаться","уступить","раздать"]},
+  {verb:"look for",meaning:"искать",example:"I'm looking for my keys.",options:["искать","смотреть","ухаживать","ожидать"]},
+  {verb:"look after",meaning:"ухаживать / присматривать",example:"She looks after her grandmother.",options:["ухаживать / присматривать","искать","смотреть","презирать"]},
+  {verb:"look forward to",meaning:"ожидать с нетерпением",example:"I look forward to seeing you.",options:["ожидать с нетерпением","искать","смотреть вперёд","оглядываться"]},
+  {verb:"look up",meaning:"искать (в словаре)",example:"Look up this word in the dictionary.",options:["искать (в словаре)","смотреть вверх","ухаживать","ожидать"]},
+  {verb:"look down on",meaning:"презирать / смотреть свысока",example:"He looks down on everyone.",options:["презирать / смотреть свысока","искать","смотреть вниз","ухаживать"]},
+  {verb:"take off",meaning:"снять / взлететь",example:"The plane took off on time.",options:["снять / взлететь","взять","принять","захватить"]},
+  {verb:"take on",meaning:"взять на себя / нанять",example:"She took on more responsibility.",options:["взять на себя / нанять","снять","разобрать","захватить"]},
+  {verb:"take over",meaning:"захватить / перенять",example:"The company was taken over.",options:["захватить / перенять","снять","взять","разобрать"]},
+  {verb:"turn on",meaning:"включить",example:"Turn on the light, please.",options:["включить","выключить","повернуть","отвергнуть"]},
+  {verb:"turn off",meaning:"выключить",example:"Don't forget to turn off the TV.",options:["выключить","включить","повернуть","оказаться"]},
+  {verb:"turn out",meaning:"оказаться",example:"It turned out he was right.",options:["оказаться","выключить","включить","повернуть"]},
+  {verb:"turn down",meaning:"отклонить / убавить",example:"She turned down the offer.",options:["отклонить / убавить","включить","выключить","оказаться"]},
+  {verb:"put off",meaning:"отложить",example:"Don't put off your homework.",options:["отложить","надеть","погасить","мириться"]},
+  {verb:"put on",meaning:"надеть",example:"Put on your jacket, it's cold.",options:["надеть","отложить","погасить","мириться"]},
+  {verb:"put up with",meaning:"мириться / терпеть",example:"I can't put up with this noise.",options:["мириться / терпеть","надеть","отложить","погасить"]},
+  {verb:"break down",meaning:"сломаться / расплакаться",example:"The car broke down on the highway.",options:["сломаться / расплакаться","расстаться","ворваться","прорваться"]},
+  {verb:"break up",meaning:"расстаться / разбить",example:"They broke up last month.",options:["расстаться / разбить","сломаться","ворваться","прорваться"]},
+  {verb:"break into",meaning:"ворваться / вломиться",example:"Someone broke into our house.",options:["ворваться / вломиться","расстаться","сломаться","прорваться"]},
+  {verb:"come across",meaning:"случайно найти / наткнуться",example:"I came across an old photo.",options:["случайно найти / наткнуться","вернуться","войти","придумать"]},
+  {verb:"come up with",meaning:"придумать",example:"She came up with a great idea.",options:["придумать","наткнуться","вернуться","зайти"]},
+  {verb:"go on",meaning:"продолжать",example:"Please go on, I'm listening.",options:["продолжать","уходить","выйти","взорваться"]},
+  {verb:"go off",meaning:"взорваться / зазвонить / испортиться",example:"The alarm went off at 6 AM.",options:["взорваться / зазвонить / испортиться","продолжать","уходить","пройти"]},
+  {verb:"go through",meaning:"пройти через / пережить",example:"She went through a difficult time.",options:["пройти через / пережить","продолжать","уходить","взорваться"]},
+  {verb:"run out of",meaning:"исчерпать / закончиться",example:"We ran out of milk.",options:["исчерпать / закончиться","убежать","наехать","управлять"]},
+  {verb:"figure out",meaning:"разобраться / понять",example:"I can't figure out this problem.",options:["разобраться / понять","выяснить внешность","считать","рисовать"]},
+  {verb:"find out",meaning:"узнать / выяснить",example:"I found out the truth.",options:["узнать / выяснить","найти","потерять","искать"]},
+  {verb:"carry on",meaning:"продолжать",example:"Carry on with your work.",options:["продолжать","нести","перенести","выполнить"]},
+  {verb:"carry out",meaning:"выполнить / провести",example:"They carried out the experiment.",options:["выполнить / провести","продолжать","нести","перенести"]},
+  {verb:"work out",meaning:"тренироваться / решить",example:"I work out three times a week.",options:["тренироваться / решить","работать","выработать","сработать"]},
+  {verb:"point out",meaning:"указать / обратить внимание",example:"She pointed out the mistake.",options:["указать / обратить внимание","показать","нацелить","отметить"]},
+  {verb:"end up",meaning:"в итоге оказаться",example:"We ended up staying home.",options:["в итоге оказаться","закончить","завершить","кончиться"]},
+  {verb:"pick up",meaning:"подобрать / забрать / выучить",example:"Can you pick me up at 5?",options:["подобрать / забрать / выучить","выбрать","поднять","собрать"]},
+  {verb:"set up",meaning:"создать / настроить / установить",example:"He set up his own business.",options:["создать / настроить / установить","поставить","сесть","отправиться"]},
+];
+
+function makePhrasalQuestions() {
+  const qs = [];
+  for (const pv of phrasalVerbs) {
+    // What does it mean?
+    qs.push({
+      type: "Что значит?",
+      sentence: pv.verb,
+      hint: pv.example,
+      options: shuffle(pv.options).slice(0, 4),
+      correct: pv.meaning,
+      explanation: `${pv.verb} = ${pv.meaning}. Пример: ${pv.example}`
+    });
+  }
+
+  // Reverse: meaning → phrasal verb
+  const reversed = [
+    {meaning:"сдаться",options:["give up","give in","give out","give away"],correct:"give up",explanation:"give up = сдаться, бросить"},
+    {meaning:"искать",options:["look for","look after","look up","look into"],correct:"look for",explanation:"look for = искать"},
+    {meaning:"отложить",options:["put off","put on","put up","put out"],correct:"put off",explanation:"put off = отложить"},
+    {meaning:"включить",options:["turn on","turn off","turn up","turn down"],correct:"turn on",explanation:"turn on = включить"},
+    {meaning:"выключить",options:["turn off","turn on","turn down","turn out"],correct:"turn off",explanation:"turn off = выключить"},
+    {meaning:"расстаться",options:["break up","break down","break in","break out"],correct:"break up",explanation:"break up = расстаться"},
+    {meaning:"продолжать",options:["go on","go off","go out","go away"],correct:"go on",explanation:"go on = продолжать"},
+    {meaning:"взлететь / снять",options:["take off","take on","take over","take up"],correct:"take off",explanation:"take off = взлететь (о самолёте) / снять (одежду)"},
+    {meaning:"ухаживать / присматривать",options:["look after","look for","look up","look into"],correct:"look after",explanation:"look after = присматривать, ухаживать"},
+    {meaning:"захватить / перенять",options:["take over","take off","take on","take up"],correct:"take over",explanation:"take over = захватить, перенять контроль"},
+    {meaning:"терпеть / мириться",options:["put up with","put off","put on","put out"],correct:"put up with",explanation:"put up with = терпеть, мириться с чем-то"},
+    {meaning:"придумать",options:["come up with","come across","come back","come in"],correct:"come up with",explanation:"come up with = придумать"},
+    {meaning:"разобраться / понять",options:["figure out","find out","work out","point out"],correct:"figure out",explanation:"figure out = разобраться, понять"},
+    {meaning:"избавиться от",options:["get rid of","get over","get along","get up"],correct:"get rid of",explanation:"get rid of = избавиться от"},
+    {meaning:"оказаться (в итоге)",options:["turn out","turn off","turn up","turn down"],correct:"turn out",explanation:"turn out = оказаться"},
+  ];
+
+  for (const r of reversed) {
+    qs.push({
+      type: "Переведите на английский",
+      sentence: r.meaning,
+      hint: "Какой фразовый глагол?",
+      options: r.options,
+      correct: r.correct,
+      explanation: r.explanation
+    });
+  }
+
+  return qs;
+}
+
+// ===================== APP STATE =====================
+const TOPICS = [
+  { id: "articles", label: "Артикли" },
+  { id: "prepositions", label: "Предлоги" },
+  { id: "tenses", label: "Времена" },
+  { id: "verbs", label: "Неправильные глаголы" },
+  { id: "phrasal", label: "Фразовые глаголы" },
+  { id: "all", label: "Все темы" },
+];
+
+let currentTopic = "all";
+let questions = [];
+let qIndex = 0;
+let score = { correct: 0, total: 0, streak: 0, maxStreak: 0 };
+let answered = false;
+
+// ===================== INIT =====================
+function init() {
+  renderTopics();
+  loadScore();
+  buildQuestions();
+  showQuestion();
+  document.addEventListener("keydown", handleKey);
+}
+
+function renderTopics() {
+  const el = document.getElementById("topics");
+  el.innerHTML = TOPICS.map(t =>
+    `<button class="topic-btn${t.id === currentTopic ? ' active' : ''}" data-topic="${t.id}">${t.label}</button>`
+  ).join("");
+  el.querySelectorAll(".topic-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      currentTopic = btn.dataset.topic;
+      renderTopics();
+      buildQuestions();
+      showQuestion();
+    });
+  });
+}
+
+// ===================== QUESTIONS =====================
+function buildQuestions() {
+  let pool = [];
+  if (currentTopic === "articles" || currentTopic === "all") {
+    pool = pool.concat(articleQuestions);
+  }
+  if (currentTopic === "prepositions" || currentTopic === "all") {
+    pool = pool.concat(prepositionQuestions);
+  }
+  if (currentTopic === "tenses" || currentTopic === "all") {
+    pool = pool.concat(tenseQuestions);
+  }
+  if (currentTopic === "verbs" || currentTopic === "all") {
+    pool = pool.concat(makeVerbQuestions());
+  }
+  if (currentTopic === "phrasal" || currentTopic === "all") {
+    pool = pool.concat(makePhrasalQuestions());
+  }
+  // Shuffle
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  questions = pool;
+  qIndex = 0;
+}
+
+function showQuestion() {
+  if (questions.length === 0) return;
+  if (qIndex >= questions.length) {
+    for (let i = questions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [questions[i], questions[j]] = [questions[j], questions[i]];
+    }
+    qIndex = 0;
+  }
+
+  answered = false;
+
+  const q = questions[qIndex];
+  const card = document.getElementById("quizCard");
+  card.classList.remove("flash-correct", "flash-wrong");
+
+  document.getElementById("qType").textContent = q.type;
+  document.getElementById("qSentence").innerHTML = formatSentence(q.sentence);
+  document.getElementById("qHint").textContent = q.hint || "";
+
+  const answersEl = document.getElementById("answers");
+  answersEl.innerHTML = q.options.map((opt, i) =>
+    `<button class="ans-btn" data-idx="${i}"><span class="key-hint">${i + 1}</span>${opt}</button>`
+  ).join("");
+
+  answersEl.querySelectorAll(".ans-btn").forEach(btn => {
+    btn.addEventListener("click", () => selectAnswer(btn, q));
+  });
+
+  document.getElementById("feedback").className = "feedback";
+  document.getElementById("feedback").innerHTML = "";
+  document.getElementById("continueBtn").classList.remove("show");
+
+  updateProgress();
+  updateScoreDisplay();
+}
+
+function formatSentence(s) {
+  return s.replace(/\[([^\]]+)\]/g, '<span class="q-blank">$1</span>')
+          .replace(/___/g, '<span class="q-blank">???</span>');
+}
+
+function selectAnswer(btn, q) {
+  if (answered) return;
+  answered = true;
+
+  const selected = q.options[parseInt(btn.dataset.idx)];
+  const isCorrect = selected === q.correct;
+  const card = document.getElementById("quizCard");
+  const answersEl = document.getElementById("answers");
+
+  answersEl.querySelectorAll(".ans-btn").forEach(b => {
+    b.classList.add("disabled");
+    if (q.options[parseInt(b.dataset.idx)] === q.correct) {
+      b.classList.add("correct");
+    }
+  });
+
+  if (isCorrect) {
+    btn.classList.add("correct");
+    card.classList.add("flash-correct");
+    score.correct++;
+    score.streak++;
+    if (score.streak > score.maxStreak) score.maxStreak = score.streak;
+    showFeedback(true, q.explanation);
+  } else {
+    btn.classList.add("wrong");
+    card.classList.add("flash-wrong");
+    score.streak = 0;
+    showFeedback(false, q.explanation);
+  }
+
+  score.total++;
+  saveScore();
+  updateScoreDisplay();
+
+  document.getElementById("continueBtn").classList.add("show");
+}
+
+function showFeedback(correct, explanation) {
+  const fb = document.getElementById("feedback");
+  fb.className = "feedback show " + (correct ? "correct-fb" : "wrong-fb");
+  fb.innerHTML = `<strong>${correct ? "Правильно! ✓" : "Неправильно ✗"}</strong><span class="explanation">${explanation}</span>`;
+}
+
+function nextQuestion() {
+  qIndex++;
+  showQuestion();
+}
+
+// ===================== SCORE =====================
+function updateScoreDisplay() {
+  document.getElementById("streak").textContent = score.streak;
+  document.getElementById("correctCount").textContent = score.correct;
+  document.getElementById("totalCount").textContent = score.total;
+  const pct = score.total > 0 ? Math.round(score.correct / score.total * 100) : 0;
+  document.getElementById("pct").textContent = pct + "%";
+}
+
+function updateProgress() {
+  const pct = questions.length > 0 ? Math.min(100, Math.round((qIndex / questions.length) * 100)) : 0;
+  document.getElementById("progressFill").style.width = pct + "%";
+}
+
+function resetScore() {
+  score = { correct: 0, total: 0, streak: 0, maxStreak: 0 };
+  saveScore();
+  updateScoreDisplay();
+  buildQuestions();
+  showQuestion();
+}
+
+function saveScore() {
+  try { localStorage.setItem("en-quiz-score", JSON.stringify(score)); } catch(e) {}
+}
+
+function loadScore() {
+  try {
+    const s = JSON.parse(localStorage.getItem("en-quiz-score"));
+    if (s) score = { correct: s.correct || 0, total: s.total || 0, streak: s.streak || 0, maxStreak: s.maxStreak || 0 };
+  } catch(e) {}
+}
+
+// ===================== KEYBOARD =====================
+function handleKey(e) {
+  if (answered) {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      nextQuestion();
+    }
+    return;
+  }
+
+  const keyMap = { "1": 0, "2": 1, "3": 2, "4": 3 };
+  if (keyMap[e.key] !== undefined) {
+    const btns = document.querySelectorAll("#answers .ans-btn");
+    if (btns[keyMap[e.key]]) {
+      btns[keyMap[e.key]].click();
+    }
+  }
+
+  if (e.key === "Escape") {
+    currentTopic = "all";
+    renderTopics();
+    buildQuestions();
+    showQuestion();
+  }
+}
+
+// ===================== START =====================
+init();
+</script>
+
+</body>
+</html>
