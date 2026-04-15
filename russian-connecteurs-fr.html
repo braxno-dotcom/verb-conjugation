@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>RU</text></svg>">
+<meta name="apple-mobile-web-app-title" content="RU connecteurs">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="description" content="Pour parler comme un Russe : connecteurs, mots modaux, particules conversationnelles. Тем не менее, вроде бы, ведь, же, мол — explications en français.">
+<title>RU Pour parler comme un Russe — Connecteurs et nuances</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f0eb;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #4a1a6b, #7b2fa0);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switch-left {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch-left:hover { background: rgba(255,255,255,0.3); }
+
+  .intro {
+    max-width: 900px;
+    margin: 20px auto 0;
+    padding: 16px 20px;
+    background: #faf5ff;
+    border-left: 4px solid #7b2fa0;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.95em;
+    color: #444;
+    line-height: 1.6;
+  }
+  .intro strong { color: #4a1a6b; }
+
+  .content {
+    max-width: 900px;
+    margin: 20px auto 40px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .card-header {
+    padding: 12px 16px;
+    background: #7b2fa0;
+    color: white;
+    font-weight: 600;
+  }
+  .card-header .ru-name { font-size: 1.05em; }
+  .card-header .fr-name { font-size: 0.85em; opacity: 0.9; margin-top: 2px; }
+  .card-header-orange { background: #d84315; }
+  .card-header-blue { background: #1565c0; }
+  .card-header-green { background: #2e7d32; }
+  .card-header-memo {
+    background: linear-gradient(135deg, #4a1a6b, #7b2fa0);
+  }
+
+  .card-body { padding: 16px; }
+
+  .word-list { list-style: none; padding: 0; margin: 0; }
+  .word-list li {
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+    line-height: 1.5;
+  }
+  .word-list li:last-child { border-bottom: none; }
+  .word-ru {
+    font-weight: 700;
+    color: #4a1a6b;
+    font-size: 1.1em;
+  }
+  .word-fr {
+    color: #666;
+    font-size: 0.95em;
+    margin-left: 6px;
+  }
+  .word-example {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.93em;
+    color: #555;
+    padding-left: 12px;
+    border-left: 2px solid #e0d4e8;
+  }
+  .word-example .ru { font-weight: 600; }
+  .word-example .fr { color: #888; font-style: italic; }
+  .word-tip {
+    display: block;
+    margin-top: 4px;
+    padding: 6px 10px;
+    background: #fff8e1;
+    border-radius: 6px;
+    font-size: 0.85em;
+    color: #6d5a00;
+  }
+  .word-tip strong { color: #e65100; }
+
+  .note-box {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: #faf5ff;
+    border-left: 4px solid #7b2fa0;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.9em;
+    color: #555;
+    line-height: 1.5;
+  }
+  .note-box strong { color: #4a1a6b; }
+
+  .memo-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6px;
+  }
+  .memo-table th {
+    text-align: left;
+    padding: 8px 10px;
+    font-size: 0.85em;
+    color: white;
+    font-weight: 600;
+    background: #7b2fa0;
+  }
+  .memo-table td {
+    padding: 8px 10px;
+    font-size: 0.92em;
+    border-bottom: 1px solid #f0f0f0;
+    line-height: 1.4;
+  }
+  .memo-table tr:nth-child(even) { background: #faf5ff; }
+  .memo-table .ru-col {
+    font-weight: 700;
+    color: #4a1a6b;
+    white-space: nowrap;
+  }
+  .memo-table .fr-col {
+    color: #555;
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switch-left { position: static; display: inline-block; margin-bottom: 10px; padding: 6px 12px; font-size: 0.85em; }
+    .content, .intro { padding: 12px 14px; }
+    .card-header { padding: 10px 12px; }
+    .card-header .ru-name { font-size: 0.95em; }
+    .card-body { padding: 12px; }
+    .memo-table th, .memo-table td { padding: 6px 8px; font-size: 0.82em; }
+    .word-list li { padding: 10px 0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="russian-fr.html" class="lang-switch-left">&larr; Retour au portail</a>
+  <h1>RU Pour parler comme un Russe</h1>
+  <p>Connecteurs, mots modaux et petites particules qui font tout</p>
+</header>
+
+<div class="intro">
+  <strong>Pourquoi cette page ?</strong> Ce sont les petits mots qui transforment un russe « scolaire » en russe vivant. Un Russe qui parle ne dit presque jamais une phrase sans <em>же</em>, <em>ведь</em>, <em>как бы</em> ou <em>вроде бы</em>. La grammaire les ignore — l'oreille les entend partout. On les appelle <strong>mots du discours</strong> (дискурсивные слова) : ils ne portent pas de sens « lourd », mais ils donnent <strong>l'attitude</strong>, <strong>la nuance</strong>, <strong>le rythme</strong>.
+</div>
+
+<div class="content">
+
+  <!-- CARD 1: CONNECTEURS LOGIQUES -->
+  <div class="card">
+    <div class="card-header">
+      <div class="ru-name">1. СВЯЗКИ — Connecteurs logiques</div>
+      <div class="fr-name">Pour relier deux idées : opposition, concession, conséquence</div>
+    </div>
+    <div class="card-body">
+      <ul class="word-list">
+        <li>
+          <span class="word-ru">тем не менее</span><span class="word-fr">— néanmoins, toutefois</span>
+          <span class="word-example"><span class="ru">Было холодно. Тем не менее, мы пошли гулять.</span><br><span class="fr">Il faisait froid. Néanmoins, nous sommes sortis nous promener.</span></span>
+        </li>
+        <li>
+          <span class="word-ru">однако</span><span class="word-fr">— cependant, pourtant</span>
+          <span class="word-example"><span class="ru">Он умный. Однако часто ошибается.</span><br><span class="fr">Il est intelligent. Cependant, il se trompe souvent.</span></span>
+        </li>
+        <li>
+          <span class="word-ru">всё-таки</span><span class="word-fr">— quand même, malgré tout</span>
+          <span class="word-example"><span class="ru">Я устал, но всё-таки доделал работу.</span><br><span class="fr">J'étais fatigué, mais j'ai quand même fini le travail.</span></span>
+          <span class="word-tip"><strong>Astuce :</strong> très fréquent à l'oral. Souligne la persévérance malgré l'obstacle.</span>
+        </li>
+        <li>
+          <span class="word-ru">зато</span><span class="word-fr">— en revanche, mais en compensation</span>
+          <span class="word-example"><span class="ru">Дорого, зато качественно.</span><br><span class="fr">C'est cher, mais en revanche c'est de qualité.</span></span>
+          <span class="word-tip"><strong>Nuance :</strong> compense un défaut par un avantage. Très russe — pas d'équivalent direct en français.</span>
+        </li>
+        <li>
+          <span class="word-ru">впрочем</span><span class="word-fr">— d'ailleurs, du reste, ceci dit</span>
+          <span class="word-example"><span class="ru">Я не пойду. Впрочем, как хочешь.</span><br><span class="fr">Je n'irai pas. Ceci dit, fais comme tu veux.</span></span>
+        </li>
+        <li>
+          <span class="word-ru">кстати</span><span class="word-fr">— au fait, à propos</span>
+          <span class="word-example"><span class="ru">Кстати, я видел Анну вчера.</span><br><span class="fr">Au fait, j'ai vu Anna hier.</span></span>
+        </li>
+        <li>
+          <span class="word-ru">в то же время</span><span class="word-fr">— en même temps, parallèlement</span>
+          <span class="word-example"><span class="ru">Это сложно. В то же время, очень интересно.</span><br><span class="fr">C'est difficile. En même temps, c'est très intéressant.</span></span>
+        </li>
+        <li>
+          <span class="word-ru">наоборот</span><span class="word-fr">— au contraire</span>
+          <span class="word-example"><span class="ru">— Тебе скучно? — Наоборот, очень интересно!</span><br><span class="fr">— Tu t'ennuies ? — Au contraire, c'est très intéressant !</span></span>
+        </li>
+        <li>
+          <span class="word-ru">поэтому</span><span class="word-fr">— c'est pourquoi, donc</span>
+          <span class="word-example"><span class="ru">Шёл дождь, поэтому я остался дома.</span><br><span class="fr">Il pleuvait, c'est pourquoi je suis resté à la maison.</span></span>
+        </li>
+        <li>
+          <span class="word-ru">значит</span><span class="word-fr">— donc, alors, ça veut dire que</span>
+          <span class="word-example"><span class="ru">Ты не пришёл — значит, забыл.</span><br><span class="fr">Tu n'es pas venu — donc, tu as oublié.</span></span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CARD 2: MOTS MODAUX -->
+  <div class="card">
+    <div class="card-header card-header-blue">
+      <div class="ru-name">2. МОДАЛЬНЫЕ СЛОВА — Mots modaux</div>
+      <div class="fr-name">Pour exprimer son degré de certitude (ou de doute)</div>
+    </div>
+    <div class="card-body">
+      <ul class="word-list">
+        <li>
+          <span class="word-ru">вроде (бы)</span><span class="word-fr">— on dirait que, il me semble que</span>
+          <span class="word-example"><span class="ru">Он вроде бы согласен.</span><br><span class="fr">Il a l'air d'être d'accord (mais je ne suis pas sûr).</span></span>
+          <span class="word-tip"><strong>Très utile :</strong> permet de dire quelque chose sans s'engager à 100 %.</span>
+        </li>
+        <li>
+          <span class="word-ru">кажется</span><span class="word-fr">— il (me) semble</span>
+          <span class="word-example"><span class="ru">Кажется, дождь начинается.</span><br><span class="fr">Il me semble qu'il commence à pleuvoir.</span></span>
+        </li>
+        <li>
+          <span class="word-ru">наверное / наверно</span><span class="word-fr">— probablement, sans doute</span>
+          <span class="word-example"><span class="ru">Он, наверное, уже дома.</span><br><span class="fr">Il est sans doute déjà à la maison.</span></span>
+        </li>
+        <li>
+          <span class="word-ru">пожалуй</span><span class="word-fr">— peut-être bien, plutôt</span>
+          <span class="word-example"><span class="ru">Я, пожалуй, выпью кофе.</span><br><span class="fr">Je vais plutôt prendre un café (après réflexion).</span></span>
+          <span class="word-tip"><strong>Nuance :</strong> indique une décision prise après hésitation.</span>
+        </li>
+        <li>
+          <span class="word-ru">видимо / по-видимому</span><span class="word-fr">— apparemment, visiblement</span>
+          <span class="word-example"><span class="ru">Его нет — видимо, заболел.</span><br><span class="fr">Il n'est pas là — apparemment, il est tombé malade.</span></span>
+        </li>
+        <li>
+          <span class="word-ru">якобы</span><span class="word-fr">— soi-disant, prétendument</span>
+          <span class="word-example"><span class="ru">Он якобы был занят.</span><br><span class="fr">Il était soi-disant occupé (je n'y crois pas trop).</span></span>
+          <span class="word-tip"><strong>Attention :</strong> exprime un doute marqué, voire de l'ironie.</span>
+        </li>
+        <li>
+          <span class="word-ru">может быть / может</span><span class="word-fr">— peut-être</span>
+          <span class="word-example"><span class="ru">Может, пойдём в кино?</span><br><span class="fr">On pourrait peut-être aller au ciné ?</span></span>
+        </li>
+        <li>
+          <span class="word-ru">по-моему</span><span class="word-fr">— à mon avis, je trouve que</span>
+          <span class="word-example"><span class="ru">По-моему, это отличная идея.</span><br><span class="fr">À mon avis, c'est une excellente idée.</span></span>
+        </li>
+        <li>
+          <span class="word-ru">разумеется</span><span class="word-fr">— bien entendu, cela va de soi</span>
+          <span class="word-example"><span class="ru">Разумеется, я тебе помогу.</span><br><span class="fr">Bien entendu, je vais t'aider.</span></span>
+        </li>
+        <li>
+          <span class="word-ru">конечно</span><span class="word-fr">— bien sûr</span>
+          <span class="word-example"><span class="ru">— Придёшь? — Конечно!</span><br><span class="fr">— Tu viendras ? — Bien sûr !</span></span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CARD 3: STRUCTURANTS DU DISCOURS -->
+  <div class="card">
+    <div class="card-header card-header-green">
+      <div class="ru-name">3. ВВОДНЫЕ ОБОРОТЫ — Structurants du discours</div>
+      <div class="fr-name">Pour organiser sa pensée : ordre, exemples, reformulation</div>
+    </div>
+    <div class="card-body">
+      <ul class="word-list">
+        <li>
+          <span class="word-ru">во-первых... во-вторых... в-третьих</span><span class="word-fr">— premièrement... deuxièmement... troisièmement</span>
+          <span class="word-example"><span class="ru">Во-первых, это дорого. Во-вторых, не нужно.</span><br><span class="fr">Premièrement, c'est cher. Deuxièmement, c'est inutile.</span></span>
+        </li>
+        <li>
+          <span class="word-ru">с одной стороны... с другой стороны</span><span class="word-fr">— d'un côté... de l'autre côté</span>
+          <span class="word-example"><span class="ru">С одной стороны, удобно. С другой стороны, дорого.</span><br><span class="fr">D'un côté, c'est pratique. De l'autre, c'est cher.</span></span>
+        </li>
+        <li>
+          <span class="word-ru">в общем</span><span class="word-fr">— en gros, dans l'ensemble</span>
+          <span class="word-example"><span class="ru">В общем, всё прошло хорошо.</span><br><span class="fr">En gros, tout s'est bien passé.</span></span>
+        </li>
+        <li>
+          <span class="word-ru">в принципе</span><span class="word-fr">— en principe, au fond</span>
+          <span class="word-example"><span class="ru">В принципе, я согласен.</span><br><span class="fr">En principe, je suis d'accord.</span></span>
+        </li>
+        <li>
+          <span class="word-ru">короче (говоря)</span><span class="word-fr">— bref, pour faire court</span>
+          <span class="word-example"><span class="ru">Короче, я опоздал.</span><br><span class="fr">Bref, j'étais en retard.</span></span>
+          <span class="word-tip"><strong>Très oral :</strong> les jeunes l'utilisent comme tic de langage, comme « du coup » en français.</span>
+        </li>
+        <li>
+          <span class="word-ru">иначе говоря</span><span class="word-fr">— autrement dit</span>
+          <span class="word-example"><span class="ru">Он отказался, иначе говоря — нет.</span><br><span class="fr">Il a refusé, autrement dit — non.</span></span>
+        </li>
+        <li>
+          <span class="word-ru">например</span><span class="word-fr">— par exemple</span>
+          <span class="word-example"><span class="ru">Возьми что-нибудь сладкое, например, шоколад.</span><br><span class="fr">Prends quelque chose de sucré, par exemple du chocolat.</span></span>
+        </li>
+        <li>
+          <span class="word-ru">то есть</span><span class="word-fr">— c'est-à-dire</span>
+          <span class="word-example"><span class="ru">Завтра, то есть в субботу.</span><br><span class="fr">Demain, c'est-à-dire samedi.</span></span>
+        </li>
+        <li>
+          <span class="word-ru">в итоге / в конце концов</span><span class="word-fr">— au final, en fin de compte</span>
+          <span class="word-example"><span class="ru">В итоге мы остались дома.</span><br><span class="fr">Au final, nous sommes restés à la maison.</span></span>
+        </li>
+        <li>
+          <span class="word-ru">главное</span><span class="word-fr">— surtout, l'essentiel c'est que</span>
+          <span class="word-example"><span class="ru">Главное — не опаздывай.</span><br><span class="fr">Surtout, ne sois pas en retard.</span></span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CARD 4: PARTICULES DE LA LANGUE PARLÉE -->
+  <div class="card">
+    <div class="card-header card-header-orange">
+      <div class="ru-name">4. ЧАСТИЦЫ — Particules de la langue parlée</div>
+      <div class="fr-name">Les petits mots « invisibles » qui colorent toutes les phrases</div>
+    </div>
+    <div class="card-body">
+      <ul class="word-list">
+        <li>
+          <span class="word-ru">же</span><span class="word-fr">— donc, voyons (insistance, souvent intraduisible)</span>
+          <span class="word-example"><span class="ru">Ты же знаешь!</span><br><span class="fr">Tu le sais bien, voyons !</span></span>
+          <span class="word-tip"><strong>Position :</strong> toujours juste après le mot souligné. <em>Я же говорил</em> = « Mais je l'avais dit ! »</span>
+        </li>
+        <li>
+          <span class="word-ru">ведь</span><span class="word-fr">— pourtant, tu sais bien que, n'est-ce pas</span>
+          <span class="word-example"><span class="ru">Ведь это правда!</span><br><span class="fr">Mais c'est vrai, voyons !</span></span>
+          <span class="word-tip"><strong>Nuance :</strong> rappelle quelque chose que l'interlocuteur est censé savoir ou admettre.</span>
+        </li>
+        <li>
+          <span class="word-ru">ну</span><span class="word-fr">— bon, ben, eh bien (démarrage de phrase)</span>
+          <span class="word-example"><span class="ru">Ну, что будем делать?</span><br><span class="fr">Bon, qu'est-ce qu'on va faire ?</span></span>
+        </li>
+        <li>
+          <span class="word-ru">мол / дескать</span><span class="word-fr">— soi-disant, à ce qu'il dit (rapporter sans s'engager)</span>
+          <span class="word-example"><span class="ru">Он сказал, мол, занят.</span><br><span class="fr">Il a dit qu'il était soi-disant occupé.</span></span>
+          <span class="word-tip"><strong>Usage :</strong> on rapporte les paroles d'autrui en marquant une distance ou un doute.</span>
+        </li>
+        <li>
+          <span class="word-ru">типа</span><span class="word-fr">— genre, style (très familier)</span>
+          <span class="word-example"><span class="ru">Он типа извинился.</span><br><span class="fr">Il s'est excusé, genre.</span></span>
+          <span class="word-tip"><strong>Attention :</strong> très oral / jeune. À éviter à l'écrit.</span>
+        </li>
+        <li>
+          <span class="word-ru">как бы</span><span class="word-fr">— en quelque sorte, comme qui dirait</span>
+          <span class="word-example"><span class="ru">Я как бы согласен.</span><br><span class="fr">Je suis d'accord, en quelque sorte.</span></span>
+          <span class="word-tip"><strong>Tic russe :</strong> adoucit l'affirmation, comme « un peu » ou « plutôt » en français.</span>
+        </li>
+        <li>
+          <span class="word-ru">вообще</span><span class="word-fr">— en général, vraiment, carrément</span>
+          <span class="word-example"><span class="ru">Я вообще не понимаю.</span><br><span class="fr">Je ne comprends carrément pas.</span></span>
+        </li>
+        <li>
+          <span class="word-ru">просто</span><span class="word-fr">— c'est juste que, simplement</span>
+          <span class="word-example"><span class="ru">Я просто устал.</span><br><span class="fr">C'est juste que je suis fatigué.</span></span>
+        </li>
+        <li>
+          <span class="word-ru">да ладно</span><span class="word-fr">— allez !, sérieusement ?!, mais non !</span>
+          <span class="word-example"><span class="ru">— Я выиграл! — Да ладно!</span><br><span class="fr">— J'ai gagné ! — Sérieux ?! / Sans déconner !</span></span>
+        </li>
+        <li>
+          <span class="word-ru">ничего</span><span class="word-fr">— ce n'est rien, pas grave</span>
+          <span class="word-example"><span class="ru">— Извини! — Ничего.</span><br><span class="fr">— Pardon ! — Ce n'est rien.</span></span>
+        </li>
+      </ul>
+      <div class="note-box">
+        <strong>Le secret :</strong> ces particules ne se traduisent presque jamais mot à mot. Pour les maîtriser, il faut les <strong>entendre</strong> en contexte (films, podcasts) — pas les apprendre par cœur. L'important est de reconnaître <strong>l'intention</strong> qu'elles portent.
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 5: AIDE-MÉMOIRE -->
+  <div class="card">
+    <div class="card-header card-header-memo">
+      <div class="ru-name">AIDE-MÉMOIRE (Шпаргалка)</div>
+      <div class="fr-name">Les indispensables — à mémoriser en priorité</div>
+    </div>
+    <div class="card-body">
+      <div class="table-wrap">
+        <table class="memo-table">
+          <thead>
+            <tr>
+              <th>Russe</th>
+              <th>Français</th>
+              <th>Quand l'utiliser</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="ru-col">тем не менее</td>
+              <td class="fr-col">néanmoins</td>
+              <td>Concession écrite/soutenue</td>
+            </tr>
+            <tr>
+              <td class="ru-col">всё-таки</td>
+              <td class="fr-col">quand même</td>
+              <td>Concession orale</td>
+            </tr>
+            <tr>
+              <td class="ru-col">зато</td>
+              <td class="fr-col">en revanche</td>
+              <td>Compenser un défaut</td>
+            </tr>
+            <tr>
+              <td class="ru-col">кстати</td>
+              <td class="fr-col">au fait</td>
+              <td>Changer de sujet</td>
+            </tr>
+            <tr>
+              <td class="ru-col">вроде бы</td>
+              <td class="fr-col">on dirait que</td>
+              <td>Pas sûr à 100 %</td>
+            </tr>
+            <tr>
+              <td class="ru-col">наверное</td>
+              <td class="fr-col">sans doute</td>
+              <td>Probabilité forte</td>
+            </tr>
+            <tr>
+              <td class="ru-col">по-моему</td>
+              <td class="fr-col">à mon avis</td>
+              <td>Donner son opinion</td>
+            </tr>
+            <tr>
+              <td class="ru-col">короче</td>
+              <td class="fr-col">bref / du coup</td>
+              <td>Conclure (oral)</td>
+            </tr>
+            <tr>
+              <td class="ru-col">то есть</td>
+              <td class="fr-col">c'est-à-dire</td>
+              <td>Reformuler</td>
+            </tr>
+            <tr>
+              <td class="ru-col">же</td>
+              <td class="fr-col">voyons / donc</td>
+              <td>Insister, rappeler</td>
+            </tr>
+            <tr>
+              <td class="ru-col">ведь</td>
+              <td class="fr-col">tu sais bien</td>
+              <td>Évidence partagée</td>
+            </tr>
+            <tr>
+              <td class="ru-col">ну</td>
+              <td class="fr-col">bon / ben</td>
+              <td>Démarrer une phrase</td>
+            </tr>
+            <tr>
+              <td class="ru-col">как бы</td>
+              <td class="fr-col">en quelque sorte</td>
+              <td>Adoucir une affirmation</td>
+            </tr>
+            <tr>
+              <td class="ru-col">просто</td>
+              <td class="fr-col">c'est juste que</td>
+              <td>Justifier doucement</td>
+            </tr>
+            <tr>
+              <td class="ru-col">да ладно</td>
+              <td class="fr-col">sérieux ?!</td>
+              <td>Surprise / incrédulité</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note-box">
+        <strong>Conseil :</strong> commencez par maîtriser <strong>5 mots</strong> que vous trouvez utiles, et glissez-les dans toutes vos phrases. Une fois automatiques, ajoutez-en d'autres. C'est la voie la plus rapide pour passer du « russe d'école » au « russe naturel ».
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
