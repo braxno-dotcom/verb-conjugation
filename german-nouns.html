@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇩🇪</text></svg>">
+<meta name="apple-mobile-web-app-title" content="DE noun">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇩🇪 Немецкие существительные — склонение</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #faf5e8;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #1a1a1a, #7a1a1a);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  .search-area {
+    max-width: 600px;
+    margin: 30px auto 10px;
+    padding: 0 20px;
+    display: flex;
+    gap: 10px;
+  }
+  .search-area input {
+    flex: 1;
+    padding: 14px 18px;
+    font-size: 1.15em;
+    border: 2px solid #d4c89a;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-area input:focus { border-color: #b8860b; }
+  .search-area button {
+    padding: 14px 28px;
+    font-size: 1.05em;
+    background: #b8860b;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .search-area button:hover { background: #1a1a1a; }
+
+  .hint {
+    max-width: 600px;
+    margin: 8px auto 0;
+    padding: 0 20px;
+    font-size: 0.85em;
+    color: #888;
+  }
+  .hint span { cursor: pointer; color: #b8860b; text-decoration: underline; }
+  .hint span:hover { color: #1a1a1a; }
+
+  .noun-info {
+    max-width: 900px;
+    margin: 18px auto 8px;
+    padding: 0 20px;
+    display: none;
+  }
+  .noun-info .badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 600;
+    margin-right: 8px;
+    margin-bottom: 6px;
+  }
+  .badge-m { background: #d6e8f7; color: #2e5c8a; }
+  .badge-f { background: #fce4ec; color: #a02355; }
+  .badge-n { background: #e8f5e9; color: #2e7d32; }
+  .badge-ru { background: #f0e4c1; color: #7a5a10; border: 1px solid #d4c89a; }
+  .badge-weak { background: #fff3cd; color: #856404; border: 1px solid #ffe69c; }
+
+  #results {
+    max-width: 900px;
+    margin: 10px auto 20px;
+    padding: 0 20px;
+  }
+
+  .decl-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    margin-bottom: 20px;
+  }
+  .decl-header {
+    padding: 14px 18px;
+    background: #b8860b;
+    color: white;
+    font-weight: 600;
+  }
+  .decl-header .de-name { font-size: 1.2em; }
+  .decl-header .ru-translation { float: right; font-size: 0.95em; opacity: 0.9; font-weight: 400; font-style: italic; }
+  .decl-body { padding: 0; }
+
+  table.decl-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1em;
+  }
+  table.decl-table th, table.decl-table td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid #f0e4c1;
+  }
+  table.decl-table thead th {
+    background: #faf5e8;
+    color: #7a5a10;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+  table.decl-table tbody th {
+    background: #faf5e8;
+    color: #7a5a10;
+    font-weight: 600;
+    font-size: 0.88em;
+    width: 18%;
+  }
+  table.decl-table td {
+    font-size: 1.05em;
+    color: #2c2c2c;
+  }
+  table.decl-table td .article {
+    color: #b8860b;
+    font-weight: 600;
+  }
+  table.decl-table tr:last-child th, table.decl-table tr:last-child td {
+    border-bottom: none;
+  }
+  .case-note {
+    padding: 10px 18px;
+    background: #faf5e8;
+    font-size: 0.85em;
+    color: #888;
+    font-style: italic;
+    border-top: 1px solid #f0e4c1;
+  }
+
+  .no-result {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+    font-size: 1.1em;
+  }
+
+  .info-section {
+    max-width: 900px;
+    margin: 10px auto 40px;
+    padding: 0 20px;
+  }
+  .info-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    line-height: 1.7;
+    font-size: 0.92em;
+    color: #555;
+  }
+  .info-card h3 { color: #b8860b; margin-bottom: 10px; font-size: 1.05em; }
+  .info-card b { color: #333; }
+  .info-card code {
+    background: #faf5e8;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.92em;
+    color: #b8860b;
+    font-weight: 600;
+  }
+  .gender-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+  .dot-m { background: #2e5c8a; }
+  .dot-f { background: #a02355; }
+  .dot-n { background: #2e7d32; }
+
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switch { padding: 6px 12px; font-size: 0.85em; }
+    .search-area { padding: 0 10px; flex-direction: column; }
+    .search-area input { font-size: 1em; padding: 12px 14px; width: 100%; }
+    .search-area button { padding: 12px 18px; font-size: 0.95em; width: 100%; }
+    .hint { padding: 0 10px; }
+    .noun-info { padding: 0 10px; }
+    .noun-info .badge { font-size: 0.8em; padding: 4px 10px; }
+    .info-section { padding: 0 10px; }
+    #results { padding: 0 10px; }
+    .decl-header { padding: 10px 12px; }
+    .decl-header .de-name { font-size: 1.05em; }
+    .decl-header .ru-translation { display: block; float: none; margin-top: 4px; }
+    table.decl-table th, table.decl-table td { padding: 8px 10px; font-size: 0.95em; }
+    table.decl-table tbody th { font-size: 0.8em; width: 22%; }
+    table.decl-table td { font-size: 0.95em; }
+    .case-note { padding: 8px 12px; font-size: 0.8em; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="german.html" class="lang-switch">📖 Портал</a>
+    <a href="norwegian-nouns.html" class="lang-switch">🇳🇴 Норвежский</a>
+  </div>
+  <h1>🇩🇪 Немецкие существительные — склонение</h1>
+  <p>Введите существительное — получите род, множественное число и все 4 падежа</p>
+</header>
+
+<div class="search-area">
+  <input type="text" id="nounInput" placeholder="Mann, Frau, Kind... или по-русски: дом, книга, ребёнок..." autofocus
+    onkeydown="if(event.key==='Enter')decline()">
+  <button onclick="decline()">Склонять</button>
+</div>
+<div class="hint">
+  Попробуйте:
+  <span onclick="tryNoun('Mann')">Mann</span>,
+  <span onclick="tryNoun('Frau')">Frau</span>,
+  <span onclick="tryNoun('Kind')">Kind</span>,
+  <span onclick="tryNoun('Haus')">Haus</span>,
+  <span onclick="tryNoun('Buch')">Buch</span>,
+  <span onclick="tryNoun('Auto')">Auto</span>,
+  <span onclick="tryNoun('Tag')">Tag</span>
+  | на русском:
+  <span onclick="tryNoun('женщина')">женщина</span>,
+  <span onclick="tryNoun('дом')">дом</span>,
+  <span onclick="tryNoun('ребёнок')">ребёнок</span>
+</div>
+
+<div class="noun-info" id="nounInfo"></div>
+<div id="results"></div>
+
+<div class="info-section" id="infoSection">
+  <div class="info-card">
+    <h3>📚 Немецкие существительные — как это устроено</h3>
+    <p>
+      В немецком языке <b>3 рода</b> существительных:
+      <span class="gender-dot dot-m"></span><b>мужской</b> (Maskulinum, артикль <code>der</code>),
+      <span class="gender-dot dot-f"></span><b>женский</b> (Femininum, артикль <code>die</code>),
+      <span class="gender-dot dot-n"></span><b>средний</b> (Neutrum, артикль <code>das</code>).
+      Род нужно <b>учить вместе со словом</b> — он часто не совпадает с русским.
+    </p>
+    <br>
+    <p>
+      <b>4 падежа</b>:<br>
+      1. <b>Nominativ</b> — именительный (кто? что?) — подлежащее: <code>Der Mann schläft</code>.<br>
+      2. <b>Akkusativ</b> — винительный (кого? что?) — прямое дополнение: <code>Ich sehe den Mann</code>.<br>
+      3. <b>Dativ</b> — дательный (кому? чему?) — косвенное дополнение: <code>Ich helfe dem Mann</code>.<br>
+      4. <b>Genitiv</b> — родительный (кого? чего?) — принадлежность: <code>das Auto des Mannes</code>.
+    </p>
+    <br>
+    <p>
+      <b>Окончания существительных</b>:<br>
+      • В <b>Genitiv Singular</b> мужской и средний род получают <code>-s</code> или <code>-es</code>: <code>des Mannes</code>, <code>des Kindes</code>. Женский род не меняется: <code>der Frau</code>.<br>
+      • В <b>Dativ Plural</b> добавляется <code>-n</code>, если множественное число ещё не оканчивается на <code>-n</code> или <code>-s</code>: <code>den Männern</code>, <code>den Kindern</code>, но <code>den Frauen</code> (уже на -n), <code>den Autos</code> (на -s).
+    </p>
+    <br>
+    <p>
+      <b>n-склонение (слабые существительные)</b>: небольшая группа мужских одушевлённых существительных получает окончание <code>-(e)n</code> во <b>всех</b> падежах кроме Nominativ Singular. Сюда входят <code>Student, Mensch, Junge, Herr, Nachbar, Kollege, Kunde, Präsident</code> и др.<br>
+      Пример: <code>der Student → den Studenten → dem Studenten → des Studenten</code>.
+    </p>
+  </div>
+</div>
+
+<script>
+const NOUNS = [
+  // ===== der (Maskulinum) =====
+  { key: "mann", article: "der", singular: "Mann", plural: "Männer", genSg: "Mannes", weakN: false, ru: "мужчина" },
+  { key: "tisch", article: "der", singular: "Tisch", plural: "Tische", genSg: "Tisches", weakN: false, ru: "стол" },
+  { key: "stuhl", article: "der", singular: "Stuhl", plural: "Stühle", genSg: "Stuhles", weakN: false, ru: "стул" },
+  { key: "hund", article: "der", singular: "Hund", plural: "Hunde", genSg: "Hundes", weakN: false, ru: "собака" },
+  { key: "computer", article: "der", singular: "Computer", plural: "Computer", genSg: "Computers", weakN: false, ru: "компьютер" },
+  { key: "freund", article: "der", singular: "Freund", plural: "Freunde", genSg: "Freundes", weakN: false, ru: "друг" },
+  { key: "bruder", article: "der", singular: "Bruder", plural: "Brüder", genSg: "Bruders", weakN: false, ru: "брат" },
+  { key: "vater", article: "der", singular: "Vater", plural: "Väter", genSg: "Vaters", weakN: false, ru: "отец" },
+  { key: "tag", article: "der", singular: "Tag", plural: "Tage", genSg: "Tages", weakN: false, ru: "день" },
+  { key: "monat", article: "der", singular: "Monat", plural: "Monate", genSg: "Monats", weakN: false, ru: "месяц" },
+  { key: "morgen", article: "der", singular: "Morgen", plural: "Morgen", genSg: "Morgens", weakN: false, ru: "утро" },
+  { key: "abend", article: "der", singular: "Abend", plural: "Abende", genSg: "Abends", weakN: false, ru: "вечер" },
+  { key: "fluss", article: "der", singular: "Fluss", plural: "Flüsse", genSg: "Flusses", weakN: false, ru: "река" },
+  { key: "berg", article: "der", singular: "Berg", plural: "Berge", genSg: "Berges", weakN: false, ru: "гора" },
+  { key: "baum", article: "der", singular: "Baum", plural: "Bäume", genSg: "Baumes", weakN: false, ru: "дерево" },
+  { key: "zug", article: "der", singular: "Zug", plural: "Züge", genSg: "Zuges", weakN: false, ru: "поезд" },
+  { key: "bus", article: "der", singular: "Bus", plural: "Busse", genSg: "Busses", weakN: false, ru: "автобус" },
+  { key: "brief", article: "der", singular: "Brief", plural: "Briefe", genSg: "Briefes", weakN: false, ru: "письмо" },
+  { key: "name", article: "der", singular: "Name", plural: "Namen", genSg: "Namens", weakN: false, ru: "имя" },
+  { key: "preis", article: "der", singular: "Preis", plural: "Preise", genSg: "Preises", weakN: false, ru: "цена" },
+  { key: "film", article: "der", singular: "Film", plural: "Filme", genSg: "Films", weakN: false, ru: "фильм" },
+  { key: "kaffee", article: "der", singular: "Kaffee", plural: "Kaffees", genSg: "Kaffees", weakN: false, ru: "кофе" },
+  { key: "tee", article: "der", singular: "Tee", plural: "Tees", genSg: "Tees", weakN: false, ru: "чай" },
+  { key: "stern", article: "der", singular: "Stern", plural: "Sterne", genSg: "Sternes", weakN: false, ru: "звезда" },
+  { key: "apfel", article: "der", singular: "Apfel", plural: "Äpfel", genSg: "Apfels", weakN: false, ru: "яблоко" },
+  { key: "schlüssel", article: "der", singular: "Schlüssel", plural: "Schlüssel", genSg: "Schlüssels", weakN: false, ru: "ключ" },
+  { key: "wagen", article: "der", singular: "Wagen", plural: "Wagen", genSg: "Wagens", weakN: false, ru: "машина/повозка" },
+
+  // ===== die (Femininum) =====
+  { key: "frau", article: "die", singular: "Frau", plural: "Frauen", genSg: null, weakN: false, ru: "женщина" },
+  { key: "katze", article: "die", singular: "Katze", plural: "Katzen", genSg: null, weakN: false, ru: "кошка" },
+  { key: "schule", article: "die", singular: "Schule", plural: "Schulen", genSg: null, weakN: false, ru: "школа" },
+  { key: "universität", article: "die", singular: "Universität", plural: "Universitäten", genSg: null, weakN: false, ru: "университет" },
+  { key: "arbeit", article: "die", singular: "Arbeit", plural: "Arbeiten", genSg: null, weakN: false, ru: "работа" },
+  { key: "firma", article: "die", singular: "Firma", plural: "Firmen", genSg: null, weakN: false, ru: "фирма" },
+  { key: "blume", article: "die", singular: "Blume", plural: "Blumen", genSg: null, weakN: false, ru: "цветок" },
+  { key: "sonne", article: "die", singular: "Sonne", plural: "Sonnen", genSg: null, weakN: false, ru: "солнце" },
+  { key: "musik", article: "die", singular: "Musik", plural: "Musiken", genSg: null, weakN: false, ru: "музыка" },
+  { key: "zeitung", article: "die", singular: "Zeitung", plural: "Zeitungen", genSg: null, weakN: false, ru: "газета" },
+  { key: "frage", article: "die", singular: "Frage", plural: "Fragen", genSg: null, weakN: false, ru: "вопрос" },
+  { key: "antwort", article: "die", singular: "Antwort", plural: "Antworten", genSg: null, weakN: false, ru: "ответ" },
+  { key: "idee", article: "die", singular: "Idee", plural: "Ideen", genSg: null, weakN: false, ru: "идея" },
+  { key: "liebe", article: "die", singular: "Liebe", plural: "Lieben", genSg: null, weakN: false, ru: "любовь" },
+  { key: "welt", article: "die", singular: "Welt", plural: "Welten", genSg: null, weakN: false, ru: "мир" },
+  { key: "zeit", article: "die", singular: "Zeit", plural: "Zeiten", genSg: null, weakN: false, ru: "время" },
+  { key: "nacht", article: "die", singular: "Nacht", plural: "Nächte", genSg: null, weakN: false, ru: "ночь" },
+  { key: "woche", article: "die", singular: "Woche", plural: "Wochen", genSg: null, weakN: false, ru: "неделя" },
+  { key: "stunde", article: "die", singular: "Stunde", plural: "Stunden", genSg: null, weakN: false, ru: "час" },
+  { key: "minute", article: "die", singular: "Minute", plural: "Minuten", genSg: null, weakN: false, ru: "минута" },
+  { key: "straße", article: "die", singular: "Straße", plural: "Straßen", genSg: null, weakN: false, ru: "улица" },
+  { key: "stadt", article: "die", singular: "Stadt", plural: "Städte", genSg: null, weakN: false, ru: "город" },
+  { key: "tür", article: "die", singular: "Tür", plural: "Türen", genSg: null, weakN: false, ru: "дверь" },
+  { key: "wohnung", article: "die", singular: "Wohnung", plural: "Wohnungen", genSg: null, weakN: false, ru: "квартира" },
+  { key: "familie", article: "die", singular: "Familie", plural: "Familien", genSg: null, weakN: false, ru: "семья" },
+  { key: "mutter", article: "die", singular: "Mutter", plural: "Mütter", genSg: null, weakN: false, ru: "мать" },
+  { key: "schwester", article: "die", singular: "Schwester", plural: "Schwestern", genSg: null, weakN: false, ru: "сестра" },
+  { key: "sprache", article: "die", singular: "Sprache", plural: "Sprachen", genSg: null, weakN: false, ru: "язык" },
+  { key: "geschichte", article: "die", singular: "Geschichte", plural: "Geschichten", genSg: null, weakN: false, ru: "история" },
+  { key: "hand", article: "die", singular: "Hand", plural: "Hände", genSg: null, weakN: false, ru: "рука" },
+  { key: "tochter", article: "die", singular: "Tochter", plural: "Töchter", genSg: null, weakN: false, ru: "дочь" },
+
+  // ===== das (Neutrum) =====
+  { key: "kind", article: "das", singular: "Kind", plural: "Kinder", genSg: "Kindes", weakN: false, ru: "ребёнок" },
+  { key: "haus", article: "das", singular: "Haus", plural: "Häuser", genSg: "Hauses", weakN: false, ru: "дом" },
+  { key: "auto", article: "das", singular: "Auto", plural: "Autos", genSg: "Autos", weakN: false, ru: "машина" },
+  { key: "buch", article: "das", singular: "Buch", plural: "Bücher", genSg: "Buches", weakN: false, ru: "книга" },
+  { key: "wasser", article: "das", singular: "Wasser", plural: "Wasser", genSg: "Wassers", weakN: false, ru: "вода" },
+  { key: "brot", article: "das", singular: "Brot", plural: "Brote", genSg: "Brotes", weakN: false, ru: "хлеб" },
+  { key: "jahr", article: "das", singular: "Jahr", plural: "Jahre", genSg: "Jahres", weakN: false, ru: "год" },
+  { key: "land", article: "das", singular: "Land", plural: "Länder", genSg: "Landes", weakN: false, ru: "страна" },
+  { key: "leben", article: "das", singular: "Leben", plural: "Leben", genSg: "Lebens", weakN: false, ru: "жизнь" },
+  { key: "zimmer", article: "das", singular: "Zimmer", plural: "Zimmer", genSg: "Zimmers", weakN: false, ru: "комната" },
+  { key: "fenster", article: "das", singular: "Fenster", plural: "Fenster", genSg: "Fensters", weakN: false, ru: "окно" },
+  { key: "telefon", article: "das", singular: "Telefon", plural: "Telefone", genSg: "Telefons", weakN: false, ru: "телефон" },
+  { key: "büro", article: "das", singular: "Büro", plural: "Büros", genSg: "Büros", weakN: false, ru: "офис" },
+  { key: "geld", article: "das", singular: "Geld", plural: "Gelder", genSg: "Geldes", weakN: false, ru: "деньги" },
+  { key: "problem", article: "das", singular: "Problem", plural: "Probleme", genSg: "Problems", weakN: false, ru: "проблема" },
+  { key: "wort", article: "das", singular: "Wort", plural: "Wörter", genSg: "Wortes", weakN: false, ru: "слово" },
+  { key: "glück", article: "das", singular: "Glück", plural: "Glücke", genSg: "Glückes", weakN: false, ru: "счастье" },
+  { key: "mädchen", article: "das", singular: "Mädchen", plural: "Mädchen", genSg: "Mädchens", weakN: false, ru: "девочка" },
+  { key: "meer", article: "das", singular: "Meer", plural: "Meere", genSg: "Meeres", weakN: false, ru: "море" },
+  { key: "bier", article: "das", singular: "Bier", plural: "Biere", genSg: "Bieres", weakN: false, ru: "пиво" },
+  { key: "ei", article: "das", singular: "Ei", plural: "Eier", genSg: "Eies", weakN: false, ru: "яйцо" },
+  { key: "herz", article: "das", singular: "Herz", plural: "Herzen", genSg: "Herzens", weakN: false, ru: "сердце" },
+  { key: "bild", article: "das", singular: "Bild", plural: "Bilder", genSg: "Bildes", weakN: false, ru: "картина" },
+  { key: "spiel", article: "das", singular: "Spiel", plural: "Spiele", genSg: "Spieles", weakN: false, ru: "игра" },
+  { key: "wetter", article: "das", singular: "Wetter", plural: "Wetter", genSg: "Wetters", weakN: false, ru: "погода" },
+
+  // ===== n-Deklination (weak masculines) =====
+  { key: "mensch", article: "der", singular: "Mensch", plural: "Menschen", genSg: "Menschen", weakN: true, ru: "человек" },
+  { key: "student", article: "der", singular: "Student", plural: "Studenten", genSg: "Studenten", weakN: true, ru: "студент" },
+  { key: "junge", article: "der", singular: "Junge", plural: "Jungen", genSg: "Jungen", weakN: true, ru: "мальчик" },
+  { key: "herr", article: "der", singular: "Herr", plural: "Herren", genSg: "Herrn", weakN: true, ru: "господин" },
+  { key: "nachbar", article: "der", singular: "Nachbar", plural: "Nachbarn", genSg: "Nachbarn", weakN: true, ru: "сосед" },
+  { key: "kollege", article: "der", singular: "Kollege", plural: "Kollegen", genSg: "Kollegen", weakN: true, ru: "коллега" },
+  { key: "kunde", article: "der", singular: "Kunde", plural: "Kunden", genSg: "Kunden", weakN: true, ru: "клиент" },
+  { key: "präsident", article: "der", singular: "Präsident", plural: "Präsidenten", genSg: "Präsidenten", weakN: true, ru: "президент" },
+  { key: "polizist", article: "der", singular: "Polizist", plural: "Polizisten", genSg: "Polizisten", weakN: true, ru: "полицейский" },
+  { key: "journalist", article: "der", singular: "Journalist", plural: "Journalisten", genSg: "Journalisten", weakN: true, ru: "журналист" },
+];
+
+const genderLabels = {
+  der: { de: "Maskulinum", ru: "мужской род", badgeClass: "badge-m" },
+  die: { de: "Femininum", ru: "женский род", badgeClass: "badge-f" },
+  das: { de: "Neutrum", ru: "средний род", badgeClass: "badge-n" }
+};
+
+// Akkusativ singular article: der → den, die → die, das → das
+function akkArticleSg(art) {
+  return art === "der" ? "den" : art;
+}
+// Dativ singular article: der → dem, die → der, das → dem
+function datArticleSg(art) {
+  return art === "die" ? "der" : "dem";
+}
+// Genitiv singular article: der → des, die → der, das → des
+function genArticleSg(art) {
+  return art === "die" ? "der" : "des";
+}
+
+// Dativ singular noun form (add -e to some monosyllabic masc/neut in formal style; we show optional)
+function datSingularNoun(n) {
+  if (n.weakN) {
+    // weak: Herrn in sg, others -en in all cases except Nom sg
+    if (n.key === "herr") return "Herrn";
+    // Junge → Jungen, Kunde → Kunden, Kollege → Kollegen, Mensch → Menschen, Student → Studenten etc.
+    if (/[aeiou]$/.test(n.singular)) return n.singular + "n";
+    return n.singular + "en";
+  }
+  return n.singular;
+}
+
+// Akkusativ singular noun form
+function akkSingularNoun(n) {
+  if (n.weakN) {
+    if (n.key === "herr") return "Herrn";
+    if (/[aeiou]$/.test(n.singular)) return n.singular + "n";
+    return n.singular + "en";
+  }
+  return n.singular;
+}
+
+// Genitiv singular noun form
+function genSingularNoun(n) {
+  if (n.article === "die") return n.singular; // feminine: no change
+  if (n.weakN) return n.genSg || n.singular; // weak: -(e)n
+  return n.genSg || n.singular;
+}
+
+// Dativ plural: add -n if plural doesn't already end in -n or -s
+function datPlural(n) {
+  const pl = n.plural;
+  if (/[ns]$/i.test(pl)) return pl;
+  return pl + "n";
+}
+
+function tryNoun(w) {
+  document.getElementById('nounInput').value = w;
+  decline();
+}
+
+function decline() {
+  const raw = document.getElementById('nounInput').value.trim();
+  if (!raw) return;
+  const q = raw.toLowerCase();
+
+  const found = NOUNS.find(n =>
+    n.key === q ||
+    n.singular.toLowerCase() === q ||
+    n.plural.toLowerCase() === q ||
+    n.ru.toLowerCase() === q ||
+    n.ru.toLowerCase().includes(q)
+  );
+
+  const resultsDiv = document.getElementById('results');
+  const infoDiv = document.getElementById('nounInfo');
+  const infoSection = document.getElementById('infoSection');
+
+  if (!found) {
+    infoDiv.style.display = 'none';
+    infoSection.style.display = 'none';
+    resultsDiv.innerHTML = '<div class="no-result">Существительное не найдено. Попробуйте другое слово.</div>';
+    return;
+  }
+
+  infoSection.style.display = 'none';
+
+  const g = genderLabels[found.article];
+
+  let badges = `
+    <span class="badge ${g.badgeClass}">${found.article} — ${g.de} (${g.ru})</span>
+    <span class="badge badge-ru">RU ${found.ru}</span>
+  `;
+  if (found.weakN) {
+    badges += `<span class="badge badge-weak">⚠️ n-склонение (слабое)</span>`;
+  }
+
+  infoDiv.style.display = 'block';
+  infoDiv.innerHTML = badges;
+
+  const art = found.article;
+  const nomSgArt = art;
+  const akkSgArt = akkArticleSg(art);
+  const datSgArt = datArticleSg(art);
+  const genSgArt = genArticleSg(art);
+
+  const nomSgN = found.singular;
+  const akkSgN = akkSingularNoun(found);
+  const datSgN = datSingularNoun(found);
+  const genSgN = genSingularNoun(found);
+
+  const nomPl = found.plural;
+  const akkPl = found.plural;
+  const datPl = datPlural(found);
+  const genPl = found.plural;
+
+  const plArt = "die";
+  const akkPlArt = "die";
+  const datPlArt = "den";
+  const genPlArt = "der";
+
+  const datNote = /[ns]$/i.test(found.plural)
+    ? `Dativ Plural без -n: «${found.plural}» уже оканчивается на «${found.plural.slice(-1)}».`
+    : `Dativ Plural: добавлено «-n» → «${datPl}».`;
+
+  const weakNote = found.weakN
+    ? ` n-склонение: во всех падежах кроме Nominativ Singular — окончание «-(e)n».`
+    : "";
+
+  const genNote = art === "die"
+    ? "Genitiv Singular у женского рода не меняется."
+    : `Genitiv Singular: «${art === 'die' ? 'der' : 'des'} ${genSgN}» (окончание «-s» или «-es»).`;
+
+  resultsDiv.innerHTML = `
+    <div class="decl-card">
+      <div class="decl-header">
+        <span class="ru-translation">${found.ru}</span>
+        <div class="de-name">${art} ${found.singular}</div>
+      </div>
+      <div class="decl-body">
+        <table class="decl-table">
+          <thead>
+            <tr>
+              <th>Падеж</th>
+              <th>Singular</th>
+              <th>Plural</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>Nominativ<br><span style="font-weight:400;font-size:0.85em;">кто? что?</span></th>
+              <td><span class="article">${nomSgArt}</span> ${nomSgN}</td>
+              <td><span class="article">${plArt}</span> ${nomPl}</td>
+            </tr>
+            <tr>
+              <th>Akkusativ<br><span style="font-weight:400;font-size:0.85em;">кого? что?</span></th>
+              <td><span class="article">${akkSgArt}</span> ${akkSgN}</td>
+              <td><span class="article">${akkPlArt}</span> ${akkPl}</td>
+            </tr>
+            <tr>
+              <th>Dativ<br><span style="font-weight:400;font-size:0.85em;">кому? чему?</span></th>
+              <td><span class="article">${datSgArt}</span> ${datSgN}</td>
+              <td><span class="article">${datPlArt}</span> ${datPl}</td>
+            </tr>
+            <tr>
+              <th>Genitiv<br><span style="font-weight:400;font-size:0.85em;">кого? чего?</span></th>
+              <td><span class="article">${genSgArt}</span> ${genSgN}</td>
+              <td><span class="article">${genPlArt}</span> ${genPl}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="case-note">${genNote} ${datNote}${weakNote}</div>
+      </div>
+    </div>
+  `;
+}
+</script>
+
+</body>
+</html>

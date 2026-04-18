@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇩🇪</text></svg>">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Deutsch">
+<meta name="description" content="Немецкая грамматика с объяснениями на русском: спряжение глаголов, падежи, артикли, предлоги, порядок слов.">
+<title>🇩🇪 Немецкий язык — грамматика</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f7f3e8;
+    color: #2c2c2c;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .container {
+    text-align: center;
+    padding: 40px 20px;
+    max-width: 780px;
+  }
+  h1 { font-size: 1.8em; font-weight: 600; margin-bottom: 8px; color: #333; }
+  p { color: #888; margin-bottom: 36px; font-size: 0.95em; }
+  .cards { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+  .card {
+    display: block;
+    text-decoration: none;
+    background: white;
+    border-radius: 16px;
+    padding: 36px 40px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+    min-width: 220px;
+    flex: 1;
+    border-top: 4px solid #b8860b;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+  }
+  .card .icon { font-size: 3em; display: block; margin-bottom: 14px; }
+  .card .label { font-size: 1.1em; font-weight: 600; color: #333; display: block; }
+  .card .sub { font-size: 0.82em; color: #999; margin-top: 6px; display: block; }
+  .card .count { font-size: 0.75em; color: #b8860b; margin-top: 8px; display: block; font-weight: 600; }
+
+  .info {
+    margin-top: 36px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    text-align: left;
+    font-size: 0.9em;
+    color: #666;
+    line-height: 1.6;
+  }
+  .info h3 { color: #8b6914; margin-bottom: 8px; font-size: 1em; }
+
+  @media (max-width: 500px) {
+    .cards { flex-direction: column; }
+    .card { padding: 28px 24px; }
+    h1 { font-size: 1.4em; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🇩🇪 Немецкий язык</h1>
+  <p>Инструменты немецкой грамматики с объяснениями на русском</p>
+
+  <div class="cards">
+    <a href="german-verbs.html" class="card">
+      <span class="icon">📝</span>
+      <span class="label">Спряжение глаголов</span>
+      <span class="sub">Präsens, Präteritum, Perfekt, Futur, Konjunktiv, Imperativ</span>
+      <span class="count">~90 глаголов</span>
+    </a>
+    <a href="german-nouns.html" class="card">
+      <span class="icon">📊</span>
+      <span class="label">Существительные</span>
+      <span class="sub">Род (der/die/das), множественное число, склонение по падежам</span>
+      <span class="count">~100 существительных</span>
+    </a>
+    <a href="german-articles.html" class="card">
+      <span class="icon">🔤</span>
+      <span class="label">Артикли и падежи</span>
+      <span class="sub">der/die/das, ein/kein, dieser, mein — во всех 4 падежах</span>
+      <span class="count">4 падежа • все таблицы</span>
+    </a>
+    <a href="german-prepositions.html" class="card">
+      <span class="icon">📍</span>
+      <span class="label">Предлоги</span>
+      <span class="sub">Akkusativ, Dativ, Wechselpräpositionen, Genitiv</span>
+      <span class="count">~50 предлогов • 4 группы</span>
+    </a>
+    <a href="german-word-order.html" class="card">
+      <span class="icon">🔀</span>
+      <span class="label">Порядок слов</span>
+      <span class="sub">Правило V2, рамочная конструкция, TeKaMoLo, Nebensatz</span>
+      <span class="count">6 разделов • интерактивно</span>
+    </a>
+    <a href="german-quiz.html" class="card">
+      <span class="icon">🧠</span>
+      <span class="label">Тренажёр</span>
+      <span class="sub">Артикли, глаголы, существительные, предлоги, порядок слов</span>
+      <span class="count">5 тем • ~500 вопросов</span>
+    </a>
+  </div>
+
+  <div class="info">
+    <h3>💡 Чем немецкий интересен?</h3>
+    <p>
+      <b>Четыре падежа</b> (Nominativ, Akkusativ, Dativ, Genitiv) — как в русском, только их меньше и меняются в основном артикли, а не окончания. «Собака» = der Hund → den Hund → dem Hund → des Hundes.<br>
+      <b>Три рода</b>: der (мужской), die (женский), das (средний). Род часто не совпадает с русским: das Mädchen (девочка — средний!), die Sonne (солнце — женский).<br>
+      <b>Порядок слов</b> строгий: глагол ВСЕГДА на втором месте в главном предложении (V2), а в придаточном — в самом конце: «Ich weiß, dass er kommt» — «Я знаю, что он придёт».<br>
+      <b>Рамочная конструкция</b>: при сложных временах и модальных глаголах смысловая часть уходит в конец: «Ich habe das Buch <u>gelesen</u>», «Ich muss arbeiten <u>gehen</u>».<br>
+      <b>Составные слова</b> — немецкая фишка: Donaudampfschifffahrtsgesellschaftskapitän = капитан пароходной компании на Дунае.
+    </p>
+  </div>
+</div>
+
+</body>
+</html>

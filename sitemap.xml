@@ -156,6 +156,43 @@
     <priority>0.6</priority>
   </url>
 
+  <!-- German -->
+  <url>
+    <loc>https://braxno-dotcom.github.io/verb-conjugation/german.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://braxno-dotcom.github.io/verb-conjugation/german-verbs.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://braxno-dotcom.github.io/verb-conjugation/german-nouns.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://braxno-dotcom.github.io/verb-conjugation/german-articles.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://braxno-dotcom.github.io/verb-conjugation/german-prepositions.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://braxno-dotcom.github.io/verb-conjugation/german-word-order.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://braxno-dotcom.github.io/verb-conjugation/german-quiz.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
   <!-- Russian for French speakers -->
   <url>
     <loc>https://braxno-dotcom.github.io/verb-conjugation/russian-fr.html</loc>

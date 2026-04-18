@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇩🇪</text></svg>">
+<meta name="apple-mobile-web-app-title" content="DE prep">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇩🇪 Немецкие предлоги по падежам</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #faf5e8;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #1a1a1a, #7a1a1a);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  .search-area {
+    max-width: 600px;
+    margin: 30px auto 10px;
+    padding: 0 20px;
+  }
+  .search-area input {
+    width: 100%;
+    padding: 14px 18px;
+    font-size: 1.15em;
+    border: 2px solid #d9c89a;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-area input:focus { border-color: #b8860b; }
+  .search-hint {
+    max-width: 600px;
+    margin: 8px auto 0;
+    padding: 0 20px;
+    font-size: 0.85em;
+    color: #888;
+  }
+
+  .content {
+    max-width: 900px;
+    margin: 20px auto 40px;
+    padding: 0 20px;
+  }
+
+  .category {
+    margin-bottom: 20px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .category-header {
+    padding: 14px 18px;
+    font-weight: 600;
+    font-size: 1.1em;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    transition: filter 0.2s;
+  }
+  .category-header:hover { filter: brightness(0.95); }
+  .category-header .chevron {
+    font-size: 0.8em;
+    transition: transform 0.3s;
+  }
+  .category-header.collapsed .chevron { transform: rotate(-90deg); }
+  .category-body {
+    background: white;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+  .category-body.collapsed {
+    max-height: 0 !important;
+  }
+
+  /* Category color tints */
+  .cat-akk .category-header { background: #f5d5d0; color: #c0392b; }
+  .cat-dat .category-header { background: #d4edda; color: #2e7d32; }
+  .cat-wechsel .category-header { background: #f0e4c1; color: #b8860b; }
+  .cat-gen .category-header { background: #e2d9f3; color: #7b2fa0; }
+  .cat-hints .category-header { background: #f0e4c1; color: #7a1a1a; }
+  .cat-examples .category-header { background: #faf5e8; color: #1a1a1a; border: 1px solid #e0d4a6; }
+
+  .prep-card {
+    padding: 14px 18px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.15s;
+  }
+  .prep-card:last-child { border-bottom: none; }
+  .prep-card:hover { background: #fdfbf4; }
+  .prep-word {
+    font-weight: 700;
+    font-size: 1.15em;
+    color: #b8860b;
+    display: inline;
+  }
+  .prep-translation {
+    font-size: 0.95em;
+    color: #666;
+    margin-left: 4px;
+    display: inline;
+  }
+  .prep-examples {
+    margin-top: 6px;
+    padding-left: 2px;
+  }
+  .prep-example {
+    font-size: 0.92em;
+    line-height: 1.6;
+    color: #444;
+  }
+  .prep-example .de-text { font-weight: 500; }
+  .prep-example .ru-text { color: #888; font-style: italic; }
+
+  /* Case-specific preposition colors */
+  .cat-akk .prep-word { color: #c0392b; }
+  .cat-dat .prep-word { color: #2e7d32; }
+  .cat-wechsel .prep-word { color: #b8860b; }
+  .cat-gen .prep-word { color: #7b2fa0; }
+
+  /* Wechsel comparison sub-blocks */
+  .wechsel-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin-top: 6px;
+    border: 1px solid #f0e4c1;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .wechsel-cell {
+    padding: 8px 12px;
+    font-size: 0.9em;
+    line-height: 1.5;
+  }
+  .wechsel-cell.wohin {
+    background: #fbeae7;
+    border-right: 1px solid #f0e4c1;
+  }
+  .wechsel-cell.wo {
+    background: #e7f3e9;
+  }
+  .wechsel-cell .case-label {
+    display: block;
+    font-weight: 700;
+    font-size: 0.78em;
+    letter-spacing: 0.5px;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+  }
+  .wechsel-cell.wohin .case-label { color: #c0392b; }
+  .wechsel-cell.wo .case-label { color: #2e7d32; }
+
+  /* Hints / mnemonic block */
+  .hint-block {
+    padding: 16px 18px;
+    font-size: 0.95em;
+    line-height: 1.7;
+    color: #444;
+  }
+  .hint-block h4 {
+    font-size: 1em;
+    margin-bottom: 6px;
+    color: #7a1a1a;
+  }
+  .hint-block .mnemo {
+    font-weight: 700;
+    color: #b8860b;
+    letter-spacing: 1px;
+  }
+  .hint-block p { margin-bottom: 12px; }
+  .hint-block p:last-child { margin-bottom: 0; }
+
+  /* Contractions table */
+  .contractions-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    font-size: 0.92em;
+  }
+  .contractions-table td {
+    padding: 6px 10px;
+    border-bottom: 1px solid #f0e4c1;
+  }
+  .contractions-table tr:last-child td { border-bottom: none; }
+  .contractions-table td.contraction {
+    font-weight: 700;
+    color: #b8860b;
+    width: 35%;
+  }
+
+  /* Full-sentence examples */
+  .ex-sentence {
+    padding: 12px 18px;
+    border-bottom: 1px solid #f0e4c1;
+    font-size: 0.95em;
+    line-height: 1.6;
+  }
+  .ex-sentence:last-child { border-bottom: none; }
+  .ex-sentence .de-text { font-weight: 600; color: #1a1a1a; }
+  .ex-sentence .ru-text { color: #888; font-style: italic; display: block; margin-top: 2px; }
+  .ex-sentence .tag {
+    display: inline-block;
+    font-size: 0.75em;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 5px;
+    margin-right: 6px;
+    letter-spacing: 0.5px;
+  }
+  .tag-akk { background: #f5d5d0; color: #c0392b; }
+  .tag-dat { background: #d4edda; color: #2e7d32; }
+  .tag-gen { background: #e2d9f3; color: #7b2fa0; }
+  .tag-wechsel { background: #f0e4c1; color: #b8860b; }
+
+  .no-results-msg {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+    font-size: 1.1em;
+    display: none;
+  }
+
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switch { padding: 6px 12px; font-size: 0.85em; }
+    .search-area { padding: 0 10px; }
+    .search-area input { font-size: 1em; padding: 12px 14px; }
+    .content { padding: 0 10px; }
+    .category-header { padding: 12px 14px; font-size: 1em; }
+    .prep-card { padding: 12px 14px; }
+    .wechsel-pair { grid-template-columns: 1fr; }
+    .wechsel-cell.wohin { border-right: none; border-bottom: 1px solid #f0e4c1; }
+    .hint-block { padding: 14px; font-size: 0.9em; }
+    .contractions-table { font-size: 0.85em; }
+    .ex-sentence { padding: 10px 14px; font-size: 0.9em; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="norwegian-prepositions.html" class="lang-switch">🇳🇴 Норвежский</a>
+    <a href="german.html" class="lang-switch">📖 Портал</a>
+  </div>
+  <h1>🇩🇪 Немецкие предлоги по падежам</h1>
+  <p>Akkusativ / Dativ / Wechsel / Genitiv — с примерами и мнемоникой</p>
+</header>
+
+<div class="search-area">
+  <input type="text" id="searchInput" placeholder="Поиск по предлогу или переводу..." oninput="filterPrepositions()">
+</div>
+<div class="search-hint">Введите немецкий предлог или русское слово для фильтрации</div>
+
+<div class="content" id="content">
+
+  <!-- 🔴 Akkusativ -->
+  <div class="category cat-akk" data-category="akk">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>🔴 Akkusativ-Präpositionen (всегда Akk.)</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div class="prep-card" data-search="durch через сквозь">
+        <span class="prep-word">durch</span>
+        <span class="prep-translation">— через, сквозь</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">durch den Park gehen</span> — <span class="ru-text">идти через парк</span></div>
+          <div class="prep-example"><span class="de-text">durch die Stadt</span> — <span class="ru-text">через город</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="für для">
+        <span class="prep-word">für</span>
+        <span class="prep-translation">— для</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">ein Geschenk für dich</span> — <span class="ru-text">подарок для тебя</span></div>
+          <div class="prep-example"><span class="de-text">für meinen Freund</span> — <span class="ru-text">для моего друга</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="gegen против около время">
+        <span class="prep-word">gegen</span>
+        <span class="prep-translation">— против, около (времени)</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">gegen die Wand</span> — <span class="ru-text">об стену / против стены</span></div>
+          <div class="prep-example"><span class="de-text">gegen 8 Uhr</span> — <span class="ru-text">около 8 часов</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="ohne без">
+        <span class="prep-word">ohne</span>
+        <span class="prep-translation">— без</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">ohne den Mann</span> — <span class="ru-text">без мужчины</span></div>
+          <div class="prep-example"><span class="de-text">ohne Zucker</span> — <span class="ru-text">без сахара</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="um вокруг в время">
+        <span class="prep-word">um</span>
+        <span class="prep-translation">— вокруг, в (времени)</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">um den Tisch</span> — <span class="ru-text">вокруг стола</span></div>
+          <div class="prep-example"><span class="de-text">um 9 Uhr</span> — <span class="ru-text">в 9 часов</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="bis до">
+        <span class="prep-word">bis</span>
+        <span class="prep-translation">— до (часто без артикля; с артиклем обычно bis zu + Dat)</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">bis nächsten Monat</span> — <span class="ru-text">до следующего месяца</span></div>
+          <div class="prep-example"><span class="de-text">bis Berlin</span> — <span class="ru-text">до Берлина</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="entlang вдоль">
+        <span class="prep-word">entlang</span>
+        <span class="prep-translation">— вдоль (постпозиция!)</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">den Fluss entlang</span> — <span class="ru-text">вдоль реки</span></div>
+          <div class="prep-example"><span class="de-text">die Straße entlang</span> — <span class="ru-text">вдоль улицы</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🟢 Dativ -->
+  <div class="category cat-dat" data-category="dat">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>🟢 Dativ-Präpositionen (всегда Dat.)</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div class="prep-card" data-search="mit с">
+        <span class="prep-word">mit</span>
+        <span class="prep-translation">— с</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">mit dem Freund</span> — <span class="ru-text">с другом</span></div>
+          <div class="prep-example"><span class="de-text">mit dem Auto</span> — <span class="ru-text">на машине</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="nach после в страны без артикля">
+        <span class="prep-word">nach</span>
+        <span class="prep-translation">— после, в (страны без артикля)</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">nach der Arbeit</span> — <span class="ru-text">после работы</span></div>
+          <div class="prep-example"><span class="de-text">nach Deutschland</span> — <span class="ru-text">в Германию</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="aus из">
+        <span class="prep-word">aus</span>
+        <span class="prep-translation">— из</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">aus dem Haus</span> — <span class="ru-text">из дома</span></div>
+          <div class="prep-example"><span class="de-text">aus Russland</span> — <span class="ru-text">из России</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="zu к">
+        <span class="prep-word">zu</span>
+        <span class="prep-translation">— к</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">zu dem (= zum) Arzt</span> — <span class="ru-text">к врачу</span></div>
+          <div class="prep-example"><span class="de-text">zu der (= zur) Schule</span> — <span class="ru-text">к школе</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="von от с">
+        <span class="prep-word">von</span>
+        <span class="prep-translation">— от, с</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">von dem (= vom) Tisch</span> — <span class="ru-text">со стола</span></div>
+          <div class="prep-example"><span class="de-text">ein Brief von Anna</span> — <span class="ru-text">письмо от Анны</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="bei у при">
+        <span class="prep-word">bei</span>
+        <span class="prep-translation">— у, при</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">bei der Arbeit</span> — <span class="ru-text">на работе</span></div>
+          <div class="prep-example"><span class="de-text">bei dem (= beim) Freund</span> — <span class="ru-text">у друга</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="seit с времени">
+        <span class="prep-word">seit</span>
+        <span class="prep-translation">— с (времени, длительность до настоящего)</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">seit einem Jahr</span> — <span class="ru-text">(уже) год</span></div>
+          <div class="prep-example"><span class="de-text">seit Montag</span> — <span class="ru-text">с понедельника</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="gegenüber напротив">
+        <span class="prep-word">gegenüber</span>
+        <span class="prep-translation">— напротив (обычно постпозиция)</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">dem Bahnhof gegenüber</span> — <span class="ru-text">напротив вокзала</span></div>
+          <div class="prep-example"><span class="de-text">mir gegenüber</span> — <span class="ru-text">напротив меня</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="außer кроме">
+        <span class="prep-word">außer</span>
+        <span class="prep-translation">— кроме</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">außer mir</span> — <span class="ru-text">кроме меня</span></div>
+          <div class="prep-example"><span class="de-text">außer dem Lehrer</span> — <span class="ru-text">кроме учителя</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="ab начиная с">
+        <span class="prep-word">ab</span>
+        <span class="prep-translation">— начиная с</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">ab dem 1. Januar</span> — <span class="ru-text">с 1 января</span></div>
+          <div class="prep-example"><span class="de-text">ab nächster Woche</span> — <span class="ru-text">со следующей недели</span></div>
+        </div>
+      </div>
+
+      <!-- Contractions -->
+      <div class="hint-block" style="border-top: 2px solid #d4edda;">
+        <h4>🔗 Слитные формы (Verschmelzungen)</h4>
+        <table class="contractions-table">
+          <tr><td class="contraction">zum</td><td>= zu + dem</td></tr>
+          <tr><td class="contraction">zur</td><td>= zu + der</td></tr>
+          <tr><td class="contraction">vom</td><td>= von + dem</td></tr>
+          <tr><td class="contraction">beim</td><td>= bei + dem</td></tr>
+          <tr><td class="contraction">am</td><td>= an + dem</td></tr>
+          <tr><td class="contraction">im</td><td>= in + dem</td></tr>
+          <tr><td class="contraction">ans</td><td>= an + das</td></tr>
+          <tr><td class="contraction">ins</td><td>= in + das</td></tr>
+          <tr><td class="contraction">aufs</td><td>= auf + das</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🟡 Wechselpräpositionen -->
+  <div class="category cat-wechsel" data-category="wechsel">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>🟡 Wechselpräpositionen (Akk. Wohin? / Dat. Wo?)</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div class="prep-card" data-search="in в">
+        <span class="prep-word">in</span>
+        <span class="prep-translation">— в</span>
+        <div class="wechsel-pair">
+          <div class="wechsel-cell wohin">
+            <span class="case-label">Wohin? → Akk.</span>
+            <span class="de-text">in das (= ins) Haus gehen</span><br>
+            <span class="ru-text">идти в дом</span>
+          </div>
+          <div class="wechsel-cell wo">
+            <span class="case-label">Wo? → Dat.</span>
+            <span class="de-text">in dem (= im) Haus sein</span><br>
+            <span class="ru-text">быть в доме</span>
+          </div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="an у к на вертикальной поверхности">
+        <span class="prep-word">an</span>
+        <span class="prep-translation">— у, к, на (вертикальной поверхности)</span>
+        <div class="wechsel-pair">
+          <div class="wechsel-cell wohin">
+            <span class="case-label">Wohin? → Akk.</span>
+            <span class="de-text">an die Wand hängen</span><br>
+            <span class="ru-text">вешать на стену</span>
+          </div>
+          <div class="wechsel-cell wo">
+            <span class="case-label">Wo? → Dat.</span>
+            <span class="de-text">an der Wand hängen</span><br>
+            <span class="ru-text">висеть на стене</span>
+          </div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="auf на горизонтальной поверхности">
+        <span class="prep-word">auf</span>
+        <span class="prep-translation">— на (горизонтальной поверхности)</span>
+        <div class="wechsel-pair">
+          <div class="wechsel-cell wohin">
+            <span class="case-label">Wohin? → Akk.</span>
+            <span class="de-text">auf den Tisch legen</span><br>
+            <span class="ru-text">положить на стол</span>
+          </div>
+          <div class="wechsel-cell wo">
+            <span class="case-label">Wo? → Dat.</span>
+            <span class="de-text">auf dem Tisch liegen</span><br>
+            <span class="ru-text">лежать на столе</span>
+          </div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="unter под">
+        <span class="prep-word">unter</span>
+        <span class="prep-translation">— под</span>
+        <div class="wechsel-pair">
+          <div class="wechsel-cell wohin">
+            <span class="case-label">Wohin? → Akk.</span>
+            <span class="de-text">unter den Tisch</span><br>
+            <span class="ru-text">под стол</span>
+          </div>
+          <div class="wechsel-cell wo">
+            <span class="case-label">Wo? → Dat.</span>
+            <span class="de-text">unter dem Tisch</span><br>
+            <span class="ru-text">под столом</span>
+          </div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="über над о теме">
+        <span class="prep-word">über</span>
+        <span class="prep-translation">— над; о (теме)</span>
+        <div class="wechsel-pair">
+          <div class="wechsel-cell wohin">
+            <span class="case-label">Wohin? → Akk.</span>
+            <span class="de-text">über den Tisch</span><br>
+            <span class="ru-text">через стол (движение над)</span>
+          </div>
+          <div class="wechsel-cell wo">
+            <span class="case-label">Wo? → Dat.</span>
+            <span class="de-text">über dem Tisch</span><br>
+            <span class="ru-text">над столом</span>
+          </div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="vor перед до времени">
+        <span class="prep-word">vor</span>
+        <span class="prep-translation">— перед; до (времени — всегда Dat.)</span>
+        <div class="wechsel-pair">
+          <div class="wechsel-cell wohin">
+            <span class="case-label">Wohin? → Akk.</span>
+            <span class="de-text">vor das Haus</span><br>
+            <span class="ru-text">к дому (спереди)</span>
+          </div>
+          <div class="wechsel-cell wo">
+            <span class="case-label">Wo? → Dat.</span>
+            <span class="de-text">vor dem Haus</span><br>
+            <span class="ru-text">перед домом</span>
+          </div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="hinter за позади">
+        <span class="prep-word">hinter</span>
+        <span class="prep-translation">— за, позади</span>
+        <div class="wechsel-pair">
+          <div class="wechsel-cell wohin">
+            <span class="case-label">Wohin? → Akk.</span>
+            <span class="de-text">hinter das Haus</span><br>
+            <span class="ru-text">за дом</span>
+          </div>
+          <div class="wechsel-cell wo">
+            <span class="case-label">Wo? → Dat.</span>
+            <span class="de-text">hinter dem Haus</span><br>
+            <span class="ru-text">за домом</span>
+          </div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="neben рядом">
+        <span class="prep-word">neben</span>
+        <span class="prep-translation">— рядом</span>
+        <div class="wechsel-pair">
+          <div class="wechsel-cell wohin">
+            <span class="case-label">Wohin? → Akk.</span>
+            <span class="de-text">neben den Stuhl</span><br>
+            <span class="ru-text">(поставить) рядом со стулом</span>
+          </div>
+          <div class="wechsel-cell wo">
+            <span class="case-label">Wo? → Dat.</span>
+            <span class="de-text">neben dem Stuhl</span><br>
+            <span class="ru-text">рядом со стулом</span>
+          </div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="zwischen между">
+        <span class="prep-word">zwischen</span>
+        <span class="prep-translation">— между</span>
+        <div class="wechsel-pair">
+          <div class="wechsel-cell wohin">
+            <span class="case-label">Wohin? → Akk.</span>
+            <span class="de-text">zwischen die Bücher</span><br>
+            <span class="ru-text">(положить) между книгами</span>
+          </div>
+          <div class="wechsel-cell wo">
+            <span class="case-label">Wo? → Dat.</span>
+            <span class="de-text">zwischen den Büchern</span><br>
+            <span class="ru-text">между книгами</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🟣 Genitiv -->
+  <div class="category cat-gen" data-category="gen">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>🟣 Genitiv-Präpositionen (в разговоре часто → Dativ)</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div class="prep-card" data-search="wegen из-за">
+        <span class="prep-word">wegen</span>
+        <span class="prep-translation">— из-за</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">wegen des Wetters</span> — <span class="ru-text">из-за погоды</span></div>
+          <div class="prep-example"><span class="de-text">разг.: wegen dem Wetter</span> — <span class="ru-text">(Dat. в разговоре)</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="trotz несмотря на">
+        <span class="prep-word">trotz</span>
+        <span class="prep-translation">— несмотря на</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">trotz des Regens</span> — <span class="ru-text">несмотря на дождь</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="während во время">
+        <span class="prep-word">während</span>
+        <span class="prep-translation">— во время</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">während der Nacht</span> — <span class="ru-text">во время ночи / ночью</span></div>
+          <div class="prep-example"><span class="de-text">während der Ferien</span> — <span class="ru-text">во время каникул</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="statt anstatt вместо">
+        <span class="prep-word">statt / anstatt</span>
+        <span class="prep-translation">— вместо</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">statt des Buches</span> — <span class="ru-text">вместо книги</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="innerhalb внутри">
+        <span class="prep-word">innerhalb</span>
+        <span class="prep-translation">— внутри, в пределах</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">innerhalb der Stadt</span> — <span class="ru-text">внутри города</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="außerhalb за пределами">
+        <span class="prep-word">außerhalb</span>
+        <span class="prep-translation">— за пределами</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">außerhalb des Hauses</span> — <span class="ru-text">за пределами дома</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="aufgrund на основании">
+        <span class="prep-word">aufgrund</span>
+        <span class="prep-translation">— на основании</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">aufgrund der Daten</span> — <span class="ru-text">на основании данных</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="angesichts ввиду">
+        <span class="prep-word">angesichts</span>
+        <span class="prep-translation">— ввиду</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">angesichts der Lage</span> — <span class="ru-text">ввиду (сложившейся) ситуации</span></div>
+        </div>
+      </div>
+      <div class="prep-card" data-search="mangels за недостатком">
+        <span class="prep-word">mangels</span>
+        <span class="prep-translation">— за недостатком</span>
+        <div class="prep-examples">
+          <div class="prep-example"><span class="de-text">mangels Beweisen</span> — <span class="ru-text">за недостатком доказательств</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🧠 Мнемоника -->
+  <div class="category cat-hints" data-category="hints">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>🧠 Мнемоника и правила</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div class="hint-block">
+        <h4>🔴 Akkusativ — мнемоника <span class="mnemo">FUDGO</span></h4>
+        <p>
+          <span class="mnemo">F</span>ür, <span class="mnemo">U</span>m, <span class="mnemo">D</span>urch, <span class="mnemo">G</span>egen, <span class="mnemo">O</span>hne.
+          Все эти предлоги похожи на «бьющий» глагол или прямую цель — отвечают на вопрос <b>wohin?</b> / <b>wofür?</b> и требуют прямого объекта в Akkusativ.
+          К FUDGO добавляем <b>bis</b> и постпозиционный <b>entlang</b>.
+        </p>
+
+        <h4>🟢 Dativ — «из мамы / бабушки»</h4>
+        <p>
+          Традиционное мнемоническое заклинание для немцев-школьников:<br>
+          <span class="mnemo">aus, bei, mit, nach, seit, von, zu</span> — семь «базовых» предлогов Дативе.
+          Дополняем: <b>außer, gegenüber, ab</b>. После любого из них — всегда Dativ, без исключений.
+        </p>
+
+        <h4>🟡 Wechselpräpositionen — два вопроса</h4>
+        <p>
+          Девять «двухпадежных» предлогов: <b>in, an, auf, unter, über, vor, hinter, neben, zwischen</b>.<br>
+          Правило: задай вопрос глаголу.<br>
+          — <b>Wohin?</b> (куда? движение с целью) → <span style="color:#c0392b"><b>Akkusativ</b></span><br>
+          — <b>Wo?</b> (где? местоположение / действие на месте) → <span style="color:#2e7d32"><b>Dativ</b></span><br>
+          Подсказка: если глагол «ложить, вешать, идти, ехать» (направление) — Akk.; «лежать, висеть, стоять, быть» (состояние) — Dat.
+        </p>
+
+        <h4>🟣 Genitiv — книжный падеж</h4>
+        <p>
+          В разговорной речи многие предлоги Генитива переходят в Датив (<i>wegen dem Wetter</i> вместо <i>wegen des Wetters</i>).
+          В письменной речи и в экзаменах — держим Genitiv. Окончание у артикля: <b>des / eines</b> (m, n) и <b>der / einer</b> (f, pl).
+          У существительных мужского/среднего рода — ещё добавляется <b>-s</b> или <b>-es</b>: <i>des Mann<b>es</b>, des Buch<b>es</b></i>.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 📚 Примеры предложений -->
+  <div class="category cat-examples" data-category="examples">
+    <div class="category-header" onclick="toggleCategory(this)">
+      <span>📚 Примеры предложений (все падежи в действии)</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="category-body">
+      <div class="ex-sentence">
+        <span class="tag tag-akk">Akk</span>
+        <span class="de-text">Ich gehe ohne meinen Bruder durch den Wald.</span>
+        <span class="ru-text">Я иду без брата через лес.</span>
+      </div>
+      <div class="ex-sentence">
+        <span class="tag tag-dat">Dat</span>
+        <span class="de-text">Nach der Arbeit fahre ich mit dem Bus zu meinem Freund.</span>
+        <span class="ru-text">После работы я еду на автобусе к своему другу.</span>
+      </div>
+      <div class="ex-sentence">
+        <span class="tag tag-wechsel">Wechsel</span>
+        <span class="de-text">Ich lege das Buch auf den Tisch. Jetzt liegt es auf dem Tisch.</span>
+        <span class="ru-text">Я кладу книгу на стол. Теперь она лежит на столе. (Wohin Akk → Wo Dat)</span>
+      </div>
+      <div class="ex-sentence">
+        <span class="tag tag-wechsel">Wechsel</span>
+        <span class="de-text">Die Kinder laufen in den Garten, wo die Hunde im Gras spielen.</span>
+        <span class="ru-text">Дети бегут в сад, где собаки играют в траве.</span>
+      </div>
+      <div class="ex-sentence">
+        <span class="tag tag-gen">Gen</span>
+        <span class="de-text">Trotz des Regens gehen wir während der Pause spazieren.</span>
+        <span class="ru-text">Несмотря на дождь, мы идём гулять во время перерыва.</span>
+      </div>
+      <div class="ex-sentence">
+        <span class="tag tag-akk">Akk</span>
+        <span class="tag tag-dat">Dat</span>
+        <span class="de-text">Um 8 Uhr gehe ich mit dem Hund durch den Park zum Bahnhof.</span>
+        <span class="ru-text">В 8 часов я иду с собакой через парк к вокзалу.</span>
+      </div>
+      <div class="ex-sentence">
+        <span class="tag tag-gen">Gen</span>
+        <span class="de-text">Wegen des Wetters bleiben wir innerhalb der Stadt.</span>
+        <span class="ru-text">Из-за погоды мы остаёмся в пределах города.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-results-msg" id="noResults">Ничего не найдено. Попробуйте другой запрос.</div>
+</div>
+
+<script>
+function toggleCategory(header) {
+  header.classList.toggle('collapsed');
+  const body = header.nextElementSibling;
+  body.classList.toggle('collapsed');
+}
+
+function filterPrepositions() {
+  const query = document.getElementById('searchInput').value.toLowerCase().trim();
+  const categories = document.querySelectorAll('.category');
+  let anyVisible = false;
+
+  categories.forEach(cat => {
+    const catType = cat.dataset.category;
+    const isFullText = catType === 'hints' || catType === 'examples';
+
+    if (isFullText) {
+      const text = cat.textContent.toLowerCase();
+      const match = !query || text.includes(query);
+      cat.style.display = match ? '' : 'none';
+      if (match) anyVisible = true;
+      return;
+    }
+
+    const cards = cat.querySelectorAll('.prep-card');
+    let catHasVisible = false;
+
+    cards.forEach(card => {
+      const searchData = card.getAttribute('data-search').toLowerCase();
+      const cardText = card.textContent.toLowerCase();
+      const match = !query || searchData.includes(query) || cardText.includes(query);
+      card.style.display = match ? '' : 'none';
+      if (match) catHasVisible = true;
+    });
+
+    cat.style.display = catHasVisible ? '' : 'none';
+    if (catHasVisible) anyVisible = true;
+
+    if (query && catHasVisible) {
+      const header = cat.querySelector('.category-header');
+      const body = cat.querySelector('.category-body');
+      header.classList.remove('collapsed');
+      body.classList.remove('collapsed');
+    }
+  });
+
+  document.getElementById('noResults').style.display = anyVisible ? 'none' : 'block';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.category-body').forEach(body => {
+    body.style.maxHeight = body.scrollHeight + 'px';
+  });
+
+  const observer = new MutationObserver(() => {
+    document.querySelectorAll('.category-body:not(.collapsed)').forEach(body => {
+      body.style.maxHeight = body.scrollHeight + 'px';
+    });
+  });
+  observer.observe(document.getElementById('content'), { childList: true, subtree: true, attributes: true });
+});
+</script>
+
+</body>
+</html>

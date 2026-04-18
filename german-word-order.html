@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇩🇪</text></svg>">
+<meta name="apple-mobile-web-app-title" content="DE Wortstellung">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇩🇪 Порядок слов в немецком</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #faf5e8;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #1a1a1a, #7a1a1a);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 20px 60px;
+  }
+
+  /* Section nav */
+  .section-nav {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px 0 10px;
+  }
+  .section-nav a {
+    background: white;
+    color: #b8860b;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    transition: background 0.2s, color 0.2s;
+  }
+  .section-nav a:hover { background: #b8860b; color: white; }
+
+  /* Cards / sections */
+  .card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    margin-top: 20px;
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 14px 20px;
+    background: #b8860b;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1em;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+  }
+  .card-header:hover { background: #9a7009; }
+  .card-header .toggle { font-size: 1.2em; transition: transform 0.3s; }
+  .card-header.collapsed .toggle { transform: rotate(-90deg); }
+  .card-body {
+    padding: 20px;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    overflow: hidden;
+  }
+  .card-body.collapsed {
+    max-height: 0 !important;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  /* Subsection headers */
+  .sub-header {
+    font-size: 1em;
+    font-weight: 600;
+    color: #b8860b;
+    margin: 18px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #f0e4c1;
+  }
+  .sub-header:first-child { margin-top: 0; }
+
+  .explanation {
+    font-size: 0.92em;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+
+  /* Example rows */
+  .example-row {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+    flex-wrap: wrap;
+  }
+  .example-row:last-child { border-bottom: none; }
+  .example-de {
+    font-size: 1.1em;
+    line-height: 1.5;
+    flex: 1;
+    min-width: 200px;
+  }
+  .example-ru {
+    font-size: 0.9em;
+    color: #888;
+    flex-shrink: 0;
+  }
+
+  /* Color-coded spans */
+  .pos1 {
+    background: #f0e4c1;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  .verb {
+    background: #ffcdd2;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+  }
+  .subj {
+    background: #c8e6c9;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  .frame-end {
+    background: #bbdefb;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    text-decoration: underline;
+  }
+  .dat {
+    background: #e1bee7;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  .akk {
+    background: #ffe0b2;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  .te { background: #c5e1a5; padding: 2px 6px; border-radius: 4px; }
+  .ka { background: #ffccbc; padding: 2px 6px; border-radius: 4px; }
+  .mo { background: #b3e5fc; padding: 2px 6px; border-radius: 4px; }
+  .lo { background: #f8bbd0; padding: 2px 6px; border-radius: 4px; }
+
+  /* Color legend */
+  .legend {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    font-size: 0.85em;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .legend-swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    display: inline-block;
+  }
+
+  /* Summary table */
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92em;
+  }
+  .summary-table th {
+    background: #b8860b;
+    color: white;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .summary-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+  }
+  .summary-table tr:nth-child(even) td { background: #fdfaf0; }
+  .summary-table code {
+    background: #f5eed6;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.95em;
+    white-space: nowrap;
+  }
+
+  /* Interactive demo */
+  .demo-area {
+    background: #fdfaf0;
+    border: 2px dashed #d4b878;
+    border-radius: 10px;
+    padding: 16px;
+    margin: 14px 0;
+  }
+  .demo-sentence {
+    font-size: 1.15em;
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+  .demo-btn {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95em;
+    font-weight: 600;
+    cursor: pointer;
+    background: #b8860b;
+    color: white;
+    transition: background 0.2s;
+  }
+  .demo-btn:hover { background: #1a1a1a; }
+
+  /* Conjunction list */
+  .conj-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .conj-chip {
+    background: #fdfaf0;
+    border: 1px solid #f0e4c1;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.9em;
+  }
+  .conj-chip b { color: #b8860b; }
+
+  /* Prefix chips */
+  .prefix-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 8px 0 14px;
+  }
+  .prefix-chip {
+    background: #fdfaf0;
+    border: 1px solid #f0e4c1;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-family: monospace;
+    color: #7a5a00;
+  }
+  .prefix-chip.insep {
+    background: #fff0f0;
+    border-color: #ffcdd2;
+    color: #a53030;
+  }
+
+  /* Takeaways */
+  .takeaway-list {
+    list-style: none;
+    padding: 0;
+  }
+  .takeaway-list li {
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    background: #fdfaf0;
+    border-left: 4px solid #b8860b;
+    border-radius: 4px;
+    font-size: 0.95em;
+    line-height: 1.5;
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switch { padding: 6px 12px; font-size: 0.85em; }
+    .container { padding: 12px 10px 40px; }
+    .card-body { padding: 14px; }
+    .example-row { flex-direction: column; gap: 4px; }
+    .example-de { min-width: auto; }
+    .section-nav a { padding: 6px 12px; font-size: 0.82em; }
+    .summary-table { font-size: 0.82em; }
+    .summary-table th, .summary-table td { padding: 7px 6px; }
+  }
+
+  html { scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="norwegian-word-order.html" class="lang-switch">🇳🇴 Норвежский</a>
+    <a href="german.html" class="lang-switch">📖 Портал</a>
+  </div>
+  <h1>🇩🇪 Порядок слов в немецком</h1>
+  <p>V2, рамочная конструкция, TeKaMoLo и придаточные</p>
+</header>
+
+<div class="container">
+
+  <nav class="section-nav">
+    <a href="#v2">V2 правило</a>
+    <a href="#rahmen">Рамка</a>
+    <a href="#tekamolo">TeKaMoLo</a>
+    <a href="#objects">Объекты</a>
+    <a href="#nebensatz">Придаточные</a>
+    <a href="#questions">Вопросы</a>
+    <a href="#trennbar">Trennbar</a>
+    <a href="#summary">Шпаргалка</a>
+  </nav>
+
+  <!-- ===== 1. V2 Rule ===== -->
+  <div class="card" id="v2">
+    <div class="card-header" onclick="toggleSection(this)">
+      <span>1. Правило V2 — глагол на втором месте</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+      <p class="explanation">
+        В немецком повествовательном предложении (главном) <b>спрягаемый глагол ВСЕГДА на второй позиции</b>.
+        На первой позиции (<b>Vorfeld</b>) может стоять <b>один любой элемент</b>: подлежащее, обстоятельство,
+        дополнение или даже целое придаточное. Если на первом месте НЕ подлежащее — оно сдвигается сразу ЗА глагол (инверсия).
+      </p>
+
+      <div class="legend">
+        <div class="legend-item"><span class="legend-swatch" style="background:#f0e4c1"></span> Позиция 1 (Vorfeld)</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#ffcdd2"></span> Позиция 2 — глагол</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#c8e6c9"></span> Подлежащее (инверсия)</div>
+      </div>
+
+      <div class="sub-header">Vorfeld = подлежащее</div>
+      <div class="example-row">
+        <div class="example-de"><span class="pos1">Ich</span> <span class="verb">gehe</span> morgen ins Kino.</div>
+        <div class="example-ru">Я иду завтра в кино.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de"><span class="pos1">Anna</span> <span class="verb">liest</span> ein Buch.</div>
+        <div class="example-ru">Анна читает книгу.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de"><span class="pos1">Wir</span> <span class="verb">wohnen</span> in Berlin.</div>
+        <div class="example-ru">Мы живём в Берлине.</div>
+      </div>
+
+      <div class="sub-header">Vorfeld = обстоятельство времени (инверсия)</div>
+      <div class="example-row">
+        <div class="example-de"><span class="pos1">Morgen</span> <span class="verb">gehe</span> <span class="subj">ich</span> ins Kino.</div>
+        <div class="example-ru">Завтра я иду в кино.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de"><span class="pos1">Gestern</span> <span class="verb">hat</span> <span class="subj">Anna</span> ein Buch gelesen.</div>
+        <div class="example-ru">Вчера Анна читала книгу.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de"><span class="pos1">Heute</span> <span class="verb">bleibe</span> <span class="subj">ich</span> zu Hause.</div>
+        <div class="example-ru">Сегодня я остаюсь дома.</div>
+      </div>
+
+      <div class="sub-header">Vorfeld = дополнение (инверсия)</div>
+      <div class="example-row">
+        <div class="example-de"><span class="pos1">Ins Kino</span> <span class="verb">gehe</span> <span class="subj">ich</span> morgen.</div>
+        <div class="example-ru">В кино я иду завтра.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de"><span class="pos1">Das Buch</span> <span class="verb">habe</span> <span class="subj">ich</span> schon gelesen.</div>
+        <div class="example-ru">Эту книгу я уже прочитал.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de"><span class="pos1">Den Kaffee</span> <span class="verb">mag</span> <span class="subj">er</span> nicht.</div>
+        <div class="example-ru">Кофе он не любит.</div>
+      </div>
+
+      <p class="explanation" style="margin-top:14px;">
+        <b>Важно:</b> в позиции 1 может стоять <b>только ОДИН элемент</b> (одна именная группа,
+        одно обстоятельство или одно придаточное). Два подряд — ошибка.
+      </p>
+    </div>
+  </div>
+
+  <!-- ===== 2. Satzklammer / Rahmen ===== -->
+  <div class="card" id="rahmen">
+    <div class="card-header" onclick="toggleSection(this)">
+      <span>2. Рамочная конструкция (Satzklammer)</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+      <p class="explanation">
+        Когда в предложении <b>два глагольных элемента</b> (вспомогательный + причастие, модальный + инфинитив,
+        глагол + отделяемая приставка), они образуют <b>рамку</b>: спрягаемая форма на позиции 2,
+        а вторая часть — <b>в самом конце предложения</b>. Всё остальное зажато внутри.
+      </p>
+
+      <div class="legend">
+        <div class="legend-item"><span class="legend-swatch" style="background:#ffcdd2"></span> Поз. 2 (спрягаемый)</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#bbdefb"></span> Конец рамки</div>
+      </div>
+
+      <div class="sub-header">Perfekt (haben/sein + Partizip II)</div>
+      <div class="example-row">
+        <div class="example-de">Ich <span class="verb">habe</span> gestern ein Buch <span class="frame-end">gelesen</span>.</div>
+        <div class="example-ru">Я вчера прочитал книгу.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de">Wir <span class="verb">sind</span> nach Berlin <span class="frame-end">gefahren</span>.</div>
+        <div class="example-ru">Мы поехали в Берлин.</div>
+      </div>
+
+      <div class="sub-header">Модальные глаголы (Modalverb + Infinitiv)</div>
+      <div class="example-row">
+        <div class="example-de">Ich <span class="verb">muss</span> heute arbeiten <span class="frame-end">gehen</span>.</div>
+        <div class="example-ru">Я должен сегодня идти работать.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de">Er <span class="verb">will</span> einen Kaffee <span class="frame-end">trinken</span>.</div>
+        <div class="example-ru">Он хочет выпить кофе.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de">Du <span class="verb">kannst</span> gut Deutsch <span class="frame-end">sprechen</span>.</div>
+        <div class="example-ru">Ты хорошо говоришь по-немецки.</div>
+      </div>
+
+      <div class="sub-header">Futur I (werden + Infinitiv)</div>
+      <div class="example-row">
+        <div class="example-de">Ich <span class="verb">werde</span> morgen <span class="frame-end">kommen</span>.</div>
+        <div class="example-ru">Я приду завтра.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de">Sie <span class="verb">wird</span> das sicher <span class="frame-end">verstehen</span>.</div>
+        <div class="example-ru">Она точно это поймёт.</div>
+      </div>
+
+      <div class="sub-header">Отделяемая приставка (trennbares Verb)</div>
+      <div class="example-row">
+        <div class="example-de">Ich <span class="verb">komme</span> um 8 Uhr <span class="frame-end">an</span>. <span style="color:#888;font-size:0.85em;">(ankommen)</span></div>
+        <div class="example-ru">Я прибываю в 8 часов.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de">Er <span class="verb">steht</span> jeden Tag früh <span class="frame-end">auf</span>. <span style="color:#888;font-size:0.85em;">(aufstehen)</span></div>
+        <div class="example-ru">Он каждый день встаёт рано.</div>
+      </div>
+
+      <div class="demo-area">
+        <div class="demo-sentence" id="demo-sent">
+          Ich habe gestern im Park ein gutes Buch gelesen.
+        </div>
+        <button class="demo-btn" onclick="toggleFrame()">Показать V2 и рамку</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 3. TeKaMoLo ===== -->
+  <div class="card" id="tekamolo">
+    <div class="card-header" onclick="toggleSection(this)">
+      <span>3. TeKaMoLo — порядок обстоятельств</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+      <p class="explanation">
+        Когда в предложении несколько обстоятельств, их порядок по умолчанию —
+        <b>Te</b>mporal → <b>Ka</b>usal → <b>Mo</b>dal → <b>Lo</b>kal.
+        Это порядок по умолчанию; любое обстоятельство можно вынести в Vorfeld для акцента.
+      </p>
+
+      <div class="legend">
+        <div class="legend-item"><span class="legend-swatch" style="background:#c5e1a5"></span> <b>Te</b> — когда?</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#ffccbc"></span> <b>Ka</b> — почему?</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#b3e5fc"></span> <b>Mo</b> — как?</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#f8bbd0"></span> <b>Lo</b> — где/куда?</div>
+      </div>
+
+      <div class="sub-header">Типичные наполнители</div>
+      <table class="summary-table">
+        <tbody>
+          <tr><td><span class="te"><b>Te</b>mporal</span></td><td>heute, morgen, um 8 Uhr, gestern, oft, jetzt</td></tr>
+          <tr><td><span class="ka"><b>Ka</b>usal</span></td><td>wegen des Regens, deshalb, aus Liebe, darum</td></tr>
+          <tr><td><span class="mo"><b>Mo</b>dal</span></td><td>mit dem Auto, schnell, gerne, allein, zu Fuß</td></tr>
+          <tr><td><span class="lo"><b>Lo</b>kal</span></td><td>nach Berlin, in die Schule, zu Hause, dort</td></tr>
+        </tbody>
+      </table>
+
+      <div class="sub-header">Полный пример (все 4 обстоятельства)</div>
+      <div class="example-row">
+        <div class="example-de">Ich <span class="verb">fahre</span> <span class="te">heute</span> <span class="ka">wegen der Arbeit</span> <span class="mo">mit dem Zug</span> <span class="lo">nach Berlin</span>.</div>
+        <div class="example-ru">Я сегодня из-за работы еду на поезде в Берлин.</div>
+      </div>
+
+      <div class="sub-header">Частичные комбинации</div>
+      <div class="example-row">
+        <div class="example-de">Er <span class="verb">kommt</span> <span class="te">morgen</span> <span class="mo">mit dem Auto</span> <span class="lo">zu uns</span>.</div>
+        <div class="example-ru">Он завтра приедет к нам на машине.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de">Sie <span class="verb">arbeitet</span> <span class="te">heute</span> <span class="mo">fleißig</span> <span class="lo">im Büro</span>.</div>
+        <div class="example-ru">Она сегодня усердно работает в офисе.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de">Wir <span class="verb">gehen</span> <span class="te">jetzt</span> <span class="lo">ins Kino</span>.</div>
+        <div class="example-ru">Мы сейчас идём в кино.</div>
+      </div>
+
+      <div class="sub-header">Перенос в Vorfeld для акцента</div>
+      <div class="example-row">
+        <div class="example-de"><span class="te">Heute</span> <span class="verb">fahre</span> ich <span class="ka">wegen der Arbeit</span> <span class="mo">mit dem Zug</span> <span class="lo">nach Berlin</span>.</div>
+        <div class="example-ru">Сегодня я еду… (акцент на «сегодня»)</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de"><span class="lo">Nach Berlin</span> <span class="verb">fahre</span> ich <span class="te">heute</span> <span class="mo">mit dem Zug</span>.</div>
+        <div class="example-ru">В Берлин я сегодня еду на поезде.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 4. Object order: Akkusativ vs Dativ ===== -->
+  <div class="card" id="objects">
+    <div class="card-header" onclick="toggleSection(this)">
+      <span>4. Порядок объектов — Akkusativ vs Dativ</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+      <p class="explanation">
+        Когда у глагола два дополнения — дательное и винительное — порядок зависит от того,
+        <b>существительное это или местоимение</b>. Правило строгое и важное.
+      </p>
+
+      <div class="legend">
+        <div class="legend-item"><span class="legend-swatch" style="background:#e1bee7"></span> Dativ (кому?)</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#ffe0b2"></span> Akkusativ (что?)</div>
+      </div>
+
+      <div class="sub-header">Правило 1. Два существительных → Dat + Akk</div>
+      <div class="example-row">
+        <div class="example-de">Ich <span class="verb">gebe</span> <span class="dat">dem Mann</span> <span class="akk">das Buch</span>.</div>
+        <div class="example-ru">Я даю мужчине книгу.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de">Sie <span class="verb">schenkt</span> <span class="dat">dem Kind</span> <span class="akk">ein Spielzeug</span>.</div>
+        <div class="example-ru">Она дарит ребёнку игрушку.</div>
+      </div>
+
+      <div class="sub-header">Правило 2. Akk — местоимение → Akk + Dat</div>
+      <div class="example-row">
+        <div class="example-de">Ich <span class="verb">gebe</span> <span class="akk">es</span> <span class="dat">dem Mann</span>.</div>
+        <div class="example-ru">Я даю это мужчине.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de">Sie <span class="verb">schenkt</span> <span class="akk">es</span> <span class="dat">dem Kind</span>.</div>
+        <div class="example-ru">Она дарит это ребёнку.</div>
+      </div>
+
+      <div class="sub-header">Правило 3. Два местоимения → Akk + Dat</div>
+      <div class="example-row">
+        <div class="example-de">Ich <span class="verb">gebe</span> <span class="akk">es</span> <span class="dat">ihm</span>.</div>
+        <div class="example-ru">Я даю это ему.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de">Sie <span class="verb">schenkt</span> <span class="akk">es</span> <span class="dat">ihr</span>.</div>
+        <div class="example-ru">Она дарит это ей.</div>
+      </div>
+
+      <div class="sub-header">Четыре комбинации (сводная таблица)</div>
+      <table class="summary-table">
+        <thead>
+          <tr><th>Dativ</th><th>Akkusativ</th><th>Порядок</th><th>Пример</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>сущ.</td><td>сущ.</td>
+            <td><code>Dat + Akk</code></td>
+            <td><span class="dat">dem Mann</span> <span class="akk">das Buch</span></td>
+          </tr>
+          <tr>
+            <td>сущ.</td><td>мест.</td>
+            <td><code>Akk + Dat</code></td>
+            <td><span class="akk">es</span> <span class="dat">dem Mann</span></td>
+          </tr>
+          <tr>
+            <td>мест.</td><td>сущ.</td>
+            <td><code>Dat + Akk</code></td>
+            <td><span class="dat">ihm</span> <span class="akk">das Buch</span></td>
+          </tr>
+          <tr>
+            <td>мест.</td><td>мест.</td>
+            <td><code>Akk + Dat</code></td>
+            <td><span class="akk">es</span> <span class="dat">ihm</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="explanation" style="margin-top:12px;">
+        <b>Мнемоника:</b> местоимение всегда «торопится» — оно ближе к началу.
+        Если есть местоимение в Akk — оно встаёт впереди Dat-а.
+      </p>
+    </div>
+  </div>
+
+  <!-- ===== 5. Nebensatz ===== -->
+  <div class="card" id="nebensatz">
+    <div class="card-header" onclick="toggleSection(this)">
+      <span>5. Nebensatz — придаточные (глагол в конец)</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+      <p class="explanation">
+        В придаточных предложениях, вводимых <b>подчинительным союзом</b>,
+        <b>спрягаемый глагол уходит в самый конец</b>. Главное и придаточное отделяются запятой.
+      </p>
+
+      <div class="sub-header">Союзы подчинения</div>
+      <div class="conj-list">
+        <span class="conj-chip"><b>dass</b> — что</span>
+        <span class="conj-chip"><b>weil</b> — потому что</span>
+        <span class="conj-chip"><b>wenn</b> — если / когда</span>
+        <span class="conj-chip"><b>ob</b> — ли</span>
+        <span class="conj-chip"><b>obwohl</b> — хотя</span>
+        <span class="conj-chip"><b>als</b> — когда (однократно в прошл.)</span>
+        <span class="conj-chip"><b>da</b> — так как</span>
+        <span class="conj-chip"><b>damit</b> — чтобы</span>
+        <span class="conj-chip"><b>während</b> — пока</span>
+        <span class="conj-chip"><b>bis</b> — до тех пор пока</span>
+        <span class="conj-chip"><b>seit(dem)</b> — с тех пор как</span>
+        <span class="conj-chip"><b>nachdem</b> — после того как</span>
+        <span class="conj-chip"><b>bevor</b> — прежде чем</span>
+        <span class="conj-chip"><b>wie</b> — как</span>
+      </div>
+
+      <div class="sub-header">Основные примеры</div>
+      <div class="example-row">
+        <div class="example-de">Ich weiß, <b>dass</b> er heute <span class="frame-end">kommt</span>.</div>
+        <div class="example-ru">Я знаю, что он сегодня придёт.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de">Ich bleibe zu Hause, <b>weil</b> ich krank <span class="frame-end">bin</span>.</div>
+        <div class="example-ru">Я остаюсь дома, потому что я болен.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de">Er fragt, <b>ob</b> du Zeit <span class="frame-end">hast</span>.</div>
+        <div class="example-ru">Он спрашивает, есть ли у тебя время.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de">Wir gehen spazieren, <b>obwohl</b> es <span class="frame-end">regnet</span>.</div>
+        <div class="example-ru">Мы идём гулять, хотя идёт дождь.</div>
+      </div>
+
+      <div class="sub-header">Придаточное на первом месте → главное начинается с глагола</div>
+      <p class="explanation">
+        Если придаточное стоит в начале — оно занимает <b>Vorfeld главного</b>.
+        Тогда после запятой сразу идёт <b>спрягаемый глагол главного</b> (V2!), а за ним подлежащее.
+      </p>
+      <div class="example-row">
+        <div class="example-de"><b>Wenn</b> es <span class="frame-end">regnet</span>, <span class="verb">bleibe</span> <span class="subj">ich</span> zu Hause.</div>
+        <div class="example-ru">Если идёт дождь, я остаюсь дома.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de"><b>Weil</b> ich müde <span class="frame-end">bin</span>, <span class="verb">gehe</span> <span class="subj">ich</span> ins Bett.</div>
+        <div class="example-ru">Поскольку я устал, я иду спать.</div>
+      </div>
+
+      <div class="sub-header">Два глагола в Nebensatz — вспомогательный в самом конце</div>
+      <div class="example-row">
+        <div class="example-de">Ich weiß, <b>dass</b> er das Buch gelesen <span class="frame-end">hat</span>.</div>
+        <div class="example-ru">Я знаю, что он прочитал книгу.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de">Er sagt, <b>dass</b> sie morgen kommen <span class="frame-end">wird</span>.</div>
+        <div class="example-ru">Он говорит, что она завтра придёт.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de">Sie glaubt, <b>dass</b> ich Deutsch lernen <span class="frame-end">muss</span>.</div>
+        <div class="example-ru">Она считает, что я должен учить немецкий.</div>
+      </div>
+
+      <div class="sub-header">Относительные придаточные (тоже V-конец)</div>
+      <div class="example-row">
+        <div class="example-de">Der Mann, <b>der</b> das Buch <span class="frame-end">liest</span>, ist mein Lehrer.</div>
+        <div class="example-ru">Мужчина, который читает книгу, — мой учитель.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de">Die Frau, <b>die</b> ich gestern <span class="frame-end">gesehen</span> <span class="frame-end">habe</span>, war sehr nett.</div>
+        <div class="example-ru">Женщина, которую я вчера видел, была очень приятной.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 6. Questions ===== -->
+  <div class="card" id="questions">
+    <div class="card-header" onclick="toggleSection(this)">
+      <span>6. Вопросительные предложения</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+
+      <div class="sub-header">Ja/Nein-Frage — глагол на 1-м месте</div>
+      <div class="example-row">
+        <div class="example-de"><span class="verb">Kommst</span> <span class="subj">du</span> morgen?</div>
+        <div class="example-ru">Ты придёшь завтра?</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de"><span class="verb">Hast</span> <span class="subj">du</span> Zeit?</div>
+        <div class="example-ru">У тебя есть время?</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de"><span class="verb">Wohnt</span> <span class="subj">er</span> in Berlin?</div>
+        <div class="example-ru">Он живёт в Берлине?</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de"><span class="verb">Kannst</span> <span class="subj">du</span> mir <span class="frame-end">helfen</span>?</div>
+        <div class="example-ru">Ты можешь мне помочь? (с рамкой)</div>
+      </div>
+
+      <div class="sub-header">W-Frage — вопросительное слово + V2</div>
+      <div class="example-row">
+        <div class="example-de"><span class="pos1">Wann</span> <span class="verb">kommst</span> <span class="subj">du</span>?</div>
+        <div class="example-ru">Когда ты придёшь?</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de"><span class="pos1">Was</span> <span class="verb">machst</span> <span class="subj">du</span>?</div>
+        <div class="example-ru">Что ты делаешь?</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de"><span class="pos1">Wo</span> <span class="verb">wohnst</span> <span class="subj">du</span>?</div>
+        <div class="example-ru">Где ты живёшь?</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de"><span class="pos1">Wohin</span> <span class="verb">gehst</span> <span class="subj">du</span>?</div>
+        <div class="example-ru">Куда ты идёшь?</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de"><span class="pos1">Woher</span> <span class="verb">kommst</span> <span class="subj">du</span>?</div>
+        <div class="example-ru">Откуда ты?</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de"><span class="pos1">Warum</span> <span class="verb">lernst</span> <span class="subj">du</span> Deutsch?</div>
+        <div class="example-ru">Почему ты учишь немецкий?</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de"><span class="pos1">Wie</span> <span class="verb">heißt</span> <span class="subj">du</span>?</div>
+        <div class="example-ru">Как тебя зовут?</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de"><span class="pos1">Welches Buch</span> <span class="verb">liest</span> <span class="subj">du</span>?</div>
+        <div class="example-ru">Какую книгу ты читаешь?</div>
+      </div>
+
+      <div class="sub-header">Список W-слов</div>
+      <div class="conj-list">
+        <span class="conj-chip"><b>wer</b> — кто</span>
+        <span class="conj-chip"><b>was</b> — что</span>
+        <span class="conj-chip"><b>wo</b> — где</span>
+        <span class="conj-chip"><b>wohin</b> — куда</span>
+        <span class="conj-chip"><b>woher</b> — откуда</span>
+        <span class="conj-chip"><b>wann</b> — когда</span>
+        <span class="conj-chip"><b>warum</b> — почему</span>
+        <span class="conj-chip"><b>wieso</b> — почему (почему это так)</span>
+        <span class="conj-chip"><b>weshalb</b> — отчего</span>
+        <span class="conj-chip"><b>wie</b> — как</span>
+        <span class="conj-chip"><b>welch-</b> — какой</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 7. Trennbare Verben ===== -->
+  <div class="card" id="trennbar">
+    <div class="card-header" onclick="toggleSection(this)">
+      <span>7. Trennbare Verben — отделяемые глаголы</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+      <p class="explanation">
+        В немецком есть глаголы с <b>ударной отделяемой приставкой</b>. В главном предложении
+        приставка <b>отделяется и уходит в конец</b> (образуя рамку). В инфинитиве, в причастии
+        и в придаточном приставка <b>остаётся на своём месте</b>.
+      </p>
+
+      <div class="sub-header">Главное предложение — приставка в конце</div>
+      <div class="example-row">
+        <div class="example-de">Ich <span class="verb">rufe</span> dich morgen <span class="frame-end">an</span>. <span style="color:#888;font-size:0.85em;">(anrufen)</span></div>
+        <div class="example-ru">Я позвоню тебе завтра.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de">Der Zug <span class="verb">fährt</span> um 10 Uhr <span class="frame-end">ab</span>. <span style="color:#888;font-size:0.85em;">(abfahren)</span></div>
+        <div class="example-ru">Поезд отправляется в 10.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de">Sie <span class="verb">macht</span> die Tür <span class="frame-end">zu</span>. <span style="color:#888;font-size:0.85em;">(zumachen)</span></div>
+        <div class="example-ru">Она закрывает дверь.</div>
+      </div>
+
+      <div class="sub-header">Инфинитив / Nebensatz — приставка не отделяется</div>
+      <div class="example-row">
+        <div class="example-de">Ich will dich morgen <span class="frame-end">anrufen</span>.</div>
+        <div class="example-ru">Я хочу позвонить тебе завтра.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de">..., weil ich dich morgen <span class="frame-end">anrufe</span>.</div>
+        <div class="example-ru">..., потому что я позвоню тебе завтра.</div>
+      </div>
+      <div class="example-row">
+        <div class="example-de">Ich habe dich gestern <span class="frame-end">angerufen</span>. <span style="color:#888;font-size:0.85em;">(Partizip II)</span></div>
+        <div class="example-ru">Я звонил тебе вчера.</div>
+      </div>
+
+      <div class="sub-header">Отделяемые приставки (ударные)</div>
+      <div class="prefix-box">
+        <span class="prefix-chip">ab-</span>
+        <span class="prefix-chip">an-</span>
+        <span class="prefix-chip">auf-</span>
+        <span class="prefix-chip">aus-</span>
+        <span class="prefix-chip">ein-</span>
+        <span class="prefix-chip">mit-</span>
+        <span class="prefix-chip">nach-</span>
+        <span class="prefix-chip">vor-</span>
+        <span class="prefix-chip">zu-</span>
+        <span class="prefix-chip">zurück-</span>
+        <span class="prefix-chip">zusammen-</span>
+        <span class="prefix-chip">weg-</span>
+        <span class="prefix-chip">her-</span>
+        <span class="prefix-chip">hin-</span>
+        <span class="prefix-chip">fort-</span>
+        <span class="prefix-chip">los-</span>
+      </div>
+
+      <div class="sub-header">Неотделяемые приставки (безударные — НИКОГДА не отделяются)</div>
+      <div class="prefix-box">
+        <span class="prefix-chip insep">be-</span>
+        <span class="prefix-chip insep">emp-</span>
+        <span class="prefix-chip insep">ent-</span>
+        <span class="prefix-chip insep">er-</span>
+        <span class="prefix-chip insep">ge-</span>
+        <span class="prefix-chip insep">ver-</span>
+        <span class="prefix-chip insep">zer-</span>
+        <span class="prefix-chip insep">miss-</span>
+      </div>
+      <p class="explanation">
+        <b>Запомни:</b> <i>be-, emp-, ent-, er-, ge-, ver-, zer-, miss-</i> — это «неприкасаемые».
+        Ударение падает на корень глагола: <i>ver<b>stéh</b>en</i>, <i>be<b>súch</b>en</i>, <i>ge<b>fáll</b>en</i>.
+      </p>
+    </div>
+  </div>
+
+  <!-- ===== 8. Summary ===== -->
+  <div class="card" id="summary">
+    <div class="card-header" onclick="toggleSection(this)">
+      <span>8. Шпаргалка и ключевые выводы</span>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="card-body">
+
+      <table class="summary-table">
+        <thead>
+          <tr>
+            <th>Тип предложения</th>
+            <th>Позиция глагола</th>
+            <th>Пример</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Главное (повеств.)</td>
+            <td><code>V2</code></td>
+            <td><span class="pos1">Ich</span> <span class="verb">gehe</span> ins Kino.</td>
+          </tr>
+          <tr>
+            <td>Инверсия (обст. в Vorfeld)</td>
+            <td><code>X + V + S</code></td>
+            <td><span class="pos1">Morgen</span> <span class="verb">gehe</span> <span class="subj">ich</span>.</td>
+          </tr>
+          <tr>
+            <td>Рамка (Perfekt/Modal/Futur)</td>
+            <td><code>V2 … Vend</code></td>
+            <td>Ich <span class="verb">habe</span> es <span class="frame-end">gelesen</span>.</td>
+          </tr>
+          <tr>
+            <td>Отделяемый глагол</td>
+            <td><code>V2 … präfix</code></td>
+            <td>Ich <span class="verb">rufe</span> dich <span class="frame-end">an</span>.</td>
+          </tr>
+          <tr>
+            <td>Nebensatz</td>
+            <td><code>конец</code></td>
+            <td>..., weil ich müde <span class="frame-end">bin</span>.</td>
+          </tr>
+          <tr>
+            <td>Ja/Nein-Frage</td>
+            <td><code>V1</code></td>
+            <td><span class="verb">Kommst</span> <span class="subj">du</span>?</td>
+          </tr>
+          <tr>
+            <td>W-Frage</td>
+            <td><code>W + V2</code></td>
+            <td><span class="pos1">Wann</span> <span class="verb">kommst</span> <span class="subj">du</span>?</td>
+          </tr>
+          <tr>
+            <td>Обстоятельства</td>
+            <td><code>TeKaMoLo</code></td>
+            <td>… <span class="te">heute</span> <span class="ka">wegen…</span> <span class="mo">mit…</span> <span class="lo">nach…</span></td>
+          </tr>
+          <tr>
+            <td>Dat + Akk (сущ+сущ)</td>
+            <td><code>Dat → Akk</code></td>
+            <td>… <span class="dat">dem Mann</span> <span class="akk">das Buch</span>.</td>
+          </tr>
+          <tr>
+            <td>Akk-местоимение</td>
+            <td><code>Akk → Dat</code></td>
+            <td>… <span class="akk">es</span> <span class="dat">dem Mann</span>.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="sub-header">Ключевые выводы</div>
+      <ul class="takeaway-list">
+        <li><b>V2 в главном:</b> спрягаемый глагол всегда на позиции 2, что бы ни стояло в Vorfeld.</li>
+        <li><b>Глагол в конец</b> в придаточном — после <i>weil, dass, wenn, ob…</i> спрягаемая форма едет в самый хвост.</li>
+        <li><b>Рамка (Satzklammer)</b> для сложных времён и модальных: спрягаемый на поз. 2, вторая часть глагола — в конце.</li>
+        <li><b>TeKaMoLo</b> — порядок обстоятельств по умолчанию: время → причина → образ → место.</li>
+        <li><b>Dativ перед Akkusativ</b>, НО местоимение в Akk всегда впереди — ещё правило «местоимение торопится».</li>
+        <li><b>Отделяемая приставка</b> в главном уходит в конец; в инфинитиве и Nebensatz — остаётся при глаголе.</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// === Collapsible sections ===
+function toggleSection(headerEl) {
+  const body = headerEl.nextElementSibling;
+  headerEl.classList.toggle('collapsed');
+  body.classList.toggle('collapsed');
+}
+
+// === Interactive V2 / Rahmen demo ===
+let frameShown = false;
+function toggleFrame() {
+  const el = document.getElementById('demo-sent');
+  if (!frameShown) {
+    el.innerHTML = '<span class="pos1">Ich</span> <span class="verb">habe</span> gestern im Park ein gutes Buch <span class="frame-end">gelesen</span>.';
+    frameShown = true;
+  } else {
+    el.textContent = 'Ich habe gestern im Park ein gutes Buch gelesen.';
+    frameShown = false;
+  }
+}
+</script>
+
+</body>
+</html>

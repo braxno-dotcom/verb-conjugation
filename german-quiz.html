@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇩🇪</text></svg>">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="DE quiz">
+<title>🇩🇪 Тренажёр немецкого</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #eef1f5;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #1a1a1a, #7a1a1a);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px 20px 60px;
+  }
+  .topics {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0 0 18px;
+  }
+  .topic-btn {
+    padding: 10px 18px;
+    border: 2px solid #b8860b;
+    background: white;
+    color: #b8860b;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .topic-btn:hover { background: #faf5e8; }
+  .topic-btn.active { background: #b8860b; color: white; }
+  .score-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    background: white;
+    border-radius: 12px;
+    padding: 14px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    margin-bottom: 18px;
+    font-size: 0.95em;
+  }
+  .score-item { display: flex; align-items: center; gap: 5px; }
+  .score-item .label { color: #888; }
+  .score-item .value { font-weight: 700; color: #1a1a1a; }
+  .streak-fire { font-size: 1.2em; }
+  .score-bar .reset-btn {
+    padding: 6px 14px;
+    background: #faf5e8;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85em;
+    color: #555;
+    transition: background 0.2s;
+  }
+  .score-bar .reset-btn:hover { background: #f0e4c1; }
+  .progress-wrap {
+    height: 6px;
+    background: #d5dce5;
+    border-radius: 3px;
+    margin-bottom: 18px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #b8860b, #d4a017);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  .quiz-card {
+    background: white;
+    border-radius: 16px;
+    padding: 36px 30px 30px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    text-align: center;
+    transition: background-color 0.3s;
+    min-height: 260px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .quiz-card.flash-correct { background-color: #e6f9ec; }
+  .quiz-card.flash-wrong { background-color: #fde8e8; }
+  .q-type {
+    font-size: 0.85em;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+  }
+  .q-sentence {
+    font-size: 1.5em;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .q-hint {
+    font-size: 0.9em;
+    color: #888;
+    margin-bottom: 24px;
+    font-style: italic;
+  }
+  .q-blank {
+    background: #faf5e8;
+    border: 2px dashed #b8860b;
+    border-radius: 8px;
+    padding: 4px 14px;
+    display: inline-block;
+    min-width: 60px;
+    color: #b8860b;
+    font-weight: 700;
+  }
+  .answers {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  .ans-btn {
+    padding: 14px 24px;
+    min-width: 100px;
+    min-height: 48px;
+    border: 2px solid #bcc8d6;
+    background: white;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #2c2c2c;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .ans-btn:hover:not(.disabled) {
+    border-color: #b8860b;
+    background: #faf5e8;
+    transform: translateY(-1px);
+  }
+  .ans-btn.correct { border-color: #38a169; background: #e6f9ec; color: #22653a; }
+  .ans-btn.wrong { border-color: #e53e3e; background: #fde8e8; color: #9b2c2c; }
+  .ans-btn.disabled { cursor: default; opacity: 0.6; }
+  .ans-btn .key-hint {
+    position: absolute;
+    top: 3px;
+    right: 7px;
+    font-size: 0.6em;
+    color: #aaa;
+    font-weight: 400;
+  }
+  .feedback {
+    margin-top: 18px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-size: 0.95em;
+    line-height: 1.5;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct-fb { background: #e6f9ec; color: #22653a; border: 1px solid #b2e5c5; }
+  .feedback.wrong-fb { background: #fde8e8; color: #9b2c2c; border: 1px solid #f5b8b8; }
+  .feedback strong { display: block; margin-bottom: 4px; font-size: 1.05em; }
+  .feedback .explanation { font-size: 0.9em; opacity: 0.85; }
+  .continue-btn {
+    margin-top: 16px;
+    padding: 14px 36px;
+    background: linear-gradient(135deg, #b8860b, #d4a017);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.05em;
+    font-weight: 600;
+    cursor: pointer;
+    display: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .continue-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(184,134,11,0.3); }
+  .continue-btn.show { display: inline-block; }
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.3em; }
+    header p { font-size: 0.85em; }
+    .quiz-card { padding: 24px 16px 22px; }
+    .q-sentence { font-size: 1.25em; }
+    .ans-btn { padding: 12px 16px; min-width: 80px; font-size: 1em; }
+    .topic-btn { padding: 8px 12px; font-size: 0.85em; }
+    .score-bar { gap: 10px; font-size: 0.85em; padding: 10px 14px; }
+    .container { padding: 14px 12px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="norwegian-quiz.html" class="lang-switch">🇳🇴 Норвежский</a>
+    <a href="spanish-quiz.html" class="lang-switch">🇪🇸 Испанский</a>
+    <a href="french-quiz.html" class="lang-switch">🇫🇷 Французский</a>
+    <a href="english-quiz.html" class="lang-switch">🇬🇧 Английский</a>
+    <a href="german.html" class="lang-switch">📖 Портал</a>
+  </div>
+  <h1>🇩🇪 Тренажёр немецкого</h1>
+  <p>Интерактивные упражнения по грамматике</p>
+</header>
+
+<div class="container">
+  <div class="topics" id="topics"></div>
+  <div class="score-bar">
+    <div class="score-item"><span class="streak-fire">🔥</span> <span class="label">Серия:</span> <span class="value" id="streak">0</span></div>
+    <div class="score-item"><span class="label">Верно:</span> <span class="value" id="correctCount">0</span> / <span class="value" id="totalCount">0</span></div>
+    <div class="score-item"><span class="label">Точность:</span> <span class="value" id="pct">0%</span></div>
+    <button class="reset-btn" onclick="resetScore()">Сбросить</button>
+  </div>
+  <div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="quiz-card" id="quizCard">
+    <div class="q-type" id="qType"></div>
+    <div class="q-sentence" id="qSentence"></div>
+    <div class="q-hint" id="qHint"></div>
+    <div class="answers" id="answers"></div>
+    <div class="feedback" id="feedback"></div>
+    <button class="continue-btn" id="continueBtn" onclick="nextQuestion()">Далее →</button>
+  </div>
+</div>
+
+<script>
+// ===================== HELPERS =====================
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function pickWrong(correct, pool, n) {
+  const unique = [...new Set(pool.filter(x => x !== correct))];
+  return shuffle(unique).slice(0, n);
+}
+function mkQ(type, sentence, hint, correct, distractors, explanation) {
+  const opts = shuffle([correct, ...distractors]);
+  return { type, sentence, hint, options: opts, correct, explanation };
+}
+
+// ===================== TOPIC 1: Articles & Cases =====================
+const articleQuestions = [
+  // Nom masc
+  mkQ("Артикль (Nom)","Das ist ___ Mann.","именительный, мужской","der",["die","das","den"],"der Mann — Nom masc → der"),
+  mkQ("Артикль (Nom)","___ Hund schläft.","именительный, мужской","Der",["Die","Das","Dem"],"Der Hund — Nom masc → der"),
+  mkQ("Артикль (Nom)","___ Vater arbeitet.","именительный, мужской","Der",["Die","Das","Den"],"Der Vater — Nom masc → der"),
+  mkQ("Артикль (Nom)","Hier ist ___ Tisch.","именительный, мужской","der",["die","das","den"],"der Tisch — Nom masc → der"),
+  mkQ("Артикль (Nom)","___ Lehrer kommt.","именительный, мужской","Der",["Die","Das","Den"],"Der Lehrer — Nom masc → der"),
+  mkQ("Артикль (Nom)","___ Bruder ist da.","именительный, мужской","Der",["Die","Das","Den"],"Der Bruder — Nom masc → der"),
+  mkQ("Артикль (Nom)","___ Baum ist groß.","именительный, мужской","Der",["Die","Das","Den"],"Der Baum — Nom masc → der"),
+  mkQ("Артикль (Nom)","___ Stuhl ist neu.","именительный, мужской","Der",["Die","Das","Den"],"Der Stuhl — Nom masc → der"),
+  // Nom fem
+  mkQ("Артикль (Nom)","Das ist ___ Frau.","именительный, женский","die",["der","das","den"],"die Frau — Nom fem → die"),
+  mkQ("Артикль (Nom)","___ Mutter kocht.","именительный, женский","Die",["Der","Das","Den"],"Die Mutter — Nom fem → die"),
+  mkQ("Артикль (Nom)","___ Katze schläft.","именительный, женский","Die",["Der","Das","Den"],"Die Katze — Nom fem → die"),
+  mkQ("Артикль (Nom)","___ Schule ist groß.","именительный, женский","Die",["Der","Das","Den"],"Die Schule — Nom fem → die"),
+  mkQ("Артикль (Nom)","Hier ist ___ Tür.","именительный, женский","die",["der","das","den"],"die Tür — Nom fem → die"),
+  mkQ("Артикль (Nom)","___ Lampe ist neu.","именительный, женский","Die",["Der","Das","Den"],"Die Lampe — Nom fem → die"),
+  mkQ("Артикль (Nom)","___ Blume blüht.","именительный, женский","Die",["Der","Das","Den"],"Die Blume — Nom fem → die"),
+  mkQ("Артикль (Nom)","___ Schwester singt.","именительный, женский","Die",["Der","Das","Den"],"Die Schwester — Nom fem → die"),
+  // Nom neut
+  mkQ("Артикль (Nom)","Das ist ___ Kind.","именительный, средний","das",["der","die","dem"],"das Kind — Nom neut → das"),
+  mkQ("Артикль (Nom)","___ Haus ist alt.","именительный, средний","Das",["Der","Die","Dem"],"Das Haus — Nom neut → das"),
+  mkQ("Артикль (Nom)","___ Auto ist rot.","именительный, средний","Das",["Der","Die","Dem"],"Das Auto — Nom neut → das"),
+  mkQ("Артикль (Nom)","___ Buch liegt hier.","именительный, средний","Das",["Der","Die","Dem"],"Das Buch — Nom neut → das"),
+  mkQ("Артикль (Nom)","___ Fenster ist offen.","именительный, средний","Das",["Der","Die","Dem"],"Das Fenster — Nom neut → das"),
+  mkQ("Артикль (Nom)","___ Mädchen lacht.","именительный, средний (-chen)","Das",["Der","Die","Dem"],"Das Mädchen — -chen всегда средний → das"),
+  mkQ("Артикль (Nom)","___ Brot ist frisch.","именительный, средний","Das",["Der","Die","Dem"],"Das Brot — Nom neut → das"),
+  mkQ("Артикль (Nom)","___ Bier ist kalt.","именительный, средний","Das",["Der","Die","Dem"],"Das Bier — Nom neut → das"),
+  // Akk masc (den!)
+  mkQ("Артикль (Akk)","Ich sehe ___ Mann.","винительный, мужской","den",["der","dem","des"],"Akk masc → den (только мужской меняется!)"),
+  mkQ("Артикль (Akk)","Ich kaufe ___ Hund.","винительный, мужской","den",["der","dem","des"],"Akk masc → den"),
+  mkQ("Артикль (Akk)","Er liest ___ Brief.","винительный, мужской","den",["der","dem","des"],"Akk masc → den"),
+  mkQ("Артикль (Akk)","Ich trinke ___ Kaffee.","винительный, мужской","den",["der","dem","des"],"Akk masc → den"),
+  mkQ("Артикль (Akk)","Sie nimmt ___ Schlüssel.","винительный, мужской","den",["der","dem","des"],"Akk masc → den"),
+  mkQ("Артикль (Akk)","Ich kenne ___ Lehrer.","винительный, мужской","den",["der","dem","des"],"Akk masc → den"),
+  mkQ("Артикль (Akk)","Er hat ___ Ball.","винительный, мужской","den",["der","dem","des"],"Akk masc → den"),
+  mkQ("Артикль (Akk)","Wir sehen ___ Film.","винительный, мужской","den",["der","dem","des"],"Akk masc → den"),
+  // Akk fem (=Nom)
+  mkQ("Артикль (Akk)","Ich sehe ___ Frau.","винительный, женский","die",["der","dem","den"],"Akk fem = Nom fem → die"),
+  mkQ("Артикль (Akk)","Er liebt ___ Katze.","винительный, женский","die",["der","dem","den"],"Akk fem → die"),
+  mkQ("Артикль (Akk)","Ich kaufe ___ Blume.","винительный, женский","die",["der","dem","den"],"Akk fem → die"),
+  mkQ("Артикль (Akk)","Sie liest ___ Zeitung.","винительный, женский","die",["der","dem","den"],"Akk fem → die"),
+  mkQ("Артикль (Akk)","Ich öffne ___ Tür.","винительный, женский","die",["der","dem","den"],"Akk fem → die"),
+  mkQ("Артикль (Akk)","Er kennt ___ Stadt.","винительный, женский","die",["der","dem","den"],"Akk fem → die"),
+  // Akk neut (=Nom)
+  mkQ("Артикль (Akk)","Ich sehe ___ Kind.","винительный, средний","das",["der","die","dem"],"Akk neut = Nom neut → das"),
+  mkQ("Артикль (Akk)","Ich lese ___ Buch.","винительный, средний","das",["der","die","dem"],"Akk neut → das"),
+  mkQ("Артикль (Akk)","Er kauft ___ Auto.","винительный, средний","das",["der","die","dem"],"Akk neut → das"),
+  mkQ("Артикль (Akk)","Sie öffnet ___ Fenster.","винительный, средний","das",["der","die","dem"],"Akk neut → das"),
+  mkQ("Артикль (Akk)","Ich esse ___ Brot.","винительный, средний","das",["der","die","dem"],"Akk neut → das"),
+  mkQ("Артикль (Akk)","Wir trinken ___ Wasser.","винительный, средний","das",["der","die","dem"],"Akk neut → das"),
+  // Dat masc (dem)
+  mkQ("Артикль (Dat)","Ich helfe ___ Mann.","дательный, мужской","dem",["der","den","des"],"Dat masc → dem"),
+  mkQ("Артикль (Dat)","Ich gebe ___ Hund Futter.","дательный, мужской","dem",["der","den","des"],"Dat masc → dem"),
+  mkQ("Артикль (Dat)","Sie dankt ___ Lehrer.","дательный, мужской","dem",["der","den","des"],"Dat masc → dem"),
+  mkQ("Артикль (Dat)","Ich antworte ___ Vater.","дательный, мужской","dem",["der","den","des"],"Dat masc → dem (antworten + Dat)"),
+  mkQ("Артикль (Dat)","Er spricht mit ___ Freund.","дательный, мужской","dem",["der","den","des"],"mit + Dat masc → dem"),
+  mkQ("Артикль (Dat)","Ich bin bei ___ Arzt.","дательный, мужской","dem",["der","den","des"],"bei + Dat masc → dem"),
+  mkQ("Артикль (Dat)","Nach ___ Film gehen wir nach Hause.","дательный, мужской","dem",["der","den","des"],"nach + Dat masc → dem"),
+  // Dat fem (der!)
+  mkQ("Артикль (Dat)","Ich helfe ___ Frau.","дательный, женский","der",["die","dem","den"],"Dat fem → der (не die!)"),
+  mkQ("Артикль (Dat)","Ich gebe ___ Mutter Blumen.","дательный, женский","der",["die","dem","den"],"Dat fem → der"),
+  mkQ("Артикль (Dat)","Er dankt ___ Lehrerin.","дательный, женский","der",["die","dem","den"],"Dat fem → der"),
+  mkQ("Артикль (Dat)","Sie spricht mit ___ Freundin.","дательный, женский","der",["die","dem","den"],"mit + Dat fem → der"),
+  mkQ("Артикль (Dat)","Ich bin bei ___ Oma.","дательный, женский","der",["die","dem","den"],"bei + Dat fem → der"),
+  mkQ("Артикль (Dat)","Nach ___ Schule.","дательный, женский","der",["die","dem","den"],"nach + Dat fem → der"),
+  // Dat neut (dem)
+  mkQ("Артикль (Dat)","Ich helfe ___ Kind.","дательный, средний","dem",["der","die","den"],"Dat neut → dem"),
+  mkQ("Артикль (Dat)","Das Buch gehört ___ Mädchen.","дательный, средний","dem",["der","die","den"],"Dat neut → dem"),
+  mkQ("Артикль (Dat)","Er spricht mit ___ Kind.","дательный, средний","dem",["der","die","den"],"mit + Dat neut → dem"),
+  mkQ("Артикль (Dat)","Ich bin in ___ Haus (место).","дательный, средний","dem",["der","die","den"],"in + Dat neut → dem (где?)"),
+  // Dat Plural (den + n)
+  mkQ("Артикль (Dat pl)","Ich helfe ___ Kindern.","дательный, мн.ч.","den",["der","die","dem"],"Dat pl → den + существ. получает -n"),
+  mkQ("Артикль (Dat pl)","Ich spreche mit ___ Freunden.","дательный, мн.ч.","den",["der","die","dem"],"mit + Dat pl → den Freunden"),
+  mkQ("Артикль (Dat pl)","Er spielt mit ___ Hunden.","дательный, мн.ч.","den",["der","die","dem"],"Dat pl → den Hunden"),
+  mkQ("Артикль (Dat pl)","Ich gebe ___ Schülern Hausaufgaben.","дательный, мн.ч.","den",["der","die","dem"],"Dat pl → den Schülern"),
+  // Gen
+  mkQ("Артикль (Gen)","Das Auto ___ Mannes.","родительный, мужской","des",["der","dem","den"],"Gen masc → des + -(e)s"),
+  mkQ("Артикль (Gen)","Das Buch ___ Lehrers.","родительный, мужской","des",["der","dem","den"],"Gen masc → des + -s"),
+  mkQ("Артикль (Gen)","Die Farbe ___ Autos.","родительный, средний","des",["der","dem","den"],"Gen neut → des + -s"),
+  mkQ("Артикль (Gen)","Die Tür ___ Hauses.","родительный, средний","des",["der","dem","den"],"Gen neut → des + -es"),
+  mkQ("Артикль (Gen)","Das Haus ___ Frau.","родительный, женский","der",["die","dem","des"],"Gen fem → der"),
+  mkQ("Артикль (Gen)","Der Name ___ Mutter.","родительный, женский","der",["die","dem","des"],"Gen fem → der"),
+  mkQ("Артикль (Gen)","Das Ende ___ Films.","родительный, мужской","des",["der","dem","den"],"Gen masc → des"),
+  mkQ("Артикль (Gen)","Die Bücher ___ Kinder.","родительный, мн.ч.","der",["die","dem","des"],"Gen pl → der"),
+  // Indefinite
+  mkQ("Неопр. артикль (Nom)","Das ist ___ Mann.","неопр., мужской Nom","ein",["einen","einem","eines"],"Nom masc: ein"),
+  mkQ("Неопр. артикль (Nom)","Das ist ___ Frau.","неопр., женский Nom","eine",["ein","einer","einen"],"Nom fem: eine"),
+  mkQ("Неопр. артикль (Nom)","Das ist ___ Kind.","неопр., средний Nom","ein",["eine","einen","einem"],"Nom neut: ein"),
+  mkQ("Неопр. артикль (Akk)","Ich sehe ___ Mann.","неопр., мужской Akk","einen",["ein","einem","eines"],"Akk masc: einen"),
+  mkQ("Неопр. артикль (Akk)","Ich kaufe ___ Hund.","неопр., мужской Akk","einen",["ein","einem","eines"],"Akk masc: einen"),
+  mkQ("Неопр. артикль (Akk)","Ich habe ___ Bruder.","неопр., мужской Akk","einen",["ein","einem","eines"],"Akk masc: einen"),
+  mkQ("Неопр. артикль (Akk)","Ich sehe ___ Frau.","неопр., женский Akk","eine",["ein","einer","einen"],"Akk fem = Nom: eine"),
+  mkQ("Неопр. артикль (Akk)","Ich habe ___ Schwester.","неопр., женский Akk","eine",["ein","einer","einen"],"Akk fem: eine"),
+  mkQ("Неопр. артикль (Akk)","Ich sehe ___ Kind.","неопр., средний Akk","ein",["eine","einen","einem"],"Akk neut = Nom: ein"),
+  mkQ("Неопр. артикль (Akk)","Ich lese ___ Buch.","неопр., средний Akk","ein",["eine","einen","einem"],"Akk neut: ein"),
+  mkQ("Неопр. артикль (Dat)","Ich helfe ___ Mann.","неопр., мужской Dat","einem",["ein","einen","eines"],"Dat masc: einem"),
+  mkQ("Неопр. артикль (Dat)","Ich gebe ___ Hund Futter.","неопр., мужской Dat","einem",["ein","einen","eines"],"Dat masc: einem"),
+  mkQ("Неопр. артикль (Dat)","Ich helfe ___ Frau.","неопр., женский Dat","einer",["ein","eine","einem"],"Dat fem: einer"),
+  mkQ("Неопр. артикль (Dat)","Ich gebe ___ Freundin Blumen.","неопр., женский Dat","einer",["ein","eine","einem"],"Dat fem: einer"),
+  mkQ("Неопр. артикль (Dat)","Ich helfe ___ Kind.","неопр., средний Dat","einem",["ein","eine","einer"],"Dat neut: einem"),
+  mkQ("Неопр. артикль (Dat)","Ich spreche mit ___ Mädchen.","неопр., средний Dat","einem",["ein","eine","einer"],"Dat neut: einem"),
+  mkQ("Неопр. артикль (Gen)","Das Auto ___ Mannes.","неопр., мужской Gen","eines",["ein","einem","einen"],"Gen masc: eines"),
+  mkQ("Неопр. артикль (Gen)","Das Buch ___ Frau.","неопр., женский Gen","einer",["ein","eine","eines"],"Gen fem: einer"),
+  mkQ("Неопр. артикль (Gen)","Die Farbe ___ Autos.","неопр., средний Gen","eines",["ein","einem","einen"],"Gen neut: eines"),
+  // kein
+  mkQ("Отрицание kein","Ich habe ___ Bruder.","Akk masc (у меня нет брата)","keinen",["kein","keine","keinem"],"kein + Akk masc → keinen"),
+  mkQ("Отрицание kein","Ich habe ___ Schwester.","Akk fem","keine",["kein","keinen","keiner"],"kein + Akk fem → keine"),
+  mkQ("Отрицание kein","Ich habe ___ Auto.","Akk neut","kein",["keine","keinen","keinem"],"kein + Akk neut → kein"),
+  mkQ("Отрицание kein","Ich habe ___ Kinder.","Akk pl","keine",["kein","keinen","keinem"],"kein + Akk pl → keine"),
+  mkQ("Отрицание kein","Das ist ___ Problem.","Nom neut","kein",["keine","keinen","keinem"],"kein + Nom neut → kein"),
+  mkQ("Отрицание kein","Er hat ___ Zeit.","Akk fem","keine",["kein","keinen","keiner"],"kein + Akk fem → keine"),
+  mkQ("Отрицание kein","Ich spreche mit ___ Freund.","Dat masc","keinem",["kein","keinen","keines"],"mit + Dat → keinem"),
+  mkQ("Отрицание kein","Ich helfe ___ Frau.","Dat fem","keiner",["kein","keine","keinem"],"kein + Dat fem → keiner"),
+  mkQ("Отрицание kein","Ich spiele mit ___ Kindern.","Dat pl","keinen",["kein","keine","keinem"],"Dat pl → keinen + -n"),
+  // Possessive
+  mkQ("Притяжательный","___ Vater arbeitet. (мой)","Nom masc","Mein",["Meinen","Meinem","Meiner"],"mein + Nom masc → mein (как ein)"),
+  mkQ("Притяжательный","___ Mutter kocht. (моя)","Nom fem","Meine",["Mein","Meinen","Meiner"],"mein + Nom fem → meine"),
+  mkQ("Притяжательный","___ Auto ist neu. (моё)","Nom neut","Mein",["Meine","Meinen","Meinem"],"mein + Nom neut → mein"),
+  mkQ("Притяжательный","Ich sehe ___ Bruder. (моего)","Akk masc","meinen",["mein","meine","meinem"],"mein + Akk masc → meinen"),
+  mkQ("Притяжательный","Ich liebe ___ Schwester. (мою)","Akk fem","meine",["mein","meinen","meiner"],"mein + Akk fem → meine"),
+  mkQ("Притяжательный","Ich helfe ___ Bruder. (моему)","Dat masc","meinem",["mein","meinen","meines"],"mein + Dat masc → meinem"),
+  mkQ("Притяжательный","Ich helfe ___ Schwester. (моей)","Dat fem","meiner",["mein","meine","meinem"],"mein + Dat fem → meiner"),
+  mkQ("Притяжательный","Ich spiele mit ___ Kindern. (моими)","Dat pl","meinen",["mein","meine","meinem"],"mein + Dat pl → meinen"),
+  mkQ("Притяжательный","Das ist ___ Hund. (твой)","Nom masc","dein",["deinen","deinem","deiner"],"dein + Nom masc → dein"),
+  mkQ("Притяжательный","Ich sehe ___ Vater. (твоего)","Akk masc","deinen",["dein","deine","deinem"],"dein + Akk masc → deinen"),
+  mkQ("Притяжательный","___ Auto ist rot. (его)","Nom neut","Sein",["Seine","Seinen","Seinem"],"sein + Nom neut → sein"),
+  mkQ("Притяжательный","Ich kenne ___ Freund. (его)","Akk masc","seinen",["sein","seine","seinem"],"sein + Akk masc → seinen"),
+  mkQ("Притяжательный","___ Mutter ist nett. (её)","Nom fem","Ihre",["Ihr","Ihren","Ihrem"],"ihr + Nom fem → ihre"),
+  mkQ("Притяжательный","Ich sehe ___ Bruder. (её)","Akk masc","ihren",["ihr","ihre","ihrem"],"ihr + Akk masc → ihren"),
+  mkQ("Притяжательный","___ Haus ist groß. (наш)","Nom neut","Unser",["Unsere","Unseren","Unserem"],"unser + Nom neut → unser"),
+  mkQ("Притяжательный","Ich besuche ___ Eltern. (наших)","Akk pl","unsere",["unser","unseren","unserem"],"unser + Akk pl → unsere"),
+  mkQ("Притяжательный","___ Kinder sind nett. (ваши)","Nom pl","Eure",["Euer","Euren","Eurem"],"euer + Nom pl → eure"),
+  mkQ("Притяжательный","Das ist ___ Meinung. (Ваше)","Nom fem (Höflich)","Ihre",["Ihr","Ihren","Ihrem"],"Ihr (вежл.) + Nom fem → Ihre"),
+  // Plural-related
+  mkQ("Артикль мн.ч.","___ Kinder spielen.","Nom pl","Die",["Der","Das","Den"],"Все мн.ч. в Nom/Akk → die"),
+  mkQ("Артикль мн.ч.","Ich sehe ___ Kinder.","Akk pl","die",["der","das","den"],"Akk pl → die"),
+  mkQ("Артикль мн.ч.","Ich helfe ___ Kindern.","Dat pl","den",["die","der","das"],"Dat pl → den (+ -n)"),
+];
+
+// Extra article/case variety
+const extraArticleQs = [
+  mkQ("В/На (Wohin Akk)","Ich gehe in ___ Park.","направление → Akk masc","den",["dem","der","das"],"in + Wohin (куда) + Akk masc → den"),
+  mkQ("В/На (Wo Dat)","Ich bin in ___ Park.","место → Dat masc","dem",["den","der","das"],"in + Wo (где) + Dat masc → dem"),
+  mkQ("В/На (Wohin Akk)","Ich gehe in ___ Schule.","направление → Akk fem","die",["der","dem","das"],"in + Wohin + Akk fem → die"),
+  mkQ("В/На (Wo Dat)","Ich bin in ___ Schule.","место → Dat fem","der",["die","dem","das"],"in + Wo + Dat fem → der"),
+  mkQ("В/На (Wohin Akk)","Ich lege das Buch auf ___ Tisch.","направление → Akk masc","den",["dem","der","das"],"auf + Wohin + Akk masc → den"),
+  mkQ("В/На (Wo Dat)","Das Buch liegt auf ___ Tisch.","место → Dat masc","dem",["den","der","das"],"auf + Wo + Dat masc → dem"),
+  mkQ("Dat (помощь)","Ich helfe ___ Freund.","helfen + Dat","dem",["den","der","des"],"helfen требует Dat → dem Freund"),
+  mkQ("Dat (верить)","Ich glaube ___ Lehrerin.","glauben + Dat","der",["die","dem","des"],"glauben (человеку) + Dat fem → der"),
+  mkQ("Dat (следовать)","Ich folge ___ Mann.","folgen + Dat","dem",["den","der","des"],"folgen + Dat → dem"),
+  mkQ("Dat (нравиться)","Das gefällt ___ Kind.","gefallen + Dat","dem",["den","der","das"],"gefallen + Dat → dem"),
+  mkQ("Dat (принадлежать)","Das Buch gehört ___ Frau.","gehören + Dat","der",["die","dem","des"],"gehören + Dat fem → der"),
+  mkQ("Akk (для)","Das Geschenk ist für ___ Vater.","für + Akk","den",["dem","der","des"],"für + Akk masc → den"),
+  mkQ("Akk (через)","Wir gehen durch ___ Wald.","durch + Akk","den",["dem","der","des"],"durch + Akk masc → den"),
+  mkQ("Akk (без)","Ich komme ohne ___ Freund.","ohne + Akk","den",["dem","der","des"],"ohne + Akk masc → den"),
+  mkQ("Akk (против)","Wir spielen gegen ___ Mannschaft.","gegen + Akk","die",["der","dem","des"],"gegen + Akk fem → die"),
+  mkQ("Dat (с)","Ich gehe mit ___ Freundin.","mit + Dat","der",["die","dem","des"],"mit + Dat fem → der"),
+  mkQ("Dat (к)","Ich gehe zu ___ Arzt.","zu + Dat","dem",["den","der","des"],"zu + Dat masc → dem (zum Arzt)"),
+  mkQ("Dat (из)","Er kommt aus ___ Schweiz.","aus + Dat","der",["die","dem","des"],"aus + Dat fem → der"),
+  mkQ("Dat (от, с)","Seit ___ Krieg.","seit + Dat masc","dem",["den","der","des"],"seit + Dat masc → dem"),
+  mkQ("Dat (у)","Ich wohne bei ___ Eltern.","bei + Dat pl","den",["die","der","dem"],"bei + Dat pl → den Eltern"),
+];
+
+// ===================== TOPIC 2: Verb Conjugation =====================
+const verbQuestions = [
+  // sein
+  mkQ("sein (Präsens)","Ich ___ müde.","1 л. ед.","bin",["bist","ist","sind"],"ich bin — формы sein"),
+  mkQ("sein (Präsens)","Du ___ nett.","2 л. ед.","bist",["bin","ist","seid"],"du bist"),
+  mkQ("sein (Präsens)","Er ___ Lehrer.","3 л. ед.","ist",["bin","bist","sind"],"er/sie/es ist"),
+  mkQ("sein (Präsens)","Wir ___ Freunde.","1 л. мн.","sind",["seid","bin","ist"],"wir sind"),
+  mkQ("sein (Präsens)","Ihr ___ jung.","2 л. мн.","seid",["sind","bist","ist"],"ihr seid"),
+  mkQ("sein (Präsens)","Sie ___ Studenten.","3 л. мн.","sind",["seid","ist","bin"],"sie sind"),
+  mkQ("sein (Präteritum)","Ich ___ gestern krank.","1 л. ед. прош.","war",["warst","waren","wart"],"ich war — Präteritum"),
+  mkQ("sein (Präteritum)","Du ___ im Kino.","2 л. ед. прош.","warst",["war","waren","wart"],"du warst"),
+  mkQ("sein (Präteritum)","Wir ___ zu Hause.","1 л. мн. прош.","waren",["war","warst","wart"],"wir waren"),
+  mkQ("sein (Präteritum)","Ihr ___ spät.","2 л. мн. прош.","wart",["waren","warst","war"],"ihr wart"),
+  // haben
+  mkQ("haben (Präsens)","Ich ___ Zeit.","1 л. ед.","habe",["hast","hat","haben"],"ich habe"),
+  mkQ("haben (Präsens)","Du ___ Hunger.","2 л. ед.","hast",["habe","hat","habt"],"du hast"),
+  mkQ("haben (Präsens)","Er ___ ein Auto.","3 л. ед.","hat",["habe","hast","haben"],"er hat"),
+  mkQ("haben (Präsens)","Wir ___ Kinder.","1 л. мн.","haben",["habt","hast","hat"],"wir haben"),
+  mkQ("haben (Präsens)","Ihr ___ Fragen.","2 л. мн.","habt",["haben","hast","hat"],"ihr habt"),
+  mkQ("haben (Präteritum)","Ich ___ kein Geld.","1 л. ед. прош.","hatte",["hattest","hatten","hattet"],"ich hatte"),
+  mkQ("haben (Präteritum)","Du ___ recht.","2 л. ед. прош.","hattest",["hatte","hatten","hattet"],"du hattest"),
+  mkQ("haben (Präteritum)","Wir ___ Glück.","1 л. мн. прош.","hatten",["hatte","hattest","hattet"],"wir hatten"),
+  // werden
+  mkQ("werden (Präsens)","Ich ___ Arzt.","1 л. ед.","werde",["wirst","wird","werden"],"ich werde"),
+  mkQ("werden (Präsens)","Du ___ groß.","2 л. ед.","wirst",["werde","wird","werdet"],"du wirst"),
+  mkQ("werden (Präsens)","Er ___ müde.","3 л. ед.","wird",["werde","wirst","werden"],"er wird"),
+  mkQ("werden (Präsens)","Wir ___ alt.","1 л. мн.","werden",["werdet","wird","wirst"],"wir werden"),
+  mkQ("werden (Futur)","Ich ___ morgen kommen.","Futur I","werde",["wird","werden","wirst"],"Futur: werden + Infinitiv → ich werde"),
+  mkQ("werden (Futur)","Er ___ uns helfen.","Futur I","wird",["werde","werden","wirst"],"er wird ... helfen"),
+  mkQ("werden (Präteritum)","Ich ___ Lehrer.","ich стал...","wurde",["wurdest","wurden","wart"],"ich wurde — Präteritum от werden"),
+  // regular verbs — Präsens
+  mkQ("machen","Ich ___ Sport.","1 л. ед.","mache",["machst","macht","machen"],"ich mache"),
+  mkQ("machen","Du ___ Musik.","2 л. ед.","machst",["mache","macht","machen"],"du machst"),
+  mkQ("machen","Er ___ Hausaufgaben.","3 л. ед.","macht",["mache","machst","machen"],"er macht"),
+  mkQ("spielen","Ich ___ Fußball.","1 л. ед.","spiele",["spielst","spielt","spielen"],"ich spiele"),
+  mkQ("spielen","Du ___ Klavier.","2 л. ед.","spielst",["spiele","spielt","spielen"],"du spielst"),
+  mkQ("spielen","Sie ___ Karten.","3 л. мн.","spielen",["spielt","spielst","spiele"],"sie spielen"),
+  mkQ("lernen","Ich ___ Deutsch.","1 л. ед.","lerne",["lernst","lernt","lernen"],"ich lerne"),
+  mkQ("lernen","Du ___ schnell.","2 л. ед.","lernst",["lerne","lernt","lernen"],"du lernst"),
+  mkQ("wohnen","Wir ___ in Berlin.","1 л. мн.","wohnen",["wohnt","wohne","wohnst"],"wir wohnen"),
+  mkQ("kommen","Er ___ aus Italien.","3 л. ед.","kommt",["komme","kommst","kommen"],"er kommt"),
+  mkQ("gehen","Ich ___ nach Hause.","1 л. ед.","gehe",["gehst","geht","gehen"],"ich gehe"),
+  mkQ("hören","Du ___ Musik.","2 л. ед.","hörst",["höre","hört","hören"],"du hörst"),
+  mkQ("kaufen","Ich ___ Brot.","1 л. ед.","kaufe",["kaufst","kauft","kaufen"],"ich kaufe"),
+  mkQ("arbeiten","Er ___ viel.","3 л. ед. (t-stem → +et)","arbeitet",["arbeitt","arbeit","arbeiten"],"основа на -t/-d → er arbeitet (с -et)"),
+  mkQ("arbeiten","Du ___ zu viel.","2 л. ед. (t-stem)","arbeitest",["arbeitst","arbeitet","arbeiten"],"du arbeitest (вставное e)"),
+  mkQ("finden","Ich ___ das Buch.","1 л. ед.","finde",["findst","findet","finden"],"ich finde"),
+  mkQ("finden","Du ___ es gut.","2 л. ед.","findest",["findst","findet","findest"],"du findest (вставное e)"),
+  mkQ("heißen","Wie ___ du?","2 л. ед. (-ß-stem)","heißt",["heißst","heiße","heißen"],"du heißt (основа на -ß → +t)"),
+  mkQ("tanzen","Du ___ gut.","2 л. ед. (-z-stem)","tanzt",["tanzst","tanze","tanzen"],"du tanzt (основа на -z → +t)"),
+  // irregular (stem change)
+  mkQ("sprechen","Du ___ Deutsch.","e→i","sprichst",["sprechst","spricht","sprechen"],"sprechen: e→i → du sprichst"),
+  mkQ("sprechen","Er ___ laut.","e→i","spricht",["sprecht","sprichst","sprechen"],"er spricht"),
+  mkQ("sehen","Du ___ mich.","e→ie","siehst",["sehst","sieht","sehen"],"sehen: e→ie → du siehst"),
+  mkQ("sehen","Er ___ den Film.","e→ie","sieht",["seht","siehst","sehen"],"er sieht"),
+  mkQ("lesen","Du ___ viel.","e→ie","liest",["lesst","lest","lesen"],"lesen: e→ie → du liest"),
+  mkQ("lesen","Er ___ ein Buch.","e→ie","liest",["lest","liest","lesen"],"er liest"),
+  mkQ("essen","Du ___ Pizza.","e→i","isst",["esst","essst","essen"],"essen: e→i → du isst"),
+  mkQ("essen","Er ___ Fleisch.","e→i","isst",["esst","esse","essen"],"er isst"),
+  mkQ("geben","Du ___ mir Geld.","e→i","gibst",["gebst","gibt","geben"],"geben: e→i → du gibst"),
+  mkQ("nehmen","Du ___ den Bus.","e→i + mm","nimmst",["nehmst","nimmt","nehmen"],"nehmen: e→i + удвоение m → du nimmst"),
+  mkQ("nehmen","Er ___ ein Taxi.","e→i","nimmt",["nehmt","nimmst","nehmen"],"er nimmt"),
+  mkQ("helfen","Du ___ mir.","e→i","hilfst",["helfst","hilft","helfen"],"helfen: e→i → du hilfst"),
+  mkQ("fahren","Du ___ Auto.","a→ä","fährst",["fahrst","fährt","fahren"],"fahren: a→ä → du fährst"),
+  mkQ("fahren","Er ___ nach Berlin.","a→ä","fährt",["fahrt","fährst","fahren"],"er fährt"),
+  mkQ("schlafen","Du ___ lange.","a→ä","schläfst",["schlafst","schläft","schlafen"],"schlafen: a→ä → du schläfst"),
+  mkQ("schlafen","Er ___ gut.","a→ä","schläft",["schlaft","schläfst","schlafen"],"er schläft"),
+  mkQ("laufen","Du ___ schnell.","au→äu","läufst",["laufst","läuft","laufen"],"laufen: au→äu → du läufst"),
+  mkQ("laufen","Er ___ 10 km.","au→äu","läuft",["lauft","läufst","laufen"],"er läuft"),
+  mkQ("tragen","Du ___ eine Tasche.","a→ä","trägst",["tragst","trägt","tragen"],"tragen: a→ä → du trägst"),
+  mkQ("wissen","Ich ___ es.","unregelmäßig","weiß",["weißt","wisse","weiss"],"wissen: ich weiß (не weisse!)"),
+  mkQ("wissen","Du ___ alles.","unregelmäßig","weißt",["weiß","wisst","wissen"],"du weißt"),
+  mkQ("wissen","Er ___ nichts.","unregelmäßig","weiß",["weißt","wisst","wissen"],"er weiß"),
+  mkQ("wissen","Wir ___ das.","unregelmäßig","wissen",["weiß","weißt","wisst"],"wir wissen (мн.ч. регулярно)"),
+  // modal verbs — Präsens
+  mkQ("können","Ich ___ Deutsch.","1 л. ед.","kann",["kannst","könne","können"],"модальный: ich kann (ед.ч. без окончания)"),
+  mkQ("können","Du ___ das.","2 л. ед.","kannst",["kann","könnst","können"],"du kannst"),
+  mkQ("können","Er ___ schwimmen.","3 л. ед.","kann",["kannst","könnt","können"],"er kann"),
+  mkQ("können","Wir ___ helfen.","1 л. мн.","können",["könnt","kann","kannst"],"wir können"),
+  mkQ("können","Ihr ___ gehen.","2 л. мн.","könnt",["können","kann","kannst"],"ihr könnt"),
+  mkQ("müssen","Ich ___ gehen.","1 л. ед.","muss",["musst","müsse","müssen"],"ich muss"),
+  mkQ("müssen","Du ___ lernen.","2 л. ед.","musst",["muss","müsst","müssen"],"du musst"),
+  mkQ("müssen","Er ___ arbeiten.","3 л. ед.","muss",["musst","müsst","müssen"],"er muss"),
+  mkQ("müssen","Wir ___ warten.","1 л. мн.","müssen",["müsst","muss","musst"],"wir müssen"),
+  mkQ("wollen","Ich ___ schlafen.","1 л. ед.","will",["willst","wolle","wollen"],"ich will"),
+  mkQ("wollen","Du ___ essen.","2 л. ед.","willst",["will","wollt","wollen"],"du willst"),
+  mkQ("wollen","Er ___ gehen.","3 л. ед.","will",["willst","wollt","wollen"],"er will"),
+  mkQ("sollen","Ich ___ lernen.","1 л. ед.","soll",["sollst","solle","sollen"],"ich soll (без умляута)"),
+  mkQ("sollen","Du ___ kommen.","2 л. ед.","sollst",["soll","sollt","sollen"],"du sollst"),
+  mkQ("dürfen","Ich ___ rauchen?","1 л. ед.","darf",["darfst","dürfe","dürfen"],"ich darf"),
+  mkQ("dürfen","Du ___ hier parken.","2 л. ед.","darfst",["darf","dürft","dürfen"],"du darfst"),
+  mkQ("dürfen","Er ___ nicht kommen.","3 л. ед.","darf",["darfst","dürft","dürfen"],"er darf"),
+  mkQ("mögen","Ich ___ Schokolade.","1 л. ед.","mag",["magst","möge","mögen"],"ich mag"),
+  mkQ("mögen","Du ___ Kaffee.","2 л. ед.","magst",["mag","mögt","mögen"],"du magst"),
+  mkQ("möchten","Ich ___ einen Kaffee.","вежливое хотеть","möchte",["möchtest","möchten","mag"],"ich möchte (Konjunktiv от mögen)"),
+  mkQ("möchten","Du ___ Wasser?","вежливое хотеть","möchtest",["möchte","möchten","magst"],"du möchtest"),
+  // Perfekt with haben
+  mkQ("Perfekt (haben)","Ich habe das Buch ___ (lesen).","Partizip II","gelesen",["gelest","lesen","geliest"],"lesen → gelesen (сильный)"),
+  mkQ("Perfekt (haben)","Er hat Pizza ___ (essen).","Partizip II","gegessen",["geesst","esst","essen"],"essen → gegessen"),
+  mkQ("Perfekt (haben)","Wir haben Deutsch ___ (lernen).","Partizip II (слаб.)","gelernt",["gelernet","lernen","lerngt"],"слаб.: ge- + основа + -t → gelernt"),
+  mkQ("Perfekt (haben)","Sie hat einen Kuchen ___ (machen).","Partizip II","gemacht",["gemacht","gemachen","macht"],"machen → gemacht"),
+  mkQ("Perfekt (haben)","Ich habe Tee ___ (trinken).","Partizip II","getrunken",["getrinkt","trinken","getrinken"],"trinken → getrunken"),
+  mkQ("Perfekt (haben)","Er hat mich ___ (sehen).","Partizip II","gesehen",["geseht","sehen","gesieht"],"sehen → gesehen"),
+  mkQ("Perfekt (haben)","Sie hat einen Brief ___ (schreiben).","Partizip II","geschrieben",["geschreibt","schreiben","geschrieben"],"schreiben → geschrieben"),
+  mkQ("Perfekt (haben)","Wir haben einen Film ___ (sehen).","Partizip II","gesehen",["geseht","gesieht","sehen"],"sehen → gesehen"),
+  mkQ("Perfekt (haben)","Ich habe die Tür ___ (öffnen).","Partizip II","geöffnet",["öffnet","geöffnt","öffnet"],"слаб. с t-основой: geöffnet"),
+  mkQ("Perfekt (haben)","Er hat ___ (arbeiten).","Partizip II","gearbeitet",["gearbeitt","arbeiten","arbeit"],"arbeiten → gearbeitet"),
+  mkQ("Perfekt (haben)","Sie haben ___ (sprechen).","Partizip II","gesprochen",["gespracht","spracht","gesprachen"],"sprechen → gesprochen"),
+  mkQ("Perfekt (haben)","Ich habe den Schlüssel ___ (finden).","Partizip II","gefunden",["gefindet","fand","finden"],"finden → gefunden"),
+  mkQ("Perfekt (haben)","Er hat das Fenster ___ (schließen).","Partizip II","geschlossen",["geschliessen","schloss","geschließt"],"schließen → geschlossen"),
+  // Perfekt with sein (движение/изменение)
+  mkQ("Perfekt (sein)","Ich ___ ins Kino gegangen.","вспомог. при движении","bin",["habe","ist","hat"],"gehen = движение → sein (ich bin gegangen)"),
+  mkQ("Perfekt (sein)","Er ___ nach Berlin gefahren.","fahren + sein","ist",["hat","bin","hast"],"fahren → sein (er ist gefahren)"),
+  mkQ("Perfekt (sein)","Wir ___ früh aufgestanden.","aufstehen + sein","sind",["haben","sein","seid"],"aufstehen → sein"),
+  mkQ("Perfekt (sein)","Sie ___ eingeschlafen.","einschlafen + sein","ist",["hat","sind","haben"],"einschlafen (изменение состояния) → sein"),
+  mkQ("Perfekt (sein)","Ich ___ gekommen.","kommen + sein","bin",["habe","ist","hat"],"kommen → sein"),
+  mkQ("Perfekt (sein)","Er ___ geblieben.","bleiben + sein (искл.)","ist",["hat","sind","bin"],"bleiben → sein (несмотря на отсутствие движения)"),
+  mkQ("Perfekt (sein)","Was ___ passiert?","passieren + sein","ist",["hat","sind","haben"],"passieren → sein"),
+  mkQ("Perfekt (gehen)","Gestern ___ ich ins Kino ___.","Perfekt: 'пошёл'","bin ... gegangen",["habe ... gegangen","bin ... gegeht","habe ... gegeht"],"gehen → bin gegangen"),
+  mkQ("Perfekt (fahren)","Wir ___ nach Paris ___.","Perfekt: 'поехали'","sind ... gefahren",["haben ... gefahren","sind ... gefahrt","haben ... gefahrt"],"fahren → sind gefahren"),
+  // Präteritum of common verbs
+  mkQ("Präteritum","gehen → ich ___","Präteritum 1.ед.","ging",["gang","gegangen","ginge"],"gehen — ging"),
+  mkQ("Präteritum","sehen → er ___","Präteritum","sah",["seh","sieht","gesehen"],"sehen — sah"),
+  mkQ("Präteritum","kommen → sie ___","Präteritum","kam",["komm","kommt","gekommen"],"kommen — kam"),
+  mkQ("Präteritum","essen → ich ___","Präteritum","aß",["aßt","isst","gegessen"],"essen — aß"),
+  mkQ("Präteritum","trinken → er ___","Präteritum","trank",["trinkt","getrunken","trunk"],"trinken — trank"),
+  mkQ("Präteritum","finden → ich ___","Präteritum","fand",["find","gefunden","fund"],"finden — fand"),
+  mkQ("Präteritum","geben → er ___","Präteritum","gab",["gibt","gegeben","gob"],"geben — gab"),
+  mkQ("Präteritum","schreiben → ich ___","Präteritum","schrieb",["schrieb","geschrieben","schreib"],"schreiben — schrieb"),
+  mkQ("Präteritum","fahren → er ___","Präteritum","fuhr",["fahrt","gefahren","far"],"fahren — fuhr"),
+  mkQ("Präteritum","nehmen → ich ___","Präteritum","nahm",["nehm","genommen","nam"],"nehmen — nahm"),
+  mkQ("Präteritum","sprechen → er ___","Präteritum","sprach",["spricht","gesprochen","sprech"],"sprechen — sprach"),
+  mkQ("Präteritum","machen → ich ___","Präteritum (слаб.)","machte",["mach","gemacht","machtest"],"machen — machte"),
+  mkQ("Präteritum","lernen → er ___","Präteritum (слаб.)","lernte",["lernt","gelernt","lernste"],"lernen — lernte"),
+  mkQ("Präteritum (модальные)","können → ich ___","Präteritum","konnte",["könnte","kann","kannte"],"können — konnte (без умляута!)"),
+  mkQ("Präteritum (модальные)","müssen → er ___","Präteritum","musste",["müsste","muss","musste"],"müssen — musste"),
+  mkQ("Präteritum (модальные)","wollen → ich ___","Präteritum","wollte",["will","gewollt","wolltest"],"wollen — wollte"),
+  mkQ("Präteritum (модальные)","dürfen → er ___","Präteritum","durfte",["dürfte","darf","durft"],"dürfen — durfte"),
+  // Futur I
+  mkQ("Futur I","Ich ___ morgen kommen.","Futur = werden + Inf","werde",["wird","werden","will"],"Futur: ich werde + Inf"),
+  mkQ("Futur I","Er ___ bald gehen.","Futur","wird",["werde","werden","will"],"er wird + Inf"),
+  mkQ("Futur I","Wir ___ lernen.","Futur","werden",["werdet","wird","werde"],"wir werden"),
+  mkQ("Futur I","Du ___ es schaffen.","Futur","wirst",["werde","wird","werden"],"du wirst"),
+  // Konjunktiv II
+  mkQ("Konjunktiv II","Wenn ich Zeit ___, würde ich helfen.","сослагательное 'имел бы'","hätte",["habe","hatte","hatten"],"haben → hätte (K II)"),
+  mkQ("Konjunktiv II","___ du reich, was würdest du tun?","сослагательное 'был бы'","Wärst",["Warst","Bist","Wärest"],"sein → wäre/wärst (K II)"),
+  mkQ("Konjunktiv II","Ich ___ gern einen Kaffee.","вежливая просьба","hätte",["habe","hatte","hätten"],"ich hätte gern = я бы хотел"),
+  mkQ("Konjunktiv II","Ich ___ gern einen Tee.","= möchte","hätte",["habe","hatte","hätten"],"ich hätte gern — стандарт"),
+  mkQ("Konjunktiv II","Er ___ kommen, wenn er Zeit hätte.","würde + Inf","würde",["wird","werde","wurde"],"würde + Inf — описательная форма K II"),
+  mkQ("Konjunktiv II","Wir ___ helfen.","'помогли бы'","würden",["werden","wurden","würde"],"wir würden helfen"),
+  mkQ("Konjunktiv II (können)","Ich ___ es machen, wenn ich Zeit hätte.","K II от können","könnte",["kann","konnte","kennte"],"können → könnte"),
+  mkQ("Konjunktiv II (müssen)","Du ___ mehr lernen.","K II от müssen","müsstest",["musst","musstest","müsst"],"müssen → müsste/müsstest"),
+  // Imperativ
+  mkQ("Imperativ (du)","___ leise! (sein)","повелит. 'будь'","Sei",["Sein","Bist","Bin"],"sein → du-Imperativ: Sei!"),
+  mkQ("Imperativ (du)","___ Geduld! (haben)","повелит. 'имей'","Hab",["Hast","Habst","Habe"],"haben → Hab(e) (окончание -e факультативно)"),
+  mkQ("Imperativ (du)","___ mir! (helfen)","повелит. 'помоги'","Hilf",["Helfst","Hilfe","Helf"],"helfen с e→i: Hilf!"),
+  mkQ("Imperativ (du)","___ das Buch! (lesen)","повелит.","Lies",["Lesst","Lese","Lest"],"lesen с e→ie: Lies!"),
+  mkQ("Imperativ (du)","___ schnell! (laufen)","повелит. (БЕЗ умляута!)","Lauf",["Läuf","Läufst","Laufe"],"laufen: в Imperativ БЕЗ умляута (a/au)"),
+  mkQ("Imperativ (du)","___ mir Wasser! (geben)","повелит.","Gib",["Gibst","Gebe","Gibt"],"geben с e→i: Gib!"),
+  mkQ("Imperativ (ihr)","___ ruhig! (sein)","повелит. мн.ч.","Seid",["Sein","Sind","Bist"],"ihr → Seid!"),
+  mkQ("Imperativ (Sie)","___ Sie bitte! (kommen)","вежл. повелит.","Kommen",["Kommt","Komm","Komme"],"Sie-Imperativ = инфинитив + Sie"),
+  mkQ("Imperativ (wir)","___ wir gehen!","'пойдём!'","Gehen",["Gehe","Geht","Geh"],"wir-Imperativ: Gehen wir!"),
+  // separable verbs
+  mkQ("Отделяемая приставка","Ich ___ früh ___. (aufstehen)","отделить приставку","stehe ... auf",["aufstehe","aufstehen","stehe aufe"],"aufstehen → ich stehe ... auf"),
+  mkQ("Отделяемая приставка","Er ___ die Tür ___. (aufmachen)","отделить приставку","macht ... auf",["aufmacht","aufmachen","macht aufe"],"aufmachen → er macht ... auf"),
+  mkQ("Отделяемая приставка","Wir ___ dich ___. (anrufen)","отделить приставку","rufen ... an",["anrufen","anrufend","rufen ane"],"anrufen → wir rufen ... an"),
+  mkQ("Отделяемая приставка","Der Zug ___ um 8 ___. (abfahren)","отделить приставку","fährt ... ab",["abfährt","abfahren","fährte ab"],"abfahren → er fährt ... ab"),
+  mkQ("Отделяемая приставка","Sie ___ ___. (einkaufen)","отделить","kauft ... ein",["einkauft","kaufe einen","einkaufen"],"einkaufen → sie kauft ... ein"),
+  mkQ("Неотделяемая приставка","Ich ___ dich. (verstehen)","не отделяется","verstehe",["stehe ver","stehe ... ver","vstehe"],"ver-, be-, ent-, emp-, zer-, ge-, er- — НЕ отделяются"),
+  mkQ("Неотделяемая приставка","Er ___ das Geschenk. (bekommen)","не отделяется","bekommt",["kommt be","kommt ... be","bkommt"],"be- не отделяется → er bekommt"),
+];
+
+// ===================== TOPIC 3: Noun Gender & Plural =====================
+const nounQuestions = [
+  mkQ("Род","Какой артикль у слова Mann?","'мужчина'","der",["die","das","den"],"der Mann — мужской"),
+  mkQ("Род","Какой артикль у слова Frau?","'женщина'","die",["der","das","den"],"die Frau — женский"),
+  mkQ("Род","Какой артикль у слова Kind?","'ребёнок'","das",["der","die","den"],"das Kind — средний"),
+  mkQ("Род","Какой артикль у слова Mädchen?","-chen всегда средний!","das",["der","die","den"],"das Mädchen — слова на -chen всегда средний род"),
+  mkQ("Род","Какой артикль у слова Haus?","'дом'","das",["der","die","den"],"das Haus — средний"),
+  mkQ("Род","Какой артикль у слова Auto?","'машина'","das",["der","die","den"],"das Auto — средний"),
+  mkQ("Род","Какой артикль у слова Buch?","'книга'","das",["der","die","den"],"das Buch — средний"),
+  mkQ("Род","Какой артикль у слова Tisch?","'стол'","der",["die","das","den"],"der Tisch — мужской"),
+  mkQ("Род","Какой артикль у слова Stuhl?","'стул'","der",["die","das","den"],"der Stuhl — мужской"),
+  mkQ("Род","Какой артикль у слова Tür?","'дверь'","die",["der","das","den"],"die Tür — женский"),
+  mkQ("Род","Какой артикль у слова Fenster?","'окно'","das",["der","die","den"],"das Fenster — средний"),
+  mkQ("Род","Какой артикль у слова Lampe?","'лампа'","die",["der","das","den"],"die Lampe — женский (-e)"),
+  mkQ("Род","Какой артикль у слова Blume?","'цветок'","die",["der","das","den"],"die Blume — женский (-e)"),
+  mkQ("Род","Какой артикль у слова Schule?","'школа'","die",["der","das","den"],"die Schule — женский (-e)"),
+  mkQ("Род","Какой артикль у слова Straße?","'улица'","die",["der","das","den"],"die Straße — женский"),
+  mkQ("Род","Какой артикль у слова Stadt?","'город'","die",["der","das","den"],"die Stadt — женский"),
+  mkQ("Род","Какой артикль у слова Land?","'страна'","das",["der","die","den"],"das Land — средний"),
+  mkQ("Род","Какой артикль у слова Wasser?","'вода'","das",["der","die","den"],"das Wasser — средний"),
+  mkQ("Род","Какой артикль у слова Kaffee?","'кофе'","der",["die","das","den"],"der Kaffee — мужской"),
+  mkQ("Род","Какой артикль у слова Tee?","'чай'","der",["die","das","den"],"der Tee — мужской"),
+  mkQ("Род","Какой артикль у слова Milch?","'молоко'","die",["der","das","den"],"die Milch — женский (искл.)"),
+  mkQ("Род","Какой артикль у слова Bier?","'пиво'","das",["der","die","den"],"das Bier — средний"),
+  mkQ("Род","Какой артикль у слова Wein?","'вино'","der",["die","das","den"],"der Wein — мужской"),
+  mkQ("Род","Какой артикль у слова Brot?","'хлеб'","das",["der","die","den"],"das Brot — средний"),
+  mkQ("Род","Какой артикль у слова Käse?","'сыр'","der",["die","das","den"],"der Käse — мужской"),
+  mkQ("Род","Какой артикль у слова Butter?","'масло'","die",["der","das","den"],"die Butter — женский (искл.)"),
+  mkQ("Род","Какой артикль у слова Apfel?","'яблоко'","der",["die","das","den"],"der Apfel — мужской"),
+  mkQ("Род","Какой артикль у слова Banane?","'банан'","die",["der","das","den"],"die Banane — женский (-e)"),
+  mkQ("Род","Какой артикль у слова Orange?","'апельсин'","die",["der","das","den"],"die Orange — женский (-e)"),
+  mkQ("Род","Какой артикль у слова Hund?","'собака'","der",["die","das","den"],"der Hund — мужской"),
+  mkQ("Род","Какой артикль у слова Katze?","'кошка'","die",["der","das","den"],"die Katze — женский (-e)"),
+  mkQ("Род","Какой артикль у слова Vogel?","'птица'","der",["die","das","den"],"der Vogel — мужской"),
+  mkQ("Род","Какой артикль у слова Fisch?","'рыба'","der",["die","das","den"],"der Fisch — мужской"),
+  mkQ("Род","Какой артикль у слова Pferd?","'лошадь'","das",["der","die","den"],"das Pferd — средний"),
+  mkQ("Род","Какой артикль у слова Sonne?","'солнце'","die",["der","das","den"],"die Sonne — женский"),
+  mkQ("Род","Какой артикль у слова Mond?","'луна'","der",["die","das","den"],"der Mond — мужской (в нем. мужской!)"),
+  mkQ("Род","Какой артикль у слова Stern?","'звезда'","der",["die","das","den"],"der Stern — мужской"),
+  mkQ("Род","Какой артикль у слова Regen?","'дождь'","der",["die","das","den"],"der Regen — мужской"),
+  mkQ("Род","Какой артикль у слова Schnee?","'снег'","der",["die","das","den"],"der Schnee — мужской"),
+  mkQ("Род","Какой артикль у слова Wind?","'ветер'","der",["die","das","den"],"der Wind — мужской"),
+  mkQ("Род","Какой артикль у слова Sommer?","'лето'","der",["die","das","den"],"der Sommer — мужской (все сезоны муж.)"),
+  mkQ("Род","Какой артикль у слова Winter?","'зима'","der",["die","das","den"],"der Winter — мужской"),
+  mkQ("Род","Какой артикль у слова Frühling?","'весна'","der",["die","das","den"],"der Frühling — мужской"),
+  mkQ("Род","Какой артикль у слова Herbst?","'осень'","der",["die","das","den"],"der Herbst — мужской"),
+  mkQ("Род","Какой артикль у слова Montag?","'понедельник'","der",["die","das","den"],"der Montag — дни недели мужской"),
+  mkQ("Род","Какой артикль у слова Woche?","'неделя'","die",["der","das","den"],"die Woche — женский"),
+  mkQ("Род","Какой артикль у слова Monat?","'месяц'","der",["die","das","den"],"der Monat — мужской"),
+  mkQ("Род","Какой артикль у слова Jahr?","'год'","das",["der","die","den"],"das Jahr — средний"),
+  mkQ("Род","Какой артикль у слова Tag?","'день'","der",["die","das","den"],"der Tag — мужской"),
+  mkQ("Род","Какой артикль у слова Nacht?","'ночь'","die",["der","das","den"],"die Nacht — женский"),
+  mkQ("Род","Какой артикль у слова Zeit?","'время'","die",["der","das","den"],"die Zeit — женский"),
+  mkQ("Род","Какой артикль у слова Uhr?","'часы'","die",["der","das","den"],"die Uhr — женский"),
+  mkQ("Род","Какой артикль у слова Name?","'имя' (искл.)","der",["die","das","den"],"der Name — мужской (n-Deklination)"),
+  mkQ("Род","Какой артикль у слова Student?","'студент'","der",["die","das","den"],"der Student — мужской (n-Deklination)"),
+  mkQ("Род","Какой артикль у слова Lehrer?","'учитель'","der",["die","das","den"],"der Lehrer — мужской"),
+  mkQ("Род","Какой артикль у слова Lehrerin?","'учительница'","die",["der","das","den"],"die Lehrerin — женский (-in)"),
+  mkQ("Род","Какой артикль у слова Arzt?","'врач'","der",["die","das","den"],"der Arzt — мужской"),
+  mkQ("Род","Какой артикль у слова Ärztin?","'врач (ж)'","die",["der","das","den"],"die Ärztin — -in → женский"),
+  mkQ("Род","Какой артикль у слова Freundschaft?","-schaft","die",["der","das","den"],"-schaft → всегда женский"),
+  mkQ("Род","Какой артикль у слова Universität?","-tät","die",["der","das","den"],"-tät → всегда женский"),
+  mkQ("Род","Какой артикль у слова Information?","-ion","die",["der","das","den"],"-ion → всегда женский"),
+  mkQ("Род","Какой артикль у слова Meinung?","-ung","die",["der","das","den"],"-ung → всегда женский"),
+  mkQ("Род","Какой артикль у слова Freiheit?","-heit","die",["der","das","den"],"-heit → всегда женский"),
+  mkQ("Род","Какой артикль у слова Möglichkeit?","-keit","die",["der","das","den"],"-keit → всегда женский"),
+  mkQ("Род","Какой артикль у слова Problem?","'проблема'","das",["der","die","den"],"das Problem — -em → средний"),
+  mkQ("Род","Какой артикль у слова Thema?","'тема'","das",["der","die","den"],"das Thema — -ma → средний"),
+  mkQ("Род","Какой артикль у слова Museum?","-um","das",["der","die","den"],"-um → средний"),
+  mkQ("Род","Какой артикль у слова Zentrum?","-um","das",["der","die","den"],"-um → средний"),
+  mkQ("Род","Какой артикль у слова Computer?","'компьютер'","der",["die","das","den"],"der Computer — мужской (-er)"),
+  mkQ("Род","Какой артикль у слова Fernseher?","'телевизор'","der",["die","das","den"],"der Fernseher — мужской"),
+  mkQ("Род","Какой артикль у слова Zimmer?","'комната'","das",["der","die","den"],"das Zimmer — средний"),
+  mkQ("Род","Какой артикль у слова Wohnung?","-ung","die",["der","das","den"],"die Wohnung — -ung → женский"),
+  // Plurals
+  mkQ("Множ. число","Mann →","мн.ч.","Männer",["Manne","Manns","Männen"],"der Mann → die Männer (Umlaut + -er)"),
+  mkQ("Множ. число","Frau →","мн.ч.","Frauen",["Frau","Fraus","Frauer"],"die Frau → die Frauen (-en)"),
+  mkQ("Множ. число","Kind →","мн.ч.","Kinder",["Kinde","Kinden","Kinds"],"das Kind → die Kinder (-er)"),
+  mkQ("Множ. число","Haus →","мн.ч.","Häuser",["Hause","Häuse","Hausen"],"das Haus → die Häuser (Umlaut + -er)"),
+  mkQ("Множ. число","Buch →","мн.ч.","Bücher",["Buche","Buchen","Buchs"],"das Buch → die Bücher (Umlaut + -er)"),
+  mkQ("Множ. число","Auto →","мн.ч.","Autos",["Auten","Autoen","Auto"],"das Auto → die Autos (-s, иностр.)"),
+  mkQ("Множ. число","Tisch →","мн.ч.","Tische",["Tischen","Tische","Tischer"],"der Tisch → die Tische (-e)"),
+  mkQ("Множ. число","Stuhl →","мн.ч.","Stühle",["Stuhle","Stühler","Stuhlen"],"der Stuhl → die Stühle (Umlaut + -e)"),
+  mkQ("Множ. число","Tür →","мн.ч.","Türen",["Türe","Türs","Türer"],"die Tür → die Türen (-en)"),
+  mkQ("Множ. число","Fenster →","мн.ч.","Fenster",["Fensters","Fenstern","Fenstere"],"das Fenster → die Fenster (без изменений)"),
+  mkQ("Множ. число","Apfel →","мн.ч.","Äpfel",["Apfel","Apfels","Apfeln"],"der Apfel → die Äpfel (Umlaut)"),
+  mkQ("Множ. число","Hund →","мн.ч.","Hunde",["Hunden","Hundes","Hünde"],"der Hund → die Hunde"),
+  mkQ("Множ. число","Katze →","мн.ч.","Katzen",["Katze","Katzer","Katzes"],"die Katze → die Katzen"),
+  mkQ("Множ. число","Vogel →","мн.ч.","Vögel",["Vogel","Vogels","Vogeln"],"der Vogel → die Vögel (Umlaut)"),
+  mkQ("Множ. число","Wagen →","мн.ч.","Wagen",["Wägen","Wagens","Wägenen"],"der Wagen → die Wagen (без изменений)"),
+  mkQ("Множ. число","Garten →","мн.ч.","Gärten",["Garten","Gartens","Gartene"],"der Garten → die Gärten (Umlaut)"),
+  mkQ("Множ. число","Mutter →","мн.ч.","Mütter",["Mutter","Mutters","Muttern"],"die Mutter → die Mütter (Umlaut)"),
+  mkQ("Множ. число","Vater →","мн.ч.","Väter",["Vater","Vaters","Vatern"],"der Vater → die Väter (Umlaut)"),
+  mkQ("Множ. число","Bruder →","мн.ч.","Brüder",["Bruder","Bruders","Brudern"],"der Bruder → die Brüder (Umlaut)"),
+  mkQ("Множ. число","Schwester →","мн.ч.","Schwestern",["Schwester","Schwesters","Schwesterer"],"die Schwester → die Schwestern"),
+  mkQ("Множ. число","Tochter →","мн.ч.","Töchter",["Tochter","Tochters","Tochtern"],"die Tochter → die Töchter (Umlaut)"),
+  mkQ("Множ. число","Sohn →","мн.ч.","Söhne",["Sohn","Sohns","Sohner"],"der Sohn → die Söhne (Umlaut + -e)"),
+  mkQ("Множ. число","Freund →","мн.ч.","Freunde",["Freund","Freunds","Freundser"],"der Freund → die Freunde"),
+  mkQ("Множ. число","Freundin →","мн.ч.","Freundinnen",["Freundin","Freundinen","Freundine"],"-in → -innen (удвоение n!)"),
+  mkQ("Множ. число","Lehrerin →","мн.ч.","Lehrerinnen",["Lehrerin","Lehrerine","Lehrerins"],"-in → -innen"),
+  mkQ("Множ. число","Blume →","мн.ч.","Blumen",["Blume","Blumer","Blumes"],"die Blume → die Blumen"),
+  mkQ("Множ. число","Stadt →","мн.ч.","Städte",["Stadt","Stadten","Stadter"],"die Stadt → die Städte (Umlaut + -e)"),
+  mkQ("Множ. число","Land →","мн.ч.","Länder",["Land","Lande","Lands"],"das Land → die Länder (Umlaut + -er)"),
+  mkQ("Множ. число","Nacht →","мн.ч.","Nächte",["Nacht","Nachten","Nachter"],"die Nacht → die Nächte (Umlaut + -e)"),
+  mkQ("Множ. число","Hand →","мн.ч.","Hände",["Hand","Handen","Hands"],"die Hand → die Hände (Umlaut + -e)"),
+  mkQ("Множ. число","Auge →","мн.ч.","Augen",["Auge","Auger","Auges"],"das Auge → die Augen"),
+  mkQ("Множ. число","Ohr →","мн.ч.","Ohren",["Ohr","Ohrer","Ohre"],"das Ohr → die Ohren"),
+  mkQ("Множ. число","Mädchen →","мн.ч.","Mädchen",["Mädchens","Mädchene","Mädchenen"],"-chen → без изменений"),
+  mkQ("Множ. число","Kaffee →","мн.ч. (сорта)","Kaffees",["Kaffeen","Kaffeer","Kaffee"],"der Kaffee → die Kaffees"),
+  mkQ("Множ. число","Hotel →","мн.ч.","Hotels",["Hotele","Hoteln","Hotelen"],"das Hotel → die Hotels (-s иностр.)"),
+  mkQ("Множ. число","Party →","мн.ч.","Partys",["Parties","Partyen","Partyn"],"die Party → die Partys (нем. -s, не англ. -ies)"),
+  mkQ("Dat pl","Kind → Dat pl: ___","'детям'","den Kindern",["die Kinder","den Kinder","der Kindern"],"Dat pl всегда + -n: den Kindern"),
+  mkQ("Dat pl","Mann → Dat pl: ___","'мужчинам'","den Männern",["die Männer","den Männer","der Männern"],"Dat pl: den Männern"),
+  mkQ("Dat pl","Haus → Dat pl: ___","'домам'","den Häusern",["die Häuser","den Häuser","der Häusern"],"Dat pl: den Häusern"),
+  mkQ("Dat pl","Buch → Dat pl: ___","'книгам'","den Büchern",["die Bücher","den Bücher","der Büchern"],"Dat pl: den Büchern"),
+  mkQ("Dat pl","Auto → Dat pl: ___","-s → без +n!","den Autos",["den Auton","den Autosn","die Autos"],"если мн.ч. уже на -s → НЕ добавляем -n"),
+  // N-declension
+  mkQ("n-склонение","Ich sehe ___ (Student).","Akk masc слаб.скл.","den Studenten",["den Student","dem Student","des Studenten"],"Student — слабое склонение: во всех падежах кроме Nom → -en"),
+  mkQ("n-склонение","Ich helfe ___ (Student).","Dat masc слаб.скл.","dem Studenten",["dem Student","den Student","des Student"],"Dat: dem Studenten (+en)"),
+  mkQ("n-склонение","Das Buch ___ (Student).","Gen masc слаб.скл.","des Studenten",["des Students","des Student","der Studenten"],"Gen: des Studenten (+en, не -s!)"),
+  mkQ("n-склонение","Ich sehe ___ (Junge).","Akk masc слаб.скл.","den Jungen",["den Junge","dem Jungen","des Jungen"],"Junge — n-скл.: den Jungen"),
+  mkQ("n-склонение","Ich sehe ___ (Herr).","Akk masc слаб.скл.","den Herrn",["den Herr","dem Herr","des Herrn"],"Herr: в ед.ч. +n, во мн. → Herren"),
+  mkQ("n-склонение","Ich helfe ___ (Mensch).","Dat masc слаб.скл.","dem Menschen",["dem Mensch","den Mensch","des Mensch"],"Mensch — n-скл.: dem Menschen"),
+  mkQ("n-склонение","Das ist der Name ___ (Kollege).","Gen слаб.скл.","des Kollegen",["des Kolleges","des Kollege","der Kollege"],"Kollege → des Kollegen"),
+  mkQ("n-склонение","Ich sehe ___ (Junge).","окончание","Jungen",["Junge","Jung","Junges"],"Junge в Akk/Dat/Gen → Jungen"),
+];
+
+// ===================== TOPIC 4: Prepositions =====================
+const prepositionQuestions = [
+  // Akk-only: für, ohne, gegen, um, durch, bis
+  mkQ("Akk-предлог","Das Geschenk ist ___ dich.","'для тебя'","für",["mit","bei","zu"],"für + Akk → für dich"),
+  mkQ("Akk-предлог","Ich komme ___ dich.","'без тебя'","ohne",["mit","bei","von"],"ohne + Akk → ohne dich"),
+  mkQ("Akk-предлог","Ich bin ___ die Idee.","'против'","gegen",["für","mit","bei"],"gegen + Akk"),
+  mkQ("Akk-предлог","Wir treffen uns ___ acht Uhr.","'в 8 часов'","um",["in","an","zu"],"um + время → um 8 Uhr"),
+  mkQ("Akk-предлог","Wir gehen ___ den Park.","'через парк'","durch",["über","auf","in"],"durch + Akk → durch den Park"),
+  mkQ("Akk-предлог","Er arbeitet ___ Montag.","'до понедельника'","bis",["seit","von","nach"],"bis + Akk (без артикля часто)"),
+  mkQ("Akk-предлог","Ich kaufe es ___ dich.","'для тебя'","für",["mit","bei","zu"],"für + Akk"),
+  mkQ("Akk-предлог (падеж)","für ___ Freund (Akk masc)","'для друга'","den",["dem","der","des"],"für + Akk masc → den"),
+  mkQ("Akk-предлог (падеж)","ohne ___ Auto (Akk neut)","'без машины'","das",["dem","der","des"],"ohne + Akk neut → das"),
+  mkQ("Akk-предлог (падеж)","gegen ___ Wand (Akk fem)","'в стену'","die",["der","dem","des"],"gegen + Akk fem → die"),
+  // Dat-only: aus, bei, mit, nach, seit, von, zu, gegenüber
+  mkQ("Dat-предлог","Ich komme ___ Deutschland.","'из Германии'","aus",["von","in","nach"],"aus + Dat (страна, происхождение)"),
+  mkQ("Dat-предлог","Ich wohne ___ meinen Eltern.","'у родителей'","bei",["mit","von","zu"],"bei + Dat → у кого-то"),
+  mkQ("Dat-предлог","Ich gehe ___ dir.","'с тобой'","mit",["bei","von","zu"],"mit + Dat"),
+  mkQ("Dat-предлог","Ich fahre ___ Berlin.","'в Берлин' (город)","nach",["zu","in","bei"],"nach + город/страна без артикля → nach Berlin"),
+  mkQ("Dat-предлог","Ich wohne hier ___ 2020.","'с 2020'","seit",["von","bei","ab"],"seit + Dat → с какого момента"),
+  mkQ("Dat-предлог","Das ist ___ mir.","'от меня'","von",["aus","bei","zu"],"von + Dat"),
+  mkQ("Dat-предлог","Ich gehe ___ Arzt.","'к врачу'","zum",["nach","ins","bei"],"zu + Dat → zum Arzt (zu+dem)"),
+  mkQ("Dat-предлог","Der Park ist ___ dem Haus.","'напротив дома'","gegenüber",["durch","gegen","bei"],"gegenüber + Dat"),
+  mkQ("nach vs zu","Ich fahre ___ Frankreich.","страна без артикля","nach",["zu","in","bei"],"nach + страны без артикля"),
+  mkQ("nach vs zu","Ich gehe ___ Schule.","учреждение","zur",["nach","in","bei"],"zu + Dat → zur Schule (zu+der)"),
+  mkQ("nach vs zu","Ich gehe ___ Hause.","домой (устойчиво)","nach",["zu","in","bei"],"nach Hause — домой (направл.)"),
+  mkQ("bei vs zu","Ich bin ___ Hause.","дома (устойчиво)","zu",["nach","in","bei"],"zu Hause — дома (место)"),
+  mkQ("in vs nach","Ich fliege ___ die Schweiz.","страна С артиклем","in",["nach","zu","bei"],"in + Akk → страны с артиклем: in die Schweiz"),
+  mkQ("in vs nach","Ich fliege ___ Italien.","страна БЕЗ артикля","nach",["in","zu","bei"],"nach Italien (без артикля)"),
+  mkQ("Dat-предлог (падеж)","mit ___ Freund (Dat masc)","'с другом'","dem",["den","der","des"],"mit + Dat masc → dem"),
+  mkQ("Dat-предлог (падеж)","mit ___ Freundin (Dat fem)","'с подругой'","der",["die","dem","des"],"mit + Dat fem → der"),
+  mkQ("Dat-предлог (падеж)","bei ___ Eltern (Dat pl)","'у родителей'","den",["die","der","dem"],"bei + Dat pl → den"),
+  mkQ("Dat-предлог (падеж)","aus ___ Haus (Dat neut)","'из дома'","dem",["das","der","den"],"aus + Dat neut → dem"),
+  // Wechselpräpositionen (Wo Dat / Wohin Akk)
+  mkQ("Wechselpräp. (Wo/Wohin)","Ich lege das Buch ___ den Tisch.","направление → Akk","auf",["an","in","über"],"auf + Wohin (Akk) → auf den Tisch"),
+  mkQ("Wechselpräp. (Wo/Wohin)","Das Buch liegt ___ dem Tisch.","место → Dat","auf",["an","in","über"],"auf + Wo (Dat) → auf dem Tisch"),
+  mkQ("Wechselpräp. (падеж)","Ich gehe in ___ Haus.","направление → Akk neut","das",["dem","den","der"],"in + Wohin + Akk neut → das"),
+  mkQ("Wechselpräp. (падеж)","Ich bin in ___ Haus.","место → Dat neut","dem",["das","den","der"],"in + Wo + Dat neut → dem"),
+  mkQ("Wechselpräp. (падеж)","Ich hänge das Bild an ___ Wand.","направление → Akk fem","die",["der","dem","das"],"an + Wohin + Akk fem → die"),
+  mkQ("Wechselpräp. (падеж)","Das Bild hängt an ___ Wand.","место → Dat fem","der",["die","dem","das"],"an + Wo + Dat fem → der"),
+  mkQ("Wechselpräp. (падеж)","Die Katze springt unter ___ Tisch.","направление → Akk masc","den",["dem","der","das"],"unter + Wohin + Akk masc → den"),
+  mkQ("Wechselpräp. (падеж)","Die Katze ist unter ___ Tisch.","место → Dat masc","dem",["den","der","des"],"unter + Wo + Dat masc → dem"),
+  mkQ("Wechselpräp. (падеж)","Das Flugzeug fliegt über ___ Stadt.","направление → Akk fem","die",["der","dem","des"],"über + Wohin + Akk fem → die"),
+  mkQ("Wechselpräp. (падеж)","Die Wolken sind über ___ Stadt.","место → Dat fem","der",["die","dem","des"],"über + Wo + Dat fem → der"),
+  mkQ("Wechselpräp. (падеж)","Ich gehe zwischen ___ Häuser.","направление → Akk pl","die",["den","der","dem"],"zwischen + Wohin + Akk pl → die"),
+  mkQ("Wechselpräp. (падеж)","Der Baum ist zwischen ___ Häusern.","место → Dat pl","den",["die","der","dem"],"zwischen + Wo + Dat pl → den + -n"),
+  mkQ("Wechselpräp. (падеж)","Ich stelle den Stuhl neben ___ Tisch.","направление → Akk masc","den",["dem","der","das"],"neben + Wohin + Akk masc → den"),
+  mkQ("Wechselpräp. (падеж)","Der Stuhl steht neben ___ Tisch.","место → Dat masc","dem",["den","der","das"],"neben + Wo + Dat masc → dem"),
+  mkQ("Wechselpräp. (падеж)","Ich gehe hinter ___ Haus.","направление → Akk neut","das",["dem","den","der"],"hinter + Wohin + Akk neut → das"),
+  mkQ("Wechselpräp. (падеж)","Der Garten ist hinter ___ Haus.","место → Dat neut","dem",["das","den","der"],"hinter + Wo + Dat neut → dem"),
+  mkQ("Wechselpräp. (падеж)","Ich gehe vor ___ Tür.","направление → Akk fem","die",["der","dem","das"],"vor + Wohin + Akk fem → die"),
+  mkQ("Wechselpräp. (падеж)","Ich stehe vor ___ Tür.","место → Dat fem","der",["die","dem","das"],"vor + Wo + Dat fem → der"),
+  // Contractions
+  mkQ("Слияние","zu + dem →","сокращение","zum",["zudem","zem","zur"],"zu + dem = zum"),
+  mkQ("Слияние","zu + der →","сокращение","zur",["zuder","zer","zum"],"zu + der = zur"),
+  mkQ("Слияние","in + dem →","сокращение","im",["indem","in dem","am"],"in + dem = im"),
+  mkQ("Слияние","in + das →","сокращение","ins",["indas","in das","es"],"in + das = ins"),
+  mkQ("Слияние","an + dem →","сокращение","am",["andem","an dem","im"],"an + dem = am"),
+  mkQ("Слияние","an + das →","сокращение","ans",["andas","an das","es"],"an + das = ans"),
+  mkQ("Слияние","bei + dem →","сокращение","beim",["beidem","bei dem","bem"],"bei + dem = beim"),
+  mkQ("Слияние","von + dem →","сокращение","vom",["vondem","von dem","vm"],"von + dem = vom"),
+  mkQ("Слияние","auf + das →","сокращение","aufs",["aufdas","auf das","as"],"auf + das = aufs"),
+  mkQ("Слияние","für + das →","сокращение","fürs",["fürdas","für das","fr"],"für + das = fürs"),
+  // Time prepositions
+  mkQ("Предлог времени","___ Montag gehe ich zur Schule.","'в понедельник'","Am",["Im","Um","An"],"am + день недели (an+dem) → Am Montag"),
+  mkQ("Предлог времени","___ Januar fahre ich nach Berlin.","'в январе'","Im",["Am","Um","In"],"im + месяц (in+dem) → Im Januar"),
+  mkQ("Предлог времени","___ 8 Uhr beginnt die Schule.","точное время","Um",["Am","Im","An"],"um + время → Um 8 Uhr"),
+  mkQ("Предлог времени","___ Sommer reisen wir.","'летом'","Im",["Am","Um","An"],"im + сезон → Im Sommer"),
+  mkQ("Предлог времени","___ 2020 bin ich geboren.","год","___",["Am","Im","Um"],"год → БЕЗ предлога (Ich bin 2020 geboren)"),
+  mkQ("Предлог времени","Ich komme ___ einer Woche.","'через неделю'","in",["an","um","seit"],"in + Dat → через (будущее)"),
+  mkQ("Предлог времени","Ich lerne Deutsch ___ einem Jahr.","'год уже'","seit",["für","in","an"],"seit + Dat → с какого-то момента"),
+  mkQ("Предлог времени","Ich bleibe ___ Freitag.","'до пятницы'","bis",["nach","seit","von"],"bis + время → до"),
+  mkQ("Предлог времени","___ der Schule gehe ich nach Hause.","'после школы'","Nach",["Vor","Bei","Seit"],"nach + Dat → после"),
+  mkQ("Предлог времени","___ dem Essen lese ich.","'перед едой'","Vor",["Nach","Bei","Seit"],"vor + Dat → до/перед"),
+  mkQ("Предлог времени","___ Wochenende bin ich frei.","'на выходных'","Am",["Im","Um","An"],"am Wochenende"),
+  mkQ("Предлог времени","___ Abend esse ich.","'вечером'","Am",["Im","Um","An"],"am Abend (утро/день/вечер — am, но: in der Nacht)"),
+  mkQ("Предлог времени","___ der Nacht.","'ночью' (искл.)","In",["Am","Um","An"],"ночью → in der Nacht (искл.)"),
+  // verb + prep
+  mkQ("Глагол+предлог","Ich warte ___ den Bus.","warten + ?","auf",["für","mit","an"],"warten auf + Akk"),
+  mkQ("Глагол+предлог","Ich denke ___ dich.","denken + ?","an",["auf","über","von"],"denken an + Akk"),
+  mkQ("Глагол+предлог","Ich freue mich ___ das Geschenk.","freuen + ? (предмет)","über",["auf","an","von"],"sich freuen über + Akk (уже полученное)"),
+  mkQ("Глагол+предлог","Ich freue mich ___ die Ferien.","freuen + ? (будущее)","auf",["über","an","von"],"sich freuen auf + Akk (будущее)"),
+  mkQ("Глагол+предлог","Ich interessiere mich ___ Musik.","interessieren + ?","für",["auf","an","von"],"sich interessieren für + Akk"),
+  mkQ("Глагол+предлог","Ich spreche ___ meinen Freund.","sprechen + ? (о ком)","über",["mit","für","an"],"sprechen über + Akk = говорить о"),
+  mkQ("Глагол+предлог","Ich spreche ___ meinem Freund.","sprechen + ? (с кем)","mit",["über","für","an"],"sprechen mit + Dat = говорить с"),
+  mkQ("Глагол+предлог","Ich habe Angst ___ Spinnen.","Angst haben + ?","vor",["für","an","von"],"Angst vor + Dat"),
+  mkQ("Глагол+предлог","Ich träume ___ einem Haus.","träumen + ?","von",["an","auf","über"],"träumen von + Dat"),
+  mkQ("Глагол+предлог","Ich erinnere mich ___ meine Kindheit.","erinnern + ?","an",["auf","über","von"],"sich erinnern an + Akk"),
+  mkQ("Глагол+предлог","Ich bitte ___ Hilfe.","bitten + ?","um",["für","an","auf"],"bitten um + Akk"),
+  mkQ("Глагол+предлог","Ich glaube ___ Gott.","glauben + ? (в кого/что-то высшее)","an",["auf","über","von"],"glauben an + Akk"),
+  mkQ("Глагол+предлог","Es hängt ___ dir ab.","abhängen + ?","von",["an","auf","über"],"abhängen von + Dat"),
+  mkQ("Глагол+предлог","Ich bin stolz ___ meinen Sohn.","stolz + ?","auf",["an","über","von"],"stolz auf + Akk"),
+  mkQ("Глагол+предлог","Ich bin zufrieden ___ dem Ergebnis.","zufrieden + ?","mit",["von","an","für"],"zufrieden mit + Dat"),
+  mkQ("Глагол+предлог","Ich bin verliebt ___ sie.","verliebt + ?","in",["an","auf","mit"],"verliebt in + Akk"),
+  mkQ("Глагол+предлог","Ich bin böse ___ dich.","böse + ?","auf",["für","an","mit"],"böse auf + Akk"),
+];
+
+// ===================== TOPIC 5: Word Order =====================
+const wordOrderQuestions = [
+  mkQ("V2 (глагол вторым)","Выберите правильный порядок:","Ich/gehe/morgen/ins Kino","Ich gehe morgen ins Kino.",["Ich morgen gehe ins Kino.","Morgen ich gehe ins Kino.","Ich ins Kino gehe morgen."],"V2: Ich (S) gehe (V2) morgen ins Kino"),
+  mkQ("V2 (инверсия)","Выберите правильный порядок:","Morgen/gehe/ich/ins Kino","Morgen gehe ich ins Kino.",["Morgen ich gehe ins Kino.","Morgen ins Kino gehe ich.","Morgen ich ins Kino gehe."],"Если 1-е место занято (Morgen), глагол всё равно 2-й → инверсия"),
+  mkQ("V2 (инверсия)","Выберите правильный порядок:","Heute/kommt/er","Heute kommt er.",["Heute er kommt.","Kommt heute er.","Er heute kommt."],"V2: Heute (X) kommt (V) er (S)"),
+  mkQ("V2 (инверсия)","Выберите правильный порядок:","In Berlin/wohnt/meine Familie","In Berlin wohnt meine Familie.",["In Berlin meine Familie wohnt.","Meine Familie in Berlin wohnt.","In Berlin wohnen meine Familie."],"V2 с обст. места: In Berlin (X) wohnt (V) ..."),
+  mkQ("V2","Выберите правильный порядок:","Am Montag/spiele/ich/Tennis","Am Montag spiele ich Tennis.",["Am Montag ich spiele Tennis.","Ich spiele am Montag Tennis."],"V2: Am Montag (X) spiele (V) ich (S) — обе верны, но V2 требуется"),
+  mkQ("Nebensatz (придаточное)","..., weil ich müde ___.","verb-final","bin",["bin ich","ich bin","ist"],"В придаточном с weil → глагол в конце: ...weil ich müde bin"),
+  mkQ("Nebensatz","..., weil er krank ___.","verb-final","ist",["ist er","er ist","sei"],"...weil er krank ist"),
+  mkQ("Nebensatz","..., dass ich dich ___.","verb-final","liebe",["liebe ich","ich liebe","liebst"],"...dass ich dich liebe"),
+  mkQ("Nebensatz","..., wenn ich Zeit ___.","verb-final","habe",["habe ich","ich habe","hat"],"...wenn ich Zeit habe"),
+  mkQ("Nebensatz","Ich weiß, dass er morgen ___.","verb-final","kommt",["kommt er","er kommt","komme"],"...dass er morgen kommt"),
+  mkQ("Nebensatz","Ich weiß nicht, ob sie ___.","verb-final","kommt",["kommt sie","sie kommt","komme"],"ob-Satz: ...ob sie kommt"),
+  mkQ("Nebensatz","..., obwohl es regnet, gehe ich.","главное после придат. → инверсия","gehe ich",["ich gehe","gehen ich","ich gehen"],"Когда придаточное ПЕРЕД главным, главное начинается с глагола"),
+  mkQ("Nebensatz (модальн.)","..., weil ich nicht ___ ___.","'не могу прийти' (Nebensatz)","kommen kann",["kann kommen","kommen können","kommt kann"],"В Nebensatz: инфинитив + модальный в конце → kommen kann"),
+  mkQ("Separable в Nebensatz","..., weil ich früh ___.","приставка не отделяется!","aufstehe",["auf stehe","stehe auf","stehe ... auf"],"В Nebensatz отделяемая приставка ВОЗВРАЩАЕТСЯ: aufstehe"),
+  mkQ("Separable в Nebensatz","..., wenn du mich ___.","'позвонишь' в Nebensatz","anrufst",["an rufst","rufst an","rufst ... an"],"В Nebensatz: anrufst (вместе)"),
+  // Separable verbs in Hauptsatz
+  mkQ("Отделяемая (Hauptsatz)","Ich ___ dich morgen ___. (anrufen)","разделить","rufe ... an",["anrufe","an rufe","rufe an dich"],"anrufen → Ich rufe dich morgen an"),
+  mkQ("Отделяемая (Hauptsatz)","Er ___ die Tür ___. (aufmachen)","разделить","macht ... auf",["aufmacht","auf macht","macht auf die Tür"],"aufmachen → Er macht die Tür auf"),
+  mkQ("Отделяемая (Hauptsatz)","Wir ___ früh ___. (aufstehen)","разделить","stehen ... auf",["aufstehen","auf stehen","stehen auf früh"],"aufstehen → Wir stehen früh auf"),
+  // Perfekt frame (Satzklammer)
+  mkQ("Рамка (Perfekt)","Ich habe das Buch ___.","Partizip в конце","gelesen",["lese","liest","las"],"Perfekt: haben + ... + Partizip II в конце (рамка)"),
+  mkQ("Рамка (Perfekt)","Er hat mich gestern ___.","Partizip в конце","gesehen",["sieht","sehen","sah"],"Perfekt-рамка: hat ... gesehen"),
+  mkQ("Рамка (Perfekt)","Wir sind nach Berlin ___.","Partizip в конце","gefahren",["fahren","fährt","fuhr"],"sind ... gefahren"),
+  // Modal verbs frame
+  mkQ("Рамка (Modal)","Ich will heute Abend ins Kino ___.","Infinitiv в конце","gehen",["gehe","ging","gegangen"],"Modal-рамка: will ... gehen"),
+  mkQ("Рамка (Modal)","Du musst jetzt Hausaufgaben ___.","Infinitiv в конце","machen",["mache","gemacht","machst"],"musst ... machen"),
+  mkQ("Рамка (Modal)","Er kann gut Deutsch ___.","Infinitiv в конце","sprechen",["spricht","gesprochen","sprach"],"kann ... sprechen"),
+  // Futur frame
+  mkQ("Рамка (Futur)","Ich werde morgen kommen.","Infinitiv в конце","werde ... kommen",["werde kommen morgen","komme werde morgen","werde morgen komme"],"Futur-рамка: werde ... Inf в конце"),
+  // TeKaMoLo
+  mkQ("TeKaMoLo","Ich fahre ___ mit dem Auto nach Berlin.","Te = Temporal = время ПЕРВЫМ","morgen",["nach Berlin","mit dem Auto","schnell"],"TeKaMoLo: Время → Причина → Образ → Место. Сначала morgen (Te)"),
+  mkQ("TeKaMoLo","Ich fahre morgen ___ nach Berlin.","после времени → Ka/Mo","mit dem Auto",["morgen","nach Berlin","zum Bahnhof"],"После времени → образ действия (Mo)"),
+  mkQ("TeKaMoLo","Правильный порядок: 'завтра на машине в Берлин'","TeKaMoLo","morgen mit dem Auto nach Berlin",["nach Berlin morgen mit dem Auto","mit dem Auto morgen nach Berlin","morgen nach Berlin mit dem Auto"],"TeKaMoLo: morgen (Te) + mit dem Auto (Mo) + nach Berlin (Lo)"),
+  // Negation
+  mkQ("nicht-позиция","Ich komme ___. (отриц. всего предл.)","nicht в конце","heute nicht",["nicht heute","nicht komme","komme nicht heute"],"nicht в конце простого предложения: 'Ich komme heute nicht'"),
+  mkQ("nicht-позиция","Ich fahre ___ nach Berlin. (отриц. места)","nicht перед обст. места","nicht",["nicht mal","nein","kein"],"nicht перед обстоятельством места: 'Ich fahre nicht nach Berlin'"),
+  mkQ("nicht-позиция","Ich habe das Buch ___ ___.","Perfekt + nicht","nicht gelesen",["gelesen nicht","gelesennicht","nichtgelesen"],"В Perfekt: nicht ПЕРЕД Partizip → nicht gelesen"),
+  mkQ("nicht vs kein","Ich habe ___ Auto.","отр. существит. с артиклем","kein",["nicht","nicht ein","keine"],"kein заменяет ein/неопред. → kein Auto"),
+  mkQ("nicht vs kein","Ich mag das Buch ___.","отр. определённое","nicht",["kein","keine","keinen"],"nicht с определённым артиклем → Ich mag das Buch nicht"),
+  mkQ("nicht vs kein","Das ist ___ Problem.","'это не проблема'","kein",["nicht","nicht ein","keine"],"kein + сущ. (Nom neut) → kein Problem"),
+  // Question word order
+  mkQ("Вопрос (W-Frage)","'Где ты живёшь?'","W-Frage порядок","Wo wohnst du?",["Du wo wohnst?","Wo du wohnst?","Wohnst du wo?"],"W-вопрос: W-слово + V + S → Wo wohnst du?"),
+  mkQ("Вопрос (W-Frage)","'Что ты делаешь?'","W-Frage порядок","Was machst du?",["Du was machst?","Was du machst?","Machst du was?"],"Was machst du?"),
+  mkQ("Вопрос (Ja/Nein)","'Ты говоришь по-немецки?'","да/нет-вопрос","Sprichst du Deutsch?",["Du sprichst Deutsch?","Deutsch sprichst du?","Du Deutsch sprichst?"],"Ja/Nein: V + S + ... → Sprichst du Deutsch?"),
+  mkQ("Вопрос (Ja/Nein)","'Он дома?'","да/нет-вопрос","Ist er zu Hause?",["Er ist zu Hause?","Zu Hause er ist?","Er zu Hause ist?"],"V + S → Ist er zu Hause?"),
+  mkQ("Вопрос","'Когда ты приходишь?'","W-Frage","Wann kommst du?",["Du wann kommst?","Wann du kommst?","Kommst wann du?"],"Wann kommst du?"),
+  mkQ("Вопрос","'Почему ты плачешь?'","W-Frage","Warum weinst du?",["Du warum weinst?","Warum du weinst?","Weinst du warum?"],"Warum weinst du?"),
+  // Pronoun order
+  mkQ("Порядок местоимений","Ich gebe ___ ___ (es, ihm).","акк-мест. перед дат.-мест.","es ihm",["ihm es","es dem","dem es"],"Когда оба местоимения: Akk ПЕРЕД Dat → es ihm"),
+  mkQ("Порядок местоимений","Ich gebe ___ ___ (dem Mann, es).","местоимение перед сущ.","es dem Mann",["dem Mann es","es den Mann","der Mann es"],"Местоимение ПЕРЕД существительным"),
+  // Conjunctions word order
+  mkQ("Союзы (und/aber/denn — без инверсии)","Ich bleibe zu Hause, ___ ich bin krank.","координирующий союз","denn",["weil","dass","obwohl"],"denn = обычный порядок (без инверсии, не subord.)"),
+  mkQ("Союзы (deshalb → инверсия)","Ich bin krank, ___ bleibe ich zu Hause.","'поэтому'","deshalb",["weil","denn","dass"],"deshalb = наречие → инверсия: deshalb + V + S"),
+  mkQ("weil vs denn","weil vs denn — в чём разница порядка?","порядок слов","weil → verb-final, denn → обычный",["оба verb-final","оба обычный","наоборот"],"weil → придаточное (verb в конце), denn → координ. (обычный порядок)"),
+  mkQ("damit vs um ... zu","Ich lerne, ___ ich gut Deutsch spreche.","разные подлежащие","damit",["um","dass","weil"],"damit = когда подлежащие РАЗНЫЕ или есть две части"),
+  mkQ("damit vs um ... zu","Ich lerne, ___ gut Deutsch zu sprechen.","то же подлежащее","um",["damit","dass","weil"],"um ... zu + Inf = когда подлежащее ОДНО и то же"),
+  mkQ("Relativsatz","Der Mann, ___ dort steht, ist mein Vater.","relative pronoun Nom masc","der",["den","dem","dessen"],"относит. мест. Nom masc → der"),
+  mkQ("Relativsatz","Die Frau, ___ ich liebe, heißt Anna.","relative pronoun Akk fem","die",["der","dem","den"],"отн.мест. Akk fem → die"),
+  mkQ("Relativsatz","Das Kind, ___ ich helfe, ist klein.","relative pronoun Dat neut","dem",["das","der","des"],"отн.мест. Dat neut → dem"),
+  mkQ("Relativsatz","Der Mann, ___ Auto kaputt ist, ruft an.","relative Gen masc","dessen",["der","des","dem"],"отн.мест. Gen masc → dessen"),
+  mkQ("Relativsatz","Die Frau, ___ Sohn krank ist.","relative Gen fem","deren",["der","die","dessen"],"отн.мест. Gen fem → deren"),
+];
+
+// Add more questions to reach ~500
+const moreArticleQs = [
+  mkQ("Артикль (смешанный)","___ Kuchen schmeckt gut.","'пирог' Nom masc","Der",["Die","Das","Den"],"der Kuchen"),
+  mkQ("Артикль (смешанный)","Ich esse ___ Kuchen.","Akk masc","den",["der","die","das"],"den Kuchen (Akk)"),
+  mkQ("Артикль (смешанный)","___ Suppe ist heiß.","Nom fem","Die",["Der","Das","Den"],"die Suppe"),
+  mkQ("Артикль (смешанный)","Ich esse ___ Suppe.","Akk fem","die",["der","das","den"],"die Suppe (Akk = Nom fem)"),
+  mkQ("Артикль (смешанный)","___ Wasser ist kalt.","Nom neut","Das",["Der","Die","Dem"],"das Wasser"),
+  mkQ("Артикль (смешанный)","Ich trinke ___ Wasser.","Akk neut","das",["der","die","den"],"das Wasser"),
+  mkQ("Артикль (смешанный)","Ich kaufe ___ Brot.","Akk neut","das",["der","die","den"],"das Brot"),
+  mkQ("Артикль (смешанный)","Ich habe ___ Hund.","Akk masc неопр.","einen",["ein","eine","einem"],"einen Hund"),
+  mkQ("Артикль (смешанный)","Ich habe ___ Katze.","Akk fem неопр.","eine",["ein","einer","einen"],"eine Katze"),
+  mkQ("Артикль (смешанный)","Ich habe ___ Fahrrad.","Akk neut неопр.","ein",["eine","einen","einem"],"ein Fahrrad"),
+  mkQ("Артикль (Dat смеш.)","mit ___ Kind","Dat neut","dem",["das","den","der"],"mit + Dat neut → dem"),
+  mkQ("Артикль (Dat смеш.)","nach ___ Schule","Dat fem","der",["die","dem","das"],"nach + Dat fem → der"),
+  mkQ("Артикль (Dat смеш.)","bei ___ Arzt","Dat masc","dem",["der","den","des"],"bei + Dat masc → dem"),
+  mkQ("Артикль (Dat смеш.)","mit ___ Auto","Dat neut","dem",["das","den","der"],"mit + Dat neut → dem"),
+  mkQ("Артикль (Dat смеш.)","aus ___ Stadt","Dat fem","der",["die","dem","das"],"aus + Dat fem → der"),
+  mkQ("Артикль (Dat смеш.)","von ___ Freund","Dat masc","dem",["der","den","des"],"von + Dat masc → dem"),
+  mkQ("Артикль (Dat смеш.)","zu ___ Freundin","Dat fem","der",["die","dem","das"],"zu + Dat fem → der"),
+  mkQ("Артикль (Dat смеш.)","seit ___ Woche","Dat fem","einer",["ein","eine","einem"],"seit + Dat fem неопр. → einer"),
+  mkQ("Артикль (Dat смеш.)","nach ___ Stunde","Dat fem","einer",["ein","eine","einem"],"nach + Dat fem неопр. → einer"),
+  mkQ("Артикль (Dat смеш.)","mit ___ Freund","Dat masc неопр.","einem",["ein","einen","eines"],"mit + Dat masc неопр. → einem"),
+  mkQ("Kein/nicht","Das ist ___ gute Idee.","Nom fem — kein","keine",["nicht","kein","keinen"],"keine gute Idee"),
+  mkQ("Kein/nicht","Ich mag ___ Schokolade.","Akk fem — НЕ kein (опр.)","keine",["nicht","kein","keinen"],"Ich mag keine Schokolade — отриц. неопред."),
+  mkQ("Kein/nicht","Er hat ___ Geld.","Akk neut","kein",["nicht","keine","keinen"],"kein Geld"),
+  mkQ("Kein/nicht","Ich habe ___ Bruder.","Akk masc","keinen",["nicht","kein","keine"],"keinen Bruder"),
+  mkQ("Артикль (Gen доп.)","Das Haus ___ Lehrers.","Gen masc","des",["der","dem","den"],"Gen masc → des Lehrers"),
+  mkQ("Артикль (Gen доп.)","Die Farbe ___ Wand.","Gen fem","der",["die","dem","des"],"Gen fem → der Wand"),
+  mkQ("Артикль (Gen доп.)","Das Fenster ___ Hauses.","Gen neut","des",["der","dem","den"],"Gen neut → des Hauses"),
+  mkQ("Артикль (Gen доп.)","Die Spielsachen ___ Kinder.","Gen pl","der",["die","den","des"],"Gen pl → der Kinder"),
+  mkQ("dieser/diese/dieses (Nom)","___ Mann ist nett.","Nom masc","Dieser",["Dieses","Diese","Diesen"],"dieser = этот (Nom masc)"),
+  mkQ("dieser/diese/dieses (Nom)","___ Frau ist nett.","Nom fem","Diese",["Dieser","Dieses","Diesem"],"diese = эта (Nom fem)"),
+  mkQ("dieser/diese/dieses (Nom)","___ Kind ist nett.","Nom neut","Dieses",["Dieser","Diese","Diesem"],"dieses = это (Nom neut)"),
+  mkQ("dieser/diese/dieses (Akk)","Ich sehe ___ Mann.","Akk masc","diesen",["dieser","dieses","diesem"],"diesen Mann (Akk masc)"),
+  mkQ("dieser/diese/dieses (Dat)","mit ___ Mann","Dat masc","diesem",["diesen","dieser","dieses"],"diesem Mann (Dat masc)"),
+  mkQ("welcher (Nom)","___ Buch liest du?","'какую книгу?' Nom neut","Welches",["Welcher","Welche","Welchen"],"welches + neut"),
+  mkQ("welcher (Akk)","___ Mann meinst du?","Akk masc","Welchen",["Welcher","Welche","Welches"],"welchen (Akk masc)"),
+  mkQ("jeder (Nom)","___ Tag ist schön.","Nom masc","Jeder",["Jede","Jedes","Jeden"],"jeder = каждый (Nom masc)"),
+  mkQ("jeder (Akk)","Ich sehe sie ___ Tag.","Akk masc","jeden",["jeder","jedes","jedem"],"jeden Tag (Akk)"),
+  mkQ("alle","___ Kinder spielen.","мн.ч.","Alle",["Jede","Jeder","Jedes"],"alle + мн.ч."),
+];
+
+const moreVerbQs = [
+  mkQ("Präsens","ich (spielen)","наст.","spiele",["spielst","spielt","spielen"],"ich spiele"),
+  mkQ("Präsens","du (spielen)","наст.","spielst",["spiele","spielt","spielen"],"du spielst"),
+  mkQ("Präsens","er (spielen)","наст.","spielt",["spiele","spielst","spielen"],"er spielt"),
+  mkQ("Präsens","wir (spielen)","наст.","spielen",["spielt","spielst","spiele"],"wir spielen"),
+  mkQ("Präsens","ihr (spielen)","наст.","spielt",["spielen","spielst","spiele"],"ihr spielt"),
+  mkQ("Präsens","sie (spielen)","наст.","spielen",["spielt","spielst","spiele"],"sie spielen"),
+  mkQ("Präsens","ich (lernen)","наст.","lerne",["lernst","lernt","lernen"],"ich lerne"),
+  mkQ("Präsens","du (lernen)","наст.","lernst",["lerne","lernt","lernen"],"du lernst"),
+  mkQ("Präsens","er (lernen)","наст.","lernt",["lerne","lernst","lernen"],"er lernt"),
+  mkQ("Präsens","wir (lernen)","наст.","lernen",["lernt","lernst","lerne"],"wir lernen"),
+  mkQ("Präsens","ich (trinken)","наст.","trinke",["trinkst","trinkt","trinken"],"ich trinke"),
+  mkQ("Präsens","du (trinken)","наст.","trinkst",["trinke","trinkt","trinken"],"du trinkst"),
+  mkQ("Präsens","er (trinken)","наст.","trinkt",["trinke","trinkst","trinken"],"er trinkt"),
+  mkQ("Präsens (e→i)","ich (sprechen)","е→i (только 2/3 л. ед.)","spreche",["sprichst","spricht","sprechen"],"ich spreche (в 1 л. без изменения)"),
+  mkQ("Präsens (e→i)","du (sprechen)","е→i","sprichst",["sprechst","spricht","sprechen"],"du sprichst"),
+  mkQ("Präsens (e→i)","er (sprechen)","е→i","spricht",["sprecht","sprichst","sprechen"],"er spricht"),
+  mkQ("Präsens (e→ie)","du (lesen)","е→ie","liest",["lesst","lest","lesen"],"du liest"),
+  mkQ("Präsens (e→ie)","er (lesen)","е→ie","liest",["lest","liest","lesen"],"er liest"),
+  mkQ("Präsens (a→ä)","du (fahren)","а→ä","fährst",["fahrst","fährt","fahren"],"du fährst"),
+  mkQ("Präsens (a→ä)","er (fahren)","а→ä","fährt",["fahrt","fährst","fahren"],"er fährt"),
+  mkQ("Präsens (a→ä)","du (schlafen)","а→ä","schläfst",["schlafst","schläft","schlafen"],"du schläfst"),
+  mkQ("Präsens (a→ä)","er (tragen)","а→ä","trägt",["tragt","trägst","tragen"],"er trägt"),
+  mkQ("Präsens (a→ä)","du (laufen)","au→äu","läufst",["laufst","läuft","laufen"],"du läufst"),
+  mkQ("Modal","ich (können)","мод.","kann",["kannst","könne","können"],"ich kann"),
+  mkQ("Modal","du (können)","мод.","kannst",["kann","könnst","könnt"],"du kannst"),
+  mkQ("Modal","er (können)","мод.","kann",["kannst","können","könnt"],"er kann"),
+  mkQ("Modal","ich (müssen)","мод.","muss",["musst","müsse","müssen"],"ich muss"),
+  mkQ("Modal","du (müssen)","мод.","musst",["muss","müsst","müssen"],"du musst"),
+  mkQ("Modal","er (müssen)","мод.","muss",["musst","müsst","müssen"],"er muss"),
+  mkQ("Modal","ich (wollen)","мод.","will",["willst","wolle","wollen"],"ich will"),
+  mkQ("Modal","du (wollen)","мод.","willst",["will","wollt","wollen"],"du willst"),
+  mkQ("Modal","er (wollen)","мод.","will",["willst","wollt","wollen"],"er will"),
+  mkQ("Modal","ich (dürfen)","мод.","darf",["darfst","dürfe","dürfen"],"ich darf"),
+  mkQ("Modal","du (dürfen)","мод.","darfst",["darf","dürft","dürfen"],"du darfst"),
+  mkQ("Modal","ich (sollen)","мод.","soll",["sollst","solle","sollen"],"ich soll"),
+  mkQ("Modal","du (sollen)","мод.","sollst",["soll","sollt","sollen"],"du sollst"),
+  mkQ("Modal","ich (mögen)","мод.","mag",["magst","möge","mögen"],"ich mag"),
+  mkQ("Modal","du (mögen)","мод.","magst",["mag","mögst","mögen"],"du magst"),
+  mkQ("Partizip II","machen → ___","слаб.","gemacht",["macht","machte","machen"],"gemacht"),
+  mkQ("Partizip II","spielen → ___","слаб.","gespielt",["spielt","spielte","spielen"],"gespielt"),
+  mkQ("Partizip II","lernen → ___","слаб.","gelernt",["lernt","lernte","lernen"],"gelernt"),
+  mkQ("Partizip II","kaufen → ___","слаб.","gekauft",["kauft","kaufte","kaufen"],"gekauft"),
+  mkQ("Partizip II","hören → ___","слаб.","gehört",["hört","hörte","gehörert"],"gehört"),
+  mkQ("Partizip II","wohnen → ___","слаб.","gewohnt",["wohnt","wohnte","wohnen"],"gewohnt"),
+  mkQ("Partizip II","arbeiten → ___","слаб. t-stem","gearbeitet",["arbeitet","arbeitete","arbeiten"],"gearbeitet"),
+  mkQ("Partizip II","finden → ___","сильн.","gefunden",["findet","fand","finden"],"gefunden"),
+  mkQ("Partizip II","sehen → ___","сильн.","gesehen",["seht","sah","sehen"],"gesehen"),
+  mkQ("Partizip II","lesen → ___","сильн.","gelesen",["liest","las","lesen"],"gelesen"),
+  mkQ("Partizip II","schreiben → ___","сильн.","geschrieben",["schreibt","schrieb","schreiben"],"geschrieben"),
+  mkQ("Partizip II","trinken → ___","сильн.","getrunken",["trinkt","trank","trinken"],"getrunken"),
+  mkQ("Partizip II","sprechen → ___","сильн.","gesprochen",["spricht","sprach","sprechen"],"gesprochen"),
+  mkQ("Partizip II","gehen → ___","сильн.","gegangen",["geht","ging","gehen"],"gegangen"),
+  mkQ("Partizip II","kommen → ___","сильн.","gekommen",["kommt","kam","kommen"],"gekommen"),
+  mkQ("Partizip II","fahren → ___","сильн.","gefahren",["fährt","fuhr","fahren"],"gefahren"),
+  mkQ("Partizip II","nehmen → ___","сильн.","genommen",["nimmt","nahm","nehmen"],"genommen"),
+  mkQ("Partizip II","bleiben → ___","сильн. (с sein!)","geblieben",["bleibt","blieb","bleiben"],"geblieben"),
+  mkQ("Partizip II","sein → ___","неправ.","gewesen",["ist","war","sein"],"gewesen (с sein!)"),
+  mkQ("Partizip II","haben → ___","неправ.","gehabt",["hat","hatte","haben"],"gehabt"),
+  mkQ("Partizip II","werden → ___","неправ.","geworden",["wird","wurde","werden"],"geworden (с sein)"),
+  mkQ("Partizip II (-ieren)","studieren → ___","-ieren: БЕЗ ge-","studiert",["gestudiert","studierte","studieren"],"глаголы на -ieren: БЕЗ приставки ge-"),
+  mkQ("Partizip II (-ieren)","telefonieren → ___","-ieren: БЕЗ ge-","telefoniert",["getelefoniert","telefonierte","telefonieren"],"telefoniert (без ge-)"),
+  mkQ("Partizip II (не-отд.)","bekommen → ___","не-отд. приставка: БЕЗ ge-","bekommen",["gebekommen","bekam","bekommt"],"bekommen (без ge- так как be- неотдел.)"),
+  mkQ("Partizip II (не-отд.)","verstehen → ___","не-отд.: БЕЗ ge-","verstanden",["geverstanden","verstand","versteht"],"verstanden (без ge-)"),
+  mkQ("Partizip II (отд.)","aufstehen → ___","отд.: ge- ВНУТРИ","aufgestanden",["geaufgestanden","aufstand","gestandenauf"],"aufgestanden (ge- между приставкой и глаголом)"),
+  mkQ("Partizip II (отд.)","anrufen → ___","отд.: ge- ВНУТРИ","angerufen",["geanrufen","anrief","ruftgean"],"angerufen"),
+  mkQ("Perfekt haben/sein","___ ich gestern gekommen.","kommen — sein!","bin",["habe","war","hatte"],"kommen → sein: Ich bin gekommen"),
+  mkQ("Perfekt haben/sein","___ du das Buch gelesen?","lesen — haben","Hast",["Bist","Warst","Hattest"],"lesen → haben: Hast du gelesen?"),
+  mkQ("Perfekt haben/sein","___ er nach Hause gefahren?","fahren — sein","Ist",["Hat","War","Hatte"],"fahren → sein"),
+  mkQ("Perfekt haben/sein","Wir ___ ein Lied gesungen.","singen — haben","haben",["sind","waren","hatten"],"singen → haben"),
+  mkQ("Perfekt haben/sein","Ich ___ in Berlin gewesen.","sein — sein!","bin",["habe","war","hatte"],"sein использует sein: Ich bin gewesen"),
+  mkQ("Perfekt haben/sein","Sie ___ geblieben.","bleiben — sein","ist",["hat","war","sind"],"bleiben → sein (искл., не движение)"),
+];
+
+// Append arrays
+const topic1 = articleQuestions.concat(extraArticleQs).concat(moreArticleQs);
+const topic2 = verbQuestions.concat(moreVerbQs);
+const topic3 = nounQuestions;
+const topic4 = prepositionQuestions;
+const topic5 = wordOrderQuestions;
+
+// ===================== APP STATE =====================
+const TOPICS = [
+  { id: "articles", label: "🔤 Артикли и падежи" },
+  { id: "verbs", label: "📝 Спряжение глаголов" },
+  { id: "nouns", label: "📊 Сущ.: род и мн.ч." },
+  { id: "prepositions", label: "📍 Предлоги" },
+  { id: "wordorder", label: "🔀 Порядок слов" },
+  { id: "all", label: "Все темы сразу" },
+];
+
+let currentTopic = "all";
+let questions = [];
+let qIndex = 0;
+let score = { correct: 0, total: 0, streak: 0, maxStreak: 0 };
+let answered = false;
+
+function init() {
+  renderTopics();
+  loadScore();
+  buildQuestions();
+  showQuestion();
+  document.addEventListener("keydown", handleKey);
+}
+
+function renderTopics() {
+  const el = document.getElementById("topics");
+  el.innerHTML = TOPICS.map(t =>
+    `<button class="topic-btn${t.id === currentTopic ? ' active' : ''}" data-topic="${t.id}">${t.label}</button>`
+  ).join("");
+  el.querySelectorAll(".topic-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      currentTopic = btn.dataset.topic;
+      renderTopics();
+      buildQuestions();
+      showQuestion();
+    });
+  });
+}
+
+function buildQuestions() {
+  let pool = [];
+  if (currentTopic === "articles" || currentTopic === "all") pool = pool.concat(topic1);
+  if (currentTopic === "verbs" || currentTopic === "all") pool = pool.concat(topic2);
+  if (currentTopic === "nouns" || currentTopic === "all") pool = pool.concat(topic3);
+  if (currentTopic === "prepositions" || currentTopic === "all") pool = pool.concat(topic4);
+  if (currentTopic === "wordorder" || currentTopic === "all") pool = pool.concat(topic5);
+  questions = shuffle(pool);
+  qIndex = 0;
+}
+
+function showQuestion() {
+  if (questions.length === 0) return;
+  if (qIndex >= questions.length) {
+    questions = shuffle(questions);
+    qIndex = 0;
+  }
+  answered = false;
+  const q = questions[qIndex];
+  const card = document.getElementById("quizCard");
+  card.classList.remove("flash-correct", "flash-wrong");
+  document.getElementById("qType").textContent = q.type;
+  document.getElementById("qSentence").innerHTML = formatSentence(q.sentence);
+  document.getElementById("qHint").textContent = q.hint || "";
+  const answersEl = document.getElementById("answers");
+  answersEl.innerHTML = q.options.map((opt, i) =>
+    `<button class="ans-btn" data-idx="${i}"><span class="key-hint">${i + 1}</span>${opt}</button>`
+  ).join("");
+  answersEl.querySelectorAll(".ans-btn").forEach(btn => {
+    btn.addEventListener("click", () => selectAnswer(btn, q));
+  });
+  document.getElementById("feedback").className = "feedback";
+  document.getElementById("feedback").innerHTML = "";
+  document.getElementById("continueBtn").classList.remove("show");
+  updateProgress();
+  updateScoreDisplay();
+}
+
+function formatSentence(s) {
+  return s.replace(/\[([^\]]+)\]/g, '<span class="q-blank">$1</span>')
+          .replace(/___/g, '<span class="q-blank">???</span>');
+}
+
+function selectAnswer(btn, q) {
+  if (answered) return;
+  answered = true;
+  const selected = q.options[parseInt(btn.dataset.idx)];
+  const isCorrect = selected === q.correct;
+  const card = document.getElementById("quizCard");
+  document.getElementById("answers").querySelectorAll(".ans-btn").forEach(b => {
+    b.classList.add("disabled");
+    if (q.options[parseInt(b.dataset.idx)] === q.correct) b.classList.add("correct");
+  });
+  if (isCorrect) {
+    btn.classList.add("correct");
+    card.classList.add("flash-correct");
+    score.correct++;
+    score.streak++;
+    if (score.streak > score.maxStreak) score.maxStreak = score.streak;
+    showFeedback(true, q.explanation);
+  } else {
+    btn.classList.add("wrong");
+    card.classList.add("flash-wrong");
+    score.streak = 0;
+    showFeedback(false, q.explanation);
+  }
+  score.total++;
+  saveScore();
+  updateScoreDisplay();
+  document.getElementById("continueBtn").classList.add("show");
+}
+
+function showFeedback(correct, explanation) {
+  const fb = document.getElementById("feedback");
+  fb.className = "feedback show " + (correct ? "correct-fb" : "wrong-fb");
+  fb.innerHTML = `<strong>${correct ? "Richtig! ✓" : "Falsch ✗"}</strong><span class="explanation">${explanation}</span>`;
+}
+
+function nextQuestion() { qIndex++; showQuestion(); }
+
+function updateScoreDisplay() {
+  document.getElementById("streak").textContent = score.streak;
+  document.getElementById("correctCount").textContent = score.correct;
+  document.getElementById("totalCount").textContent = score.total;
+  const pct = score.total > 0 ? Math.round(score.correct / score.total * 100) : 0;
+  document.getElementById("pct").textContent = pct + "%";
+}
+
+function updateProgress() {
+  const pct = questions.length > 0 ? Math.min(100, Math.round((qIndex / questions.length) * 100)) : 0;
+  document.getElementById("progressFill").style.width = pct + "%";
+}
+
+function resetScore() {
+  score = { correct: 0, total: 0, streak: 0, maxStreak: 0 };
+  saveScore();
+  updateScoreDisplay();
+  buildQuestions();
+  showQuestion();
+}
+
+function saveScore() {
+  try { localStorage.setItem("de-quiz-score", JSON.stringify(score)); } catch(e) {}
+}
+
+function loadScore() {
+  try {
+    const s = JSON.parse(localStorage.getItem("de-quiz-score"));
+    if (s) score = { correct: s.correct || 0, total: s.total || 0, streak: s.streak || 0, maxStreak: s.maxStreak || 0 };
+  } catch(e) {}
+}
+
+function handleKey(e) {
+  if (answered) {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); nextQuestion(); }
+    return;
+  }
+  const keyMap = { "1": 0, "2": 1, "3": 2, "4": 3 };
+  if (keyMap[e.key] !== undefined) {
+    const btns = document.querySelectorAll("#answers .ans-btn");
+    if (btns[keyMap[e.key]]) btns[keyMap[e.key]].click();
+  }
+  if (e.key === "Escape") {
+    currentTopic = "all";
+    renderTopics();
+    buildQuestions();
+    showQuestion();
+  }
+}
+
+init();
+</script>
+</body>
+</html>

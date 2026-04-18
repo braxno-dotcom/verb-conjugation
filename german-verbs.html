@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇩🇪</text></svg>">
+<meta name="apple-mobile-web-app-title" content="DE verb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇩🇪 Спряжение немецких глаголов</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #faf5e8;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #1a1a1a, #7a1a1a);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  .search-area {
+    max-width: 600px;
+    margin: 30px auto 10px;
+    padding: 0 20px;
+    display: flex;
+    gap: 10px;
+  }
+  .search-area input {
+    flex: 1;
+    padding: 14px 18px;
+    font-size: 1.15em;
+    border: 2px solid #d4c89a;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-area input:focus { border-color: #b8860b; }
+  .search-area button {
+    padding: 14px 28px;
+    font-size: 1.05em;
+    background: #b8860b;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .search-area button:hover { background: #1a1a1a; }
+
+  .hint {
+    max-width: 600px;
+    margin: 8px auto 0;
+    padding: 0 20px;
+    font-size: 0.85em;
+    color: #888;
+  }
+  .hint span { cursor: pointer; color: #b8860b; text-decoration: underline; }
+  .hint span:hover { color: #1a1a1a; }
+
+  .verb-info {
+    max-width: 900px;
+    margin: 18px auto 8px;
+    padding: 0 20px;
+    display: none;
+  }
+  .verb-info .badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 600;
+    margin-right: 8px;
+    margin-bottom: 6px;
+  }
+  .badge-group { background: #f0e4c1; color: #1a1a1a; }
+  .badge-ru { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+  .badge-pp { background: #e8f5e9; color: #1b5e20; }
+  .badge-prp { background: #fff3e0; color: #e65100; }
+
+  #results {
+    max-width: 900px;
+    margin: 10px auto 40px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 16px;
+  }
+  @media (max-width: 500px) {
+    #results { grid-template-columns: 1fr; padding: 0 10px; }
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switch { padding: 6px 12px; font-size: 0.85em; }
+    .search-area { padding: 0 10px; flex-direction: column; }
+    .search-area input { font-size: 1em; padding: 12px 14px; width: 100%; }
+    .search-area button { padding: 12px 18px; font-size: 0.95em; width: 100%; }
+    .hint { padding: 0 10px; }
+    .verb-info { padding: 0 10px; }
+    .verb-info .badge { font-size: 0.8em; padding: 4px 10px; }
+    .warning-banner { margin: 10px 10px; }
+    .tense-header { padding: 10px 12px; }
+    .tense-header .no-name { font-size: 0.95em; }
+    .tense-body { padding: 10px 12px; }
+  }
+
+  .tense-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .tense-header {
+    padding: 12px 16px;
+    background: #b8860b;
+    color: white;
+    font-weight: 600;
+  }
+  .tense-header .no-name { font-size: 1.05em; }
+  .tense-header .ru-name { font-size: 0.85em; opacity: 0.9; margin-top: 2px; }
+  .tense-header .ru-translation { float: right; font-size: 0.9em; opacity: 0.85; font-weight: 400; font-style: italic; }
+  .tense-explain {
+    padding: 8px 16px;
+    font-size: 0.88em;
+    color: #666;
+    background: #fafafa;
+    border-bottom: 1px solid #eee;
+    font-style: italic;
+  }
+  .tense-body { padding: 12px 16px; }
+  .tense-body table { width: 100%; }
+  .tense-body td { padding: 3px 0; font-size: 0.95em; }
+  .tense-body .pronoun { color: #999; width: 90px; font-size: 0.9em; }
+  .tense-body .verb-form { font-weight: 600; color: #2c2c2c; }
+  .tense-body .example {
+    font-size: 0.88em;
+    color: #777;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #eee;
+    line-height: 1.5;
+  }
+  .tense-body .example b { color: #b8860b; }
+
+  .no-result {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: #999;
+    font-size: 1.1em;
+  }
+  .warning-banner {
+    max-width: 900px;
+    margin: 10px auto;
+    padding: 12px 20px;
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 10px;
+    color: #856404;
+    font-size: 0.92em;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="french-verbs.html" class="lang-switch">🇫🇷 Французский</a>
+    <a href="spanish-verbs.html" class="lang-switch">🇪🇸 Испанский</a>
+    <a href="english-verbs.html" class="lang-switch">🇬🇧 Английский</a>
+    <a href="norwegian-verbs.html" class="lang-switch">🇳🇴 Норвежский</a>
+    <a href="german.html" class="lang-switch">📖 Портал</a>
+  </div>
+  <h1>🇩🇪 Спряжение немецких глаголов</h1>
+  <p>Введите глагол в инфинитиве — получите все времена с объяснениями на русском</p>
+</header>
+
+<div class="search-area">
+  <input type="text" id="verbInput" placeholder="machen, sein... или по-русски: делать, быть..." autofocus
+    onkeydown="if(event.key==='Enter')conjugate()">
+  <button onclick="conjugate()">Спрягать</button>
+</div>
+<div class="hint">
+  Попробуйте:
+  <span onclick="tryVerb('sein')">sein</span>,
+  <span onclick="tryVerb('haben')">haben</span>,
+  <span onclick="tryVerb('gehen')">gehen</span>,
+  <span onclick="tryVerb('können')">können</span>,
+  <span onclick="tryVerb('essen')">essen</span>,
+  <span onclick="tryVerb('sprechen')">sprechen</span>,
+  <span onclick="tryVerb('fahren')">fahren</span>,
+  <span onclick="tryVerb('machen')">machen</span>,
+  <span onclick="tryVerb('kommen')">kommen</span>,
+  <span onclick="tryVerb('geben')">geben</span>
+  | на русском:
+  <span onclick="tryVerb('делать')">делать</span>,
+  <span onclick="tryVerb('быть')">быть</span>,
+  <span onclick="tryVerb('идти')">идти</span>
+</div>
+
+<div class="warning-banner" id="warningBanner"></div>
+<div class="verb-info" id="verbInfo"></div>
+
+<div id="results"></div>
+
+<script>
+// ============================================================
+// TENSE DEFINITIONS
+// ============================================================
+const TENSES = [
+  {
+    id: 'infinitiv', name: 'Infinitiv',
+    ru: 'Инфинитив',
+    explain: '«делать» — неопределённая форма, ставится в конец при модальных глаголах и после zu'
+  },
+  {
+    id: 'präsens', name: 'Präsens',
+    ru: 'Настоящее время',
+    explain: 'настоящее время, также используется для будущего в разговоре'
+  },
+  {
+    id: 'präteritum', name: 'Präteritum',
+    ru: 'Простое прошедшее',
+    explain: 'простое прошедшее, книжное/письменное, для sein/haben/модальных используется и в разговоре'
+  },
+  {
+    id: 'perfekt', name: 'Perfekt',
+    ru: 'Разговорное прошедшее',
+    explain: 'разговорное прошедшее, haben/sein + Partizip II'
+  },
+  {
+    id: 'plusquamperfekt', name: 'Plusquamperfekt',
+    ru: 'Предпрошедшее',
+    explain: 'предпрошедшее, hatte/war + Partizip II'
+  },
+  {
+    id: 'futur1', name: 'Futur I',
+    ru: 'Будущее',
+    explain: 'будущее, werden + Infinitiv'
+  },
+  {
+    id: 'futur2', name: 'Futur II',
+    ru: 'Будущее завершённое',
+    explain: 'будущее завершённое, werden + Partizip II + haben/sein'
+  },
+  {
+    id: 'konjunktiv2', name: 'Konjunktiv II',
+    ru: 'Сослагательное наклонение',
+    explain: 'сослагательное, würde + Infinitiv (для слабых) или синтетически (wäre, hätte, käme, ginge)'
+  },
+  {
+    id: 'imperativ', name: 'Imperativ',
+    ru: 'Повелительное наклонение',
+    explain: 'du/ihr/Sie формы — приказ, просьба, совет'
+  }
+];
+
+// ============================================================
+// VERB DATABASE
+// group: 'schwach' | 'stark' | 'gemischt' | 'modal' | 'hilfsverb'
+// Each verb has: präsens (6 forms), präteritum_stem, partizip2, aux, konjunktiv2_stem (null → würde),
+//   imperativ_du, imperativ_ihr, imperativ_sie, ru, separable (prefix if separable)
+// ============================================================
+const VERBS = {
+  // === HILFSVERBEN ===
+  'sein': {
+    group: 'hilfsverb',
+    präsens: {ich:'bin', du:'bist', er:'ist', wir:'sind', ihr:'seid', sie:'sind'},
+    präteritum_stem: 'war', präteritum_forms: {ich:'war', du:'warst', er:'war', wir:'waren', ihr:'wart', sie:'waren'},
+    partizip2: 'gewesen', aux: 'sein',
+    konjunktiv2_stem: 'wär', konjunktiv2_forms: {ich:'wäre', du:'wärst', er:'wäre', wir:'wären', ihr:'wärt', sie:'wären'},
+    imperativ_du: 'sei', imperativ_ihr: 'seid', imperativ_sie: 'seien Sie',
+    ru: 'быть'
+  },
+  'haben': {
+    group: 'hilfsverb',
+    präsens: {ich:'habe', du:'hast', er:'hat', wir:'haben', ihr:'habt', sie:'haben'},
+    präteritum_stem: 'hatte', präteritum_forms: {ich:'hatte', du:'hattest', er:'hatte', wir:'hatten', ihr:'hattet', sie:'hatten'},
+    partizip2: 'gehabt', aux: 'haben',
+    konjunktiv2_stem: 'hätt', konjunktiv2_forms: {ich:'hätte', du:'hättest', er:'hätte', wir:'hätten', ihr:'hättet', sie:'hätten'},
+    imperativ_du: 'hab', imperativ_ihr: 'habt', imperativ_sie: 'haben Sie',
+    ru: 'иметь'
+  },
+  'werden': {
+    group: 'hilfsverb',
+    präsens: {ich:'werde', du:'wirst', er:'wird', wir:'werden', ihr:'werdet', sie:'werden'},
+    präteritum_stem: 'wurde', präteritum_forms: {ich:'wurde', du:'wurdest', er:'wurde', wir:'wurden', ihr:'wurdet', sie:'wurden'},
+    partizip2: 'geworden', aux: 'sein',
+    konjunktiv2_stem: 'würd', konjunktiv2_forms: {ich:'würde', du:'würdest', er:'würde', wir:'würden', ihr:'würdet', sie:'würden'},
+    imperativ_du: 'werde', imperativ_ihr: 'werdet', imperativ_sie: 'werden Sie',
+    ru: 'становиться'
+  },
+
+  // === MODALVERBEN ===
+  'können': {
+    group: 'modal',
+    präsens: {ich:'kann', du:'kannst', er:'kann', wir:'können', ihr:'könnt', sie:'können'},
+    präteritum_stem: 'konnte', präteritum_forms: {ich:'konnte', du:'konntest', er:'konnte', wir:'konnten', ihr:'konntet', sie:'konnten'},
+    partizip2: 'gekonnt', aux: 'haben',
+    konjunktiv2_stem: 'könnt', konjunktiv2_forms: {ich:'könnte', du:'könntest', er:'könnte', wir:'könnten', ihr:'könntet', sie:'könnten'},
+    imperativ_du: null, imperativ_ihr: null, imperativ_sie: null,
+    ru: 'мочь, уметь'
+  },
+  'müssen': {
+    group: 'modal',
+    präsens: {ich:'muss', du:'musst', er:'muss', wir:'müssen', ihr:'müsst', sie:'müssen'},
+    präteritum_stem: 'musste', präteritum_forms: {ich:'musste', du:'musstest', er:'musste', wir:'mussten', ihr:'musstet', sie:'mussten'},
+    partizip2: 'gemusst', aux: 'haben',
+    konjunktiv2_stem: 'müsst', konjunktiv2_forms: {ich:'müsste', du:'müsstest', er:'müsste', wir:'müssten', ihr:'müsstet', sie:'müssten'},
+    imperativ_du: null, imperativ_ihr: null, imperativ_sie: null,
+    ru: 'быть должным'
+  },
+  'wollen': {
+    group: 'modal',
+    präsens: {ich:'will', du:'willst', er:'will', wir:'wollen', ihr:'wollt', sie:'wollen'},
+    präteritum_stem: 'wollte', präteritum_forms: {ich:'wollte', du:'wolltest', er:'wollte', wir:'wollten', ihr:'wolltet', sie:'wollten'},
+    partizip2: 'gewollt', aux: 'haben',
+    konjunktiv2_stem: 'wollt', konjunktiv2_forms: {ich:'wollte', du:'wolltest', er:'wollte', wir:'wollten', ihr:'wolltet', sie:'wollten'},
+    imperativ_du: null, imperativ_ihr: null, imperativ_sie: null,
+    ru: 'хотеть'
+  },
+  'sollen': {
+    group: 'modal',
+    präsens: {ich:'soll', du:'sollst', er:'soll', wir:'sollen', ihr:'sollt', sie:'sollen'},
+    präteritum_stem: 'sollte', präteritum_forms: {ich:'sollte', du:'solltest', er:'sollte', wir:'sollten', ihr:'solltet', sie:'sollten'},
+    partizip2: 'gesollt', aux: 'haben',
+    konjunktiv2_stem: 'sollt', konjunktiv2_forms: {ich:'sollte', du:'solltest', er:'sollte', wir:'sollten', ihr:'solltet', sie:'sollten'},
+    imperativ_du: null, imperativ_ihr: null, imperativ_sie: null,
+    ru: 'быть обязанным'
+  },
+  'dürfen': {
+    group: 'modal',
+    präsens: {ich:'darf', du:'darfst', er:'darf', wir:'dürfen', ihr:'dürft', sie:'dürfen'},
+    präteritum_stem: 'durfte', präteritum_forms: {ich:'durfte', du:'durftest', er:'durfte', wir:'durften', ihr:'durftet', sie:'durften'},
+    partizip2: 'gedurft', aux: 'haben',
+    konjunktiv2_stem: 'dürft', konjunktiv2_forms: {ich:'dürfte', du:'dürftest', er:'dürfte', wir:'dürften', ihr:'dürftet', sie:'dürften'},
+    imperativ_du: null, imperativ_ihr: null, imperativ_sie: null,
+    ru: 'иметь право, можно'
+  },
+  'mögen': {
+    group: 'modal',
+    präsens: {ich:'mag', du:'magst', er:'mag', wir:'mögen', ihr:'mögt', sie:'mögen'},
+    präteritum_stem: 'mochte', präteritum_forms: {ich:'mochte', du:'mochtest', er:'mochte', wir:'mochten', ihr:'mochtet', sie:'mochten'},
+    partizip2: 'gemocht', aux: 'haben',
+    konjunktiv2_stem: 'möcht', konjunktiv2_forms: {ich:'möchte', du:'möchtest', er:'möchte', wir:'möchten', ihr:'möchtet', sie:'möchten'},
+    imperativ_du: null, imperativ_ihr: null, imperativ_sie: null,
+    ru: 'любить, хотеть'
+  },
+
+  // === STARKE VERBEN ===
+  'gehen': {
+    group: 'stark',
+    präsens: {ich:'gehe', du:'gehst', er:'geht', wir:'gehen', ihr:'geht', sie:'gehen'},
+    präteritum_stem: 'ging', präteritum_forms: {ich:'ging', du:'gingst', er:'ging', wir:'gingen', ihr:'gingt', sie:'gingen'},
+    partizip2: 'gegangen', aux: 'sein',
+    konjunktiv2_stem: 'ging', konjunktiv2_forms: {ich:'ginge', du:'gingest', er:'ginge', wir:'gingen', ihr:'ginget', sie:'gingen'},
+    imperativ_du: 'geh', imperativ_ihr: 'geht', imperativ_sie: 'gehen Sie',
+    ru: 'идти, ходить'
+  },
+  'kommen': {
+    group: 'stark',
+    präsens: {ich:'komme', du:'kommst', er:'kommt', wir:'kommen', ihr:'kommt', sie:'kommen'},
+    präteritum_stem: 'kam', präteritum_forms: {ich:'kam', du:'kamst', er:'kam', wir:'kamen', ihr:'kamt', sie:'kamen'},
+    partizip2: 'gekommen', aux: 'sein',
+    konjunktiv2_stem: 'käm', konjunktiv2_forms: {ich:'käme', du:'kämest', er:'käme', wir:'kämen', ihr:'kämet', sie:'kämen'},
+    imperativ_du: 'komm', imperativ_ihr: 'kommt', imperativ_sie: 'kommen Sie',
+    ru: 'приходить'
+  },
+  'sehen': {
+    group: 'stark',
+    präsens: {ich:'sehe', du:'siehst', er:'sieht', wir:'sehen', ihr:'seht', sie:'sehen'},
+    präteritum_stem: 'sah', präteritum_forms: {ich:'sah', du:'sahst', er:'sah', wir:'sahen', ihr:'saht', sie:'sahen'},
+    partizip2: 'gesehen', aux: 'haben',
+    konjunktiv2_stem: 'säh', konjunktiv2_forms: {ich:'sähe', du:'sähest', er:'sähe', wir:'sähen', ihr:'sähet', sie:'sähen'},
+    imperativ_du: 'sieh', imperativ_ihr: 'seht', imperativ_sie: 'sehen Sie',
+    ru: 'видеть, смотреть'
+  },
+  'geben': {
+    group: 'stark',
+    präsens: {ich:'gebe', du:'gibst', er:'gibt', wir:'geben', ihr:'gebt', sie:'geben'},
+    präteritum_stem: 'gab', präteritum_forms: {ich:'gab', du:'gabst', er:'gab', wir:'gaben', ihr:'gabt', sie:'gaben'},
+    partizip2: 'gegeben', aux: 'haben',
+    konjunktiv2_stem: 'gäb', konjunktiv2_forms: {ich:'gäbe', du:'gäbest', er:'gäbe', wir:'gäben', ihr:'gäbet', sie:'gäben'},
+    imperativ_du: 'gib', imperativ_ihr: 'gebt', imperativ_sie: 'geben Sie',
+    ru: 'давать'
+  },
+  'nehmen': {
+    group: 'stark',
+    präsens: {ich:'nehme', du:'nimmst', er:'nimmt', wir:'nehmen', ihr:'nehmt', sie:'nehmen'},
+    präteritum_stem: 'nahm', präteritum_forms: {ich:'nahm', du:'nahmst', er:'nahm', wir:'nahmen', ihr:'nahmt', sie:'nahmen'},
+    partizip2: 'genommen', aux: 'haben',
+    konjunktiv2_stem: 'nähm', konjunktiv2_forms: {ich:'nähme', du:'nähmest', er:'nähme', wir:'nähmen', ihr:'nähmet', sie:'nähmen'},
+    imperativ_du: 'nimm', imperativ_ihr: 'nehmt', imperativ_sie: 'nehmen Sie',
+    ru: 'брать'
+  },
+  'finden': {
+    group: 'stark',
+    präsens: {ich:'finde', du:'findest', er:'findet', wir:'finden', ihr:'findet', sie:'finden'},
+    präteritum_stem: 'fand', präteritum_forms: {ich:'fand', du:'fandst', er:'fand', wir:'fanden', ihr:'fandet', sie:'fanden'},
+    partizip2: 'gefunden', aux: 'haben',
+    konjunktiv2_stem: 'fänd', konjunktiv2_forms: {ich:'fände', du:'fändest', er:'fände', wir:'fänden', ihr:'fändet', sie:'fänden'},
+    imperativ_du: 'finde', imperativ_ihr: 'findet', imperativ_sie: 'finden Sie',
+    ru: 'находить'
+  },
+  'lesen': {
+    group: 'stark',
+    präsens: {ich:'lese', du:'liest', er:'liest', wir:'lesen', ihr:'lest', sie:'lesen'},
+    präteritum_stem: 'las', präteritum_forms: {ich:'las', du:'lasest', er:'las', wir:'lasen', ihr:'last', sie:'lasen'},
+    partizip2: 'gelesen', aux: 'haben',
+    konjunktiv2_stem: 'läs', konjunktiv2_forms: {ich:'läse', du:'läsest', er:'läse', wir:'läsen', ihr:'läset', sie:'läsen'},
+    imperativ_du: 'lies', imperativ_ihr: 'lest', imperativ_sie: 'lesen Sie',
+    ru: 'читать'
+  },
+  'schreiben': {
+    group: 'stark',
+    präsens: {ich:'schreibe', du:'schreibst', er:'schreibt', wir:'schreiben', ihr:'schreibt', sie:'schreiben'},
+    präteritum_stem: 'schrieb', präteritum_forms: {ich:'schrieb', du:'schriebst', er:'schrieb', wir:'schrieben', ihr:'schriebt', sie:'schrieben'},
+    partizip2: 'geschrieben', aux: 'haben',
+    konjunktiv2_stem: 'schrieb', konjunktiv2_forms: {ich:'schriebe', du:'schriebest', er:'schriebe', wir:'schrieben', ihr:'schriebet', sie:'schrieben'},
+    imperativ_du: 'schreib', imperativ_ihr: 'schreibt', imperativ_sie: 'schreiben Sie',
+    ru: 'писать'
+  },
+  'sprechen': {
+    group: 'stark',
+    präsens: {ich:'spreche', du:'sprichst', er:'spricht', wir:'sprechen', ihr:'sprecht', sie:'sprechen'},
+    präteritum_stem: 'sprach', präteritum_forms: {ich:'sprach', du:'sprachst', er:'sprach', wir:'sprachen', ihr:'spracht', sie:'sprachen'},
+    partizip2: 'gesprochen', aux: 'haben',
+    konjunktiv2_stem: 'spräch', konjunktiv2_forms: {ich:'spräche', du:'sprächest', er:'spräche', wir:'sprächen', ihr:'sprächet', sie:'sprächen'},
+    imperativ_du: 'sprich', imperativ_ihr: 'sprecht', imperativ_sie: 'sprechen Sie',
+    ru: 'говорить'
+  },
+  'essen': {
+    group: 'stark',
+    präsens: {ich:'esse', du:'isst', er:'isst', wir:'essen', ihr:'esst', sie:'essen'},
+    präteritum_stem: 'aß', präteritum_forms: {ich:'aß', du:'aßest', er:'aß', wir:'aßen', ihr:'aßt', sie:'aßen'},
+    partizip2: 'gegessen', aux: 'haben',
+    konjunktiv2_stem: 'äß', konjunktiv2_forms: {ich:'äße', du:'äßest', er:'äße', wir:'äßen', ihr:'äßet', sie:'äßen'},
+    imperativ_du: 'iss', imperativ_ihr: 'esst', imperativ_sie: 'essen Sie',
+    ru: 'есть, кушать'
+  },
+  'trinken': {
+    group: 'stark',
+    präsens: {ich:'trinke', du:'trinkst', er:'trinkt', wir:'trinken', ihr:'trinkt', sie:'trinken'},
+    präteritum_stem: 'trank', präteritum_forms: {ich:'trank', du:'trankst', er:'trank', wir:'tranken', ihr:'trankt', sie:'tranken'},
+    partizip2: 'getrunken', aux: 'haben',
+    konjunktiv2_stem: 'tränk', konjunktiv2_forms: {ich:'tränke', du:'tränkest', er:'tränke', wir:'tränken', ihr:'tränket', sie:'tränken'},
+    imperativ_du: 'trink', imperativ_ihr: 'trinkt', imperativ_sie: 'trinken Sie',
+    ru: 'пить'
+  },
+  'schlafen': {
+    group: 'stark',
+    präsens: {ich:'schlafe', du:'schläfst', er:'schläft', wir:'schlafen', ihr:'schlaft', sie:'schlafen'},
+    präteritum_stem: 'schlief', präteritum_forms: {ich:'schlief', du:'schliefst', er:'schlief', wir:'schliefen', ihr:'schlieft', sie:'schliefen'},
+    partizip2: 'geschlafen', aux: 'haben',
+    konjunktiv2_stem: 'schlief', konjunktiv2_forms: {ich:'schliefe', du:'schliefest', er:'schliefe', wir:'schliefen', ihr:'schliefet', sie:'schliefen'},
+    imperativ_du: 'schlaf', imperativ_ihr: 'schlaft', imperativ_sie: 'schlafen Sie',
+    ru: 'спать'
+  },
+  'stehen': {
+    group: 'stark',
+    präsens: {ich:'stehe', du:'stehst', er:'steht', wir:'stehen', ihr:'steht', sie:'stehen'},
+    präteritum_stem: 'stand', präteritum_forms: {ich:'stand', du:'standst', er:'stand', wir:'standen', ihr:'standet', sie:'standen'},
+    partizip2: 'gestanden', aux: 'haben',
+    konjunktiv2_stem: 'stünd', konjunktiv2_forms: {ich:'stünde', du:'stündest', er:'stünde', wir:'stünden', ihr:'stündet', sie:'stünden'},
+    imperativ_du: 'steh', imperativ_ihr: 'steht', imperativ_sie: 'stehen Sie',
+    ru: 'стоять'
+  },
+  'sitzen': {
+    group: 'stark',
+    präsens: {ich:'sitze', du:'sitzt', er:'sitzt', wir:'sitzen', ihr:'sitzt', sie:'sitzen'},
+    präteritum_stem: 'saß', präteritum_forms: {ich:'saß', du:'saßest', er:'saß', wir:'saßen', ihr:'saßt', sie:'saßen'},
+    partizip2: 'gesessen', aux: 'haben',
+    konjunktiv2_stem: 'säß', konjunktiv2_forms: {ich:'säße', du:'säßest', er:'säße', wir:'säßen', ihr:'säßet', sie:'säßen'},
+    imperativ_du: 'sitz', imperativ_ihr: 'sitzt', imperativ_sie: 'sitzen Sie',
+    ru: 'сидеть'
+  },
+  'liegen': {
+    group: 'stark',
+    präsens: {ich:'liege', du:'liegst', er:'liegt', wir:'liegen', ihr:'liegt', sie:'liegen'},
+    präteritum_stem: 'lag', präteritum_forms: {ich:'lag', du:'lagst', er:'lag', wir:'lagen', ihr:'lagt', sie:'lagen'},
+    partizip2: 'gelegen', aux: 'haben',
+    konjunktiv2_stem: 'läg', konjunktiv2_forms: {ich:'läge', du:'lägest', er:'läge', wir:'lägen', ihr:'läget', sie:'lägen'},
+    imperativ_du: 'lieg', imperativ_ihr: 'liegt', imperativ_sie: 'liegen Sie',
+    ru: 'лежать'
+  },
+  'laufen': {
+    group: 'stark',
+    präsens: {ich:'laufe', du:'läufst', er:'läuft', wir:'laufen', ihr:'lauft', sie:'laufen'},
+    präteritum_stem: 'lief', präteritum_forms: {ich:'lief', du:'liefst', er:'lief', wir:'liefen', ihr:'lieft', sie:'liefen'},
+    partizip2: 'gelaufen', aux: 'sein',
+    konjunktiv2_stem: 'lief', konjunktiv2_forms: {ich:'liefe', du:'liefest', er:'liefe', wir:'liefen', ihr:'liefet', sie:'liefen'},
+    imperativ_du: 'lauf', imperativ_ihr: 'lauft', imperativ_sie: 'laufen Sie',
+    ru: 'бежать, ходить'
+  },
+  'fahren': {
+    group: 'stark',
+    präsens: {ich:'fahre', du:'fährst', er:'fährt', wir:'fahren', ihr:'fahrt', sie:'fahren'},
+    präteritum_stem: 'fuhr', präteritum_forms: {ich:'fuhr', du:'fuhrst', er:'fuhr', wir:'fuhren', ihr:'fuhrt', sie:'fuhren'},
+    partizip2: 'gefahren', aux: 'sein',
+    konjunktiv2_stem: 'führ', konjunktiv2_forms: {ich:'führe', du:'führest', er:'führe', wir:'führen', ihr:'führet', sie:'führen'},
+    imperativ_du: 'fahr', imperativ_ihr: 'fahrt', imperativ_sie: 'fahren Sie',
+    ru: 'ехать, водить'
+  },
+  'fliegen': {
+    group: 'stark',
+    präsens: {ich:'fliege', du:'fliegst', er:'fliegt', wir:'fliegen', ihr:'fliegt', sie:'fliegen'},
+    präteritum_stem: 'flog', präteritum_forms: {ich:'flog', du:'flogst', er:'flog', wir:'flogen', ihr:'flogt', sie:'flogen'},
+    partizip2: 'geflogen', aux: 'sein',
+    konjunktiv2_stem: 'flög', konjunktiv2_forms: {ich:'flöge', du:'flögest', er:'flöge', wir:'flögen', ihr:'flöget', sie:'flögen'},
+    imperativ_du: 'flieg', imperativ_ihr: 'fliegt', imperativ_sie: 'fliegen Sie',
+    ru: 'летать'
+  },
+  'tragen': {
+    group: 'stark',
+    präsens: {ich:'trage', du:'trägst', er:'trägt', wir:'tragen', ihr:'tragt', sie:'tragen'},
+    präteritum_stem: 'trug', präteritum_forms: {ich:'trug', du:'trugst', er:'trug', wir:'trugen', ihr:'trugt', sie:'trugen'},
+    partizip2: 'getragen', aux: 'haben',
+    konjunktiv2_stem: 'trüg', konjunktiv2_forms: {ich:'trüge', du:'trügest', er:'trüge', wir:'trügen', ihr:'trüget', sie:'trügen'},
+    imperativ_du: 'trag', imperativ_ihr: 'tragt', imperativ_sie: 'tragen Sie',
+    ru: 'носить'
+  },
+  'lassen': {
+    group: 'stark',
+    präsens: {ich:'lasse', du:'lässt', er:'lässt', wir:'lassen', ihr:'lasst', sie:'lassen'},
+    präteritum_stem: 'ließ', präteritum_forms: {ich:'ließ', du:'ließest', er:'ließ', wir:'ließen', ihr:'ließt', sie:'ließen'},
+    partizip2: 'gelassen', aux: 'haben',
+    konjunktiv2_stem: 'ließ', konjunktiv2_forms: {ich:'ließe', du:'ließest', er:'ließe', wir:'ließen', ihr:'ließet', sie:'ließen'},
+    imperativ_du: 'lass', imperativ_ihr: 'lasst', imperativ_sie: 'lassen Sie',
+    ru: 'оставлять, позволять'
+  },
+  'halten': {
+    group: 'stark',
+    präsens: {ich:'halte', du:'hältst', er:'hält', wir:'halten', ihr:'haltet', sie:'halten'},
+    präteritum_stem: 'hielt', präteritum_forms: {ich:'hielt', du:'hieltst', er:'hielt', wir:'hielten', ihr:'hieltet', sie:'hielten'},
+    partizip2: 'gehalten', aux: 'haben',
+    konjunktiv2_stem: 'hielt', konjunktiv2_forms: {ich:'hielte', du:'hieltest', er:'hielte', wir:'hielten', ihr:'hieltet', sie:'hielten'},
+    imperativ_du: 'halt', imperativ_ihr: 'haltet', imperativ_sie: 'halten Sie',
+    ru: 'держать'
+  },
+  'helfen': {
+    group: 'stark',
+    präsens: {ich:'helfe', du:'hilfst', er:'hilft', wir:'helfen', ihr:'helft', sie:'helfen'},
+    präteritum_stem: 'half', präteritum_forms: {ich:'half', du:'halfst', er:'half', wir:'halfen', ihr:'halft', sie:'halfen'},
+    partizip2: 'geholfen', aux: 'haben',
+    konjunktiv2_stem: 'hülf', konjunktiv2_forms: {ich:'hülfe', du:'hülfest', er:'hülfe', wir:'hülfen', ihr:'hülfet', sie:'hülfen'},
+    imperativ_du: 'hilf', imperativ_ihr: 'helft', imperativ_sie: 'helfen Sie',
+    ru: 'помогать'
+  },
+  'treffen': {
+    group: 'stark',
+    präsens: {ich:'treffe', du:'triffst', er:'trifft', wir:'treffen', ihr:'trefft', sie:'treffen'},
+    präteritum_stem: 'traf', präteritum_forms: {ich:'traf', du:'trafst', er:'traf', wir:'trafen', ihr:'traft', sie:'trafen'},
+    partizip2: 'getroffen', aux: 'haben',
+    konjunktiv2_stem: 'träf', konjunktiv2_forms: {ich:'träfe', du:'träfest', er:'träfe', wir:'träfen', ihr:'träfet', sie:'träfen'},
+    imperativ_du: 'triff', imperativ_ihr: 'trefft', imperativ_sie: 'treffen Sie',
+    ru: 'встречать'
+  },
+  'verlieren': {
+    group: 'stark',
+    präsens: {ich:'verliere', du:'verlierst', er:'verliert', wir:'verlieren', ihr:'verliert', sie:'verlieren'},
+    präteritum_stem: 'verlor', präteritum_forms: {ich:'verlor', du:'verlorst', er:'verlor', wir:'verloren', ihr:'verlort', sie:'verloren'},
+    partizip2: 'verloren', aux: 'haben',
+    konjunktiv2_stem: 'verlör', konjunktiv2_forms: {ich:'verlöre', du:'verlörest', er:'verlöre', wir:'verlören', ihr:'verlöret', sie:'verlören'},
+    imperativ_du: 'verlier', imperativ_ihr: 'verliert', imperativ_sie: 'verlieren Sie',
+    ru: 'терять, проигрывать'
+  },
+  'gewinnen': {
+    group: 'stark',
+    präsens: {ich:'gewinne', du:'gewinnst', er:'gewinnt', wir:'gewinnen', ihr:'gewinnt', sie:'gewinnen'},
+    präteritum_stem: 'gewann', präteritum_forms: {ich:'gewann', du:'gewannst', er:'gewann', wir:'gewannen', ihr:'gewannt', sie:'gewannen'},
+    partizip2: 'gewonnen', aux: 'haben',
+    konjunktiv2_stem: 'gewänn', konjunktiv2_forms: {ich:'gewänne', du:'gewännest', er:'gewänne', wir:'gewännen', ihr:'gewännet', sie:'gewännen'},
+    imperativ_du: 'gewinn', imperativ_ihr: 'gewinnt', imperativ_sie: 'gewinnen Sie',
+    ru: 'выигрывать, побеждать'
+  },
+  'beginnen': {
+    group: 'stark',
+    präsens: {ich:'beginne', du:'beginnst', er:'beginnt', wir:'beginnen', ihr:'beginnt', sie:'beginnen'},
+    präteritum_stem: 'begann', präteritum_forms: {ich:'begann', du:'begannst', er:'begann', wir:'begannen', ihr:'begannt', sie:'begannen'},
+    partizip2: 'begonnen', aux: 'haben',
+    konjunktiv2_stem: 'begänn', konjunktiv2_forms: {ich:'begänne', du:'begännest', er:'begänne', wir:'begännen', ihr:'begännet', sie:'begännen'},
+    imperativ_du: 'beginn', imperativ_ihr: 'beginnt', imperativ_sie: 'beginnen Sie',
+    ru: 'начинать'
+  },
+  'bekommen': {
+    group: 'stark',
+    präsens: {ich:'bekomme', du:'bekommst', er:'bekommt', wir:'bekommen', ihr:'bekommt', sie:'bekommen'},
+    präteritum_stem: 'bekam', präteritum_forms: {ich:'bekam', du:'bekamst', er:'bekam', wir:'bekamen', ihr:'bekamt', sie:'bekamen'},
+    partizip2: 'bekommen', aux: 'haben',
+    konjunktiv2_stem: 'bekäm', konjunktiv2_forms: {ich:'bekäme', du:'bekämest', er:'bekäme', wir:'bekämen', ihr:'bekämet', sie:'bekämen'},
+    imperativ_du: 'bekomm', imperativ_ihr: 'bekommt', imperativ_sie: 'bekommen Sie',
+    ru: 'получать'
+  },
+  'bleiben': {
+    group: 'stark',
+    präsens: {ich:'bleibe', du:'bleibst', er:'bleibt', wir:'bleiben', ihr:'bleibt', sie:'bleiben'},
+    präteritum_stem: 'blieb', präteritum_forms: {ich:'blieb', du:'bliebst', er:'blieb', wir:'blieben', ihr:'bliebt', sie:'blieben'},
+    partizip2: 'geblieben', aux: 'sein',
+    konjunktiv2_stem: 'blieb', konjunktiv2_forms: {ich:'bliebe', du:'bliebest', er:'bliebe', wir:'blieben', ihr:'bliebet', sie:'blieben'},
+    imperativ_du: 'bleib', imperativ_ihr: 'bleibt', imperativ_sie: 'bleiben Sie',
+    ru: 'оставаться'
+  },
+  'schließen': {
+    group: 'stark',
+    präsens: {ich:'schließe', du:'schließt', er:'schließt', wir:'schließen', ihr:'schließt', sie:'schließen'},
+    präteritum_stem: 'schloss', präteritum_forms: {ich:'schloss', du:'schlossest', er:'schloss', wir:'schlossen', ihr:'schlosst', sie:'schlossen'},
+    partizip2: 'geschlossen', aux: 'haben',
+    konjunktiv2_stem: 'schlöss', konjunktiv2_forms: {ich:'schlösse', du:'schlössest', er:'schlösse', wir:'schlössen', ihr:'schlösset', sie:'schlössen'},
+    imperativ_du: 'schließ', imperativ_ihr: 'schließt', imperativ_sie: 'schließen Sie',
+    ru: 'закрывать'
+  },
+  'rufen': {
+    group: 'stark',
+    präsens: {ich:'rufe', du:'rufst', er:'ruft', wir:'rufen', ihr:'ruft', sie:'rufen'},
+    präteritum_stem: 'rief', präteritum_forms: {ich:'rief', du:'riefst', er:'rief', wir:'riefen', ihr:'rieft', sie:'riefen'},
+    partizip2: 'gerufen', aux: 'haben',
+    konjunktiv2_stem: 'rief', konjunktiv2_forms: {ich:'riefe', du:'riefest', er:'riefe', wir:'riefen', ihr:'riefet', sie:'riefen'},
+    imperativ_du: 'ruf', imperativ_ihr: 'ruft', imperativ_sie: 'rufen Sie',
+    ru: 'звать, кричать'
+  },
+  'singen': {
+    group: 'stark',
+    präsens: {ich:'singe', du:'singst', er:'singt', wir:'singen', ihr:'singt', sie:'singen'},
+    präteritum_stem: 'sang', präteritum_forms: {ich:'sang', du:'sangst', er:'sang', wir:'sangen', ihr:'sangt', sie:'sangen'},
+    partizip2: 'gesungen', aux: 'haben',
+    konjunktiv2_stem: 'säng', konjunktiv2_forms: {ich:'sänge', du:'sängest', er:'sänge', wir:'sängen', ihr:'sänget', sie:'sängen'},
+    imperativ_du: 'sing', imperativ_ihr: 'singt', imperativ_sie: 'singen Sie',
+    ru: 'петь'
+  },
+  'vergessen': {
+    group: 'stark',
+    präsens: {ich:'vergesse', du:'vergisst', er:'vergisst', wir:'vergessen', ihr:'vergesst', sie:'vergessen'},
+    präteritum_stem: 'vergaß', präteritum_forms: {ich:'vergaß', du:'vergaßest', er:'vergaß', wir:'vergaßen', ihr:'vergaßt', sie:'vergaßen'},
+    partizip2: 'vergessen', aux: 'haben',
+    konjunktiv2_stem: 'vergäß', konjunktiv2_forms: {ich:'vergäße', du:'vergäßest', er:'vergäße', wir:'vergäßen', ihr:'vergäßet', sie:'vergäßen'},
+    imperativ_du: 'vergiss', imperativ_ihr: 'vergesst', imperativ_sie: 'vergessen Sie',
+    ru: 'забывать'
+  },
+  'entscheiden': {
+    group: 'stark',
+    präsens: {ich:'entscheide', du:'entscheidest', er:'entscheidet', wir:'entscheiden', ihr:'entscheidet', sie:'entscheiden'},
+    präteritum_stem: 'entschied', präteritum_forms: {ich:'entschied', du:'entschiedst', er:'entschied', wir:'entschieden', ihr:'entschiedet', sie:'entschieden'},
+    partizip2: 'entschieden', aux: 'haben',
+    konjunktiv2_stem: 'entschied', konjunktiv2_forms: {ich:'entschiede', du:'entschiedest', er:'entschiede', wir:'entschieden', ihr:'entschiedet', sie:'entschieden'},
+    imperativ_du: 'entscheide', imperativ_ihr: 'entscheidet', imperativ_sie: 'entscheiden Sie',
+    ru: 'решать'
+  },
+  'verstehen': {
+    group: 'stark',
+    präsens: {ich:'verstehe', du:'verstehst', er:'versteht', wir:'verstehen', ihr:'versteht', sie:'verstehen'},
+    präteritum_stem: 'verstand', präteritum_forms: {ich:'verstand', du:'verstandst', er:'verstand', wir:'verstanden', ihr:'verstandet', sie:'verstanden'},
+    partizip2: 'verstanden', aux: 'haben',
+    konjunktiv2_stem: 'verstünd', konjunktiv2_forms: {ich:'verstünde', du:'verstündest', er:'verstünde', wir:'verstünden', ihr:'verstündet', sie:'verstünden'},
+    imperativ_du: 'versteh', imperativ_ihr: 'versteht', imperativ_sie: 'verstehen Sie',
+    ru: 'понимать'
+  },
+
+  // === GEMISCHTE VERBEN ===
+  'bringen': {
+    group: 'gemischt',
+    präsens: {ich:'bringe', du:'bringst', er:'bringt', wir:'bringen', ihr:'bringt', sie:'bringen'},
+    präteritum_stem: 'brachte', präteritum_forms: {ich:'brachte', du:'brachtest', er:'brachte', wir:'brachten', ihr:'brachtet', sie:'brachten'},
+    partizip2: 'gebracht', aux: 'haben',
+    konjunktiv2_stem: 'brächt', konjunktiv2_forms: {ich:'brächte', du:'brächtest', er:'brächte', wir:'brächten', ihr:'brächtet', sie:'brächten'},
+    imperativ_du: 'bring', imperativ_ihr: 'bringt', imperativ_sie: 'bringen Sie',
+    ru: 'приносить, приводить'
+  },
+  'denken': {
+    group: 'gemischt',
+    präsens: {ich:'denke', du:'denkst', er:'denkt', wir:'denken', ihr:'denkt', sie:'denken'},
+    präteritum_stem: 'dachte', präteritum_forms: {ich:'dachte', du:'dachtest', er:'dachte', wir:'dachten', ihr:'dachtet', sie:'dachten'},
+    partizip2: 'gedacht', aux: 'haben',
+    konjunktiv2_stem: 'dächt', konjunktiv2_forms: {ich:'dächte', du:'dächtest', er:'dächte', wir:'dächten', ihr:'dächtet', sie:'dächten'},
+    imperativ_du: 'denk', imperativ_ihr: 'denkt', imperativ_sie: 'denken Sie',
+    ru: 'думать'
+  },
+  'wissen': {
+    group: 'gemischt',
+    präsens: {ich:'weiß', du:'weißt', er:'weiß', wir:'wissen', ihr:'wisst', sie:'wissen'},
+    präteritum_stem: 'wusste', präteritum_forms: {ich:'wusste', du:'wusstest', er:'wusste', wir:'wussten', ihr:'wusstet', sie:'wussten'},
+    partizip2: 'gewusst', aux: 'haben',
+    konjunktiv2_stem: 'wüsst', konjunktiv2_forms: {ich:'wüsste', du:'wüsstest', er:'wüsste', wir:'wüssten', ihr:'wüsstet', sie:'wüssten'},
+    imperativ_du: 'wisse', imperativ_ihr: 'wisst', imperativ_sie: 'wissen Sie',
+    ru: 'знать (факт)'
+  },
+  'kennen': {
+    group: 'gemischt',
+    präsens: {ich:'kenne', du:'kennst', er:'kennt', wir:'kennen', ihr:'kennt', sie:'kennen'},
+    präteritum_stem: 'kannte', präteritum_forms: {ich:'kannte', du:'kanntest', er:'kannte', wir:'kannten', ihr:'kanntet', sie:'kannten'},
+    partizip2: 'gekannt', aux: 'haben',
+    konjunktiv2_stem: 'kennt', konjunktiv2_forms: {ich:'kennte', du:'kenntest', er:'kennte', wir:'kennten', ihr:'kenntet', sie:'kennten'},
+    imperativ_du: 'kenn', imperativ_ihr: 'kennt', imperativ_sie: 'kennen Sie',
+    ru: 'знать (быть знакомым)'
+  },
+
+  // === SCHWACHE VERBEN ===
+  'machen': {
+    group: 'schwach',
+    präsens: {ich:'mache', du:'machst', er:'macht', wir:'machen', ihr:'macht', sie:'machen'},
+    präteritum_stem: 'machte', präteritum_forms: {ich:'machte', du:'machtest', er:'machte', wir:'machten', ihr:'machtet', sie:'machten'},
+    partizip2: 'gemacht', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'mach', imperativ_ihr: 'macht', imperativ_sie: 'machen Sie',
+    ru: 'делать'
+  },
+  'sagen': {
+    group: 'schwach',
+    präsens: {ich:'sage', du:'sagst', er:'sagt', wir:'sagen', ihr:'sagt', sie:'sagen'},
+    präteritum_stem: 'sagte', präteritum_forms: {ich:'sagte', du:'sagtest', er:'sagte', wir:'sagten', ihr:'sagtet', sie:'sagten'},
+    partizip2: 'gesagt', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'sag', imperativ_ihr: 'sagt', imperativ_sie: 'sagen Sie',
+    ru: 'сказать, говорить'
+  },
+  'fragen': {
+    group: 'schwach',
+    präsens: {ich:'frage', du:'fragst', er:'fragt', wir:'fragen', ihr:'fragt', sie:'fragen'},
+    präteritum_stem: 'fragte', präteritum_forms: {ich:'fragte', du:'fragtest', er:'fragte', wir:'fragten', ihr:'fragtet', sie:'fragten'},
+    partizip2: 'gefragt', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'frag', imperativ_ihr: 'fragt', imperativ_sie: 'fragen Sie',
+    ru: 'спрашивать'
+  },
+  'antworten': {
+    group: 'schwach',
+    präsens: {ich:'antworte', du:'antwortest', er:'antwortet', wir:'antworten', ihr:'antwortet', sie:'antworten'},
+    präteritum_stem: 'antwortete', präteritum_forms: {ich:'antwortete', du:'antwortetest', er:'antwortete', wir:'antworteten', ihr:'antwortetet', sie:'antworteten'},
+    partizip2: 'geantwortet', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'antworte', imperativ_ihr: 'antwortet', imperativ_sie: 'antworten Sie',
+    ru: 'отвечать'
+  },
+  'hören': {
+    group: 'schwach',
+    präsens: {ich:'höre', du:'hörst', er:'hört', wir:'hören', ihr:'hört', sie:'hören'},
+    präteritum_stem: 'hörte', präteritum_forms: {ich:'hörte', du:'hörtest', er:'hörte', wir:'hörten', ihr:'hörtet', sie:'hörten'},
+    partizip2: 'gehört', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'hör', imperativ_ihr: 'hört', imperativ_sie: 'hören Sie',
+    ru: 'слышать, слушать'
+  },
+  'arbeiten': {
+    group: 'schwach',
+    präsens: {ich:'arbeite', du:'arbeitest', er:'arbeitet', wir:'arbeiten', ihr:'arbeitet', sie:'arbeiten'},
+    präteritum_stem: 'arbeitete', präteritum_forms: {ich:'arbeitete', du:'arbeitetest', er:'arbeitete', wir:'arbeiteten', ihr:'arbeitetet', sie:'arbeiteten'},
+    partizip2: 'gearbeitet', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'arbeite', imperativ_ihr: 'arbeitet', imperativ_sie: 'arbeiten Sie',
+    ru: 'работать'
+  },
+  'spielen': {
+    group: 'schwach',
+    präsens: {ich:'spiele', du:'spielst', er:'spielt', wir:'spielen', ihr:'spielt', sie:'spielen'},
+    präteritum_stem: 'spielte', präteritum_forms: {ich:'spielte', du:'spieltest', er:'spielte', wir:'spielten', ihr:'spieltet', sie:'spielten'},
+    partizip2: 'gespielt', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'spiel', imperativ_ihr: 'spielt', imperativ_sie: 'spielen Sie',
+    ru: 'играть'
+  },
+  'kaufen': {
+    group: 'schwach',
+    präsens: {ich:'kaufe', du:'kaufst', er:'kauft', wir:'kaufen', ihr:'kauft', sie:'kaufen'},
+    präteritum_stem: 'kaufte', präteritum_forms: {ich:'kaufte', du:'kauftest', er:'kaufte', wir:'kauften', ihr:'kauftet', sie:'kauften'},
+    partizip2: 'gekauft', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'kauf', imperativ_ihr: 'kauft', imperativ_sie: 'kaufen Sie',
+    ru: 'покупать'
+  },
+  'leben': {
+    group: 'schwach',
+    präsens: {ich:'lebe', du:'lebst', er:'lebt', wir:'leben', ihr:'lebt', sie:'leben'},
+    präteritum_stem: 'lebte', präteritum_forms: {ich:'lebte', du:'lebtest', er:'lebte', wir:'lebten', ihr:'lebtet', sie:'lebten'},
+    partizip2: 'gelebt', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'leb', imperativ_ihr: 'lebt', imperativ_sie: 'leben Sie',
+    ru: 'жить'
+  },
+  'wohnen': {
+    group: 'schwach',
+    präsens: {ich:'wohne', du:'wohnst', er:'wohnt', wir:'wohnen', ihr:'wohnt', sie:'wohnen'},
+    präteritum_stem: 'wohnte', präteritum_forms: {ich:'wohnte', du:'wohntest', er:'wohnte', wir:'wohnten', ihr:'wohntet', sie:'wohnten'},
+    partizip2: 'gewohnt', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'wohn', imperativ_ihr: 'wohnt', imperativ_sie: 'wohnen Sie',
+    ru: 'жить, проживать'
+  },
+  'lernen': {
+    group: 'schwach',
+    präsens: {ich:'lerne', du:'lernst', er:'lernt', wir:'lernen', ihr:'lernt', sie:'lernen'},
+    präteritum_stem: 'lernte', präteritum_forms: {ich:'lernte', du:'lerntest', er:'lernte', wir:'lernten', ihr:'lerntet', sie:'lernten'},
+    partizip2: 'gelernt', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'lern', imperativ_ihr: 'lernt', imperativ_sie: 'lernen Sie',
+    ru: 'учить, учиться'
+  },
+  'warten': {
+    group: 'schwach',
+    präsens: {ich:'warte', du:'wartest', er:'wartet', wir:'warten', ihr:'wartet', sie:'warten'},
+    präteritum_stem: 'wartete', präteritum_forms: {ich:'wartete', du:'wartetest', er:'wartete', wir:'warteten', ihr:'wartetet', sie:'warteten'},
+    partizip2: 'gewartet', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'warte', imperativ_ihr: 'wartet', imperativ_sie: 'warten Sie',
+    ru: 'ждать'
+  },
+  'lieben': {
+    group: 'schwach',
+    präsens: {ich:'liebe', du:'liebst', er:'liebt', wir:'lieben', ihr:'liebt', sie:'lieben'},
+    präteritum_stem: 'liebte', präteritum_forms: {ich:'liebte', du:'liebtest', er:'liebte', wir:'liebten', ihr:'liebtet', sie:'liebten'},
+    partizip2: 'geliebt', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'lieb', imperativ_ihr: 'liebt', imperativ_sie: 'lieben Sie',
+    ru: 'любить'
+  },
+  'brauchen': {
+    group: 'schwach',
+    präsens: {ich:'brauche', du:'brauchst', er:'braucht', wir:'brauchen', ihr:'braucht', sie:'brauchen'},
+    präteritum_stem: 'brauchte', präteritum_forms: {ich:'brauchte', du:'brauchtest', er:'brauchte', wir:'brauchten', ihr:'brauchtet', sie:'brauchten'},
+    partizip2: 'gebraucht', aux: 'haben',
+    konjunktiv2_stem: 'bräucht', konjunktiv2_forms: {ich:'bräuchte', du:'bräuchtest', er:'bräuchte', wir:'bräuchten', ihr:'bräuchtet', sie:'bräuchten'},
+    imperativ_du: 'brauch', imperativ_ihr: 'braucht', imperativ_sie: 'brauchen Sie',
+    ru: 'нуждаться, нужно'
+  },
+  'zeigen': {
+    group: 'schwach',
+    präsens: {ich:'zeige', du:'zeigst', er:'zeigt', wir:'zeigen', ihr:'zeigt', sie:'zeigen'},
+    präteritum_stem: 'zeigte', präteritum_forms: {ich:'zeigte', du:'zeigtest', er:'zeigte', wir:'zeigten', ihr:'zeigtet', sie:'zeigten'},
+    partizip2: 'gezeigt', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'zeig', imperativ_ihr: 'zeigt', imperativ_sie: 'zeigen Sie',
+    ru: 'показывать'
+  },
+  'öffnen': {
+    group: 'schwach',
+    präsens: {ich:'öffne', du:'öffnest', er:'öffnet', wir:'öffnen', ihr:'öffnet', sie:'öffnen'},
+    präteritum_stem: 'öffnete', präteritum_forms: {ich:'öffnete', du:'öffnetest', er:'öffnete', wir:'öffneten', ihr:'öffnetet', sie:'öffneten'},
+    partizip2: 'geöffnet', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'öffne', imperativ_ihr: 'öffnet', imperativ_sie: 'öffnen Sie',
+    ru: 'открывать'
+  },
+  'suchen': {
+    group: 'schwach',
+    präsens: {ich:'suche', du:'suchst', er:'sucht', wir:'suchen', ihr:'sucht', sie:'suchen'},
+    präteritum_stem: 'suchte', präteritum_forms: {ich:'suchte', du:'suchtest', er:'suchte', wir:'suchten', ihr:'suchtet', sie:'suchten'},
+    partizip2: 'gesucht', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'such', imperativ_ihr: 'sucht', imperativ_sie: 'suchen Sie',
+    ru: 'искать'
+  },
+  'lachen': {
+    group: 'schwach',
+    präsens: {ich:'lache', du:'lachst', er:'lacht', wir:'lachen', ihr:'lacht', sie:'lachen'},
+    präteritum_stem: 'lachte', präteritum_forms: {ich:'lachte', du:'lachtest', er:'lachte', wir:'lachten', ihr:'lachtet', sie:'lachten'},
+    partizip2: 'gelacht', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'lach', imperativ_ihr: 'lacht', imperativ_sie: 'lachen Sie',
+    ru: 'смеяться'
+  },
+  'weinen': {
+    group: 'schwach',
+    präsens: {ich:'weine', du:'weinst', er:'weint', wir:'weinen', ihr:'weint', sie:'weinen'},
+    präteritum_stem: 'weinte', präteritum_forms: {ich:'weinte', du:'weintest', er:'weinte', wir:'weinten', ihr:'weintet', sie:'weinten'},
+    partizip2: 'geweint', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'wein', imperativ_ihr: 'weint', imperativ_sie: 'weinen Sie',
+    ru: 'плакать'
+  },
+  'träumen': {
+    group: 'schwach',
+    präsens: {ich:'träume', du:'träumst', er:'träumt', wir:'träumen', ihr:'träumt', sie:'träumen'},
+    präteritum_stem: 'träumte', präteritum_forms: {ich:'träumte', du:'träumtest', er:'träumte', wir:'träumten', ihr:'träumtet', sie:'träumten'},
+    partizip2: 'geträumt', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'träum', imperativ_ihr: 'träumt', imperativ_sie: 'träumen Sie',
+    ru: 'мечтать, видеть сны'
+  },
+  'fühlen': {
+    group: 'schwach',
+    präsens: {ich:'fühle', du:'fühlst', er:'fühlt', wir:'fühlen', ihr:'fühlt', sie:'fühlen'},
+    präteritum_stem: 'fühlte', präteritum_forms: {ich:'fühlte', du:'fühltest', er:'fühlte', wir:'fühlten', ihr:'fühltet', sie:'fühlten'},
+    partizip2: 'gefühlt', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'fühl', imperativ_ihr: 'fühlt', imperativ_sie: 'fühlen Sie',
+    ru: 'чувствовать'
+  },
+  'hoffen': {
+    group: 'schwach',
+    präsens: {ich:'hoffe', du:'hoffst', er:'hofft', wir:'hoffen', ihr:'hofft', sie:'hoffen'},
+    präteritum_stem: 'hoffte', präteritum_forms: {ich:'hoffte', du:'hofftest', er:'hoffte', wir:'hofften', ihr:'hofftet', sie:'hofften'},
+    partizip2: 'gehofft', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'hoff', imperativ_ihr: 'hofft', imperativ_sie: 'hoffen Sie',
+    ru: 'надеяться'
+  },
+  'glauben': {
+    group: 'schwach',
+    präsens: {ich:'glaube', du:'glaubst', er:'glaubt', wir:'glauben', ihr:'glaubt', sie:'glauben'},
+    präteritum_stem: 'glaubte', präteritum_forms: {ich:'glaubte', du:'glaubtest', er:'glaubte', wir:'glaubten', ihr:'glaubtet', sie:'glaubten'},
+    partizip2: 'geglaubt', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'glaub', imperativ_ihr: 'glaubt', imperativ_sie: 'glauben Sie',
+    ru: 'верить, думать'
+  },
+  'erinnern': {
+    group: 'schwach',
+    präsens: {ich:'erinnere', du:'erinnerst', er:'erinnert', wir:'erinnern', ihr:'erinnert', sie:'erinnern'},
+    präteritum_stem: 'erinnerte', präteritum_forms: {ich:'erinnerte', du:'erinnertest', er:'erinnerte', wir:'erinnerten', ihr:'erinnertet', sie:'erinnerten'},
+    partizip2: 'erinnert', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'erinnere', imperativ_ihr: 'erinnert', imperativ_sie: 'erinnern Sie',
+    ru: 'напоминать; (sich) вспоминать'
+  },
+  'erklären': {
+    group: 'schwach',
+    präsens: {ich:'erkläre', du:'erklärst', er:'erklärt', wir:'erklären', ihr:'erklärt', sie:'erklären'},
+    präteritum_stem: 'erklärte', präteritum_forms: {ich:'erklärte', du:'erklärtest', er:'erklärte', wir:'erklärten', ihr:'erklärtet', sie:'erklärten'},
+    partizip2: 'erklärt', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'erklär', imperativ_ihr: 'erklärt', imperativ_sie: 'erklären Sie',
+    ru: 'объяснять'
+  },
+  'tanzen': {
+    group: 'schwach',
+    präsens: {ich:'tanze', du:'tanzt', er:'tanzt', wir:'tanzen', ihr:'tanzt', sie:'tanzen'},
+    präteritum_stem: 'tanzte', präteritum_forms: {ich:'tanzte', du:'tanztest', er:'tanzte', wir:'tanzten', ihr:'tanztet', sie:'tanzten'},
+    partizip2: 'getanzt', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'tanz', imperativ_ihr: 'tanzt', imperativ_sie: 'tanzen Sie',
+    ru: 'танцевать'
+  },
+  'reisen': {
+    group: 'schwach',
+    präsens: {ich:'reise', du:'reist', er:'reist', wir:'reisen', ihr:'reist', sie:'reisen'},
+    präteritum_stem: 'reiste', präteritum_forms: {ich:'reiste', du:'reistest', er:'reiste', wir:'reisten', ihr:'reistet', sie:'reisten'},
+    partizip2: 'gereist', aux: 'sein',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'reis', imperativ_ihr: 'reist', imperativ_sie: 'reisen Sie',
+    ru: 'путешествовать'
+  },
+  'besuchen': {
+    group: 'schwach',
+    präsens: {ich:'besuche', du:'besuchst', er:'besucht', wir:'besuchen', ihr:'besucht', sie:'besuchen'},
+    präteritum_stem: 'besuchte', präteritum_forms: {ich:'besuchte', du:'besuchtest', er:'besuchte', wir:'besuchten', ihr:'besuchtet', sie:'besuchten'},
+    partizip2: 'besucht', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'besuch', imperativ_ihr: 'besucht', imperativ_sie: 'besuchen Sie',
+    ru: 'навещать, посещать'
+  },
+  'kochen': {
+    group: 'schwach',
+    präsens: {ich:'koche', du:'kochst', er:'kocht', wir:'kochen', ihr:'kocht', sie:'kochen'},
+    präteritum_stem: 'kochte', präteritum_forms: {ich:'kochte', du:'kochtest', er:'kochte', wir:'kochten', ihr:'kochtet', sie:'kochten'},
+    partizip2: 'gekocht', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'koch', imperativ_ihr: 'kocht', imperativ_sie: 'kochen Sie',
+    ru: 'готовить, варить'
+  },
+  'putzen': {
+    group: 'schwach',
+    präsens: {ich:'putze', du:'putzt', er:'putzt', wir:'putzen', ihr:'putzt', sie:'putzen'},
+    präteritum_stem: 'putzte', präteritum_forms: {ich:'putzte', du:'putztest', er:'putzte', wir:'putzten', ihr:'putztet', sie:'putzten'},
+    partizip2: 'geputzt', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'putz', imperativ_ihr: 'putzt', imperativ_sie: 'putzen Sie',
+    ru: 'чистить, убирать'
+  },
+  'verkaufen': {
+    group: 'schwach',
+    präsens: {ich:'verkaufe', du:'verkaufst', er:'verkauft', wir:'verkaufen', ihr:'verkauft', sie:'verkaufen'},
+    präteritum_stem: 'verkaufte', präteritum_forms: {ich:'verkaufte', du:'verkauftest', er:'verkaufte', wir:'verkauften', ihr:'verkauftet', sie:'verkauften'},
+    partizip2: 'verkauft', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'verkauf', imperativ_ihr: 'verkauft', imperativ_sie: 'verkaufen Sie',
+    ru: 'продавать'
+  },
+  'schicken': {
+    group: 'schwach',
+    präsens: {ich:'schicke', du:'schickst', er:'schickt', wir:'schicken', ihr:'schickt', sie:'schicken'},
+    präteritum_stem: 'schickte', präteritum_forms: {ich:'schickte', du:'schicktest', er:'schickte', wir:'schickten', ihr:'schicktet', sie:'schickten'},
+    partizip2: 'geschickt', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'schick', imperativ_ihr: 'schickt', imperativ_sie: 'schicken Sie',
+    ru: 'посылать, отправлять'
+  },
+  'reden': {
+    group: 'schwach',
+    präsens: {ich:'rede', du:'redest', er:'redet', wir:'reden', ihr:'redet', sie:'reden'},
+    präteritum_stem: 'redete', präteritum_forms: {ich:'redete', du:'redetest', er:'redete', wir:'redeten', ihr:'redetet', sie:'redeten'},
+    partizip2: 'geredet', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'rede', imperativ_ihr: 'redet', imperativ_sie: 'reden Sie',
+    ru: 'говорить, разговаривать'
+  },
+  'bezahlen': {
+    group: 'schwach',
+    präsens: {ich:'bezahle', du:'bezahlst', er:'bezahlt', wir:'bezahlen', ihr:'bezahlt', sie:'bezahlen'},
+    präteritum_stem: 'bezahlte', präteritum_forms: {ich:'bezahlte', du:'bezahltest', er:'bezahlte', wir:'bezahlten', ihr:'bezahltet', sie:'bezahlten'},
+    partizip2: 'bezahlt', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'bezahl', imperativ_ihr: 'bezahlt', imperativ_sie: 'bezahlen Sie',
+    ru: 'платить'
+  },
+  'kosten': {
+    group: 'schwach',
+    präsens: {ich:'koste', du:'kostest', er:'kostet', wir:'kosten', ihr:'kostet', sie:'kosten'},
+    präteritum_stem: 'kostete', präteritum_forms: {ich:'kostete', du:'kostetest', er:'kostete', wir:'kosteten', ihr:'kostetet', sie:'kosteten'},
+    partizip2: 'gekostet', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'koste', imperativ_ihr: 'kostet', imperativ_sie: 'kosten Sie',
+    ru: 'стоить'
+  },
+  'üben': {
+    group: 'schwach',
+    präsens: {ich:'übe', du:'übst', er:'übt', wir:'üben', ihr:'übt', sie:'üben'},
+    präteritum_stem: 'übte', präteritum_forms: {ich:'übte', du:'übtest', er:'übte', wir:'übten', ihr:'übtet', sie:'übten'},
+    partizip2: 'geübt', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'üb', imperativ_ihr: 'übt', imperativ_sie: 'üben Sie',
+    ru: 'упражняться, практиковаться'
+  },
+  'atmen': {
+    group: 'schwach',
+    präsens: {ich:'atme', du:'atmest', er:'atmet', wir:'atmen', ihr:'atmet', sie:'atmen'},
+    präteritum_stem: 'atmete', präteritum_forms: {ich:'atmete', du:'atmetest', er:'atmete', wir:'atmeten', ihr:'atmetet', sie:'atmeten'},
+    partizip2: 'geatmet', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'atme', imperativ_ihr: 'atmet', imperativ_sie: 'atmen Sie',
+    ru: 'дышать'
+  },
+  'wünschen': {
+    group: 'schwach',
+    präsens: {ich:'wünsche', du:'wünschst', er:'wünscht', wir:'wünschen', ihr:'wünscht', sie:'wünschen'},
+    präteritum_stem: 'wünschte', präteritum_forms: {ich:'wünschte', du:'wünschtest', er:'wünschte', wir:'wünschten', ihr:'wünschtet', sie:'wünschten'},
+    partizip2: 'gewünscht', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'wünsch', imperativ_ihr: 'wünscht', imperativ_sie: 'wünschen Sie',
+    ru: 'желать'
+  },
+  'schenken': {
+    group: 'schwach',
+    präsens: {ich:'schenke', du:'schenkst', er:'schenkt', wir:'schenken', ihr:'schenkt', sie:'schenken'},
+    präteritum_stem: 'schenkte', präteritum_forms: {ich:'schenkte', du:'schenktest', er:'schenkte', wir:'schenkten', ihr:'schenktet', sie:'schenkten'},
+    partizip2: 'geschenkt', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'schenk', imperativ_ihr: 'schenkt', imperativ_sie: 'schenken Sie',
+    ru: 'дарить'
+  },
+  'danken': {
+    group: 'schwach',
+    präsens: {ich:'danke', du:'dankst', er:'dankt', wir:'danken', ihr:'dankt', sie:'danken'},
+    präteritum_stem: 'dankte', präteritum_forms: {ich:'dankte', du:'danktest', er:'dankte', wir:'dankten', ihr:'danktet', sie:'dankten'},
+    partizip2: 'gedankt', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'dank', imperativ_ihr: 'dankt', imperativ_sie: 'danken Sie',
+    ru: 'благодарить'
+  },
+  'feiern': {
+    group: 'schwach',
+    präsens: {ich:'feiere', du:'feierst', er:'feiert', wir:'feiern', ihr:'feiert', sie:'feiern'},
+    präteritum_stem: 'feierte', präteritum_forms: {ich:'feierte', du:'feiertest', er:'feierte', wir:'feierten', ihr:'feiertet', sie:'feierten'},
+    partizip2: 'gefeiert', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'feier', imperativ_ihr: 'feiert', imperativ_sie: 'feiern Sie',
+    ru: 'праздновать'
+  },
+  'stellen': {
+    group: 'schwach',
+    präsens: {ich:'stelle', du:'stellst', er:'stellt', wir:'stellen', ihr:'stellt', sie:'stellen'},
+    präteritum_stem: 'stellte', präteritum_forms: {ich:'stellte', du:'stelltest', er:'stellte', wir:'stellten', ihr:'stelltet', sie:'stellten'},
+    partizip2: 'gestellt', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'stell', imperativ_ihr: 'stellt', imperativ_sie: 'stellen Sie',
+    ru: 'ставить'
+  },
+  'legen': {
+    group: 'schwach',
+    präsens: {ich:'lege', du:'legst', er:'legt', wir:'legen', ihr:'legt', sie:'legen'},
+    präteritum_stem: 'legte', präteritum_forms: {ich:'legte', du:'legtest', er:'legte', wir:'legten', ihr:'legtet', sie:'legten'},
+    partizip2: 'gelegt', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'leg', imperativ_ihr: 'legt', imperativ_sie: 'legen Sie',
+    ru: 'класть, положить'
+  },
+  'setzen': {
+    group: 'schwach',
+    präsens: {ich:'setze', du:'setzt', er:'setzt', wir:'setzen', ihr:'setzt', sie:'setzen'},
+    präteritum_stem: 'setzte', präteritum_forms: {ich:'setzte', du:'setztest', er:'setzte', wir:'setzten', ihr:'setztet', sie:'setzten'},
+    partizip2: 'gesetzt', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'setz', imperativ_ihr: 'setzt', imperativ_sie: 'setzen Sie',
+    ru: 'сажать, ставить'
+  },
+  'hängen': {
+    group: 'schwach',
+    präsens: {ich:'hänge', du:'hängst', er:'hängt', wir:'hängen', ihr:'hängt', sie:'hängen'},
+    präteritum_stem: 'hängte', präteritum_forms: {ich:'hängte', du:'hängtest', er:'hängte', wir:'hängten', ihr:'hängtet', sie:'hängten'},
+    partizip2: 'gehängt', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'häng', imperativ_ihr: 'hängt', imperativ_sie: 'hängen Sie',
+    ru: 'вешать'
+  },
+  'schmecken': {
+    group: 'schwach',
+    präsens: {ich:'schmecke', du:'schmeckst', er:'schmeckt', wir:'schmecken', ihr:'schmeckt', sie:'schmecken'},
+    präteritum_stem: 'schmeckte', präteritum_forms: {ich:'schmeckte', du:'schmecktest', er:'schmeckte', wir:'schmeckten', ihr:'schmecktet', sie:'schmeckten'},
+    partizip2: 'geschmeckt', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'schmeck', imperativ_ihr: 'schmeckt', imperativ_sie: 'schmecken Sie',
+    ru: 'быть вкусным, нравиться на вкус'
+  },
+  'dauern': {
+    group: 'schwach',
+    präsens: {ich:'dauere', du:'dauerst', er:'dauert', wir:'dauern', ihr:'dauert', sie:'dauern'},
+    präteritum_stem: 'dauerte', präteritum_forms: {ich:'dauerte', du:'dauertest', er:'dauerte', wir:'dauerten', ihr:'dauertet', sie:'dauerten'},
+    partizip2: 'gedauert', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'dauere', imperativ_ihr: 'dauert', imperativ_sie: 'dauern Sie',
+    ru: 'длиться, продолжаться'
+  },
+  'benutzen': {
+    group: 'schwach',
+    präsens: {ich:'benutze', du:'benutzt', er:'benutzt', wir:'benutzen', ihr:'benutzt', sie:'benutzen'},
+    präteritum_stem: 'benutzte', präteritum_forms: {ich:'benutzte', du:'benutztest', er:'benutzte', wir:'benutzten', ihr:'benutztet', sie:'benutzten'},
+    partizip2: 'benutzt', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'benutz', imperativ_ihr: 'benutzt', imperativ_sie: 'benutzen Sie',
+    ru: 'использовать'
+  },
+  'probieren': {
+    group: 'schwach',
+    präsens: {ich:'probiere', du:'probierst', er:'probiert', wir:'probieren', ihr:'probiert', sie:'probieren'},
+    präteritum_stem: 'probierte', präteritum_forms: {ich:'probierte', du:'probiertest', er:'probierte', wir:'probierten', ihr:'probiertet', sie:'probierten'},
+    partizip2: 'probiert', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'probier', imperativ_ihr: 'probiert', imperativ_sie: 'probieren Sie',
+    ru: 'пробовать'
+  },
+  'studieren': {
+    group: 'schwach',
+    präsens: {ich:'studiere', du:'studierst', er:'studiert', wir:'studieren', ihr:'studiert', sie:'studieren'},
+    präteritum_stem: 'studierte', präteritum_forms: {ich:'studierte', du:'studiertest', er:'studierte', wir:'studierten', ihr:'studiertet', sie:'studierten'},
+    partizip2: 'studiert', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'studier', imperativ_ihr: 'studiert', imperativ_sie: 'studieren Sie',
+    ru: 'учиться в вузе, изучать'
+  },
+
+  // === TRENNBARE VERBEN (separable prefix) ===
+  'ankommen': {
+    group: 'stark', separable: 'an',
+    präsens: {ich:'komme an', du:'kommst an', er:'kommt an', wir:'kommen an', ihr:'kommt an', sie:'kommen an'},
+    präteritum_stem: 'kam an', präteritum_forms: {ich:'kam an', du:'kamst an', er:'kam an', wir:'kamen an', ihr:'kamt an', sie:'kamen an'},
+    partizip2: 'angekommen', aux: 'sein',
+    konjunktiv2_stem: 'käm an', konjunktiv2_forms: {ich:'käme an', du:'kämest an', er:'käme an', wir:'kämen an', ihr:'kämet an', sie:'kämen an'},
+    imperativ_du: 'komm an', imperativ_ihr: 'kommt an', imperativ_sie: 'kommen Sie an',
+    ru: 'прибывать, приезжать'
+  },
+  'aufstehen': {
+    group: 'stark', separable: 'auf',
+    präsens: {ich:'stehe auf', du:'stehst auf', er:'steht auf', wir:'stehen auf', ihr:'steht auf', sie:'stehen auf'},
+    präteritum_stem: 'stand auf', präteritum_forms: {ich:'stand auf', du:'standst auf', er:'stand auf', wir:'standen auf', ihr:'standet auf', sie:'standen auf'},
+    partizip2: 'aufgestanden', aux: 'sein',
+    konjunktiv2_stem: 'stünd auf', konjunktiv2_forms: {ich:'stünde auf', du:'stündest auf', er:'stünde auf', wir:'stünden auf', ihr:'stündet auf', sie:'stünden auf'},
+    imperativ_du: 'steh auf', imperativ_ihr: 'steht auf', imperativ_sie: 'stehen Sie auf',
+    ru: 'вставать'
+  },
+  'einkaufen': {
+    group: 'schwach', separable: 'ein',
+    präsens: {ich:'kaufe ein', du:'kaufst ein', er:'kauft ein', wir:'kaufen ein', ihr:'kauft ein', sie:'kaufen ein'},
+    präteritum_stem: 'kaufte ein', präteritum_forms: {ich:'kaufte ein', du:'kauftest ein', er:'kaufte ein', wir:'kauften ein', ihr:'kauftet ein', sie:'kauften ein'},
+    partizip2: 'eingekauft', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'kauf ein', imperativ_ihr: 'kauft ein', imperativ_sie: 'kaufen Sie ein',
+    ru: 'делать покупки'
+  },
+  'anrufen': {
+    group: 'stark', separable: 'an',
+    präsens: {ich:'rufe an', du:'rufst an', er:'ruft an', wir:'rufen an', ihr:'ruft an', sie:'rufen an'},
+    präteritum_stem: 'rief an', präteritum_forms: {ich:'rief an', du:'riefst an', er:'rief an', wir:'riefen an', ihr:'rieft an', sie:'riefen an'},
+    partizip2: 'angerufen', aux: 'haben',
+    konjunktiv2_stem: 'rief an', konjunktiv2_forms: {ich:'riefe an', du:'riefest an', er:'riefe an', wir:'riefen an', ihr:'riefet an', sie:'riefen an'},
+    imperativ_du: 'ruf an', imperativ_ihr: 'ruft an', imperativ_sie: 'rufen Sie an',
+    ru: 'звонить (по телефону)'
+  },
+  'mitkommen': {
+    group: 'stark', separable: 'mit',
+    präsens: {ich:'komme mit', du:'kommst mit', er:'kommt mit', wir:'kommen mit', ihr:'kommt mit', sie:'kommen mit'},
+    präteritum_stem: 'kam mit', präteritum_forms: {ich:'kam mit', du:'kamst mit', er:'kam mit', wir:'kamen mit', ihr:'kamt mit', sie:'kamen mit'},
+    partizip2: 'mitgekommen', aux: 'sein',
+    konjunktiv2_stem: 'käm mit', konjunktiv2_forms: {ich:'käme mit', du:'kämest mit', er:'käme mit', wir:'kämen mit', ihr:'kämet mit', sie:'kämen mit'},
+    imperativ_du: 'komm mit', imperativ_ihr: 'kommt mit', imperativ_sie: 'kommen Sie mit',
+    ru: 'идти с кем-то вместе'
+  },
+  'mitbringen': {
+    group: 'gemischt', separable: 'mit',
+    präsens: {ich:'bringe mit', du:'bringst mit', er:'bringt mit', wir:'bringen mit', ihr:'bringt mit', sie:'bringen mit'},
+    präteritum_stem: 'brachte mit', präteritum_forms: {ich:'brachte mit', du:'brachtest mit', er:'brachte mit', wir:'brachten mit', ihr:'brachtet mit', sie:'brachten mit'},
+    partizip2: 'mitgebracht', aux: 'haben',
+    konjunktiv2_stem: 'brächt mit', konjunktiv2_forms: {ich:'brächte mit', du:'brächtest mit', er:'brächte mit', wir:'brächten mit', ihr:'brächtet mit', sie:'brächten mit'},
+    imperativ_du: 'bring mit', imperativ_ihr: 'bringt mit', imperativ_sie: 'bringen Sie mit',
+    ru: 'приносить с собой'
+  },
+  'fernsehen': {
+    group: 'stark', separable: 'fern',
+    präsens: {ich:'sehe fern', du:'siehst fern', er:'sieht fern', wir:'sehen fern', ihr:'seht fern', sie:'sehen fern'},
+    präteritum_stem: 'sah fern', präteritum_forms: {ich:'sah fern', du:'sahst fern', er:'sah fern', wir:'sahen fern', ihr:'saht fern', sie:'sahen fern'},
+    partizip2: 'ferngesehen', aux: 'haben',
+    konjunktiv2_stem: 'säh fern', konjunktiv2_forms: {ich:'sähe fern', du:'sähest fern', er:'sähe fern', wir:'sähen fern', ihr:'sähet fern', sie:'sähen fern'},
+    imperativ_du: 'sieh fern', imperativ_ihr: 'seht fern', imperativ_sie: 'sehen Sie fern',
+    ru: 'смотреть телевизор'
+  },
+  'aufmachen': {
+    group: 'schwach', separable: 'auf',
+    präsens: {ich:'mache auf', du:'machst auf', er:'macht auf', wir:'machen auf', ihr:'macht auf', sie:'machen auf'},
+    präteritum_stem: 'machte auf', präteritum_forms: {ich:'machte auf', du:'machtest auf', er:'machte auf', wir:'machten auf', ihr:'machtet auf', sie:'machten auf'},
+    partizip2: 'aufgemacht', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'mach auf', imperativ_ihr: 'macht auf', imperativ_sie: 'machen Sie auf',
+    ru: 'открывать'
+  },
+  'zumachen': {
+    group: 'schwach', separable: 'zu',
+    präsens: {ich:'mache zu', du:'machst zu', er:'macht zu', wir:'machen zu', ihr:'macht zu', sie:'machen zu'},
+    präteritum_stem: 'machte zu', präteritum_forms: {ich:'machte zu', du:'machtest zu', er:'machte zu', wir:'machten zu', ihr:'machtet zu', sie:'machten zu'},
+    partizip2: 'zugemacht', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'mach zu', imperativ_ihr: 'macht zu', imperativ_sie: 'machen Sie zu',
+    ru: 'закрывать'
+  },
+  'zuhören': {
+    group: 'schwach', separable: 'zu',
+    präsens: {ich:'höre zu', du:'hörst zu', er:'hört zu', wir:'hören zu', ihr:'hört zu', sie:'hören zu'},
+    präteritum_stem: 'hörte zu', präteritum_forms: {ich:'hörte zu', du:'hörtest zu', er:'hörte zu', wir:'hörten zu', ihr:'hörtet zu', sie:'hörten zu'},
+    partizip2: 'zugehört', aux: 'haben',
+    konjunktiv2_stem: null, konjunktiv2_forms: null,
+    imperativ_du: 'hör zu', imperativ_ihr: 'hört zu', imperativ_sie: 'hören Sie zu',
+    ru: 'слушать (внимательно)'
+  }
+};
+
+// ============================================================
+// EXAMPLE SENTENCES
+// ============================================================
+const EXAMPLES = {
+  'sein': {
+    präsens: ['Ich <b>bin</b> müde. — Я устал.', 'Wir <b>sind</b> zu Hause. — Мы дома.'],
+    präteritum: ['Er <b>war</b> gestern hier. — Он был здесь вчера.'],
+    perfekt: ['Ich <b>bin</b> in Berlin <b>gewesen</b>. — Я был в Берлине.'],
+    plusquamperfekt: ['Wir <b>waren</b> schon <b>gewesen</b>. — Мы уже были там.'],
+    futur1: ['Ich <b>werde</b> pünktlich <b>sein</b>. — Я буду вовремя.'],
+    futur2: ['Er <b>wird</b> schon da <b>gewesen sein</b>. — Он, наверное, уже был там.'],
+    konjunktiv2: ['Ich <b>wäre</b> gern dort. — Я бы хотел быть там.'],
+    imperativ: ['<b>Sei</b> vorsichtig! — Будь осторожен!']
+  },
+  'haben': {
+    präsens: ['Ich <b>habe</b> eine Katze. — У меня есть кошка.', 'Sie <b>hat</b> Zeit. — У неё есть время.'],
+    präteritum: ['Wir <b>hatten</b> viel Arbeit. — У нас было много работы.'],
+    perfekt: ['Ich <b>habe</b> einen Hund <b>gehabt</b>. — У меня была собака.'],
+    plusquamperfekt: ['Sie <b>hatte</b> das Buch schon <b>gehabt</b>. — Она уже имела эту книгу.'],
+    futur1: ['Wir <b>werden</b> eine Party <b>haben</b>. — У нас будет праздник.'],
+    futur2: ['Er <b>wird</b> alles <b>gehabt haben</b>. — У него, вероятно, уже всё было.'],
+    konjunktiv2: ['Ich <b>hätte</b> gern Tee. — Я бы хотел чаю.'],
+    imperativ: ['<b>Hab</b> keine Angst! — Не бойся!']
+  },
+  'machen': {
+    präsens: ['Ich <b>mache</b> das. — Я делаю это.', 'Was <b>machst</b> du? — Что ты делаешь?'],
+    präteritum: ['Er <b>machte</b> Hausaufgaben. — Он делал уроки.'],
+    perfekt: ['Ich <b>habe</b> das <b>gemacht</b>. — Я это сделал.'],
+    plusquamperfekt: ['Sie <b>hatte</b> alles <b>gemacht</b>. — Она уже всё сделала.'],
+    futur1: ['Wir <b>werden</b> es <b>machen</b>. — Мы это сделаем.'],
+    futur2: ['Bis morgen <b>wird</b> er es <b>gemacht haben</b>. — До завтра он это сделает.'],
+    konjunktiv2: ['Ich <b>würde</b> das <b>machen</b>. — Я бы это сделал.'],
+    imperativ: ['<b>Mach</b> schnell! — Делай быстро!']
+  },
+  'gehen': {
+    präsens: ['Ich <b>gehe</b> zur Schule. — Я иду в школу.'],
+    präteritum: ['Wir <b>gingen</b> nach Hause. — Мы шли домой.'],
+    perfekt: ['Er <b>ist</b> weg <b>gegangen</b>. — Он ушёл.'],
+    plusquamperfekt: ['Sie <b>war</b> schon <b>gegangen</b>. — Она уже ушла.'],
+    futur1: ['Ich <b>werde</b> morgen <b>gehen</b>. — Я пойду завтра.'],
+    futur2: ['Bis dann <b>wird</b> er <b>gegangen sein</b>. — К тому времени он уже уйдёт.'],
+    konjunktiv2: ['Ich <b>ginge</b> gern mit. — Я бы с радостью пошёл.'],
+    imperativ: ['<b>Geh</b> nach Hause! — Иди домой!']
+  },
+  'kommen': {
+    präsens: ['Er <b>kommt</b> bald. — Он скоро придёт.'],
+    präteritum: ['Sie <b>kamen</b> gestern. — Они пришли вчера.'],
+    perfekt: ['Ich <b>bin gekommen</b>. — Я пришёл.'],
+    plusquamperfekt: ['Er <b>war</b> schon <b>gekommen</b>. — Он уже пришёл.'],
+    futur1: ['Ich <b>werde komm</b>en. — Я приду.'],
+    futur2: ['Sie <b>wird</b> schon <b>gekommen sein</b>. — Она, наверное, уже пришла.'],
+    konjunktiv2: ['Ich <b>käme</b> gern. — Я бы с удовольствием пришёл.'],
+    imperativ: ['<b>Komm</b> her! — Иди сюда!']
+  },
+  'essen': {
+    präsens: ['Ich <b>esse</b> einen Apfel. — Я ем яблоко.'],
+    präteritum: ['Er <b>aß</b> sein Mittagessen. — Он ел обед.'],
+    perfekt: ['Wir <b>haben gegessen</b>. — Мы поели.'],
+    plusquamperfekt: ['Sie <b>hatte</b> schon <b>gegessen</b>. — Она уже поела.'],
+    futur1: ['Ich <b>werde</b> später <b>essen</b>. — Я поем позже.'],
+    futur2: ['Bis 8 Uhr <b>wird</b> er <b>gegessen haben</b>. — К 8 он поест.'],
+    konjunktiv2: ['Ich <b>äße</b> jetzt gern. — Я бы сейчас поел.'],
+    imperativ: ['<b>Iss</b> dein Gemüse! — Ешь овощи!']
+  },
+  'sprechen': {
+    präsens: ['Wir <b>sprechen</b> Deutsch. — Мы говорим по-немецки.'],
+    präteritum: ['Er <b>sprach</b> laut. — Он говорил громко.'],
+    perfekt: ['Ich <b>habe</b> mit ihm <b>gesprochen</b>. — Я с ним поговорил.'],
+    plusquamperfekt: ['Sie <b>hatte</b> schon <b>gesprochen</b>. — Она уже поговорила.'],
+    futur1: ['Wir <b>werden</b> später <b>sprechen</b>. — Мы поговорим позже.'],
+    futur2: ['Bis dann <b>wird</b> er <b>gesprochen haben</b>. — К тому времени он поговорит.'],
+    konjunktiv2: ['Ich <b>spräche</b> gern mit dir. — Я бы с тобой поговорил.'],
+    imperativ: ['<b>Sprich</b> lauter! — Говори громче!']
+  },
+  'fahren': {
+    präsens: ['Ich <b>fahre</b> nach Berlin. — Я еду в Берлин.'],
+    präteritum: ['Er <b>fuhr</b> mit dem Auto. — Он ехал на машине.'],
+    perfekt: ['Wir <b>sind</b> nach Hause <b>gefahren</b>. — Мы поехали домой.'],
+    plusquamperfekt: ['Sie <b>war</b> schon <b>gefahren</b>. — Она уже уехала.'],
+    futur1: ['Ich <b>werde</b> morgen <b>fahren</b>. — Я поеду завтра.'],
+    futur2: ['Er <b>wird</b> schon <b>gefahren sein</b>. — Он, наверное, уже уехал.'],
+    konjunktiv2: ['Ich <b>führe</b> gern nach Italien. — Я бы с удовольствием поехал в Италию.'],
+    imperativ: ['<b>Fahr</b> vorsichtig! — Езжай осторожно!']
+  },
+  'können': {
+    präsens: ['Ich <b>kann</b> schwimmen. — Я умею плавать.'],
+    präteritum: ['Er <b>konnte</b> nicht kommen. — Он не мог прийти.'],
+    perfekt: ['Ich <b>habe</b> es nicht <b>gekonnt</b>. — Я не смог.'],
+    plusquamperfekt: ['Sie <b>hatte</b> es <b>gekonnt</b>. — Она смогла (это сделать).'],
+    futur1: ['Wir <b>werden</b> das <b>können</b>. — Мы сможем это.'],
+    futur2: ['Er <b>wird</b> es <b>gekonnt haben</b>. — Он, вероятно, смог.'],
+    konjunktiv2: ['Ich <b>könnte</b> helfen. — Я мог бы помочь.'],
+    imperativ: []
+  },
+  'geben': {
+    präsens: ['Er <b>gibt</b> mir ein Buch. — Он даёт мне книгу.'],
+    präteritum: ['Sie <b>gab</b> dem Kind Milch. — Она дала ребёнку молоко.'],
+    perfekt: ['Ich <b>habe</b> ihm Geld <b>gegeben</b>. — Я дал ему денег.'],
+    plusquamperfekt: ['Er <b>hatte</b> mir alles <b>gegeben</b>. — Он уже всё мне отдал.'],
+    futur1: ['Ich <b>werde</b> dir das <b>geben</b>. — Я тебе это дам.'],
+    futur2: ['Sie <b>wird</b> es <b>gegeben haben</b>. — Она, вероятно, уже дала.'],
+    konjunktiv2: ['Ich <b>gäbe</b> dir alles. — Я бы тебе всё отдал.'],
+    imperativ: ['<b>Gib</b> mir das! — Дай мне это!']
+  }
+};
+
+// ============================================================
+// RUSSIAN TO GERMAN MAPPING
+// ============================================================
+const RU_TO_DE = {
+  'быть': 'sein', 'иметь': 'haben', 'становиться': 'werden',
+  'мочь': 'können', 'уметь': 'können', 'быть должным': 'müssen',
+  'хотеть': 'wollen', 'быть обязанным': 'sollen', 'можно': 'dürfen',
+  'делать': 'machen', 'идти': 'gehen', 'ходить': 'gehen',
+  'приходить': 'kommen', 'видеть': 'sehen', 'смотреть': 'sehen',
+  'давать': 'geben', 'брать': 'nehmen', 'приносить': 'bringen',
+  'думать': 'denken', 'знать': 'wissen', 'знать (факт)': 'wissen',
+  'знать (быть знакомым)': 'kennen', 'находить': 'finden',
+  'читать': 'lesen', 'писать': 'schreiben', 'говорить': 'sprechen',
+  'сказать': 'sagen', 'спрашивать': 'fragen', 'отвечать': 'antworten',
+  'слышать': 'hören', 'слушать': 'hören', 'работать': 'arbeiten',
+  'играть': 'spielen', 'покупать': 'kaufen', 'жить': 'leben',
+  'проживать': 'wohnen', 'есть': 'essen', 'кушать': 'essen',
+  'пить': 'trinken', 'спать': 'schlafen', 'стоять': 'stehen',
+  'сидеть': 'sitzen', 'лежать': 'liegen', 'бежать': 'laufen',
+  'ехать': 'fahren', 'водить': 'fahren', 'летать': 'fliegen',
+  'носить': 'tragen', 'оставлять': 'lassen', 'позволять': 'lassen',
+  'держать': 'halten', 'учить': 'lernen', 'учиться': 'lernen',
+  'понимать': 'verstehen', 'ждать': 'warten', 'помогать': 'helfen',
+  'встречать': 'treffen', 'терять': 'verlieren', 'проигрывать': 'verlieren',
+  'выигрывать': 'gewinnen', 'побеждать': 'gewinnen', 'начинать': 'beginnen',
+  'любить': 'lieben', 'нуждаться': 'brauchen', 'нужно': 'brauchen',
+  'получать': 'bekommen', 'оставаться': 'bleiben', 'показывать': 'zeigen',
+  'закрывать': 'schließen', 'открывать': 'öffnen', 'искать': 'suchen',
+  'смеяться': 'lachen', 'плакать': 'weinen', 'мечтать': 'träumen',
+  'видеть сны': 'träumen', 'чувствовать': 'fühlen', 'надеяться': 'hoffen',
+  'верить': 'glauben', 'забывать': 'vergessen', 'вспоминать': 'erinnern',
+  'напоминать': 'erinnern', 'решать': 'entscheiden', 'объяснять': 'erklären',
+  'звать': 'rufen', 'кричать': 'rufen', 'петь': 'singen',
+  'танцевать': 'tanzen', 'путешествовать': 'reisen', 'навещать': 'besuchen',
+  'посещать': 'besuchen', 'прибывать': 'ankommen', 'приезжать': 'ankommen',
+  'вставать': 'aufstehen', 'делать покупки': 'einkaufen',
+  'звонить': 'anrufen', 'звонить по телефону': 'anrufen',
+  'приносить с собой': 'mitbringen', 'смотреть телевизор': 'fernsehen',
+  'готовить': 'kochen', 'варить': 'kochen', 'чистить': 'putzen',
+  'убирать': 'putzen', 'посылать': 'schicken', 'отправлять': 'schicken',
+  'разговаривать': 'reden', 'платить': 'bezahlen', 'стоить': 'kosten',
+  'упражняться': 'üben', 'практиковаться': 'üben', 'дышать': 'atmen',
+  'желать': 'wünschen', 'дарить': 'schenken', 'благодарить': 'danken',
+  'праздновать': 'feiern', 'ставить': 'stellen', 'класть': 'legen',
+  'положить': 'legen', 'сажать': 'setzen', 'вешать': 'hängen',
+  'быть вкусным': 'schmecken', 'длиться': 'dauern', 'продолжаться': 'dauern',
+  'использовать': 'benutzen', 'пробовать': 'probieren',
+  'учиться в вузе': 'studieren', 'изучать': 'studieren',
+  'любить (предпочитать)': 'mögen', 'слушать внимательно': 'zuhören',
+  'продавать': 'verkaufen'
+};
+
+// ============================================================
+// GROUP LABELS
+// ============================================================
+function groupLabel(g) {
+  if (g === 'schwach') return 'Schwach (слабый, регулярный)';
+  if (g === 'stark') return 'Stark (сильный)';
+  if (g === 'gemischt') return 'Gemischt (смешанный)';
+  if (g === 'modal') return 'Modalverb (модальный)';
+  if (g === 'hilfsverb') return 'Hilfsverb (вспомогательный)';
+  return g;
+}
+
+// ============================================================
+// UI
+// ============================================================
+function tryVerb(v) {
+  document.getElementById('verbInput').value = v;
+  conjugate();
+}
+
+function conjugate() {
+  const input = document.getElementById('verbInput').value.trim();
+  const resultsDiv = document.getElementById('results');
+  const verbInfoDiv = document.getElementById('verbInfo');
+  const warningBanner = document.getElementById('warningBanner');
+
+  if (!input) {
+    resultsDiv.innerHTML = '';
+    verbInfoDiv.style.display = 'none';
+    warningBanner.style.display = 'none';
+    return;
+  }
+
+  // Check if input is Russian
+  let russianInput = null;
+  let germanVerb = input.toLowerCase().trim();
+  if (/[а-яё]/i.test(input)) {
+    const lowerInput = input.toLowerCase().trim();
+    if (RU_TO_DE[lowerInput]) {
+      russianInput = lowerInput;
+      germanVerb = RU_TO_DE[lowerInput];
+    } else {
+      resultsDiv.innerHTML = '<div class="no-result">Русский глагол \u00ab' + input + '\u00bb не найден в словаре.<br>Попробуйте ввести немецкий инфинитив (например: machen, sein, gehen)</div>';
+      verbInfoDiv.style.display = 'none';
+      warningBanner.style.display = 'none';
+      return;
+    }
+  }
+
+  // Strip leading "zu " if user typed it
+  germanVerb = germanVerb.replace(/^zu\s+/, '');
+
+  const v = VERBS[germanVerb];
+  if (!v) {
+    resultsDiv.innerHTML = '<div class="no-result">Глагол \u00ab' + germanVerb + '\u00bb не найден в базе.<br>Попробуйте ввести инфинитив (например: machen, sein, gehen)</div>';
+    verbInfoDiv.style.display = 'none';
+    warningBanner.style.display = 'none';
+    return;
+  }
+
+  // Show separable verb warning
+  if (v.separable) {
+    warningBanner.style.display = 'block';
+    warningBanner.innerHTML = '<b>⚠ Глагол с отделяемой приставкой «' + v.separable + '-»:</b> в главном предложении в Präsens и Präteritum приставка отделяется и уходит в конец. Пример: «Ich komme um 8 Uhr <b>an</b>.» (я прибываю в 8 часов). В Partizip II «ge-» ставится между приставкой и основой: <b>' + v.partizip2 + '</b>.';
+  } else {
+    warningBanner.style.display = 'none';
+  }
+
+  // Show verb info badges
+  verbInfoDiv.style.display = 'block';
+  let infoHTML = '';
+  if (russianInput) {
+    infoHTML += '<span class="badge badge-ru">&#128270; русский \u2192 deutsch: ' + russianInput + ' \u2192 ' + germanVerb + '</span>';
+  }
+  infoHTML += '<span class="badge badge-group">' + groupLabel(v.group) + '</span>';
+  infoHTML += '<span class="badge badge-ru">\ud83c\uddf7\ud83c\uddfa ' + v.ru + '</span>';
+  infoHTML += '<span class="badge badge-pp">Partizip II: ' + v.partizip2 + '</span>';
+  infoHTML += '<span class="badge badge-prp">Hilfsverb: ' + v.aux + '</span>';
+  verbInfoDiv.innerHTML = infoHTML;
+
+  // Get examples
+  const ex = EXAMPLES[germanVerb] || buildDefaultExamples(germanVerb, v);
+
+  const PRONOUNS = ['ich', 'du', 'er/sie/es', 'wir', 'ihr', 'sie/Sie'];
+  const PRONOUNS_RU = ['я', 'ты', 'он/она/оно', 'мы', 'вы', 'они/Вы'];
+  const KEYS = ['ich', 'du', 'er', 'wir', 'ihr', 'sie'];
+
+  // auxiliary präteritum forms for plusquamperfekt
+  const AUX_PRAT = {
+    haben: {ich:'hatte', du:'hattest', er:'hatte', wir:'hatten', ihr:'hattet', sie:'hatten'},
+    sein:  {ich:'war',   du:'warst',   er:'war',   wir:'waren',  ihr:'wart',    sie:'waren'}
+  };
+  const AUX_PRAS = {
+    haben: {ich:'habe', du:'hast', er:'hat', wir:'haben', ihr:'habt', sie:'haben'},
+    sein:  {ich:'bin',  du:'bist', er:'ist', wir:'sind',  ihr:'seid', sie:'sind'}
+  };
+  const WERDEN_PRAS = {ich:'werde', du:'wirst', er:'wird', wir:'werden', ihr:'werdet', sie:'werden'};
+  const WUERDE = {ich:'würde', du:'würdest', er:'würde', wir:'würden', ihr:'würdet', sie:'würden'};
+
+  // Build tense cards
+  let html = '';
+
+  for (const tense of TENSES) {
+    let forms = null; // object keyed by ich/du/er/wir/ihr/sie
+    let singleForm = null;
+    let examples = [];
+    let isImperativ = false;
+    let isInfinitiv = false;
+
+    if (tense.id === 'infinitiv') {
+      singleForm = germanVerb;
+      isInfinitiv = true;
+      examples = ['Er will <b>' + germanVerb + '</b>. — Он хочет ' + v.ru.split(',')[0].trim() + '.',
+                  'Ich habe keine Zeit, zu <b>' + germanVerb + '</b>. — У меня нет времени ' + v.ru.split(',')[0].trim() + '.'];
+    } else if (tense.id === 'präsens') {
+      forms = v.präsens;
+      examples = ex.präsens || [];
+    } else if (tense.id === 'präteritum') {
+      forms = v.präteritum_forms;
+      examples = ex.präteritum || [];
+    } else if (tense.id === 'perfekt') {
+      forms = {};
+      for (const k of KEYS) {
+        forms[k] = AUX_PRAS[v.aux][k] + ' ' + v.partizip2;
+      }
+      examples = ex.perfekt || [];
+    } else if (tense.id === 'plusquamperfekt') {
+      forms = {};
+      for (const k of KEYS) {
+        forms[k] = AUX_PRAT[v.aux][k] + ' ' + v.partizip2;
+      }
+      examples = ex.plusquamperfekt || [];
+    } else if (tense.id === 'futur1') {
+      forms = {};
+      // If separable, infinitive has no gap (e.g., "ankommen" not "komme an") — combined
+      const infForm = v.separable ? (v.separable + germanVerb.slice(v.separable.length)) : germanVerb;
+      // Actually the stored key IS the infinitive already (e.g., 'ankommen'). Use germanVerb directly.
+      for (const k of KEYS) {
+        forms[k] = WERDEN_PRAS[k] + ' ' + germanVerb;
+      }
+      examples = ex.futur1 || [];
+    } else if (tense.id === 'futur2') {
+      forms = {};
+      for (const k of KEYS) {
+        forms[k] = WERDEN_PRAS[k] + ' ' + v.partizip2 + ' ' + v.aux;
+      }
+      examples = ex.futur2 || [];
+    } else if (tense.id === 'konjunktiv2') {
+      forms = {};
+      if (v.konjunktiv2_forms) {
+        for (const k of KEYS) {
+          forms[k] = v.konjunktiv2_forms[k];
+        }
+        examples = ex.konjunktiv2 || [];
+        examples = examples.concat(['<i>Также часто: würde + ' + germanVerb + ' (аналитическая форма)</i>']);
+      } else {
+        // Use würde + infinitive for weak verbs
+        for (const k of KEYS) {
+          forms[k] = WUERDE[k] + ' ' + germanVerb;
+        }
+        examples = ex.konjunktiv2 || [];
+        examples = examples.concat(['<i>У слабых глаголов Konjunktiv II совпадает с Präteritum, поэтому используется würde + инфинитив</i>']);
+      }
+    } else if (tense.id === 'imperativ') {
+      isImperativ = true;
+      if (v.imperativ_du) {
+        forms = {
+          'du': v.imperativ_du + '!',
+          'ihr': v.imperativ_ihr + '!',
+          'Sie': v.imperativ_sie + '!'
+        };
+        examples = ex.imperativ || [];
+      } else {
+        forms = null;
+        singleForm = null;
+      }
+    }
+
+    // Build Russian translation for this tense
+    let ruForm = v.ru.split(',')[0].trim().replace(/\s*\(.*?\)\s*/g, '').trim();
+    let ruTenseLabel = '';
+    if (tense.id === 'infinitiv') ruTenseLabel = ruForm;
+    else if (tense.id === 'präsens') ruTenseLabel = ruForm.replace(/ть(ся)?$/, (m, s) => (s ? 'ю(сь)' : 'ю'));
+    else if (tense.id === 'präteritum') ruTenseLabel = ruForm.replace(/ть(ся)?$/, (m, s) => (s ? 'л(ся)' : 'л'));
+    else if (tense.id === 'perfekt') ruTenseLabel = ruForm.replace(/ть(ся)?$/, (m, s) => (s ? 'л(ся)' : 'л'));
+    else if (tense.id === 'plusquamperfekt') ruTenseLabel = 'уже ' + ruForm.replace(/ть(ся)?$/, (m, s) => (s ? 'л(ся)' : 'л'));
+    else if (tense.id === 'futur1') ruTenseLabel = 'буду ' + ruForm;
+    else if (tense.id === 'futur2') ruTenseLabel = 'уже ' + ruForm.replace(/ть(ся)?$/, (m, s) => (s ? 'л(ся)' : 'л')) + ' к моменту';
+    else if (tense.id === 'konjunktiv2') ruTenseLabel = ruForm.replace(/ть(ся)?$/, (m, s) => (s ? 'л(ся) бы' : 'л бы'));
+    else if (tense.id === 'imperativ') ruTenseLabel = ruForm.replace(/ть(ся)?$/, (m, s) => (s ? 'й(ся)' : 'й')) + '!';
+
+    html += '<div class="tense-card">';
+    html += '<div class="tense-header">';
+    html += '<div class="no-name">' + tense.name + '<span class="ru-translation">' + ruTenseLabel + '</span></div>';
+    html += '<div class="ru-name">' + tense.ru + '</div>';
+    html += '</div>';
+    html += '<div class="tense-explain">' + tense.explain + '</div>';
+    html += '<div class="tense-body">';
+
+    if (isInfinitiv) {
+      html += '<table><tr><td class="verb-form">' + singleForm + '</td><td class="pronoun" style="text-align:right">' + v.ru + '</td></tr></table>';
+      for (const e of examples) { html += '<div class="example">' + e + '</div>'; }
+    } else if (isImperativ) {
+      if (!forms) {
+        html += '<div style="color:#ccc;padding:8px 0;">Не употребляется для этого глагола</div>';
+      } else {
+        html += '<table>';
+        html += '<tr><td class="pronoun">du</td><td class="verb-form">' + forms['du'] + '</td><td class="pronoun" style="text-align:right;width:auto;">ты</td></tr>';
+        html += '<tr><td class="pronoun">ihr</td><td class="verb-form">' + forms['ihr'] + '</td><td class="pronoun" style="text-align:right;width:auto;">вы</td></tr>';
+        html += '<tr><td class="pronoun">Sie</td><td class="verb-form">' + forms['Sie'] + '</td><td class="pronoun" style="text-align:right;width:auto;">Вы</td></tr>';
+        html += '</table>';
+        if (examples.length > 0) {
+          html += '<div class="example">';
+          for (const e of examples) { html += e + '<br>'; }
+          html += '</div>';
+        }
+      }
+    } else if (forms === null) {
+      html += '<div style="color:#ccc;padding:8px 0;">Не употребляется для этого глагола</div>';
+    } else {
+      html += '<table>';
+      for (let i = 0; i < 6; i++) {
+        const key = KEYS[i];
+        html += '<tr><td class="pronoun">' + PRONOUNS[i] + '</td><td class="verb-form">' + forms[key] + '</td><td class="pronoun" style="text-align:right;width:auto;">' + PRONOUNS_RU[i] + '</td></tr>';
+      }
+      html += '</table>';
+      if (examples.length > 0) {
+        html += '<div class="example">';
+        for (const e of examples) { html += e + '<br>'; }
+        html += '</div>';
+      }
+    }
+
+    html += '</div></div>';
+  }
+
+  resultsDiv.innerHTML = html;
+}
+
+// ============================================================
+// DEFAULT EXAMPLES BUILDER
+// ============================================================
+function buildDefaultExamples(inf, v) {
+  const ex = {};
+  const ruBase = v.ru.split(',')[0].trim().replace(/\s*\(.*?\)\s*/g, '').trim();
+  const ruPast = ruBase.replace(/ть(ся)?$/, (m, s) => (s ? 'л(ся)' : 'л'));
+  const ruPres = ruBase.replace(/ть(ся)?$/, (m, s) => (s ? 'ю(сь)' : 'ю'));
+  ex.präsens = ['Ich <b>' + v.präsens.ich + '</b>. — Я ' + ruPres + '.'];
+  ex.präteritum = ['Ich <b>' + v.präteritum_forms.ich + '</b>. — Я ' + ruPast + '.'];
+  ex.perfekt = ['Ich <b>' + (v.aux === 'sein' ? 'bin' : 'habe') + ' ' + v.partizip2 + '</b>. — Я ' + ruPast + '.'];
+  ex.plusquamperfekt = ['Ich <b>' + (v.aux === 'sein' ? 'war' : 'hatte') + ' ' + v.partizip2 + '</b>. — Я уже ' + ruPast + '.'];
+  ex.futur1 = ['Ich <b>werde ' + inf + '</b>. — Я буду ' + ruBase + '.'];
+  ex.futur2 = ['Ich <b>werde ' + v.partizip2 + ' ' + v.aux + '</b>. — Я уже ' + ruPast + ' к тому моменту.'];
+  if (v.konjunktiv2_forms) {
+    ex.konjunktiv2 = ['Ich <b>' + v.konjunktiv2_forms.ich + '</b>. — Я ' + ruPast + ' бы.'];
+  } else {
+    ex.konjunktiv2 = ['Ich <b>würde ' + inf + '</b>. — Я ' + ruPast + ' бы.'];
+  }
+  if (v.imperativ_du) {
+    ex.imperativ = ['<b>' + v.imperativ_du.charAt(0).toUpperCase() + v.imperativ_du.slice(1) + '!</b> — ' + ruBase.replace(/ть(ся)?$/, (m, s) => (s ? 'й(ся)' : 'й')) + '!'];
+  }
+  return ex;
+}
+
+// Auto-conjugate if there's a hash
+if (location.hash) {
+  document.getElementById('verbInput').value = decodeURIComponent(location.hash.slice(1));
+  conjugate();
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇩🇪</text></svg>">
+<meta name="apple-mobile-web-app-title" content="DE Artikel">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>🇩🇪 Артикли и падежи — немецкий</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #faf5e8;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #1a1a1a, #7a1a1a);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+
+  .lang-switches {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 28px 20px 60px;
+  }
+
+  /* Section cards */
+  section {
+    background: white;
+    border-radius: 12px;
+    padding: 22px 24px;
+    margin-bottom: 22px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  section h2 {
+    font-size: 1.25em;
+    color: #b8860b;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #f0e4c1;
+  }
+  section h3 {
+    font-size: 1.02em;
+    color: #7a1a1a;
+    margin: 16px 0 10px;
+  }
+  section p {
+    font-size: 0.95em;
+    line-height: 1.65;
+    color: #444;
+    margin-bottom: 8px;
+  }
+  section p.intro {
+    font-size: 0.92em;
+    color: #666;
+    margin-bottom: 12px;
+  }
+  section ul {
+    padding-left: 22px;
+    font-size: 0.93em;
+    line-height: 1.7;
+    color: #444;
+  }
+  section ul li { margin-bottom: 4px; }
+
+  /* Case overview grid */
+  .case-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .case-card {
+    background: #faf5e8;
+    border-left: 4px solid #b8860b;
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .case-card .case-name {
+    font-weight: 700;
+    color: #7a1a1a;
+    font-size: 1.05em;
+    margin-bottom: 4px;
+  }
+  .case-card .case-q {
+    font-size: 0.85em;
+    color: #888;
+    margin-bottom: 8px;
+    font-style: italic;
+  }
+  .case-card .case-ex {
+    font-size: 0.92em;
+    color: #333;
+    background: white;
+    padding: 8px 10px;
+    border-radius: 6px;
+    margin-top: 6px;
+  }
+  .case-card .case-ex .hl { color: #b8860b; font-weight: 700; }
+  .case-card .case-ex .ru {
+    display: block;
+    color: #888;
+    font-style: italic;
+    font-size: 0.85em;
+    margin-top: 3px;
+  }
+
+  /* Declension tables */
+  .decl-wrap {
+    overflow-x: auto;
+    margin: 10px 0;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+  table.decl {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    min-width: 480px;
+  }
+  table.decl th, table.decl td {
+    padding: 10px 14px;
+    text-align: center;
+    border: 1px solid #eee;
+    font-size: 0.95em;
+  }
+  table.decl thead th {
+    background: #faf5e8;
+    color: #555;
+    font-weight: 600;
+    font-size: 0.88em;
+    letter-spacing: 0.3px;
+    position: sticky;
+    top: 0;
+  }
+  table.decl thead th.col-m { background: #2e5c8a; color: white; }
+  table.decl thead th.col-f { background: #a02355; color: white; }
+  table.decl thead th.col-n { background: #2e7d32; color: white; }
+  table.decl thead th.col-pl { background: #555; color: white; }
+
+  table.decl tbody td.case-label {
+    background: #f0e4c1;
+    font-weight: 700;
+    color: #7a1a1a;
+    text-align: left;
+    width: 22%;
+    font-size: 0.9em;
+  }
+  table.decl tbody td.case-label small {
+    display: block;
+    font-weight: 400;
+    color: #888;
+    font-style: italic;
+    font-size: 0.85em;
+    margin-top: 2px;
+  }
+  table.decl tbody tr:hover td:not(.case-label) {
+    background: #fff9e6;
+  }
+  table.decl tbody td {
+    font-weight: 600;
+    color: #2c2c2c;
+  }
+  table.decl tbody td.col-m { color: #2e5c8a; }
+  table.decl tbody td.col-f { color: #a02355; }
+  table.decl tbody td.col-n { color: #2e7d32; }
+  table.decl tbody td.col-pl { color: #444; }
+  table.decl tbody td .ending {
+    color: #b8860b;
+    font-weight: 800;
+  }
+  table.decl tbody td small {
+    display: block;
+    color: #999;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 0.78em;
+    margin-top: 2px;
+  }
+
+  .example-line {
+    background: #faf5e8;
+    border-left: 3px solid #b8860b;
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin: 10px 0;
+    font-size: 0.95em;
+  }
+  .example-line .de { font-weight: 600; color: #2c2c2c; }
+  .example-line .de b { color: #b8860b; }
+  .example-line .ru {
+    display: block;
+    color: #888;
+    font-style: italic;
+    font-size: 0.88em;
+    margin-top: 3px;
+  }
+
+  /* Possessive chart */
+  .poss-chart {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+    margin: 12px 0;
+  }
+  .poss-item {
+    background: #faf5e8;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.92em;
+  }
+  .poss-item .pron {
+    color: #7a1a1a;
+    font-weight: 700;
+  }
+  .poss-item .arrow { color: #b8860b; margin: 0 6px; }
+  .poss-item .poss {
+    color: #2e5c8a;
+    font-weight: 700;
+  }
+  .poss-item .gloss {
+    display: block;
+    color: #888;
+    font-size: 0.82em;
+    font-style: italic;
+    margin-top: 2px;
+  }
+
+  /* Adjective declension tabs */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin: 12px 0 10px;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 10px 16px;
+    background: #f0e4c1;
+    border: none;
+    border-radius: 8px 8px 0 0;
+    cursor: pointer;
+    font-size: 0.93em;
+    font-weight: 600;
+    color: #7a1a1a;
+    transition: background 0.2s;
+    font-family: inherit;
+  }
+  .tab-btn:hover { background: #e8d9a8; }
+  .tab-btn.active {
+    background: #b8860b;
+    color: white;
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* Trainer */
+  .trainer {
+    background: #faf5e8;
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-top: 10px;
+  }
+  .trainer-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .trainer-row label {
+    flex: 1;
+    min-width: 140px;
+    font-size: 0.88em;
+    color: #555;
+  }
+  .trainer-row label span {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 600;
+    color: #7a1a1a;
+  }
+  .trainer select {
+    width: 100%;
+    padding: 9px 12px;
+    border: 2px solid #e8d9a8;
+    border-radius: 8px;
+    font-size: 0.95em;
+    background: white;
+    cursor: pointer;
+    outline: none;
+    font-family: inherit;
+  }
+  .trainer select:focus { border-color: #b8860b; }
+  .trainer-output {
+    background: white;
+    padding: 16px 20px;
+    border-radius: 10px;
+    border-left: 4px solid #b8860b;
+    font-size: 1.1em;
+    line-height: 1.8;
+  }
+  .trainer-output .phrase {
+    font-weight: 700;
+    color: #2c2c2c;
+  }
+  .trainer-output .phrase .art { color: #b8860b; }
+  .trainer-output .phrase .adj { color: #2e5c8a; }
+  .trainer-output .phrase .noun { color: #7a1a1a; }
+  .trainer-output .explain {
+    font-size: 0.82em;
+    color: #888;
+    margin-top: 8px;
+    font-style: italic;
+  }
+
+  /* Trap list */
+  .trap-list {
+    display: grid;
+    gap: 10px;
+  }
+  .trap-item {
+    background: #fff8e1;
+    border-left: 4px solid #ffc107;
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 0.93em;
+    line-height: 1.6;
+  }
+  .trap-item b { color: #7a1a1a; }
+  .trap-item .de { color: #2e5c8a; font-weight: 600; }
+
+  @media (max-width: 600px) {
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switch { padding: 6px 12px; font-size: 0.85em; }
+    main { padding: 20px 10px 40px; }
+    section { padding: 16px 14px; }
+    section h2 { font-size: 1.1em; }
+    table.decl th, table.decl td { padding: 8px 8px; font-size: 0.88em; }
+    .case-grid { grid-template-columns: 1fr; }
+    .poss-chart { grid-template-columns: repeat(2, 1fr); }
+    .tab-btn { padding: 8px 12px; font-size: 0.85em; }
+    .trainer { padding: 14px; }
+    .trainer-output { padding: 12px 14px; font-size: 1em; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-switches">
+    <a href="german.html" class="lang-switch">📖 Портал</a>
+  </div>
+  <h1>🇩🇪 Артикли и падежи — немецкий</h1>
+  <p>Полный справочник: артикли, детерминативы, окончания прилагательных во всех 4 падежах</p>
+</header>
+
+<main>
+
+<!-- =================================================== -->
+<!-- 1. 4 падежа — краткий обзор                          -->
+<!-- =================================================== -->
+<section>
+  <h2>1. Четыре падежа — краткий обзор</h2>
+  <p class="intro">В немецком 4 падежа. Артикль, прилагательное и (иногда) существительное изменяются по падежам. Вот на какой вопрос отвечает каждый падеж:</p>
+
+  <div class="case-grid">
+    <div class="case-card">
+      <div class="case-name">Nominativ</div>
+      <div class="case-q">wer? was? — кто? что? (подлежащее)</div>
+      <div class="case-ex">
+        <span class="hl">Der Mann</span> schläft.
+        <span class="ru">Мужчина спит.</span>
+      </div>
+    </div>
+
+    <div class="case-card">
+      <div class="case-name">Akkusativ</div>
+      <div class="case-q">wen? was? — кого? что? (прямое дополнение)</div>
+      <div class="case-ex">
+        Ich sehe <span class="hl">den Mann</span>.
+        <span class="ru">Я вижу мужчину.</span>
+      </div>
+    </div>
+
+    <div class="case-card">
+      <div class="case-name">Dativ</div>
+      <div class="case-q">wem? — кому? чему? (косвенное дополнение)</div>
+      <div class="case-ex">
+        Ich gebe <span class="hl">dem Mann</span> ein Buch.
+        <span class="ru">Я даю мужчине книгу.</span>
+      </div>
+    </div>
+
+    <div class="case-card">
+      <div class="case-name">Genitiv</div>
+      <div class="case-q">wessen? — чей? (принадлежность)</div>
+      <div class="case-ex">
+        Das Auto <span class="hl">des Mannes</span> ist neu.
+        <span class="ru">Машина (этого) мужчины новая.</span>
+      </div>
+    </div>
+  </div>
+
+  <p style="margin-top:14px; font-size:0.88em; color:#888;">
+    Предлоги тоже требуют определённого падежа: <b>für, ohne, durch, gegen, um</b> → Akkusativ; <b>mit, nach, aus, bei, von, zu, seit</b> → Dativ; <b>wegen, trotz, während, statt</b> → Genitiv.
+  </p>
+</section>
+
+<!-- =================================================== -->
+<!-- 2. Определённый артикль                              -->
+<!-- =================================================== -->
+<section>
+  <h2>2. Определённый артикль — <i>der / die / das</i></h2>
+  <p class="intro">Используется, когда речь о конкретном, известном предмете (русское «этот / тот самый»).</p>
+
+  <div class="decl-wrap">
+    <table class="decl">
+      <thead>
+        <tr>
+          <th>Падеж</th>
+          <th class="col-m">Maskulinum (m)</th>
+          <th class="col-f">Femininum (f)</th>
+          <th class="col-n">Neutrum (n)</th>
+          <th class="col-pl">Plural</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="case-label">Nominativ<small>кто? что?</small></td>
+          <td class="col-m">d<span class="ending">er</span></td>
+          <td class="col-f">d<span class="ending">ie</span></td>
+          <td class="col-n">d<span class="ending">as</span></td>
+          <td class="col-pl">d<span class="ending">ie</span></td>
+        </tr>
+        <tr>
+          <td class="case-label">Akkusativ<small>кого? что?</small></td>
+          <td class="col-m">d<span class="ending">en</span></td>
+          <td class="col-f">d<span class="ending">ie</span></td>
+          <td class="col-n">d<span class="ending">as</span></td>
+          <td class="col-pl">d<span class="ending">ie</span></td>
+        </tr>
+        <tr>
+          <td class="case-label">Dativ<small>кому? чему?</small></td>
+          <td class="col-m">d<span class="ending">em</span></td>
+          <td class="col-f">d<span class="ending">er</span></td>
+          <td class="col-n">d<span class="ending">em</span></td>
+          <td class="col-pl">d<span class="ending">en</span> <small>+ <b>-n</b> на сущ.</small></td>
+        </tr>
+        <tr>
+          <td class="case-label">Genitiv<small>чей?</small></td>
+          <td class="col-m">d<span class="ending">es</span> <small>+ <b>-(e)s</b></small></td>
+          <td class="col-f">d<span class="ending">er</span></td>
+          <td class="col-n">d<span class="ending">es</span> <small>+ <b>-(e)s</b></small></td>
+          <td class="col-pl">d<span class="ending">er</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="example-line">
+    <span class="de">Ich gebe <b>dem</b> Mann <b>das</b> Buch <b>der</b> Frau.</span>
+    <span class="ru">Я даю мужчине (Dat.) книгу (Akk.) женщины (Gen.).</span>
+  </div>
+  <div class="example-line">
+    <span class="de">Die Kinder spielen mit <b>den</b> Hunde<b>n</b>.</span>
+    <span class="ru">Дети играют с собаками. (Dat. Pl. → -n на существительном!)</span>
+  </div>
+</section>
+
+<!-- =================================================== -->
+<!-- 3. Неопределённый артикль                            -->
+<!-- =================================================== -->
+<section>
+  <h2>3. Неопределённый артикль — <i>ein</i></h2>
+  <p class="intro">Используется для впервые упоминаемого, неопределённого предмета (русское «какой-то, один»). Во множественном числе нет — просто существительное без артикля.</p>
+
+  <div class="decl-wrap">
+    <table class="decl">
+      <thead>
+        <tr>
+          <th>Падеж</th>
+          <th class="col-m">Maskulinum (m)</th>
+          <th class="col-f">Femininum (f)</th>
+          <th class="col-n">Neutrum (n)</th>
+          <th class="col-pl">Plural</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="case-label">Nominativ</td>
+          <td class="col-m">ein</td>
+          <td class="col-f">ein<span class="ending">e</span></td>
+          <td class="col-n">ein</td>
+          <td class="col-pl" style="opacity:0.4">—</td>
+        </tr>
+        <tr>
+          <td class="case-label">Akkusativ</td>
+          <td class="col-m">ein<span class="ending">en</span></td>
+          <td class="col-f">ein<span class="ending">e</span></td>
+          <td class="col-n">ein</td>
+          <td class="col-pl" style="opacity:0.4">—</td>
+        </tr>
+        <tr>
+          <td class="case-label">Dativ</td>
+          <td class="col-m">ein<span class="ending">em</span></td>
+          <td class="col-f">ein<span class="ending">er</span></td>
+          <td class="col-n">ein<span class="ending">em</span></td>
+          <td class="col-pl" style="opacity:0.4">—</td>
+        </tr>
+        <tr>
+          <td class="case-label">Genitiv</td>
+          <td class="col-m">ein<span class="ending">es</span> <small>+ -(e)s</small></td>
+          <td class="col-f">ein<span class="ending">er</span></td>
+          <td class="col-n">ein<span class="ending">es</span> <small>+ -(e)s</small></td>
+          <td class="col-pl" style="opacity:0.4">—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="example-line">
+    <span class="de">Ich sehe <b>einen</b> Hund und <b>eine</b> Katze.</span>
+    <span class="ru">Я вижу (какую-то) собаку и (какую-то) кошку. (Akk.)</span>
+  </div>
+  <div class="example-line">
+    <span class="de">Er wohnt in <b>einem</b> Haus.</span>
+    <span class="ru">Он живёт в (каком-то) доме. (Dat.)</span>
+  </div>
+</section>
+
+<!-- =================================================== -->
+<!-- 4. Отрицание kein                                    -->
+<!-- =================================================== -->
+<section>
+  <h2>4. Отрицание — <i>kein</i></h2>
+  <p class="intro"><b>kein</b> = отрицание <b>ein</b> («никакой, ни один»). Склоняется как <b>ein</b>, но у него <b>есть форма множественного числа</b>.</p>
+
+  <div class="decl-wrap">
+    <table class="decl">
+      <thead>
+        <tr>
+          <th>Падеж</th>
+          <th class="col-m">Maskulinum</th>
+          <th class="col-f">Femininum</th>
+          <th class="col-n">Neutrum</th>
+          <th class="col-pl">Plural</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="case-label">Nominativ</td>
+          <td class="col-m">kein</td>
+          <td class="col-f">kein<span class="ending">e</span></td>
+          <td class="col-n">kein</td>
+          <td class="col-pl">kein<span class="ending">e</span></td>
+        </tr>
+        <tr>
+          <td class="case-label">Akkusativ</td>
+          <td class="col-m">kein<span class="ending">en</span></td>
+          <td class="col-f">kein<span class="ending">e</span></td>
+          <td class="col-n">kein</td>
+          <td class="col-pl">kein<span class="ending">e</span></td>
+        </tr>
+        <tr>
+          <td class="case-label">Dativ</td>
+          <td class="col-m">kein<span class="ending">em</span></td>
+          <td class="col-f">kein<span class="ending">er</span></td>
+          <td class="col-n">kein<span class="ending">em</span></td>
+          <td class="col-pl">kein<span class="ending">en</span> <small>+ -n</small></td>
+        </tr>
+        <tr>
+          <td class="case-label">Genitiv</td>
+          <td class="col-m">kein<span class="ending">es</span></td>
+          <td class="col-f">kein<span class="ending">er</span></td>
+          <td class="col-n">kein<span class="ending">es</span></td>
+          <td class="col-pl">kein<span class="ending">er</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="example-line">
+    <span class="de">Ich habe <b>kein</b> Geld und <b>keine</b> Zeit.</span>
+    <span class="ru">У меня нет денег (Akk.n) и нет времени (Akk.f).</span>
+  </div>
+  <div class="example-line">
+    <span class="de">Er spricht mit <b>keinem</b> Freund.</span>
+    <span class="ru">Он не разговаривает ни с одним другом. (Dat.m)</span>
+  </div>
+</section>
+
+<!-- =================================================== -->
+<!-- 5. Притяжательные                                    -->
+<!-- =================================================== -->
+<section>
+  <h2>5. Притяжательные — <i>mein, dein, sein…</i></h2>
+  <p class="intro">Притяжательные местоимения склоняются <b>точно как kein</b> (тот же набор окончаний). Сначала определите основу по таблице ниже, затем добавляйте окончания из таблицы kein/ein.</p>
+
+  <h3>Кто чей — базовые формы</h3>
+  <div class="poss-chart">
+    <div class="poss-item"><span class="pron">ich</span><span class="arrow">→</span><span class="poss">mein</span><span class="gloss">мой</span></div>
+    <div class="poss-item"><span class="pron">du</span><span class="arrow">→</span><span class="poss">dein</span><span class="gloss">твой</span></div>
+    <div class="poss-item"><span class="pron">er</span><span class="arrow">→</span><span class="poss">sein</span><span class="gloss">его</span></div>
+    <div class="poss-item"><span class="pron">sie</span><span class="arrow">→</span><span class="poss">ihr</span><span class="gloss">её</span></div>
+    <div class="poss-item"><span class="pron">es</span><span class="arrow">→</span><span class="poss">sein</span><span class="gloss">его (ср.)</span></div>
+    <div class="poss-item"><span class="pron">wir</span><span class="arrow">→</span><span class="poss">unser</span><span class="gloss">наш</span></div>
+    <div class="poss-item"><span class="pron">ihr</span><span class="arrow">→</span><span class="poss">euer</span><span class="gloss">ваш (мн.)</span></div>
+    <div class="poss-item"><span class="pron">sie</span><span class="arrow">→</span><span class="poss">ihr</span><span class="gloss">их</span></div>
+    <div class="poss-item"><span class="pron">Sie</span><span class="arrow">→</span><span class="poss">Ihr</span><span class="gloss">Ваш (вежл.)</span></div>
+  </div>
+
+  <h3>Пример склонения — <i>mein</i> (остальные склоняются так же)</h3>
+  <div class="decl-wrap">
+    <table class="decl">
+      <thead>
+        <tr>
+          <th>Падеж</th>
+          <th class="col-m">Maskulinum</th>
+          <th class="col-f">Femininum</th>
+          <th class="col-n">Neutrum</th>
+          <th class="col-pl">Plural</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="case-label">Nominativ</td>
+          <td class="col-m">mein</td>
+          <td class="col-f">mein<span class="ending">e</span></td>
+          <td class="col-n">mein</td>
+          <td class="col-pl">mein<span class="ending">e</span></td>
+        </tr>
+        <tr>
+          <td class="case-label">Akkusativ</td>
+          <td class="col-m">mein<span class="ending">en</span></td>
+          <td class="col-f">mein<span class="ending">e</span></td>
+          <td class="col-n">mein</td>
+          <td class="col-pl">mein<span class="ending">e</span></td>
+        </tr>
+        <tr>
+          <td class="case-label">Dativ</td>
+          <td class="col-m">mein<span class="ending">em</span></td>
+          <td class="col-f">mein<span class="ending">er</span></td>
+          <td class="col-n">mein<span class="ending">em</span></td>
+          <td class="col-pl">mein<span class="ending">en</span></td>
+        </tr>
+        <tr>
+          <td class="case-label">Genitiv</td>
+          <td class="col-m">mein<span class="ending">es</span></td>
+          <td class="col-f">mein<span class="ending">er</span></td>
+          <td class="col-n">mein<span class="ending">es</span></td>
+          <td class="col-pl">mein<span class="ending">er</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="example-line">
+    <span class="de">Das ist <b>mein</b> Bruder und <b>meine</b> Schwester.</span>
+    <span class="ru">Это мой брат и моя сестра.</span>
+  </div>
+  <div class="example-line">
+    <span class="de">Ich helfe <b>meinem</b> Vater und <b>unserer</b> Mutter.</span>
+    <span class="ru">Я помогаю моему отцу и нашей маме. (Dat.)</span>
+  </div>
+  <div class="example-line">
+    <span class="de">Hast du <b>euren</b> Hund gesehen?</span>
+    <span class="ru">Ты видел вашу собаку? (euer → eur- перед окончанием!)</span>
+  </div>
+</section>
+
+<!-- =================================================== -->
+<!-- 6. Указательные                                      -->
+<!-- =================================================== -->
+<section>
+  <h2>6. Указательные — <i>dieser, jener, jeder, welcher…</i></h2>
+  <p class="intro">Группа детерминативов: <b>dieser</b> (этот), <b>jener</b> (тот), <b>jeder</b> (каждый), <b>mancher</b> (иной), <b>solcher</b> (такой), <b>welcher</b> (который/какой). Они склоняются <b>точно как определённый артикль der/die/das</b> — то есть несут его окончания.</p>
+
+  <h3>Пример склонения — <i>dieser</i></h3>
+  <div class="decl-wrap">
+    <table class="decl">
+      <thead>
+        <tr>
+          <th>Падеж</th>
+          <th class="col-m">Maskulinum</th>
+          <th class="col-f">Femininum</th>
+          <th class="col-n">Neutrum</th>
+          <th class="col-pl">Plural</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="case-label">Nominativ</td>
+          <td class="col-m">dies<span class="ending">er</span></td>
+          <td class="col-f">dies<span class="ending">e</span></td>
+          <td class="col-n">dies<span class="ending">es</span></td>
+          <td class="col-pl">dies<span class="ending">e</span></td>
+        </tr>
+        <tr>
+          <td class="case-label">Akkusativ</td>
+          <td class="col-m">dies<span class="ending">en</span></td>
+          <td class="col-f">dies<span class="ending">e</span></td>
+          <td class="col-n">dies<span class="ending">es</span></td>
+          <td class="col-pl">dies<span class="ending">e</span></td>
+        </tr>
+        <tr>
+          <td class="case-label">Dativ</td>
+          <td class="col-m">dies<span class="ending">em</span></td>
+          <td class="col-f">dies<span class="ending">er</span></td>
+          <td class="col-n">dies<span class="ending">em</span></td>
+          <td class="col-pl">dies<span class="ending">en</span></td>
+        </tr>
+        <tr>
+          <td class="case-label">Genitiv</td>
+          <td class="col-m">dies<span class="ending">es</span></td>
+          <td class="col-f">dies<span class="ending">er</span></td>
+          <td class="col-n">dies<span class="ending">es</span></td>
+          <td class="col-pl">dies<span class="ending">er</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="example-line">
+    <span class="de"><b>Dieser</b> Mann kennt <b>jede</b> Straße <b>dieser</b> Stadt.</span>
+    <span class="ru">Этот мужчина знает каждую улицу этого города.</span>
+  </div>
+  <div class="example-line">
+    <span class="de"><b>Welchen</b> Wein möchtest du?</span>
+    <span class="ru">Какое вино ты хочешь? (Akk. m)</span>
+  </div>
+
+  <p style="margin-top:10px; font-size:0.9em; color:#666;">
+    Важно: средний род в Nom./Akk. берёт окончание <b>-es</b> (dies<b>es</b> Buch), в отличие от артикля <i>das</i>.
+  </p>
+</section>
+
+<!-- =================================================== -->
+<!-- 7. Окончания прилагательных                          -->
+<!-- =================================================== -->
+<section>
+  <h2>7. Окончания прилагательных</h2>
+  <p class="intro">Окончание прилагательного зависит от того, <b>какой детерминатив перед ним</b>. Три типа склонения:</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="weak">Слабое (после der-слов)</button>
+    <button class="tab-btn" data-tab="strong">Сильное (без артикля)</button>
+    <button class="tab-btn" data-tab="mixed">Смешанное (после ein-слов)</button>
+  </div>
+
+  <!-- WEAK -->
+  <div class="tab-panel active" id="tab-weak">
+    <h3>Слабое склонение — после <i>der, die, das, dieser, jeder, welcher…</i></h3>
+    <p class="intro">Определённый артикль уже несёт всю информацию о падеже/роде, поэтому прилагательное «отдыхает»: только <b>-e</b> или <b>-en</b>.</p>
+    <div class="decl-wrap">
+      <table class="decl">
+        <thead>
+          <tr>
+            <th>Падеж</th>
+            <th class="col-m">Maskulinum</th>
+            <th class="col-f">Femininum</th>
+            <th class="col-n">Neutrum</th>
+            <th class="col-pl">Plural</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="case-label">Nominativ</td>
+            <td class="col-m">der klein<span class="ending">e</span> Mann</td>
+            <td class="col-f">die klein<span class="ending">e</span> Frau</td>
+            <td class="col-n">das klein<span class="ending">e</span> Kind</td>
+            <td class="col-pl">die klein<span class="ending">en</span> Kinder</td>
+          </tr>
+          <tr>
+            <td class="case-label">Akkusativ</td>
+            <td class="col-m">den klein<span class="ending">en</span> Mann</td>
+            <td class="col-f">die klein<span class="ending">e</span> Frau</td>
+            <td class="col-n">das klein<span class="ending">e</span> Kind</td>
+            <td class="col-pl">die klein<span class="ending">en</span> Kinder</td>
+          </tr>
+          <tr>
+            <td class="case-label">Dativ</td>
+            <td class="col-m">dem klein<span class="ending">en</span> Mann</td>
+            <td class="col-f">der klein<span class="ending">en</span> Frau</td>
+            <td class="col-n">dem klein<span class="ending">en</span> Kind</td>
+            <td class="col-pl">den klein<span class="ending">en</span> Kindern</td>
+          </tr>
+          <tr>
+            <td class="case-label">Genitiv</td>
+            <td class="col-m">des klein<span class="ending">en</span> Mannes</td>
+            <td class="col-f">der klein<span class="ending">en</span> Frau</td>
+            <td class="col-n">des klein<span class="ending">en</span> Kindes</td>
+            <td class="col-pl">der klein<span class="ending">en</span> Kinder</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:8px; font-size:0.9em; color:#666;">
+      <b>Правило:</b> в Nom. sing. всех родов и Akk. f/n — <b>-e</b>. Везде остальное — <b>-en</b>.
+    </p>
+    <div class="example-line">
+      <span class="de">Ich sehe <b>den klein<u>en</u> Mann</b>.</span>
+      <span class="ru">Я вижу маленького мужчину.</span>
+    </div>
+  </div>
+
+  <!-- STRONG -->
+  <div class="tab-panel" id="tab-strong">
+    <h3>Сильное склонение — без артикля</h3>
+    <p class="intro">Когда перед прилагательным ничего нет (или неопределённое количество: <i>viel, wenig, einige, etwas</i>), прилагательное само «берёт на себя» окончание артикля.</p>
+    <div class="decl-wrap">
+      <table class="decl">
+        <thead>
+          <tr>
+            <th>Падеж</th>
+            <th class="col-m">Maskulinum</th>
+            <th class="col-f">Femininum</th>
+            <th class="col-n">Neutrum</th>
+            <th class="col-pl">Plural</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="case-label">Nominativ</td>
+            <td class="col-m">klein<span class="ending">er</span> Mann</td>
+            <td class="col-f">klein<span class="ending">e</span> Frau</td>
+            <td class="col-n">klein<span class="ending">es</span> Kind</td>
+            <td class="col-pl">klein<span class="ending">e</span> Kinder</td>
+          </tr>
+          <tr>
+            <td class="case-label">Akkusativ</td>
+            <td class="col-m">klein<span class="ending">en</span> Mann</td>
+            <td class="col-f">klein<span class="ending">e</span> Frau</td>
+            <td class="col-n">klein<span class="ending">es</span> Kind</td>
+            <td class="col-pl">klein<span class="ending">e</span> Kinder</td>
+          </tr>
+          <tr>
+            <td class="case-label">Dativ</td>
+            <td class="col-m">klein<span class="ending">em</span> Mann</td>
+            <td class="col-f">klein<span class="ending">er</span> Frau</td>
+            <td class="col-n">klein<span class="ending">em</span> Kind</td>
+            <td class="col-pl">klein<span class="ending">en</span> Kindern</td>
+          </tr>
+          <tr>
+            <td class="case-label">Genitiv</td>
+            <td class="col-m">klein<span class="ending">en</span> Mannes</td>
+            <td class="col-f">klein<span class="ending">er</span> Frau</td>
+            <td class="col-n">klein<span class="ending">en</span> Kindes</td>
+            <td class="col-pl">klein<span class="ending">er</span> Kinder</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:8px; font-size:0.9em; color:#666;">
+      <b>Правило:</b> окончания совпадают с определённым артиклем (<b>-er, -e, -es, -em, -en</b>), кроме Gen. m/n, где -en (т.к. существительное уже несёт -s).
+    </p>
+    <div class="example-line">
+      <span class="de"><b>Kalt<u>er</u> Kaffee</b> schmeckt nicht.</span>
+      <span class="ru">Холодный кофе невкусный. (Nom.m, без артикля)</span>
+    </div>
+    <div class="example-line">
+      <span class="de">Ich trinke Wein mit <b>gut<u>en</u> Freund<u>en</u></b>.</span>
+      <span class="ru">Я пью вино с хорошими друзьями. (Dat.pl, без артикля)</span>
+    </div>
+  </div>
+
+  <!-- MIXED -->
+  <div class="tab-panel" id="tab-mixed">
+    <h3>Смешанное склонение — после <i>ein, kein, mein, dein, sein…</i></h3>
+    <p class="intro">«Ein-слова» в 3 случаях (Nom.m, Nom.n, Akk.n) <b>не имеют окончания</b> — там прилагательное берёт сильное окончание (<b>-er, -es, -es</b>). В остальных — слабое (-en).</p>
+    <div class="decl-wrap">
+      <table class="decl">
+        <thead>
+          <tr>
+            <th>Падеж</th>
+            <th class="col-m">Maskulinum</th>
+            <th class="col-f">Femininum</th>
+            <th class="col-n">Neutrum</th>
+            <th class="col-pl">Plural (kein…)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="case-label">Nominativ</td>
+            <td class="col-m">ein klein<span class="ending">er</span> Mann</td>
+            <td class="col-f">eine klein<span class="ending">e</span> Frau</td>
+            <td class="col-n">ein klein<span class="ending">es</span> Kind</td>
+            <td class="col-pl">keine klein<span class="ending">en</span> Kinder</td>
+          </tr>
+          <tr>
+            <td class="case-label">Akkusativ</td>
+            <td class="col-m">einen klein<span class="ending">en</span> Mann</td>
+            <td class="col-f">eine klein<span class="ending">e</span> Frau</td>
+            <td class="col-n">ein klein<span class="ending">es</span> Kind</td>
+            <td class="col-pl">keine klein<span class="ending">en</span> Kinder</td>
+          </tr>
+          <tr>
+            <td class="case-label">Dativ</td>
+            <td class="col-m">einem klein<span class="ending">en</span> Mann</td>
+            <td class="col-f">einer klein<span class="ending">en</span> Frau</td>
+            <td class="col-n">einem klein<span class="ending">en</span> Kind</td>
+            <td class="col-pl">keinen klein<span class="ending">en</span> Kindern</td>
+          </tr>
+          <tr>
+            <td class="case-label">Genitiv</td>
+            <td class="col-m">eines klein<span class="ending">en</span> Mannes</td>
+            <td class="col-f">einer klein<span class="ending">en</span> Frau</td>
+            <td class="col-n">eines klein<span class="ending">en</span> Kindes</td>
+            <td class="col-pl">keiner klein<span class="ending">en</span> Kinder</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:8px; font-size:0.9em; color:#666;">
+      <b>Запомнить:</b> Nom.m <b>-er</b>, Nom./Akk.n <b>-es</b>. Всё остальное — <b>-en</b> (как слабое).
+    </p>
+    <div class="example-line">
+      <span class="de"><b>Ein klein<u>er</u> Mann</b> trägt <b>ein klein<u>es</u> Kind</b>.</span>
+      <span class="ru">Маленький мужчина несёт маленького ребёнка. (Nom.m + Akk.n — оба с сильным окончанием!)</span>
+    </div>
+    <div class="example-line">
+      <span class="de">Ich spreche mit <b>meinem neu<u>en</u> Freund</b>.</span>
+      <span class="ru">Я разговариваю с моим новым другом. (Dat.m — слабое -en)</span>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================== -->
+<!-- 8. Мини-тренажёр                                     -->
+<!-- =================================================== -->
+<section>
+  <h2>8. Мини-тренажёр</h2>
+  <p class="intro">Выберите тип детерминатива, род и падеж — получите правильную форму вместе с прилагательным <i>klein</i>.</p>
+
+  <div class="trainer">
+    <div class="trainer-row">
+      <label><span>Детерминатив</span>
+        <select id="t-det">
+          <option value="der">der — определённый</option>
+          <option value="ein">ein — неопределённый</option>
+          <option value="kein">kein — отрицание</option>
+          <option value="mein">mein — притяжательное</option>
+          <option value="dieser">dieser — указательное</option>
+          <option value="none">— без артикля —</option>
+        </select>
+      </label>
+      <label><span>Род / число</span>
+        <select id="t-gender">
+          <option value="m">Maskulinum (мужской)</option>
+          <option value="f">Femininum (женский)</option>
+          <option value="n">Neutrum (средний)</option>
+          <option value="pl">Plural (мн. число)</option>
+        </select>
+      </label>
+      <label><span>Падеж</span>
+        <select id="t-case">
+          <option value="nom">Nominativ</option>
+          <option value="akk">Akkusativ</option>
+          <option value="dat">Dativ</option>
+          <option value="gen">Genitiv</option>
+        </select>
+      </label>
+    </div>
+    <div class="trainer-output" id="t-out">
+      <div class="phrase"></div>
+      <div class="explain"></div>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================== -->
+<!-- 9. Частые ловушки                                    -->
+<!-- =================================================== -->
+<section>
+  <h2>9. Частые ловушки</h2>
+  <div class="trap-list">
+    <div class="trap-item">
+      <b>1) Genitiv добавляет -(e)s к мужским и средним существительным:</b><br>
+      <span class="de">des Mann<u>es</u>, des Kind<u>es</u>, des Haus<u>es</u></span> — но <span class="de">des Auto<u>s</u>, des Lehrer<u>s</u></span> (без -e, если слово на гласную или -el/-er).
+    </div>
+    <div class="trap-item">
+      <b>2) Dativ Plural добавляет -n на существительное:</b><br>
+      <span class="de">mit den Männer<u>n</u>, den Kinder<u>n</u>, den Hunde<u>n</u></span>. НО не если множ. число уже кончается на -n (<i>Frauen → mit den Frauen</i>) или на -s (<i>Autos → mit den Autos</i>).
+    </div>
+    <div class="trap-item">
+      <b>3) euer теряет e при склонении:</b><br>
+      <span class="de">eu<u>e</u>r Vater</span> (основа), но <span class="de">eu<b>re</b> Mutter, eu<b>ren</b> Vater, eu<b>rem</b> Vater</span> — внутренняя <b>e</b> выпадает, когда добавляется окончание.
+    </div>
+    <div class="trap-item">
+      <b>4) «Ein-слова» без окончания → сильное прилагательное:</b><br>
+      После <b>ein, kein, mein…</b> в трёх местах (Nom.m, Nom.n, Akk.n) артикль голый, поэтому прилагательное берёт сильное окончание:<br>
+      <span class="de">ein klein<u>er</u> Mann</span> (а не «ein kleine»!),<br>
+      <span class="de">ein klein<u>es</u> Kind</span> (а не «ein kleine»!).
+    </div>
+    <div class="trap-item">
+      <b>5) unser/euer — <u>не</u> типа «unserer»:</b><br>
+      Основа уже заканчивается на -er, но это <b>часть слова</b>, не окончание. К ней добавляется только -e, -en, -em, -es, а не -er: <span class="de">unser, uns<b>e</b>re, uns<b>e</b>ren, uns<b>e</b>rem</span>.
+    </div>
+    <div class="trap-item">
+      <b>6) Genitiv в устной речи часто заменяется на «von + Dativ»:</b><br>
+      <span class="de">das Auto <u>meines Vaters</u></span> (письм.) ≈ <span class="de">das Auto <u>von meinem Vater</u></span> (разг.).
+    </div>
+    <div class="trap-item">
+      <b>7) der vs dieser в среднем роде:</b><br>
+      Артикль <b>das</b> (Nom./Akk. n), но указательное <b>dieses</b> (с -es, как артикльное окончание): <span class="de">das Buch</span> vs <span class="de">diese<u>s</u> Buch</span>.
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+// ============================================================
+// TAB SWITCHING
+// ============================================================
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + tab).classList.add('active');
+  });
+});
+
+// ============================================================
+// MINI TRAINER
+// ============================================================
+
+// Article forms: det[type][case][gender]
+const ARTICLES = {
+  der: {
+    nom: { m: 'der',  f: 'die',  n: 'das', pl: 'die' },
+    akk: { m: 'den',  f: 'die',  n: 'das', pl: 'die' },
+    dat: { m: 'dem',  f: 'der',  n: 'dem', pl: 'den' },
+    gen: { m: 'des',  f: 'der',  n: 'des', pl: 'der' },
+  },
+  ein: {
+    nom: { m: 'ein',   f: 'eine',  n: 'ein',   pl: '—' },
+    akk: { m: 'einen', f: 'eine',  n: 'ein',   pl: '—' },
+    dat: { m: 'einem', f: 'einer', n: 'einem', pl: '—' },
+    gen: { m: 'eines', f: 'einer', n: 'eines', pl: '—' },
+  },
+  kein: {
+    nom: { m: 'kein',   f: 'keine',  n: 'kein',   pl: 'keine'  },
+    akk: { m: 'keinen', f: 'keine',  n: 'kein',   pl: 'keine'  },
+    dat: { m: 'keinem', f: 'keiner', n: 'keinem', pl: 'keinen' },
+    gen: { m: 'keines', f: 'keiner', n: 'keines', pl: 'keiner' },
+  },
+  mein: {
+    nom: { m: 'mein',   f: 'meine',  n: 'mein',   pl: 'meine'  },
+    akk: { m: 'meinen', f: 'meine',  n: 'mein',   pl: 'meine'  },
+    dat: { m: 'meinem', f: 'meiner', n: 'meinem', pl: 'meinen' },
+    gen: { m: 'meines', f: 'meiner', n: 'meines', pl: 'meiner' },
+  },
+  dieser: {
+    nom: { m: 'dieser', f: 'diese',  n: 'dieses', pl: 'diese'  },
+    akk: { m: 'diesen', f: 'diese',  n: 'dieses', pl: 'diese'  },
+    dat: { m: 'diesem', f: 'dieser', n: 'diesem', pl: 'diesen' },
+    gen: { m: 'dieses', f: 'dieser', n: 'dieses', pl: 'dieser' },
+  },
+  none: {
+    nom: { m: '', f: '', n: '', pl: '' },
+    akk: { m: '', f: '', n: '', pl: '' },
+    dat: { m: '', f: '', n: '', pl: '' },
+    gen: { m: '', f: '', n: '', pl: '' },
+  }
+};
+
+// Declension type for each det
+const DECL_TYPE = {
+  der: 'weak',
+  dieser: 'weak',
+  ein: 'mixed',
+  kein: 'mixed',
+  mein: 'mixed',
+  none: 'strong',
+};
+
+// Adjective endings: endings[type][case][gender]
+const ADJ_ENDINGS = {
+  weak: {
+    nom: { m: 'e',  f: 'e',  n: 'e',  pl: 'en' },
+    akk: { m: 'en', f: 'e',  n: 'e',  pl: 'en' },
+    dat: { m: 'en', f: 'en', n: 'en', pl: 'en' },
+    gen: { m: 'en', f: 'en', n: 'en', pl: 'en' },
+  },
+  strong: {
+    nom: { m: 'er', f: 'e',  n: 'es', pl: 'e'  },
+    akk: { m: 'en', f: 'e',  n: 'es', pl: 'e'  },
+    dat: { m: 'em', f: 'er', n: 'em', pl: 'en' },
+    gen: { m: 'en', f: 'er', n: 'en', pl: 'er' },
+  },
+  mixed: {
+    nom: { m: 'er', f: 'e',  n: 'es', pl: 'en' },
+    akk: { m: 'en', f: 'e',  n: 'es', pl: 'en' },
+    dat: { m: 'en', f: 'en', n: 'en', pl: 'en' },
+    gen: { m: 'en', f: 'en', n: 'en', pl: 'en' },
+  },
+};
+
+// Nouns with adjustments for Gen sg -(e)s and Dat pl -n
+const NOUNS = {
+  m:  { base: 'Mann',   gen: 'Mannes',   pl: 'Männern' },
+  f:  { base: 'Frau',   gen: 'Frau',     pl: 'Frauen'  },
+  n:  { base: 'Kind',   gen: 'Kindes',   pl: 'Kindern' },
+};
+
+function getNounForm(gender, caseKey) {
+  if (gender === 'pl') {
+    // Generic plural — use Kinder
+    if (caseKey === 'dat') return 'Kindern';
+    return 'Kinder';
+  }
+  const n = NOUNS[gender];
+  if (caseKey === 'gen' && (gender === 'm' || gender === 'n')) return n.gen;
+  return n.base;
+}
+
+const CASE_NAMES = { nom: 'Nominativ', akk: 'Akkusativ', dat: 'Dativ', gen: 'Genitiv' };
+const GENDER_NAMES = { m: 'мужской', f: 'женский', n: 'средний', pl: 'мн. число' };
+const DECL_NAMES = { weak: 'слабое (-e / -en)', strong: 'сильное (окончания артикля)', mixed: 'смешанное (см. Nom.m/Nom.n/Akk.n)' };
+
+function updateTrainer() {
+  const det = document.getElementById('t-det').value;
+  const gender = document.getElementById('t-gender').value;
+  const caseKey = document.getElementById('t-case').value;
+
+  const phraseEl = document.querySelector('#t-out .phrase');
+  const explainEl = document.querySelector('#t-out .explain');
+
+  // Handle ein + plural — invalid
+  if (det === 'ein' && gender === 'pl') {
+    phraseEl.innerHTML = '<span style="color:#a02355">— нет формы —</span>';
+    explainEl.textContent = '«ein» не имеет множественного числа. Без артикля или используйте «keine / meine…».';
+    return;
+  }
+
+  const article = ARTICLES[det][caseKey][gender];
+  const declType = DECL_TYPE[det];
+  const adjEnd = ADJ_ENDINGS[declType][caseKey][gender];
+  const noun = getNounForm(gender, caseKey);
+
+  const articlePart = article ? `<span class="art">${article}</span> ` : '';
+  const adjPart = `<span class="adj">klein${adjEnd}</span>`;
+  const nounPart = `<span class="noun">${noun}</span>`;
+
+  phraseEl.innerHTML = articlePart + adjPart + ' ' + nounPart;
+
+  explainEl.textContent =
+    `${CASE_NAMES[caseKey]} · ${GENDER_NAMES[gender]} · ${DECL_NAMES[declType]} · окончание «-${adjEnd}»`;
+}
+
+document.getElementById('t-det').addEventListener('change', updateTrainer);
+document.getElementById('t-gender').addEventListener('change', updateTrainer);
+document.getElementById('t-case').addEventListener('change', updateTrainer);
+
+updateTrainer();
+</script>
+
+</body>
+</html>
