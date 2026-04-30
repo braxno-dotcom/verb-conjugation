@@ -40,6 +40,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://braxno-dotcom.github.io/verb-conjugation/french-cliches.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://braxno-dotcom.github.io/verb-conjugation/french-quiz.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

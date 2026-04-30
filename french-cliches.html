@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇫🇷</text></svg>">
+<meta name="apple-mobile-web-app-title" content="FR клише">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Французские клише вежливости — расшифровка формул в почте и разговоре</title>
+<meta name="description" content="Французские клише вежливости: что они значат буквально, что значат на самом деле, и как их сократить. Формулы официальной переписки, разговорные паразиты (du coup, voilà, en fait), ритуалы приветствия и прощания.">
+<meta property="og:title" content="Французские клише вежливости — расшифровка на русском">
+<meta property="og:description" content="Je vous prie d'agréer, du coup, voilà, bonne continuation — что они значат и можно ли без них обойтись.">
+<meta property="og:type" content="website">
+<meta name="keywords" content="французские клише, формулы вежливости французский, je vous prie d'agréer, du coup, voilà, bonne journée, французская переписка, cordialement, bonjour ритуал">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #eef0f5;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #1a365d, #2a4a7f);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .nav-links {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lang-switch {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch:hover { background: rgba(255,255,255,0.3); }
+
+  .intro {
+    max-width: 760px;
+    margin: 24px auto 0;
+    padding: 18px 22px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border-left: 4px solid #2a4a7f;
+    font-size: 0.95em;
+    line-height: 1.6;
+    color: #444;
+  }
+  .intro b { color: #1a365d; }
+
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    max-width: 600px;
+    margin: 24px auto 0;
+    padding: 0 20px;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 13px 16px;
+    font-size: 1.0em;
+    font-weight: 600;
+    border: 2px solid #2a4a7f;
+    background: white;
+    color: #2a4a7f;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab-btn:first-child { border-radius: 10px 0 0 10px; }
+  .tab-btn:last-child { border-radius: 0 10px 10px 0; }
+  .tab-btn:not(:first-child) { border-left: 0; }
+  .tab-btn.active {
+    background: #2a4a7f;
+    color: white;
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
+
+  .section-title {
+    font-size: 1.25em;
+    font-weight: 700;
+    color: #1a365d;
+    margin: 28px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #d0d8e6;
+  }
+  .section-title:first-child { margin-top: 0; }
+  .section-note {
+    font-size: 0.9em;
+    color: #666;
+    font-style: italic;
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+
+  .card {
+    background: white;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    border-left: 4px solid #b8c3d9;
+  }
+  .card.required { border-left-color: #b6443d; }
+  .card.fluff    { border-left-color: #c9a02a; }
+  .card.filler   { border-left-color: #6a8d4a; }
+
+  .phrase {
+    font-size: 1.15em;
+    font-weight: 700;
+    color: #1a365d;
+    margin-bottom: 4px;
+  }
+  .literal {
+    font-size: 0.9em;
+    color: #888;
+    font-style: italic;
+    margin-bottom: 8px;
+  }
+  .literal::before { content: "букв.: "; color: #aaa; font-style: normal; }
+  .meaning {
+    font-size: 0.97em;
+    line-height: 1.55;
+    color: #2c2c2c;
+    margin-bottom: 6px;
+  }
+  .replacement {
+    font-size: 0.9em;
+    color: #555;
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px dashed #d8dde7;
+  }
+  .replacement b { color: #1a365d; }
+
+  .tag {
+    display: inline-block;
+    font-size: 0.72em;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 6px;
+    vertical-align: middle;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .tag.req    { background: #fbe4e2; color: #b6443d; }
+  .tag.fluff  { background: #fbf3d8; color: #8a6d10; }
+  .tag.filler { background: #e3ecd8; color: #4d6a30; }
+
+  .ladder {
+    background: white;
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin: 16px 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  }
+  .ladder h4 {
+    color: #1a365d;
+    margin-bottom: 12px;
+    font-size: 1.0em;
+  }
+  .ladder ol { padding-left: 22px; }
+  .ladder li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+    font-size: 0.95em;
+  }
+  .ladder li code {
+    background: #f5f0eb;
+    padding: 2px 7px;
+    border-radius: 4px;
+    color: #1a365d;
+    font-weight: 600;
+  }
+  .ladder li .when {
+    color: #888;
+    font-size: 0.88em;
+    font-style: italic;
+  }
+
+  .legend {
+    max-width: 760px;
+    margin: 18px auto 0;
+    padding: 12px 18px;
+    background: #fafbfd;
+    border-radius: 8px;
+    font-size: 0.85em;
+    color: #555;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .legend-swatch {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+  }
+  .legend-swatch.req    { background: #b6443d; }
+  .legend-swatch.fluff  { background: #c9a02a; }
+  .legend-swatch.filler { background: #6a8d4a; }
+
+  @media (max-width: 600px) {
+    header h1 { font-size: 1.4em; }
+    .tabs { flex-wrap: wrap; }
+    .tab-btn { padding: 10px 8px; font-size: 0.9em; }
+    .container { padding: 16px 12px 40px; }
+    .card { padding: 14px 16px; }
+    .phrase { font-size: 1.05em; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-links">
+    <a href="index.html" class="lang-switch">📖 Портал</a>
+  </div>
+  <h1>🇫🇷 Клише вежливости</h1>
+  <p>Формулы, которые повторяются через слово — расшифровка и упрощение</p>
+</header>
+
+<div class="intro">
+  Французы — мировые чемпионы по бесполезной вежливой воде. Письмо в банк может содержать одно полезное предложение и десять ритуальных. Разговор по дороге в булочную — три «bonjour», два «du coup» и одно «voilà». Эта страница — расшифровщик: <b>что эти формулы значат буквально</b>, <b>что они значат на самом деле</b> и <b>как их сократить</b> в собственной переписке.
+</div>
+
+<div class="legend">
+  <span class="legend-item"><span class="legend-swatch req"></span> обязательно — без этого невежливо</span>
+  <span class="legend-item"><span class="legend-swatch fluff"></span> вода — можно безболезненно сократить</span>
+  <span class="legend-item"><span class="legend-swatch filler"></span> паразит — смысла не несёт</span>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('mail')">✉️ Почта</button>
+  <button class="tab-btn" onclick="switchTab('talk')">💬 Разговор</button>
+  <button class="tab-btn" onclick="switchTab('service')">🛒 Сервис</button>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- TAB 1: ПОЧТА                                -->
+<!-- ═══════════════════════════════════════════ -->
+<div id="tab-mail" class="tab-content active">
+<div class="container">
+
+  <div class="section-title">Открытие письма</div>
+  <div class="section-note">К незнакомцу обращаются обязательно. Просто «Bonjour» в первой строке официального письма — уже моветон.</div>
+
+  <div class="card required">
+    <div class="phrase">Madame, Monsieur,<span class="tag req">обязательно</span></div>
+    <div class="literal">Госпожа, Господин,</div>
+    <div class="meaning">Стандартное обращение, когда не знаешь, кто получит письмо. Аналог английского "To whom it may concern". Без него письмо в инстанцию выглядит грубо.</div>
+  </div>
+
+  <div class="card required">
+    <div class="phrase">Cher Monsieur Dupont, / Chère Madame Dupont,</div>
+    <div class="literal">Дорогой господин Дюпон, / Дорогая госпожа Дюпон,</div>
+    <div class="meaning">Когда знаешь имя. <b>Cher/Chère</b> обязательно — «Monsieur Dupont,» без «Cher» считается холодным.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">À l'attention de Monsieur le Directeur</div>
+    <div class="literal">К вниманию господина Директора</div>
+    <div class="meaning">Указание адресата по должности — на конверте или в шапке. В теле письма всё равно потом «Monsieur le Directeur,».</div>
+  </div>
+
+  <div class="section-title">Зачины — пять слов вместо «пишу вам»</div>
+  <div class="section-note">Французская канцелярия не любит начинать с дела. Сначала — ритуальный разогрев.</div>
+
+  <div class="card fluff">
+    <div class="phrase">Je me permets de vous contacter…<span class="tag fluff">вода</span></div>
+    <div class="literal">Я позволяю себе с вами связаться…</div>
+    <div class="meaning">Просто «пишу вам». Бесполезный реверанс — но французу без него кажется, что вы вломились без стука.</div>
+    <div class="replacement"><b>Можно проще:</b> сразу к делу — «Je vous écris au sujet de…»</div>
+  </div>
+
+  <div class="card fluff">
+    <div class="phrase">Suite à votre courrier en date du 15 mars…<span class="tag fluff">вода</span></div>
+    <div class="literal">Вследствие вашего письма в дате от 15 марта…</div>
+    <div class="meaning">Канцелярит. Значит «по поводу вашего письма от 15 марта». Без него обходятся редко — это пароль «я серьёзно».</div>
+    <div class="replacement"><b>Можно проще:</b> «En réponse à votre courrier du 15 mars…»</div>
+  </div>
+
+  <div class="card fluff">
+    <div class="phrase">Faisant suite à notre conversation téléphonique…<span class="tag fluff">вода</span></div>
+    <div class="literal">Продолжая нашу телефонную беседу…</div>
+    <div class="meaning">«Как мы говорили по телефону». В письме банку или начальнику — стандарт.</div>
+    <div class="replacement"><b>Можно проще:</b> «Comme convenu par téléphone,…»</div>
+  </div>
+
+  <div class="card fluff">
+    <div class="phrase">Je tiens à vous informer que…<span class="tag fluff">вода</span></div>
+    <div class="literal">Я держусь сообщить вам, что…</div>
+    <div class="meaning">«Сообщаю». Чистая вода. Французы любят произнести «я хочу сказать», прежде чем начать говорить.</div>
+    <div class="replacement"><b>Можно проще:</b> просто опустить — сразу факт.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">C'est avec grand plaisir que je vous annonce…</div>
+    <div class="literal">Это с великим удовольствием, что я вам объявляю…</div>
+    <div class="meaning">«Рад сообщить, что…» Используется в позитивных новостях (наняли, приняли, приглашаем).</div>
+  </div>
+
+  <div class="section-title">Просьбы с реверансом</div>
+  <div class="section-note">Прямое «сделайте» во французской переписке — почти агрессия. Просьба должна быть упакована в три слоя «не соизволите ли».</div>
+
+  <div class="card fluff">
+    <div class="phrase">Je vous saurais gré de bien vouloir m'envoyer…<span class="tag fluff">вода</span></div>
+    <div class="literal">Я был бы благодарен вам, что вы соизволите мне отправить…</div>
+    <div class="meaning">«Пришлите, пожалуйста». Самая частая формула в письмах в инстанции. Стандарт.</div>
+    <div class="replacement"><b>Можно проще:</b> «Pourriez-vous m'envoyer…» — короче, всё ещё вежливо.</div>
+  </div>
+
+  <div class="card fluff">
+    <div class="phrase">Pourriez-vous avoir l'amabilité de…<span class="tag fluff">вода</span></div>
+    <div class="literal">Могли бы вы иметь любезность…</div>
+    <div class="meaning">«Не могли бы вы…» Когда формула «Je vous saurais gré» кажется недостаточно вежливой.</div>
+    <div class="replacement"><b>Можно проще:</b> «Pourriez-vous…»</div>
+  </div>
+
+  <div class="card fluff">
+    <div class="phrase">Je vous serais reconnaissant(e) de me transmettre…<span class="tag fluff">вода</span></div>
+    <div class="literal">Я был(а) бы вам признателен(льна)…</div>
+    <div class="meaning">То же самое — «прошу прислать». Различия между этими тремя формулами в основном эстетические.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Auriez-vous la possibilité de…</div>
+    <div class="literal">Имели бы вы возможность…</div>
+    <div class="meaning">«Не могли бы вы…» — когда не уверен, что человек вообще обязан помочь. Самая мягкая просьба.</div>
+  </div>
+
+  <div class="section-title">Ожидание ответа</div>
+  <div class="section-note">Перед прощанием положено сообщить, что вы ждёте. Это ритуал, а не информация.</div>
+
+  <div class="card required">
+    <div class="phrase">Dans l'attente de votre réponse,<span class="tag req">обязательно</span></div>
+    <div class="literal">В ожидании вашего ответа,</div>
+    <div class="meaning">«Жду вашего ответа». Без этой строки финал письма выглядит обрубленным.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Dans l'attente de vous lire,</div>
+    <div class="literal">В ожидании прочитать вас,</div>
+    <div class="meaning">То же, но изысканнее. Используется, когда хочется показать культуру.</div>
+  </div>
+
+  <div class="card fluff">
+    <div class="phrase">Je reste à votre disposition pour tout renseignement complémentaire.<span class="tag fluff">вода</span></div>
+    <div class="literal">Я остаюсь в вашем распоряжении для всякого дополнительного сведения.</div>
+    <div class="meaning">«Если что — спрашивайте». Безусловный стандарт делового письма.</div>
+    <div class="replacement"><b>Можно проще:</b> «N'hésitez pas à me contacter pour toute question.»</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">N'hésitez pas à me contacter.</div>
+    <div class="literal">Не сомневайтесь связаться со мной.</div>
+    <div class="meaning">«Пишите/звоните, если что». Менее формальный вариант предыдущего.</div>
+  </div>
+
+  <div class="section-title">Закрытие — где французы окончательно теряют берега</div>
+  <div class="section-note">Эти формулы — главная причина, почему французское письмо длиннее английского на 20%. Чем формальнее адресат, тем длиннее реверанс.</div>
+
+  <div class="card fluff">
+    <div class="phrase">Je vous prie d'agréer, Madame, Monsieur, l'expression de mes salutations distinguées.<span class="tag fluff">вода</span></div>
+    <div class="literal">Я прошу вас принять, госпожа, господин, выражение моих отличнейших приветствий.</div>
+    <div class="meaning">«С уважением». Одиннадцать слов вместо двух. Используется в письмах в банк, госорганы, незнакомым на «вы». Без этой формулы письмо в инстанцию воспринимается как фамильярность.</div>
+  </div>
+
+  <div class="card fluff">
+    <div class="phrase">Veuillez agréer, Madame, Monsieur, l'expression de mes sentiments les meilleurs.<span class="tag fluff">вода</span></div>
+    <div class="literal">Соблаговолите принять выражение моих наилучших чувств.</div>
+    <div class="meaning">То же самое, чуть теплее. «Sentiments» используется к равному или нижестоящему; «salutations» — к вышестоящему или незнакомцу.</div>
+  </div>
+
+  <div class="card fluff">
+    <div class="phrase">Je vous prie de croire, Madame, Monsieur, à l'assurance de ma considération distinguée.<span class="tag fluff">вода</span></div>
+    <div class="literal">Прошу вас верить в заверение моего отличнейшего рассмотрения.</div>
+    <div class="meaning">Сверхформально. К послу, министру, иерарху церкви. Если получили такое письмо — вас уважают (или собираются что-то отказать).</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Cordialement,</div>
+    <div class="literal">Сердечно,</div>
+    <div class="meaning">«С уважением». Стандартный нейтральный финал в рабочей почте. Безопасный выбор по умолчанию — никого не обидите.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Bien cordialement,</div>
+    <div class="literal">Хорошо сердечно,</div>
+    <div class="meaning">Чуть теплее «Cordialement» — для тех, с кем уже переписывались.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Sincères salutations,</div>
+    <div class="literal">Искренние приветствия,</div>
+    <div class="meaning">Промежуточный вариант — формальнее «Cordialement», но без 11-словного реверанса. Для официальной, но не сверхформальной переписки.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Bien à vous,</div>
+    <div class="literal">Хорошо вам,</div>
+    <div class="meaning">«Всего доброго». Тёплое, но всё ещё на «вы» — для коллег и знакомых.</div>
+  </div>
+
+  <div class="ladder">
+    <h4>Лестница закрытий по формальности — снизу вверх</h4>
+    <ol>
+      <li><code>Bisous</code> — близким <span class="when">(друзья, семья)</span></li>
+      <li><code>À bientôt</code> — знакомым <span class="when">(легко и тепло)</span></li>
+      <li><code>Bien à toi / à vous</code> — <span class="when">(тёплое, но рабочее)</span></li>
+      <li><code>Cordialement</code> — нейтрально <span class="when">(стандарт по умолчанию)</span></li>
+      <li><code>Bien cordialement</code> — чуть теплее <span class="when">(для постоянных контактов)</span></li>
+      <li><code>Sincères salutations</code> — официально <span class="when">(заявление, жалоба)</span></li>
+      <li><code>Je vous prie d'agréer…</code> — сверхофициально <span class="when">(банк, госорган, незнакомец)</span></li>
+    </ol>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- TAB 2: РАЗГОВОР                             -->
+<!-- ═══════════════════════════════════════════ -->
+<div id="tab-talk" class="tab-content">
+<div class="container">
+
+  <div class="section-title">Слова-паразиты, которые вставляют через слово</div>
+  <div class="section-note">Французская речь без этих слов звучит сухо и иностранно. Они не несут смысла, но без них вас выдаёт акцент сильнее, чем гортанное «r».</div>
+
+  <div class="card filler">
+    <div class="phrase">Du coup<span class="tag filler">паразит</span></div>
+    <div class="literal">С удара</div>
+    <div class="meaning">«Значит / в общем / типа / получается». Самый мощный французский паразит. Современный француз вставляет его 50 раз в день, обычно без всякой логической связи. «Du coup, on y va» — «ну, пошли». «Du coup, c'est compliqué» — «ну, это сложно».</div>
+  </div>
+
+  <div class="card filler">
+    <div class="phrase">Voilà<span class="tag filler">паразит</span></div>
+    <div class="literal">Вот</div>
+    <div class="meaning">Заполняет всё: конец фразы, конец мысли, паузу при поиске слова, согласие, неловкое молчание. «…et voilà» в конце любой истории = «вот так вот». Может быть единственным ответом на вопрос.</div>
+  </div>
+
+  <div class="card filler">
+    <div class="phrase">En fait<span class="tag filler">паразит</span></div>
+    <div class="literal">В действительности</div>
+    <div class="meaning">«На самом деле / короче». Произносится «анфэт». Часто ставится в начале фразы безо всякого противопоставления — просто разогнаться.</div>
+  </div>
+
+  <div class="card filler">
+    <div class="phrase">Quoi (в конце фразы)<span class="tag filler">паразит</span></div>
+    <div class="literal">Что</div>
+    <div class="meaning">«Ну». Не вопрос — просто звуковая точка. «C'est compliqué, quoi» — «ну, сложно». «Il est sympa, quoi» — «он, ну, нормальный». Молодёжное и неформальное.</div>
+  </div>
+
+  <div class="card filler">
+    <div class="phrase">Bah / Ben / Bah ben<span class="tag filler">паразит</span></div>
+    <div class="literal">Ну / э / ну э</div>
+    <div class="meaning">Французское «э-э-э». Ставится в начале любой фразы для разгона: «Bah, je sais pas» — «ну, не знаю». «Ben oui» — «ну да».</div>
+  </div>
+
+  <div class="card filler">
+    <div class="phrase">Bon / Bon ben<span class="tag filler">паразит</span></div>
+    <div class="literal">Хорошо / хорошо ну</div>
+    <div class="meaning">Сигнал перехода к новой теме или к действию. «Bon, on y va» — «ну, пошли». «Bon ben, à demain» — «ну ладно, до завтра».</div>
+  </div>
+
+  <div class="card filler">
+    <div class="phrase">Hein?<span class="tag filler">паразит</span></div>
+    <div class="literal">А?</div>
+    <div class="meaning">В конце фразы — требует подтверждения, как «n'est-ce pas», но в 10 раз чаще. «C'est joli, hein?» — «красиво, правда?». Также может быть переспросом «что?».</div>
+  </div>
+
+  <div class="card filler">
+    <div class="phrase">C'est-à-dire que…<span class="tag filler">паразит</span></div>
+    <div class="literal">То есть, что…</div>
+    <div class="meaning">«Дело в том, что…» — но часто без всякого «дела». Франкофон тянет время, пока думает.</div>
+  </div>
+
+  <div class="section-title">Ритуал «Bonjour» — пропусти и ты невежа</div>
+  <div class="section-note">Главный социальный шок для приезжих. Молча купить хлеб во Франции невозможно — продавщица сделает вид, что вас не существует.</div>
+
+  <div class="card required">
+    <div class="phrase">Bonjour<span class="tag req">обязательно</span></div>
+    <div class="literal">Доброго дня</div>
+    <div class="meaning">Произносится при входе <b>куда угодно</b>: магазин, лифт, кабинет врача, очередь в банке, общая комната в гостинице. Без «bonjour» вы не существуете. Это не приветствие — это разрешение начать взаимодействие.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Bonjour Messieurs Dames</div>
+    <div class="literal">Здравствуйте, господа дамы</div>
+    <div class="meaning">Общее приветствие смешанной группе. Звучит архаично, но используется живо — особенно в маленьких магазинах и кафе.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Bonsoir</div>
+    <div class="literal">Доброго вечера</div>
+    <div class="meaning">После 17–18 часов «bonjour» меняется на «bonsoir». Граница плавающая — ориентируются на собеседника.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Salut / Coucou</div>
+    <div class="literal">Привет / ку-ку</div>
+    <div class="meaning">«Salut» — неформальное «привет/пока». «Coucou» — нежное «приветик» между близкими. На улице к незнакомому никогда.</div>
+  </div>
+
+  <div class="section-title">Ритуал «Ça va?»</div>
+  <div class="section-note">Это не вопрос. Никто не ждёт ответа о вашей жизни. Длинный или честный ответ — социальная ошибка, после которой собеседник занервничает.</div>
+
+  <div class="card required">
+    <div class="phrase">Ça va? — Ça va, et toi? — Ça va.<span class="tag req">обязательно</span></div>
+    <div class="literal">Идёт? — Идёт, а у тебя? — Идёт.</div>
+    <div class="meaning">Канонический трёхтактный обмен. Происходит между «Bonjour» и реальным разговором. Если у вас умерла собака — отвечайте «Ça va» и переходите к делу. Развёрнутую версию расскажете отдельно.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Tranquille / Pas mal / Bof</div>
+    <div class="literal">Спокойно / неплохо / так себе</div>
+    <div class="meaning">Допустимые варианты ответа. «Bof» — единственный честный, означает «так себе». Используется только с близкими.</div>
+  </div>
+
+  <div class="section-title">Прощание — пять слов вместо «пока»</div>
+  <div class="section-note">Просто «Au revoir» звучит холодно. Стандарт — au revoir + одно-два пожелания. Какое именно — зависит от времени суток, дня недели и того, что человек собирается делать.</div>
+
+  <div class="card required">
+    <div class="phrase">Au revoir, bonne journée!<span class="tag req">обязательно</span></div>
+    <div class="literal">До свидания, хорошего дня!</div>
+    <div class="meaning">Стандартный комплект на выходе из магазина, кабинета, лифта. До 17 часов.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Bonne soirée!</div>
+    <div class="literal">Хорошего вечера!</div>
+    <div class="meaning">После 17–18 часов вместо «bonne journée».</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Bon weekend! / Bonnes vacances!</div>
+    <div class="literal">Хороших выходных! / хорошего отпуска!</div>
+    <div class="meaning">Обязательно говорится коллегам в пятницу и перед отпуском. Не сказать — холодно.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Bon courage!</div>
+    <div class="literal">Хорошей храбрости!</div>
+    <div class="meaning">«Удачи / держись». Говорят, когда собеседнику предстоит что-то трудное: экзамен, дедлайн, поход к врачу. Также — после жалобы.</div>
+  </div>
+
+  <div class="card fluff">
+    <div class="phrase">Bonne continuation!<span class="tag fluff">вода</span></div>
+    <div class="literal">Хорошего продолжения!</div>
+    <div class="meaning">Расплывчатое пожелание «дальнейших успехов». Ничего конкретного не означает — но не сказать невозможно.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Bonne route! / Bon retour!</div>
+    <div class="literal">Хорошей дороги! / хорошего возвращения!</div>
+    <div class="meaning">Едущему за рулём / возвращающемуся домой. Тоже почти обязательно.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">À tout à l'heure / À plus / À bientôt / À tantôt</div>
+    <div class="literal">До скорого / до плюс / до скоро / до недавно</div>
+    <div class="meaning">Все варианты «до скорого», от близкого («à plus») до нейтрального («à bientôt»). «À tantôt» — региональное (юг, Бельгия).</div>
+  </div>
+
+  <div class="section-title">Merci → Je vous en prie</div>
+  <div class="section-note">После «merci» обязан последовать ответ. Молчание невежливо. Это такой же жёсткий ритуал, как «ça va — ça va».</div>
+
+  <div class="card required">
+    <div class="phrase">Je vous en prie / Je t'en prie<span class="tag req">обязательно</span></div>
+    <div class="literal">Я вас о том прошу / тебя о том прошу</div>
+    <div class="meaning">«Пожалуйста» в ответ на «merci». Также используется как «прошу вас» = проходите/угощайтесь/начинайте.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">De rien / Pas de quoi</div>
+    <div class="literal">Ни о чём / нет о чём</div>
+    <div class="meaning">«Не за что». Менее формальные варианты. «Pas de quoi» — самое разговорное.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Avec plaisir</div>
+    <div class="literal">С удовольствием</div>
+    <div class="meaning">Ответ на «merci» с ноткой искренности. Подходит, когда вы и правда были рады помочь.</div>
+  </div>
+
+  <div class="section-title">«Утвердительные» — десять способов сказать «да»</div>
+  <div class="section-note">Простое «oui» в умном разговоре считается бедным. Французы предпочитают подобрать оттенок.</div>
+
+  <div class="card filler">
+    <div class="phrase">Tout à fait<span class="tag filler">паразит</span></div>
+    <div class="literal">Совершенно</div>
+    <div class="meaning">«Точно так / именно». Главная замена «oui» в деловом разговоре.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Effectivement</div>
+    <div class="literal">Действительно</div>
+    <div class="meaning">«Да, действительно». Звучит умно, поэтому в моде у журналистов и политиков.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Bien sûr / Évidemment</div>
+    <div class="literal">Конечно / очевидно</div>
+    <div class="meaning">«Конечно». «Évidemment» иногда несёт оттенок «ну а как же иначе» — может прозвучать снисходительно.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Absolument / Carrément</div>
+    <div class="literal">Абсолютно / прямо</div>
+    <div class="meaning">«Точно / прям да». «Carrément» — молодёжное.</div>
+  </div>
+
+  <div class="card filler">
+    <div class="phrase">C'est pas faux<span class="tag filler">паразит</span></div>
+    <div class="literal">Это не неверно</div>
+    <div class="meaning">«Ну да / резонно». Классическое французское двойное отрицание — соглашаемся, но не до конца, чтобы не показаться слишком уступчивым.</div>
+  </div>
+
+  <div class="section-title">Извинительные паразиты</div>
+
+  <div class="card required">
+    <div class="phrase">Excusez-moi de vous déranger, mais…<span class="tag req">обязательно</span></div>
+    <div class="literal">Извините, что вас беспокою, но…</div>
+    <div class="meaning">Обязательное вступление к любой просьбе незнакомцу на улице, в офисе, в магазине. Сразу спросить «где почта?» — невежливо.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Désolé(e) / Pardon</div>
+    <div class="literal">Сожалею / простите</div>
+    <div class="meaning">Универсальные извинения. «Pardon» — когда задели физически или перебили; «Désolé» — за всё остальное.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Si je puis me permettre…</div>
+    <div class="literal">Если я могу себе позволить…</div>
+    <div class="meaning">Реверанс перед тем, как высказать мнение или поправить. Звучит изысканно, но в неформальном кругу — манерно.</div>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- TAB 3: СЕРВИС                               -->
+<!-- ═══════════════════════════════════════════ -->
+<div id="tab-service" class="tab-content">
+<div class="container">
+
+  <div class="section-title">Магазин и касса</div>
+  <div class="section-note">Каждый поход в булочную = маленький ритуальный спектакль. Пропустить реплику нельзя, иначе персонаж выходит из роли.</div>
+
+  <div class="card required">
+    <div class="phrase">Bonjour, je voudrais…<span class="tag req">обязательно</span></div>
+    <div class="literal">Здравствуйте, я хотел(а) бы…</div>
+    <div class="meaning">«Bonjour» в начале — святое. После него можно просить хлеб. До него — нельзя. Серьёзно.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Ce sera tout?</div>
+    <div class="literal">Это будет всё?</div>
+    <div class="meaning">«Что-то ещё?» — стандартный вопрос продавца. Отвечают «Oui, ce sera tout» или «Non, je voudrais aussi…»</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Vous payez comment? — Carte ou espèces?</div>
+    <div class="literal">Как платите? — карта или наличные?</div>
+    <div class="meaning">Стандартный вопрос на кассе. «Sans contact» — оплата касанием.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Vous avez la monnaie?</div>
+    <div class="literal">У вас есть мелочь?</div>
+    <div class="meaning">«У вас есть помельче?». «La monnaie» — это <b>мелочь/сдача</b>, а не «деньги» вообще. «L'argent» — деньги.</div>
+  </div>
+
+  <div class="card required">
+    <div class="phrase">Au revoir, bonne journée! — Merci, à vous aussi!<span class="tag req">обязательно</span></div>
+    <div class="literal">До свидания, хорошего дня! — Спасибо, и вам!</div>
+    <div class="meaning">Заключительный ритуал на выходе. Без него вы оставили чек, но не закрыли социальный контракт.</div>
+  </div>
+
+  <div class="section-title">Ресторан и кафе</div>
+
+  <div class="card">
+    <div class="phrase">Vous avez choisi? / Je vous écoute.</div>
+    <div class="literal">Вы выбрали? / Я вас слушаю.</div>
+    <div class="meaning">Стандартный вопрос официанта при подходе к столу.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Une carafe d'eau, s'il vous plaît</div>
+    <div class="literal">Графин воды, пожалуйста</div>
+    <div class="meaning">Бесплатный графин с водопроводной водой — ваше законное право в любом ресторане Франции. Без слов «une carafe» принесут платную бутылку.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Ça a été?</div>
+    <div class="literal">Это было?</div>
+    <div class="meaning">«Вам понравилось?». Спрашивают после еды. Стандартный ответ — «Très bien, merci».</div>
+  </div>
+
+  <div class="card required">
+    <div class="phrase">L'addition, s'il vous plaît<span class="tag req">обязательно</span></div>
+    <div class="literal">Счёт, пожалуйста</div>
+    <div class="meaning">Сами никогда не принесут — нужно попросить. Можно жестом «черкнуть в воздухе».</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Bonne dégustation!</div>
+    <div class="literal">Хорошей дегустации!</div>
+    <div class="meaning">«Приятного аппетита» от персонала. Между сидящими за столом — «Bon appétit!».</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">C'est offert (par la maison)</div>
+    <div class="literal">Это предложено (домом)</div>
+    <div class="meaning">«За счёт заведения». Услышать приятно — значит, вы не зря тут второй раз.</div>
+  </div>
+
+  <div class="section-title">Телефон</div>
+
+  <div class="card">
+    <div class="phrase">Allô?</div>
+    <div class="literal">Алло?</div>
+    <div class="meaning">Только при ответе на звонок. Самому начинать звонок с «Allô» — нет, начинают с «Bonjour, c'est…».</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">C'est de la part de qui?</div>
+    <div class="literal">Это от чьей части?</div>
+    <div class="meaning">«Кто его спрашивает?». Стандартный вопрос секретаря.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Ne quittez pas, je vous le passe.</div>
+    <div class="literal">Не уходите, я вам его передаю.</div>
+    <div class="meaning">«Не вешайте трубку, соединяю». «Quitter» здесь — «отключиться/положить».</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Il n'est pas disponible. Voulez-vous laisser un message?</div>
+    <div class="literal">Он не доступен. Хотите оставить сообщение?</div>
+    <div class="meaning">Стандартная связка отказа. «Pas disponible» обычно означает «не подходит к телефону по каким-то причинам».</div>
+  </div>
+
+  <div class="section-title">Госорганы и банк</div>
+  <div class="section-note">Здесь самые формальные обороты: вас зовут «Monsieur/Madame», без улыбок и без срезаний углов.</div>
+
+  <div class="card">
+    <div class="phrase">Je viens pour…</div>
+    <div class="literal">Я пришёл за…</div>
+    <div class="meaning">«Я пришёл оформить / получить / сдать…». Стандартное начало визита в инстанцию.</div>
+  </div>
+
+  <div class="card required">
+    <div class="phrase">Avez-vous un rendez-vous?<span class="tag req">обязательно</span></div>
+    <div class="literal">У вас есть назначенная встреча?</div>
+    <div class="meaning">Без записи на приём вас почти всегда развернут. «Rendez-vous» = запись, а не «свидание». Запись — отдельная процедура за недели вперёд.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Veuillez patienter / Veuillez prendre place</div>
+    <div class="literal">Соблаговолите подождать / соблаговолите занять место</div>
+    <div class="meaning">«Подождите, пожалуйста / присядьте». «Veuillez» — формальный императив, в живой речи редок, в инстанциях — норма.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Suivant!</div>
+    <div class="literal">Следующий!</div>
+    <div class="meaning">«Следующий!» — короткое и без вежливости. Единственное место, где французы экономят на словах.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Votre pièce d'identité, s'il vous plaît.</div>
+    <div class="literal">Ваш документ, удостоверяющий личность, пожалуйста.</div>
+    <div class="meaning">«Документ, пожалуйста». «Pièce d'identité» — общее название (паспорт, ID-карта, вид на жительство).</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Cela fera 47 euros, s'il vous plaît.</div>
+    <div class="literal">Это сделает 47 евро, пожалуйста.</div>
+    <div class="meaning">«С вас 47 евро». «Cela fera» = «выйдет / будет». Используется на кассе и в окошке оплаты.</div>
+  </div>
+
+  <div class="card">
+    <div class="phrase">Le dossier est complet?</div>
+    <div class="literal">Досье полное?</div>
+    <div class="meaning">Главный вопрос всех французских инстанций. «Dossier» = пакет документов. «Complet» = собран на 100%, иначе вернут с «il manque…» («не хватает…»).</div>
+  </div>
+
+</div>
+</div>
+
+<script>
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+</script>
+
+</body>
+</html>
