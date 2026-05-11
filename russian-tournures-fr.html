@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>RU</text></svg>">
+<meta name="apple-mobile-web-app-title" content="RU tournures">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="description" content="Я буду кофе, взял и ушёл, тебе идёт, пойдёт, ну давай, надо... Les tournures du russe quotidien dont la traduction mot à mot trompe — expliquées en français.">
+<title>RU Le russe parlé — ces mots qu'on ne traduit pas mot à mot</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f0eb;
+    color: #2c2c2c;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #4a1a6b, #7b2fa0);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+  }
+  header h1 { font-size: 1.8em; font-weight: 600; }
+  header p { margin-top: 6px; opacity: 0.85; font-size: 0.95em; }
+  .lang-switch-left {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background 0.2s;
+  }
+  .lang-switch-left:hover { background: rgba(255,255,255,0.3); }
+
+  .intro {
+    max-width: 900px;
+    margin: 20px auto 0;
+    padding: 16px 20px;
+    background: #faf5ff;
+    border-left: 4px solid #7b2fa0;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.95em;
+    color: #444;
+    line-height: 1.6;
+  }
+  .intro strong { color: #4a1a6b; }
+  .intro .lit {
+    display: block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: white;
+    border-radius: 8px;
+    font-size: 0.92em;
+  }
+  .intro .lit b { color: #d84315; }
+
+  .content {
+    max-width: 900px;
+    margin: 20px auto 40px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .card-header {
+    padding: 12px 16px;
+    background: #7b2fa0;
+    color: white;
+    font-weight: 600;
+  }
+  .card-header .ru-name { font-size: 1.05em; }
+  .card-header .fr-name { font-size: 0.85em; opacity: 0.9; margin-top: 2px; }
+  .card-header-orange { background: #d84315; }
+  .card-header-blue { background: #1565c0; }
+  .card-header-green { background: #2e7d32; }
+  .card-header-memo {
+    background: linear-gradient(135deg, #4a1a6b, #7b2fa0);
+  }
+
+  .card-body { padding: 16px; }
+
+  .word-list { list-style: none; padding: 0; margin: 0; }
+  .word-list li {
+    padding: 14px 0;
+    border-bottom: 1px solid #f0f0f0;
+    line-height: 1.5;
+  }
+  .word-list li:last-child { border-bottom: none; }
+  .word-ru {
+    font-weight: 700;
+    color: #4a1a6b;
+    font-size: 1.1em;
+  }
+  .word-fr {
+    color: #666;
+    font-size: 0.95em;
+    margin-left: 6px;
+  }
+  .word-lit {
+    display: block;
+    margin-top: 3px;
+    font-size: 0.85em;
+    color: #b03a1a;
+  }
+  .word-lit::before { content: "mot à mot : "; color: #999; font-style: italic; }
+  .word-example {
+    display: block;
+    margin-top: 6px;
+    font-size: 0.93em;
+    color: #555;
+    padding-left: 12px;
+    border-left: 2px solid #e0d4e8;
+  }
+  .word-example + .word-example { margin-top: 4px; }
+  .word-example .ru { font-weight: 600; }
+  .word-example .fr { color: #888; font-style: italic; }
+  .word-tip {
+    display: block;
+    margin-top: 6px;
+    padding: 6px 10px;
+    background: #fff8e1;
+    border-radius: 6px;
+    font-size: 0.85em;
+    color: #6d5a00;
+  }
+  .word-tip strong { color: #e65100; }
+
+  .note-box {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: #faf5ff;
+    border-left: 4px solid #7b2fa0;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.9em;
+    color: #555;
+    line-height: 1.5;
+  }
+  .note-box strong { color: #4a1a6b; }
+
+  .memo-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6px;
+  }
+  .memo-table th {
+    text-align: left;
+    padding: 8px 10px;
+    font-size: 0.85em;
+    color: white;
+    font-weight: 600;
+    background: #7b2fa0;
+  }
+  .memo-table td {
+    padding: 8px 10px;
+    font-size: 0.92em;
+    border-bottom: 1px solid #f0f0f0;
+    line-height: 1.4;
+  }
+  .memo-table tr:nth-child(even) { background: #faf5ff; }
+  .memo-table .ru-col {
+    font-weight: 700;
+    color: #4a1a6b;
+    white-space: nowrap;
+  }
+  .memo-table .fr-col { color: #555; }
+  .memo-table .lit-col { color: #b03a1a; font-size: 0.88em; }
+
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.3em; }
+    header { padding: 20px 14px 16px; }
+    .lang-switch-left { position: static; display: inline-block; margin-bottom: 10px; padding: 6px 12px; font-size: 0.85em; }
+    .content, .intro { padding: 12px 14px; }
+    .card-header { padding: 10px 12px; }
+    .card-header .ru-name { font-size: 0.95em; }
+    .card-body { padding: 12px; }
+    .memo-table th, .memo-table td { padding: 6px 8px; font-size: 0.82em; }
+    .word-list li { padding: 12px 0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="russian-fr.html" class="lang-switch-left">&larr; Retour au portail</a>
+  <h1>RU Ces mots qu'on ne traduit pas mot à mot</h1>
+  <p>Le russe du quotidien — quand la traduction littérale vous trompe</p>
+</header>
+
+<div class="intro">
+  <strong>Le piège du débutant :</strong> on apprend du vocabulaire, et on traduit dans sa tête, mot par mot. Mais le russe parlé est plein de tournures où le mot à mot donne un résultat <em>faux</em> ou <em>incompréhensible</em>. Pourtant un Russe les utilise dans <strong>presque chaque phrase</strong>.
+  <span class="lit"><b>«Я буду кофе»</b> &nbsp;→&nbsp; mot à mot : « je <i>serai</i> café » &nbsp;|&nbsp; en vrai : <strong>« je vais prendre un café »</strong>. Le verbe « prendre » a disparu, et « буду » (futur de « être ») fait tout le travail.</span>
+  Cette page rassemble les plus fréquentes — celles qu'il faut <strong>reconnaître</strong> avant de pouvoir les <strong>réutiliser</strong>.
+</div>
+
+<div class="content">
+
+  <!-- CARD 1 : VERBES & CONSTRUCTIONS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="ru-name">1. ГЛАГОЛЫ, КОТОРЫЕ «ОБМАНЫВАЮТ» — Verbes &amp; constructions</div>
+      <div class="fr-name">Des structures verbales qui ne se calquent pas du tout sur le français</div>
+    </div>
+    <div class="card-body">
+      <ul class="word-list">
+
+        <li>
+          <span class="word-ru">буду / будешь / будете + <i>nom</i></span><span class="word-fr">— je vais prendre / tu veux… (à table, au café)</span>
+          <span class="word-lit">« je serai (un) café / tu seras (du) thé »</span>
+          <span class="word-example"><span class="ru">Я буду кофе. А ты будешь чай?</span><br><span class="fr">Je vais prendre un café. Et toi, tu veux du thé ?</span></span>
+          <span class="word-example"><span class="ru">— Будешь? — Буду! / — Не буду, спасибо.</span><br><span class="fr">— T'en veux ? — Oui ! / — Non merci.</span></span>
+          <span class="word-tip"><strong>Pourquoi :</strong> le verbe « есть / пить / брать » (manger / boire / prendre) est sous-entendu. Marche aussi au présent : <em>«Я не ем мясо»</em>, mais avec « буду » on parle d'un choix immédiat.</span>
+        </li>
+
+        <li>
+          <span class="word-ru">(не) стану / не буду + <i>infinitif</i></span><span class="word-fr">— je refuse de / je (ne) vais (pas) le faire</span>
+          <span class="word-lit">« je ne deviendrai pas manger ça »</span>
+          <span class="word-example"><span class="ru">Не стану я это есть.</span><br><span class="fr">Je (re)fuse de manger ça.</span></span>
+          <span class="word-example"><span class="ru">Я не буду с тобой спорить.</span><br><span class="fr">Je ne vais pas me disputer avec toi.</span></span>
+          <span class="word-tip"><strong>Nuance :</strong> <em>не стану</em> = refus ferme, un peu solennel ; <em>не буду</em> = simple futur négatif, neutre. Les deux remplacent un « je ne veux pas + infinitif ».</span>
+        </li>
+
+        <li>
+          <span class="word-ru">взял(а) и + <i>verbe</i></span><span class="word-fr">— et là, sans crier gare, il a… / sur un coup de tête</span>
+          <span class="word-lit">« il a pris et il est parti »</span>
+          <span class="word-example"><span class="ru">Он взял и ушёл — даже не попрощался.</span><br><span class="fr">Il est parti comme ça, d'un coup — sans même dire au revoir.</span></span>
+          <span class="word-example"><span class="ru">А она взяла да и согласилась!</span><br><span class="fr">Et elle, hop, elle a accepté !</span></span>
+          <span class="word-tip"><strong>Forme :</strong> aussi <em>взял да и…</em> Au futur : <em>«Вот возьму и уйду!»</em> = « Je vais finir par m'en aller, moi ! ». Exprime la soudaineté, le caprice, la décision abrupte.</span>
+        </li>
+
+        <li>
+          <span class="word-ru">(я) пошёл / (мы) пошли</span><span class="word-fr">— bon, j'y vais / on y va (on annonce qu'on part)</span>
+          <span class="word-lit">« je suis parti » (passé !)</span>
+          <span class="word-example"><span class="ru">Ну всё, я пошёл. Пока!</span><br><span class="fr">Bon, allez, j'y vais. Salut !</span></span>
+          <span class="word-example"><span class="ru">Мы пошли, уже поздно.</span><br><span class="fr">On y va, il est tard.</span></span>
+          <span class="word-tip"><strong>Curiosité :</strong> on utilise le <strong>passé</strong> pour dire qu'on part <strong>maintenant</strong> — comme si l'action était déjà lancée. Idem : <em>«Пошли!»</em> = « Allons-y ! »</span>
+        </li>
+
+        <li>
+          <span class="word-ru">давай / давайте</span><span class="word-fr">— allez / on… / vas-y / OK / salut ! (le couteau suisse)</span>
+          <span class="word-lit">« donne / donnez »</span>
+          <span class="word-example"><span class="ru">Давай сходим в кино.</span><br><span class="fr">Allez, on va au ciné. <i>(proposition)</i></span></span>
+          <span class="word-example"><span class="ru">Ну всё, давай! / Давай, до завтра!</span><br><span class="fr">Allez, salut ! / Allez, à demain ! <i>(au téléphone, en se quittant)</i></span></span>
+          <span class="word-example"><span class="ru">Давай быстрее! Давай-давай!</span><br><span class="fr">Allez, dépêche ! Vas-y, vas-y !</span></span>
+          <span class="word-example"><span class="ru">Давай, рассказывай. / Давайте я помогу.</span><br><span class="fr">Vas-y, raconte. / Laissez-moi vous aider.</span></span>
+          <span class="word-tip"><strong>À retenir :</strong> rien à voir avec « donner ». Et <em>«Давай не будем»</em> = « N'en parlons pas / arrêtons ça ».</span>
+        </li>
+
+        <li>
+          <span class="word-ru">надо / нужно</span><span class="word-fr">— il faut / je dois / on doit (sans sujet)</span>
+          <span class="word-lit">« (c'est) nécessaire »</span>
+          <span class="word-example"><span class="ru">— Ты придёшь? — Надо.</span><br><span class="fr">— Tu viendras ? — Il le faut bien. / Je dois.</span></span>
+          <span class="word-example"><span class="ru">Надо помыть посуду. Так надо.</span><br><span class="fr">Il faut faire la vaisselle. C'est comme ça (il le faut).</span></span>
+          <span class="word-tip"><strong>Construction impersonnelle :</strong> celui qui doit faire l'action est au <strong>datif</strong> — <em>«Мне надо идти»</em> = « Je dois y aller ». Et <em>«Надо же!»</em> tout seul = « Ben dis donc ! / Pas possible ! »</span>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+
+  <!-- CARD 2 : UN MOT, TOUTE UNE IDÉE -->
+  <div class="card">
+    <div class="card-header card-header-blue">
+      <div class="ru-name">2. ОДНО СЛОВО = ЦЕЛАЯ МЫСЛЬ — Un mot, toute une idée</div>
+      <div class="fr-name">Des verbes du quotidien dont le sens « caché » n'a rien d'évident</div>
+    </div>
+    <div class="card-body">
+      <ul class="word-list">
+
+        <li>
+          <span class="word-ru">пойдёт / сойдёт</span><span class="word-fr">— ça ira / ça fera l'affaire / ça passe</span>
+          <span class="word-lit">« ça ira / ça descendra »</span>
+          <span class="word-example"><span class="ru">— Так нормально? — Пойдёт.</span><br><span class="fr">— Comme ça, ça va ? — Ça ira. <i>(acceptation tiède)</i></span></span>
+          <span class="word-example"><span class="ru">Не идеально, но сойдёт.</span><br><span class="fr">C'est pas parfait, mais ça fera l'affaire.</span></span>
+        </li>
+
+        <li>
+          <span class="word-ru">идёт (кому-то) &nbsp;|&nbsp; Идёт!</span><span class="word-fr">— ça va bien à qqn (vêtement) &nbsp;|&nbsp; Marché conclu !</span>
+          <span class="word-lit">« ça va / ça marche à toi »</span>
+          <span class="word-example"><span class="ru">Тебе очень идёт это платье.</span><br><span class="fr">Cette robe te va vraiment bien.</span></span>
+          <span class="word-example"><span class="ru">— Встретимся в семь? — Идёт!</span><br><span class="fr">— On se voit à sept heures ? — Ça marche ! / D'accord !</span></span>
+        </li>
+
+        <li>
+          <span class="word-ru">хватит</span><span class="word-fr">— ça suffit / arrête / assez</span>
+          <span class="word-lit">« ça suffira »</span>
+          <span class="word-example"><span class="ru">Хватит! Хватит ныть.</span><br><span class="fr">Ça suffit ! Arrête de râler.</span></span>
+          <span class="word-example"><span class="ru">— Ещё чаю? — Спасибо, хватит.</span><br><span class="fr">— Encore du thé ? — Merci, ça ira (j'en ai assez).</span></span>
+        </li>
+
+        <li>
+          <span class="word-ru">успеть / успею / не успел</span><span class="word-fr">— avoir le temps de / arriver à temps</span>
+          <span class="word-lit">« réussir / arriver à (faire) » — le français doit ajouter « à temps »</span>
+          <span class="word-example"><span class="ru">Я не успел на поезд.</span><br><span class="fr">J'ai raté le train (pas arrivé à temps).</span></span>
+          <span class="word-example"><span class="ru">Успеешь до обеда? — Не успеваю!</span><br><span class="fr">Tu y arriveras avant midi ? — J'y arrive pas (à temps) !</span></span>
+          <span class="word-tip"><strong>Très fréquent :</strong> le français doit toujours rajouter « à temps / dans les temps ». En russe, c'est dans le verbe.</span>
+        </li>
+
+        <li>
+          <span class="word-ru">получиться / получается / получилось</span><span class="word-fr">— marcher / réussir / y arriver</span>
+          <span class="word-lit">« ça (ne) se forme (pas) / ça en est sorti »</span>
+          <span class="word-example"><span class="ru">У меня не получается.</span><br><span class="fr">Je n'y arrive pas. / Ça marche pas.</span></span>
+          <span class="word-example"><span class="ru">Получилось! / Если получится, приду.</span><br><span class="fr">Ça a marché ! / Si ça se trouve / si je peux, je viendrai.</span></span>
+        </li>
+
+        <li>
+          <span class="word-ru">достать (кого-то)</span><span class="word-fr">— soûler / gonfler qqn / en avoir marre</span>
+          <span class="word-lit">« attraper / atteindre quelqu'un »</span>
+          <span class="word-example"><span class="ru">Ты меня достал!</span><br><span class="fr">Tu me gonfles ! / J'en ai ras-le-bol de toi !</span></span>
+          <span class="word-example"><span class="ru">Достали эти пробки.</span><br><span class="fr">J'en peux plus de ces bouchons.</span></span>
+        </li>
+
+        <li>
+          <span class="word-ru">ладно</span><span class="word-fr">— bon / d'accord / OK / soit</span>
+          <span class="word-lit">« bien / comme il faut » (sens d'origine, rare à l'oral)</span>
+          <span class="word-example"><span class="ru">Ладно, я подумаю.</span><br><span class="fr">Bon, je vais y réfléchir.</span></span>
+          <span class="word-example"><span class="ru">Ну ладно, как хочешь.</span><br><span class="fr">Bon, d'accord, comme tu veux.</span></span>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+
+  <!-- CARD 3 : PETITES RÉPLIQUES TOUTES FAITES -->
+  <div class="card">
+    <div class="card-header card-header-orange">
+      <div class="ru-name">3. ГОТОВЫЕ РЕПЛИКИ — Petites répliques toutes faites</div>
+      <div class="fr-name">Le mot à mot ici est carrément absurde — apprenez-les en bloc</div>
+    </div>
+    <div class="card-body">
+      <ul class="word-list">
+
+        <li>
+          <span class="word-ru">да нет (, наверное)</span><span class="word-fr">— ben non / en fait non / plutôt pas</span>
+          <span class="word-lit">« oui non (sans doute) »</span>
+          <span class="word-example"><span class="ru">— Ты обиделся? — Да нет, всё нормально.</span><br><span class="fr">— Tu es vexé ? — Mais non, tout va bien.</span></span>
+          <span class="word-tip"><strong>Le piège classique :</strong> ici <em>да</em> n'est pas « oui » — c'est une particule qui adoucit. <em>«Да нет, наверное»</em> = « Ben… non, je crois pas ».</span>
+        </li>
+
+        <li>
+          <span class="word-ru">ну да</span><span class="word-fr">— ouais / mouais (souvent ironique = « c'est ça, oui »)</span>
+          <span class="word-lit">« eh bien oui »</span>
+          <span class="word-example"><span class="ru">— Он сказал, что заплатит. — Ну да, конечно.</span><br><span class="fr">— Il a dit qu'il paierait. — Mouais, c'est ça (j'y crois pas).</span></span>
+        </li>
+
+        <li>
+          <span class="word-ru">ну вот</span><span class="word-fr">— et voilà / bon ben voilà</span>
+          <span class="word-lit">« eh bien voici »</span>
+          <span class="word-example"><span class="ru">Ну вот, опять дождь.</span><br><span class="fr">Et voilà, encore la pluie.</span></span>
+        </li>
+
+        <li>
+          <span class="word-ru">как раз</span><span class="word-fr">— justement / pile / juste ce qu'il faut</span>
+          <span class="word-lit">« comme une fois »</span>
+          <span class="word-example"><span class="ru">Ты как раз вовремя.</span><br><span class="fr">Tu tombes pile au bon moment.</span></span>
+          <span class="word-example"><span class="ru">Это как раз то, что нужно.</span><br><span class="fr">C'est exactement ce qu'il faut.</span></span>
+        </li>
+
+        <li>
+          <span class="word-ru">ничего себе! &nbsp;(ого!)</span><span class="word-fr">— ouah ! / la vache ! / non mais dis donc !</span>
+          <span class="word-lit">« rien à soi-même »</span>
+          <span class="word-example"><span class="ru">Ничего себе цены!</span><br><span class="fr">La vache, ces prix !</span></span>
+        </li>
+
+        <li>
+          <span class="word-ru">так себе</span><span class="word-fr">— bof / moyen / pas terrible</span>
+          <span class="word-lit">« comme ça à soi-même »</span>
+          <span class="word-example"><span class="ru">— Как фильм? — Так себе.</span><br><span class="fr">— Il était comment, le film ? — Bof.</span></span>
+        </li>
+
+        <li>
+          <span class="word-ru">ничего так / а ничего так</span><span class="word-fr">— pas mal en fait / plutôt sympa</span>
+          <span class="word-lit">« rien comme ça »</span>
+          <span class="word-example"><span class="ru">Кафе, кстати, ничего так.</span><br><span class="fr">Ce café, au fait, il est pas mal.</span></span>
+          <span class="word-tip"><strong>Attention :</strong> ne pas confondre avec <em>так себе</em> (= bof) ! <em>ничего так</em> est plutôt positif. Et <em>«Ничего»</em> tout seul = « (c'est) pas grave / ça va ».</span>
+        </li>
+
+        <li>
+          <span class="word-ru">что ты! / да что ты!</span><span class="word-fr">— mais non ! / penses-tu ! &nbsp;·&nbsp; je t'en prie ! &nbsp;·&nbsp; sans blague ?!</span>
+          <span class="word-lit">« quoi toi ! »</span>
+          <span class="word-example"><span class="ru">— Я тебя не отвлекаю? — Что ты, конечно нет!</span><br><span class="fr">— Je te dérange ? — Mais non, voyons !</span></span>
+          <span class="word-example"><span class="ru">— Им дали квартиру! — Да что ты!</span><br><span class="fr">— Ils ont eu un appartement ! — Sans blague ?! / Pas possible !</span></span>
+        </li>
+
+        <li>
+          <span class="word-ru">да ну тебя</span><span class="word-fr">— oh ça va / laisse tomber / arrête (mi-agacé, mi-affectueux)</span>
+          <span class="word-lit">« oui allez toi »</span>
+          <span class="word-example"><span class="ru">— Ты опять всё перепутал. — Да ну тебя.</span><br><span class="fr">— T'as encore tout mélangé. — Oh ça va, hein.</span></span>
+        </li>
+
+        <li>
+          <span class="word-ru">так и быть</span><span class="word-fr">— bon, d'accord / pour cette fois (concession)</span>
+          <span class="word-lit">« ainsi soit-il »</span>
+          <span class="word-example"><span class="ru">Так и быть, помогу тебе.</span><br><span class="fr">Bon, d'accord, je vais t'aider.</span></span>
+        </li>
+
+        <li>
+          <span class="word-ru">ещё чего! / вот ещё!</span><span class="word-fr">— et puis quoi encore ! / jamais de la vie !</span>
+          <span class="word-lit">« encore quoi ! / voici encore ! »</span>
+          <span class="word-example"><span class="ru">— Извинись перед ним. — Ещё чего!</span><br><span class="fr">— Excuse-toi auprès de lui. — Et puis quoi encore !</span></span>
+        </li>
+
+        <li>
+          <span class="word-ru">ну и ладно / ну и пусть</span><span class="word-fr">— tant pis / et alors / peu importe</span>
+          <span class="word-lit">« eh bien et OK / eh bien et que ça soit »</span>
+          <span class="word-example"><span class="ru">Не хочет — ну и ладно.</span><br><span class="fr">Il ne veut pas — tant pis pour lui.</span></span>
+        </li>
+
+        <li>
+          <span class="word-ru">мало ли</span><span class="word-fr">— on ne sait jamais / qui sait / au cas où</span>
+          <span class="word-lit">« peu si »</span>
+          <span class="word-example"><span class="ru">Возьми зонт, мало ли что.</span><br><span class="fr">Prends un parapluie, on ne sait jamais.</span></span>
+        </li>
+
+        <li>
+          <span class="word-ru">смотря (как / где / с кем…)</span><span class="word-fr">— ça dépend (comment / où / avec qui…)</span>
+          <span class="word-lit">« en regardant »</span>
+          <span class="word-example"><span class="ru">— Пойдёшь на вечеринку? — Смотря с кем.</span><br><span class="fr">— Tu iras à la fête ? — Ça dépend avec qui.</span></span>
+        </li>
+
+        <li>
+          <span class="word-ru">мне не до этого / не до тебя</span><span class="word-fr">— j'ai pas la tête à ça / pas le temps pour ça (là maintenant)</span>
+          <span class="word-lit">« à moi pas jusqu'à ça »</span>
+          <span class="word-example"><span class="ru">Отстань, мне сейчас не до этого.</span><br><span class="fr">Lâche-moi, j'ai vraiment pas la tête à ça là.</span></span>
+        </li>
+
+        <li>
+          <span class="word-ru">да что ты говоришь!</span><span class="word-fr">— sans blague ! / tu m'en diras tant ! (souvent ironique)</span>
+          <span class="word-lit">« oui quoi tu dis ! »</span>
+          <span class="word-example"><span class="ru">— Оказывается, зимой холодно. — Да что ты говоришь!</span><br><span class="fr">— Figure-toi qu'en hiver il fait froid. — Sans blague ! / Tu m'en diras tant !</span></span>
+        </li>
+
+        <li>
+          <span class="word-ru">куда там / да куда там</span><span class="word-fr">— loin de là / tu parles ! / penses-tu !</span>
+          <span class="word-lit">« où là »</span>
+          <span class="word-example"><span class="ru">— Успели на поезд? — Куда там, опоздали на час.</span><br><span class="fr">— Vous avez eu le train ? — Tu parles, une heure de retard.</span></span>
+        </li>
+
+        <li>
+          <span class="word-ru">то ли дело</span><span class="word-fr">— ça, c'est autre chose / rien à voir (en mieux)</span>
+          <span class="word-lit">« soit affaire »</span>
+          <span class="word-example"><span class="ru">В городе шумно. То ли дело за городом!</span><br><span class="fr">En ville c'est bruyant. À la campagne, là, c'est autre chose !</span></span>
+        </li>
+
+        <li>
+          <span class="word-ru">сколько можно!</span><span class="word-fr">— ça suffit ! / c'est pas bientôt fini ?! / combien de fois ?!</span>
+          <span class="word-lit">« combien c'est possible ! »</span>
+          <span class="word-example"><span class="ru">Сколько можно опаздывать!</span><br><span class="fr">C'est pas bientôt fini, ces retards ?!</span></span>
+        </li>
+
+        <li>
+          <span class="word-ru">будет тебе / да будет тебе</span><span class="word-fr">— allez, arrête / ça suffit (pour calmer ou consoler)</span>
+          <span class="word-lit">« il sera à toi »</span>
+          <span class="word-example"><span class="ru">Ну будет тебе плакать, всё хорошо.</span><br><span class="fr">Allez, arrête de pleurer, tout va bien.</span></span>
+        </li>
+
+      </ul>
+      <div class="note-box">
+        <strong>Le réflexe à prendre :</strong> dès qu'une phrase russe vous paraît absurde traduite mot à mot — <em>« je serai café », « il a pris et il est parti », « rien à soi »</em> — c'est probablement une de ces tournures figées. Ne cherchez pas la logique des mots : cherchez <strong>l'intention</strong>, et apprenez le bloc entier.
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 4 : AIDE-MÉMOIRE -->
+  <div class="card">
+    <div class="card-header card-header-memo">
+      <div class="ru-name">AIDE-MÉMOIRE (Шпаргалка)</div>
+      <div class="fr-name">Mot à mot trompeur &rarr; ce que ça veut vraiment dire</div>
+    </div>
+    <div class="card-body">
+      <div class="table-wrap">
+        <table class="memo-table">
+          <thead>
+            <tr>
+              <th>Russe</th>
+              <th>Mot à mot (faux !)</th>
+              <th>Sens réel</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="ru-col">Я буду кофе</td><td class="lit-col">je serai café</td><td class="fr-col">je vais prendre un café</td></tr>
+            <tr><td class="ru-col">Будешь чай?</td><td class="lit-col">tu seras thé ?</td><td class="fr-col">tu veux du thé ?</td></tr>
+            <tr><td class="ru-col">Не стану это есть</td><td class="lit-col">je ne deviendrai pas manger ça</td><td class="fr-col">je refuse de manger ça</td></tr>
+            <tr><td class="ru-col">Взял и ушёл</td><td class="lit-col">il a pris et il est parti</td><td class="fr-col">il est parti comme ça, d'un coup</td></tr>
+            <tr><td class="ru-col">Я пошёл</td><td class="lit-col">je suis parti</td><td class="fr-col">bon, j'y vais</td></tr>
+            <tr><td class="ru-col">Давай!</td><td class="lit-col">donne !</td><td class="fr-col">allez, salut ! / vas-y !</td></tr>
+            <tr><td class="ru-col">Надо</td><td class="lit-col">(c'est) nécessaire</td><td class="fr-col">il le faut / je dois</td></tr>
+            <tr><td class="ru-col">Пойдёт / Сойдёт</td><td class="lit-col">ça ira / ça descendra</td><td class="fr-col">ça fera l'affaire</td></tr>
+            <tr><td class="ru-col">Тебе идёт</td><td class="lit-col">ça marche à toi</td><td class="fr-col">ça te va bien</td></tr>
+            <tr><td class="ru-col">Идёт!</td><td class="lit-col">ça marche !</td><td class="fr-col">marché conclu ! / d'accord !</td></tr>
+            <tr><td class="ru-col">Хватит</td><td class="lit-col">ça suffira</td><td class="fr-col">ça suffit ! / assez</td></tr>
+            <tr><td class="ru-col">Не успел</td><td class="lit-col">— (intraduisible en 1 mot)</td><td class="fr-col">je n'ai pas eu le temps / pas arrivé à temps</td></tr>
+            <tr><td class="ru-col">Не получается</td><td class="lit-col">ça ne se forme pas</td><td class="fr-col">je n'y arrive pas</td></tr>
+            <tr><td class="ru-col">Ты меня достал</td><td class="lit-col">tu m'as attrapé</td><td class="fr-col">tu me gonfles</td></tr>
+            <tr><td class="ru-col">Да нет, наверное</td><td class="lit-col">oui non probablement</td><td class="fr-col">ben… non, je crois pas</td></tr>
+            <tr><td class="ru-col">Ну да</td><td class="lit-col">eh bien oui</td><td class="fr-col">mouais / c'est ça, oui (ironique)</td></tr>
+            <tr><td class="ru-col">Как раз</td><td class="lit-col">comme une fois</td><td class="fr-col">justement / pile</td></tr>
+            <tr><td class="ru-col">Ничего себе!</td><td class="lit-col">rien à soi</td><td class="fr-col">ouah ! / la vache !</td></tr>
+            <tr><td class="ru-col">Так себе</td><td class="lit-col">comme ça à soi</td><td class="fr-col">bof / moyen</td></tr>
+            <tr><td class="ru-col">Ничего так</td><td class="lit-col">rien comme ça</td><td class="fr-col">pas mal, en fait</td></tr>
+            <tr><td class="ru-col">Что ты!</td><td class="lit-col">quoi toi !</td><td class="fr-col">mais non ! / je t'en prie ! / sans blague ?!</td></tr>
+            <tr><td class="ru-col">Так и быть</td><td class="lit-col">ainsi soit-il</td><td class="fr-col">bon, d'accord (pour cette fois)</td></tr>
+            <tr><td class="ru-col">Ещё чего!</td><td class="lit-col">encore quoi !</td><td class="fr-col">et puis quoi encore !</td></tr>
+            <tr><td class="ru-col">Мало ли</td><td class="lit-col">peu si</td><td class="fr-col">on ne sait jamais</td></tr>
+            <tr><td class="ru-col">Смотря</td><td class="lit-col">en regardant</td><td class="fr-col">ça dépend</td></tr>
+            <tr><td class="ru-col">Мне не до этого</td><td class="lit-col">à moi pas jusqu'à ça</td><td class="fr-col">j'ai pas la tête à ça</td></tr>
+            <tr><td class="ru-col">Да что ты говоришь!</td><td class="lit-col">oui quoi tu dis !</td><td class="fr-col">sans blague ! (souvent ironique)</td></tr>
+            <tr><td class="ru-col">Куда там</td><td class="lit-col">où là</td><td class="fr-col">loin de là / tu parles !</td></tr>
+            <tr><td class="ru-col">То ли дело</td><td class="lit-col">soit affaire</td><td class="fr-col">ça, c'est autre chose (en mieux)</td></tr>
+            <tr><td class="ru-col">Сколько можно!</td><td class="lit-col">combien c'est possible !</td><td class="fr-col">c'est pas bientôt fini ?!</td></tr>
+            <tr><td class="ru-col">Будет тебе</td><td class="lit-col">il sera à toi</td><td class="fr-col">allez, arrête / ça suffit</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note-box">
+        <strong>Conseil :</strong> choisissez-en <strong>3 ou 4</strong> qui vous plaisent (par exemple <em>буду кофе</em>, <em>пойдёт</em>, <em>давай!</em>, <em>надо</em>) et glissez-les dans vos phrases dès aujourd'hui. C'est ce qui fait passer du « russe de manuel » au russe qui sonne juste.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
